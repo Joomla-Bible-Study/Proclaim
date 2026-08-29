@@ -59,25 +59,25 @@ class Cwmrestore
      *
      * @var string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public const string STATEMENT_ALLOWED = 'allowed';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public const string STATEMENT_PRESERVED = 'preserved';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public const string STATEMENT_SESSION = 'session';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public const string STATEMENT_REJECTED = 'rejected';
 
@@ -142,7 +142,7 @@ class Cwmrestore
      *
      * @return  string  One of the STATEMENT_* constants
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public static function classifyStatement(string $statement): string
     {
@@ -208,7 +208,7 @@ class Cwmrestore
      *
      * @return  string[]  The statements, exactly as splitSql() would return them
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public static function splitSqlFast(string $sql): array
     {
@@ -357,7 +357,7 @@ class Cwmrestore
      *                                                 statements that put the
      *                                                 generated columns back
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public static function normaliseGeneratedColumns(string $sql): array
     {

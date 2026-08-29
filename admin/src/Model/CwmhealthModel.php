@@ -26,7 +26,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 /**
  * The System Health report.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class CwmhealthModel extends BaseDatabaseModel
 {
@@ -38,7 +38,7 @@ class CwmhealthModel extends BaseDatabaseModel
      *
      * @return  array<string, array<int, array{check: HealthCheckInterface, result: HealthResult, quiet: bool}>>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function getReport(): array
     {
@@ -78,7 +78,7 @@ class CwmhealthModel extends BaseDatabaseModel
      *
      * @return  array<string, int>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function summarise(array $report): array
     {
@@ -101,7 +101,7 @@ class CwmhealthModel extends BaseDatabaseModel
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function sortRows(array $rows): array
     {

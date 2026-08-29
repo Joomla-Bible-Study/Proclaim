@@ -2,7 +2,7 @@
 <extension type="plugin" group="finder" method="upgrade">
     <name>plg_finder_proclaim</name>
     <author>CWM Team</author>
-    <creationDate>2026-08-26</creationDate>
+    <creationDate>2026-08-29</creationDate>
     <copyright>(C) 2026 Proclaim All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <authorEmail>info@christianwebministries.org</authorEmail>

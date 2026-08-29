@@ -152,7 +152,7 @@ class CwmtemplatecodeTable extends Table
      * how the rename came to be missed twice over.
      *
      * @var    array<int, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public const array LAYOUT_DIRECTORIES = [
         1 => 'components/com_proclaim/tmpl/cwmsermons',
@@ -172,7 +172,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @return  string|null  Null for a type with no layout directory
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function layoutPath(int $type, string $filename): ?string
     {
@@ -197,7 +197,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function removeCapitalisedTwin(int $type, string $filename): void
     {

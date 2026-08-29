@@ -30,7 +30,7 @@ use Joomla\CMS\Language\Text;
  * ⚠️ Not passive. Running it makes an outbound API call and, on YouTube,
  * spends quota, so only an explicit request may run it.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class ServerConnectionCheck implements HealthCheckInterface
 {
@@ -41,7 +41,7 @@ final class ServerConnectionCheck implements HealthCheckInterface
      * @param   string  $serverName  The server's name, for the report row.
      * @param   string  $serverType  The addon type backing the server.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function __construct(
         private readonly int $serverId,
@@ -53,7 +53,7 @@ final class ServerConnectionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -63,7 +63,7 @@ final class ServerConnectionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -73,7 +73,7 @@ final class ServerConnectionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -83,7 +83,7 @@ final class ServerConnectionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -93,7 +93,7 @@ final class ServerConnectionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {
@@ -145,7 +145,7 @@ final class ServerConnectionCheck implements HealthCheckInterface
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function gdprMode(): bool
     {

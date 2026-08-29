@@ -29,7 +29,7 @@ namespace CWM\Component\Proclaim\Administrator\Health;
  * surface with a wider audience means rewriting the check, not re-pointing it.
  * HealthContractTest pins the gate.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 interface HealthCheckInterface
 {
@@ -41,7 +41,7 @@ interface HealthCheckInterface
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function getId(): string;
 
@@ -50,7 +50,7 @@ interface HealthCheckInterface
      *
      * @return  HealthGroup
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function getGroup(): HealthGroup;
 
@@ -59,7 +59,7 @@ interface HealthCheckInterface
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function getTitle(): string;
 
@@ -71,7 +71,7 @@ interface HealthCheckInterface
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function isPassive(): bool;
 
@@ -80,7 +80,7 @@ interface HealthCheckInterface
      *
      * @return  HealthResult
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function run(): HealthResult;
 }

@@ -34,14 +34,14 @@ use Joomla\CMS\Language\Text;
  * Reads the path from configuration rather than from the application, so the
  * answer is the same from a scheduled task as from a screen.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class TmpPathCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -51,7 +51,7 @@ final class TmpPathCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -61,7 +61,7 @@ final class TmpPathCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -71,7 +71,7 @@ final class TmpPathCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -81,7 +81,7 @@ final class TmpPathCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

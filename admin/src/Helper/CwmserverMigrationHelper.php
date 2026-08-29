@@ -155,7 +155,7 @@ class CwmserverMigrationHelper
      * @return  array{servers: int, media: int}  Legacy servers, and the media
      *                                           rows still pointing at them
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public static function countPendingMigration(): array
     {

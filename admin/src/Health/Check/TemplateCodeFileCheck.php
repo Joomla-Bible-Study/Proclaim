@@ -40,14 +40,14 @@ use Joomla\Database\DatabaseInterface;
  * A record naming a type with no directory behind it is counted separately —
  * that one was never writable anywhere, rather than written and then lost.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class TemplateCodeFileCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -57,7 +57,7 @@ final class TemplateCodeFileCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -67,7 +67,7 @@ final class TemplateCodeFileCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -77,7 +77,7 @@ final class TemplateCodeFileCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -87,7 +87,7 @@ final class TemplateCodeFileCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

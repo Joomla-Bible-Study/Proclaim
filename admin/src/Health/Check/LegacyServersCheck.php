@@ -29,14 +29,14 @@ use Joomla\CMS\Language\Text;
  * A restored 9.x backup arrives with every server legacy, and most media will
  * not resolve until they are migrated.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class LegacyServersCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -46,7 +46,7 @@ final class LegacyServersCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -56,7 +56,7 @@ final class LegacyServersCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -66,7 +66,7 @@ final class LegacyServersCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -76,7 +76,7 @@ final class LegacyServersCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

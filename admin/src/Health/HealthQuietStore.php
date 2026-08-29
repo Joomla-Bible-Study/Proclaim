@@ -31,7 +31,7 @@ use Joomla\Registry\Registry;
  * ⚠️ Encoded as a JSON string, not a Registry node: check ids contain dots and
  * Registry reads a dot as a path separator.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class HealthQuietStore
 {
@@ -39,7 +39,7 @@ final class HealthQuietStore
      * The `#__bsms_admin` params key holding the encoded map.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public const PARAM_KEY = 'health_quiet';
 
@@ -51,7 +51,7 @@ final class HealthQuietStore
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function isQuiet(HealthResult $result): bool
     {
@@ -69,7 +69,7 @@ final class HealthQuietStore
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function quieten(HealthResult $result): void
     {
@@ -90,7 +90,7 @@ final class HealthQuietStore
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function restore(string $id): void
     {
@@ -110,7 +110,7 @@ final class HealthQuietStore
      *
      * @return  array<string, string>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function read(): array
     {
@@ -154,7 +154,7 @@ final class HealthQuietStore
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function write(array $map): void
     {
@@ -185,7 +185,7 @@ final class HealthQuietStore
      *
      * @return  ?Registry
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function readParams(): ?Registry
     {

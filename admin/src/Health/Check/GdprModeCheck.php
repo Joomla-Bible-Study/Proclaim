@@ -36,14 +36,14 @@ use Joomla\CMS\Language\Text;
  * rather than a setting, and the setting lives on a different screen from any
  * of them.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class GdprModeCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -53,7 +53,7 @@ final class GdprModeCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -63,7 +63,7 @@ final class GdprModeCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -73,7 +73,7 @@ final class GdprModeCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -83,7 +83,7 @@ final class GdprModeCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

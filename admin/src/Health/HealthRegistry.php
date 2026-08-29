@@ -49,7 +49,7 @@ use Joomla\Database\DatabaseInterface;
  * Every check the System Health report knows about, and the only place that
  * decides what runs unprompted.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class HealthRegistry
 {
@@ -61,7 +61,7 @@ final class HealthRegistry
      *
      * @return  HealthCheckInterface[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function checks(): array
     {
@@ -120,7 +120,7 @@ final class HealthRegistry
      *
      * @return  HealthResult[]  Keyed by check id.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function runPassive(?array $checks = null): array
     {
@@ -147,7 +147,7 @@ final class HealthRegistry
      *
      * @return  ?HealthResult  Null when no check declares that id.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function runOne(string $id): ?HealthResult
     {
@@ -165,7 +165,7 @@ final class HealthRegistry
      *
      * @return  HealthResult[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function dashboardNotices(): array
     {
@@ -183,7 +183,7 @@ final class HealthRegistry
      *
      * @return  HealthResult
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function evaluate(HealthCheckInterface $check): HealthResult
     {
@@ -213,7 +213,7 @@ final class HealthRegistry
      *
      * @return  array<int, array<string, mixed>>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function youtubeServers(): array
     {
@@ -238,7 +238,7 @@ final class HealthRegistry
      *
      * @return  array<int, array{id: int, server_name: string, type: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function testableServers(): array
     {

@@ -45,7 +45,7 @@ class CwmcpanelController extends BaseController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function hideSimpleNotice(): void
     {

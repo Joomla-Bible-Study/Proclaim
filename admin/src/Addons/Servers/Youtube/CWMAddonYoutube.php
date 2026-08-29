@@ -806,7 +806,7 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     #[\Override]
     public function supportsConnectionTest(): bool
@@ -821,7 +821,7 @@ class CWMAddonYoutube extends CWMAddon
      * that calls this reports itself as not passive. `testApiConnection()`
      * records the spend against the server it resolves from the key.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     #[\Override]
     public function testConnection(int $serverId): array
@@ -2379,7 +2379,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[\Override]
     public function isDescriptionSyncReady(int $serverId): bool

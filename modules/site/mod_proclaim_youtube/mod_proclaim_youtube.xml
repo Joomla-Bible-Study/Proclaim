@@ -6,7 +6,7 @@
     <authorUrl>www.christianwebministries.org</authorUrl>
     <copyright>(C) 2026 CWM Team All rights reserved</copyright>
     <version>10.6.0</version>
-    <creationDate>2026-08-26</creationDate>
+    <creationDate>2026-08-29</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>MOD_PROCLAIM_YOUTUBE_DESCRIPTION</description>
     <namespace path="src">CWM\Module\ProclaimYoutube</namespace>

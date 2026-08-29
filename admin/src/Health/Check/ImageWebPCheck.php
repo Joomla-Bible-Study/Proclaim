@@ -27,14 +27,14 @@ use Joomla\CMS\Language\Text;
  * Images with no WebP sibling built beside them. Nothing is broken without
  * one: the original still serves.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class ImageWebPCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -44,7 +44,7 @@ final class ImageWebPCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -54,7 +54,7 @@ final class ImageWebPCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -64,7 +64,7 @@ final class ImageWebPCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -74,7 +74,7 @@ final class ImageWebPCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

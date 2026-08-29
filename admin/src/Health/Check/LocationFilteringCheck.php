@@ -31,14 +31,14 @@ use Joomla\CMS\Language\Text;
  * them to nothing. The setting reads as configured while doing the opposite of
  * what was intended.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class LocationFilteringCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -48,7 +48,7 @@ final class LocationFilteringCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -58,7 +58,7 @@ final class LocationFilteringCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -68,7 +68,7 @@ final class LocationFilteringCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -78,7 +78,7 @@ final class LocationFilteringCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

@@ -38,14 +38,14 @@ use Joomla\CMS\Language\Text;
  * request the helper can be true because of *this* request rather than because
  * of the setting, which is a question a check has no business asking.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class DebugModeCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -55,7 +55,7 @@ final class DebugModeCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -65,7 +65,7 @@ final class DebugModeCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -75,7 +75,7 @@ final class DebugModeCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -85,7 +85,7 @@ final class DebugModeCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

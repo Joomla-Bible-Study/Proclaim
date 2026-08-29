@@ -27,7 +27,7 @@ use Joomla\CMS\Session\Session;
  * Actions on the System Health report.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.6.0
  */
 class CwmhealthController extends BaseController
 {
@@ -36,7 +36,7 @@ class CwmhealthController extends BaseController
      * is set up by the controller.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const RETURN_VIEW = 'index.php?option=com_proclaim&task=cwmadmin.edit&id=1';
 
@@ -49,7 +49,7 @@ class CwmhealthController extends BaseController
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function test(): void
     {
@@ -83,7 +83,7 @@ class CwmhealthController extends BaseController
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function quieten(): void
     {
@@ -119,7 +119,7 @@ class CwmhealthController extends BaseController
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function restore(): void
     {
@@ -146,7 +146,7 @@ class CwmhealthController extends BaseController
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function assertToken(): void
     {
@@ -161,7 +161,7 @@ class CwmhealthController extends BaseController
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function assertAdmin(): void
     {

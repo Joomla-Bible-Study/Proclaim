@@ -39,7 +39,7 @@ use Joomla\CMS\Language\Text;
  * API key — another site, another tool — spends against the same allowance and
  * is invisible here, so the real remaining figure can only be lower.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class YoutubeQuotaCheck implements HealthCheckInterface
 {
@@ -47,7 +47,7 @@ final class YoutubeQuotaCheck implements HealthCheckInterface
      * @param   int     $serverId    The server row this reports on
      * @param   string  $serverName  Its name, for the title
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function __construct(
         private readonly int $serverId,
@@ -58,7 +58,7 @@ final class YoutubeQuotaCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -68,7 +68,7 @@ final class YoutubeQuotaCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -78,7 +78,7 @@ final class YoutubeQuotaCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -88,7 +88,7 @@ final class YoutubeQuotaCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -98,7 +98,7 @@ final class YoutubeQuotaCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

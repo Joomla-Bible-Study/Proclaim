@@ -31,7 +31,7 @@ use Joomla\Database\DatabaseInterface;
  * ⚠️ Read from `#__extensions`, not `PluginHelper::isEnabled()`, which answers
  * only for the running application and cannot tell disabled from missing.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class PluginEnabledCheck implements HealthCheckInterface
 {
@@ -43,7 +43,7 @@ final class PluginEnabledCheck implements HealthCheckInterface
      * @param   string       $titleKey  Language key naming the plugin.
      * @param   HealthStatus $severity  What a missing or disabled plugin means here.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function __construct(
         private readonly string $folder,
@@ -56,7 +56,7 @@ final class PluginEnabledCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -66,7 +66,7 @@ final class PluginEnabledCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -76,7 +76,7 @@ final class PluginEnabledCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -86,7 +86,7 @@ final class PluginEnabledCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -96,7 +96,7 @@ final class PluginEnabledCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

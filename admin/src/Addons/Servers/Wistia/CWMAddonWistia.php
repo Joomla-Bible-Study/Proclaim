@@ -404,7 +404,7 @@ class CWMAddonWistia extends CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[\Override]
     public function isDescriptionSyncReady(int $serverId): bool
@@ -635,7 +635,7 @@ class CWMAddonWistia extends CWMAddon
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     #[\Override]
     public function supportsConnectionTest(): bool
@@ -661,7 +661,7 @@ class CWMAddonWistia extends CWMAddon
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     #[\Override]
     public function testConnection(int $serverId): array

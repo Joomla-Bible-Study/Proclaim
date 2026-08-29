@@ -404,7 +404,7 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[\Override]
     public function isDescriptionSyncReady(int $serverId): bool
@@ -821,7 +821,7 @@ class CWMAddonVimeo extends CWMAddon
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     #[\Override]
     public function supportsConnectionTest(): bool
@@ -847,7 +847,7 @@ class CWMAddonVimeo extends CWMAddon
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     #[\Override]
     public function testConnection(int $serverId): array

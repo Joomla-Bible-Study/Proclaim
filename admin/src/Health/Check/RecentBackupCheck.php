@@ -34,7 +34,7 @@ use Joomla\CMS\Language\Text;
  * Reporting "you have no backup" would be stating something it does not know;
  * reporting "Proclaim has not taken one" is true either way.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class RecentBackupCheck implements HealthCheckInterface
 {
@@ -44,14 +44,14 @@ final class RecentBackupCheck implements HealthCheckInterface
      * A month is long enough not to nag a site that backs up monthly, and short
      * enough that a year-old file is not reported as cover.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const STALE_AFTER_DAYS = 30;
 
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -61,7 +61,7 @@ final class RecentBackupCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -71,7 +71,7 @@ final class RecentBackupCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -81,7 +81,7 @@ final class RecentBackupCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -91,7 +91,7 @@ final class RecentBackupCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

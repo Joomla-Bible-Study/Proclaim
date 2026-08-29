@@ -40,14 +40,14 @@ use Joomla\Registry\Registry;
  * for user 0 explicitly rather than from whoever is looking. A check has to
  * answer the same way from a scheduled task as from a screen.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class RestrictedMediaCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -57,7 +57,7 @@ final class RestrictedMediaCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -67,7 +67,7 @@ final class RestrictedMediaCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -77,7 +77,7 @@ final class RestrictedMediaCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -87,7 +87,7 @@ final class RestrictedMediaCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {
@@ -147,7 +147,7 @@ final class RestrictedMediaCheck implements HealthCheckInterface
      *
      * @return  int
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function countExposed(array $guestLevels): int
     {

@@ -30,7 +30,7 @@ use Joomla\CMS\Language\Text;
  * podcast simply stops gaining episodes — and the directories subscribed to it
  * see a feed that still answers, just never changes.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class PodcastTaskCheck implements HealthCheckInterface
 {
@@ -38,7 +38,7 @@ final class PodcastTaskCheck implements HealthCheckInterface
      * Task states, as `Cwmstats::getPodcastTaskRawState()` reports them.
      *
      * @var    int
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const STATE_ENABLED = 1;
 
@@ -51,7 +51,7 @@ final class PodcastTaskCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -61,7 +61,7 @@ final class PodcastTaskCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -71,7 +71,7 @@ final class PodcastTaskCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -81,7 +81,7 @@ final class PodcastTaskCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -91,7 +91,7 @@ final class PodcastTaskCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

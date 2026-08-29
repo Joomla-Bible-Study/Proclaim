@@ -71,7 +71,7 @@ class HtmlView extends BaseHtmlView
      * until they are migrated most media will not resolve.
      *
      * @var    array{servers: int, media: int}
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public array $pendingServerMigration = ['servers' => 0, 'media' => 0];
 
@@ -84,7 +84,7 @@ class HtmlView extends BaseHtmlView
      * Health view lists it either way.
      *
      * @var    bool
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public bool $serverMigrationQuiet = false;
 

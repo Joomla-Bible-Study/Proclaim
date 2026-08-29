@@ -28,14 +28,14 @@ use Joomla\CMS\Language\Text;
  * `images/biblestudy/{type}/{alias}-{id}/` folders. Not a fault: the old
  * paths keep resolving.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class ImageMigrationCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -45,7 +45,7 @@ final class ImageMigrationCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -55,7 +55,7 @@ final class ImageMigrationCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -65,7 +65,7 @@ final class ImageMigrationCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -75,7 +75,7 @@ final class ImageMigrationCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

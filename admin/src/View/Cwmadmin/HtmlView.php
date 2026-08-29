@@ -198,7 +198,7 @@ class HtmlView extends BaseHtmlView
      * are exactly what this panel adds.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public array $healthReport = [];
 
@@ -206,7 +206,7 @@ class HtmlView extends BaseHtmlView
      * How many results fell into each status.
      *
      * @var    array<string, int>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public array $healthSummary = [];
 

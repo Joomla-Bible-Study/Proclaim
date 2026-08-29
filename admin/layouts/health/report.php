@@ -37,7 +37,7 @@ $summary = $displayData['summary'] ?? [];
  *
  * @return  string
  *
- * @since   __DEPLOY_VERSION__
+ * @since   10.6.0
  */
 $e = static fn(string $value): string => htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
 
@@ -49,7 +49,7 @@ $e = static fn(string $value): string => htmlspecialchars($value, ENT_COMPAT, 'U
  *
  * @return  string
  *
- * @since   __DEPLOY_VERSION__
+ * @since   10.6.0
  */
 $taskLink = static fn(string $task, string $check): string => Route::_(
     'index.php?option=com_proclaim&task=cwmhealth.' . $task

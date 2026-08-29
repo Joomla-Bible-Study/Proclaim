@@ -30,14 +30,14 @@ use Joomla\CMS\Language\Text;
  * against an older table shape, so the failure lands wherever a query first
  * names a column the site does not have.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class SchemaVersionCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -47,7 +47,7 @@ final class SchemaVersionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -57,7 +57,7 @@ final class SchemaVersionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -67,7 +67,7 @@ final class SchemaVersionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -77,7 +77,7 @@ final class SchemaVersionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

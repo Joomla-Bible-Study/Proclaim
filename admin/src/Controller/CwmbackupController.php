@@ -55,7 +55,7 @@ class CwmbackupController extends BaseController
      *
      * @var int
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const int IMPORT_BATCH_SIZE = 50;
 
@@ -71,7 +71,7 @@ class CwmbackupController extends BaseController
      * @return  string  Absolute path
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function importSpoolPath(string $sessionId): string
     {
@@ -98,7 +98,7 @@ class CwmbackupController extends BaseController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function sweepStaleSpools(): void
     {
@@ -130,7 +130,7 @@ class CwmbackupController extends BaseController
      * @return  string[]  The statements, or an empty array if the spool is gone
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function readImportSpool(string $sessionId, int $batch): array
     {
@@ -1063,7 +1063,7 @@ class CwmbackupController extends BaseController
      *
      * @return  array{rows: int, dir_exists: bool, dir_empty: bool}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function mediaStatus(): array
     {

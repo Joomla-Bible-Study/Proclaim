@@ -29,14 +29,14 @@ use Joomla\CMS\Language\Text;
  * ⚠️ A strict subset of the records awaiting migration. Migration cannot move
  * a file that is not there, so these fail rather than wait.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class MissingImagesCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -46,7 +46,7 @@ final class MissingImagesCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -56,7 +56,7 @@ final class MissingImagesCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -66,7 +66,7 @@ final class MissingImagesCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -76,7 +76,7 @@ final class MissingImagesCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

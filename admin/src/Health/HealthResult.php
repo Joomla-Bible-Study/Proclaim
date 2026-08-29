@@ -25,7 +25,7 @@ namespace CWM\Component\Proclaim\Administrator\Health;
  * ⚠️ A passing result has no fingerprint: there is nothing to quieten, and
  * storing one would let a later failure be silenced by a state that was fine.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final readonly class HealthResult
 {
@@ -39,7 +39,7 @@ final readonly class HealthResult
      * @param   ?string       $actionLink   Route to the screen that resolves it.
      * @param   ?string       $actionLabel  Translated label for that link.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function __construct(
         public string $id,
@@ -57,7 +57,7 @@ final readonly class HealthResult
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function isActionable(): bool
     {

@@ -20,7 +20,7 @@ namespace CWM\Component\Proclaim\Administrator\Health;
  * The state a health check reports. `Unknown` is a real answer: nothing was
  * measured, which is not the same as passing.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 enum HealthStatus: string
 {
@@ -34,7 +34,7 @@ enum HealthStatus: string
      *
      * @return  int
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function weight(): int
     {
@@ -51,7 +51,7 @@ enum HealthStatus: string
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function contextClass(): string
     {
@@ -68,7 +68,7 @@ enum HealthStatus: string
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function labelKey(): string
     {

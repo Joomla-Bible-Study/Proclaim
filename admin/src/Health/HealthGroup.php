@@ -20,7 +20,7 @@ namespace CWM\Component\Proclaim\Administrator\Health;
  * The section of the health report a check belongs to. A new check picks from
  * this list rather than inventing a heading.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 enum HealthGroup: string
 {
@@ -39,7 +39,7 @@ enum HealthGroup: string
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function labelKey(): string
     {

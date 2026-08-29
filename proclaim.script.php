@@ -2078,7 +2078,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  string  What was removed, for the install log
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function removeObsoleteFiles(): string
     {
@@ -3052,7 +3052,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  string  Summary for the install report
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function removeStrayTemplateLayouts(): string
     {
@@ -3147,7 +3147,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  int  Number of templates changed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function clearStrayTemplatePointers(array $removedNames): int
     {

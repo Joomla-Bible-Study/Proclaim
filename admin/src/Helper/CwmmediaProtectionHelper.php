@@ -62,7 +62,7 @@ class CwmmediaProtectionHelper
      * @return  bool  True when the root is the site's own address rather than a
      *                value invented because there was nothing to derive from.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function canResolveSiteRoot(): bool
     {

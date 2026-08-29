@@ -560,7 +560,7 @@ abstract class CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function isDescriptionSyncReady(int $serverId): bool
     {
@@ -651,7 +651,7 @@ abstract class CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function supportsConnectionTest(): bool
     {
@@ -673,7 +673,7 @@ abstract class CWMAddon
      *
      * @return  array{success: bool, message?: string, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function testConnection(int $serverId): array
     {
@@ -685,7 +685,7 @@ abstract class CWMAddon
      *
      * @return  array<int, array{id: int, server_name: string, type: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function getConnectionTestableServers(): array
     {

@@ -32,14 +32,14 @@ use Joomla\CMS\Language\Text;
  * identity would make the answer depend on who asked — which is also what the
  * check contract forbids, since this has to answer from a scheduled task.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class PendingReviewCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -49,7 +49,7 @@ final class PendingReviewCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -59,7 +59,7 @@ final class PendingReviewCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -69,7 +69,7 @@ final class PendingReviewCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -79,7 +79,7 @@ final class PendingReviewCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

@@ -37,14 +37,14 @@ use Joomla\Database\DatabaseInterface;
  * told apart from any other string without parsing, and a check that guesses
  * would report the wrong number rather than none.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class TemplateCodeCssCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -54,7 +54,7 @@ final class TemplateCodeCssCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -64,7 +64,7 @@ final class TemplateCodeCssCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -74,7 +74,7 @@ final class TemplateCodeCssCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -84,7 +84,7 @@ final class TemplateCodeCssCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

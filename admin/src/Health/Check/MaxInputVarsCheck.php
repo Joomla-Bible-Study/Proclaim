@@ -31,7 +31,7 @@ use Joomla\Database\DatabaseInterface;
  * to succeed and changes nothing. The grid is one field per action per user
  * group, so enough groups breach it.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class MaxInputVarsCheck implements HealthCheckInterface
 {
@@ -41,7 +41,7 @@ final class MaxInputVarsCheck implements HealthCheckInterface
      * silent save failure.
      *
      * @var    int
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const FORM_OVERHEAD = 25;
 
@@ -49,14 +49,14 @@ final class MaxInputVarsCheck implements HealthCheckInterface
      * How close to the ceiling counts as too close, as a fraction.
      *
      * @var    float
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const HEADROOM = 0.9;
 
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -66,7 +66,7 @@ final class MaxInputVarsCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -76,7 +76,7 @@ final class MaxInputVarsCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -86,7 +86,7 @@ final class MaxInputVarsCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -96,7 +96,7 @@ final class MaxInputVarsCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {
@@ -141,7 +141,7 @@ final class MaxInputVarsCheck implements HealthCheckInterface
      *
      * @return  int
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function widestGrid(): int
     {
@@ -161,7 +161,7 @@ final class MaxInputVarsCheck implements HealthCheckInterface
      *
      * @return  int
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function widestSection(): int
     {

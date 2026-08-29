@@ -37,14 +37,14 @@ use Joomla\CMS\Language\Text;
  * the rule the helper states for itself: an unanswered probe is what a broken
  * deny rule looks like from here, so it is never read as success.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class ProtectedStorageCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -54,7 +54,7 @@ final class ProtectedStorageCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -64,7 +64,7 @@ final class ProtectedStorageCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -74,7 +74,7 @@ final class ProtectedStorageCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -84,7 +84,7 @@ final class ProtectedStorageCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {

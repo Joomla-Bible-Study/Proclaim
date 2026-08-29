@@ -374,7 +374,7 @@ class CWMAddonResi extends CWMAddon
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     #[\Override]
     public function supportsConnectionTest(): bool
@@ -385,7 +385,7 @@ class CWMAddonResi extends CWMAddon
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     #[\Override]
     public function testConnection(int $serverId): array
@@ -404,7 +404,7 @@ class CWMAddonResi extends CWMAddon
      *
      * @return  array{success: bool, message?: string, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function testCredentials(int $serverId, string $clientId, string $clientSecret): array
     {

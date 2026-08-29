@@ -1550,7 +1550,7 @@ class Cwmassets
      *
      * @return  ?array  A status row, or null when the count cannot be taken
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function sectionAssetStatus(DatabaseInterface $db, int $parentId, string $emptyQuoted): ?array
     {
@@ -1612,7 +1612,7 @@ class Cwmassets
      *
      * @return  array<string, string>  `com_proclaim.<section>.` => table
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function orphanSourceMap(): array
     {

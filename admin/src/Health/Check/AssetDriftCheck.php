@@ -33,14 +33,14 @@ use Joomla\Database\DatabaseInterface;
  * anything on the record itself. A record with `asset_id = 0` is not drift —
  * that is the normal state for one carrying no per-record rules.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 final class AssetDriftCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getId(): string
     {
@@ -50,7 +50,7 @@ final class AssetDriftCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getGroup(): HealthGroup
     {
@@ -60,7 +60,7 @@ final class AssetDriftCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function getTitle(): string
     {
@@ -70,7 +70,7 @@ final class AssetDriftCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function isPassive(): bool
     {
@@ -80,7 +80,7 @@ final class AssetDriftCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     public function run(): HealthResult
     {
@@ -139,7 +139,7 @@ final class AssetDriftCheck implements HealthCheckInterface
      *
      * @return  int  The id, or 0 when the row is absent
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function readParentAssetId(DatabaseInterface $db): int
     {
