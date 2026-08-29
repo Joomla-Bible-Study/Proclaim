@@ -9,7 +9,14 @@ describe('addon-youtube-browser.es6.js', () => {
             // Set up DOM
             document.body.innerHTML = `
                 <input name="jform[server_id]" value="123" />
-                <input id="jform_study_id_name" value="" />
+                <!-- What Joomla 5 ModalSelectField actually renders: the readable
+                     title on the field id, the value on the id suffixed _id. The
+                     _name element that stood here is the Joomla 3/4 convention and
+                     never appears on a real page - a fixture matching the code
+                     rather than the CMS, which is how the empty-search bug
+                     survived. See tests/js/modal-title-prefill.test.js -->
+                <input class="js-input-title" id="jform_study_id" value="" />
+                <input type="hidden" id="jform_study_id_id" value="" />
                 <input name="jform[params][filename]" value="" />
             `;
 

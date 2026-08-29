@@ -286,7 +286,13 @@
             this.init();
 
             // Auto-search from study title
-            const studyTitleField = document.getElementById('jform_study_id_name');
+            // ⚠️ Joomla 5's ModalSelectField puts the readable title in the input
+            // carrying the field's own id (class js-input-title) and the numeric
+            // value in `<id>_id`. The `<id>_name` read here before is the Joomla
+            // 3/4 modal_article convention and no longer exists, so this silently
+            // found nothing and the search box opened empty.
+            const studyTitleField = (document.querySelector('#jform_study_id.js-input-title')
+                || document.getElementById('jform_study_id'));
             if (studyTitleField && studyTitleField.value) {
                 const studyTitle = studyTitleField.value;
                 if (studyTitle.toLowerCase().indexOf('select') === -1) {
