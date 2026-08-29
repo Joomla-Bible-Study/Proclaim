@@ -19,6 +19,24 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.6.1                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.6.1</version>
+        <date>2026-08-29</date>
+        <note>
+            <item>fix(health): count a legacy server as pending only while it still is by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2010</item>
+            <item>fix(assets): load the asset table on open instead of promising to by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2011</item>
+            <item>chore(release): open the 10.6.1 patch cycle by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2013</item>
+            <item>chore: open the 10.6.1 release cycle by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2014</item>
+            <item>fix(media): read the modal title from the input Joomla renders by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2016</item>
+            <item>docs(release): add the Browse search fix to the 10.6.1 notes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2017</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.6.0                                                   -->
     <!-- ============================================================ -->
     <changelog>
