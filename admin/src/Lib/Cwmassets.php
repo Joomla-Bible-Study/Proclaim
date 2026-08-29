@@ -924,15 +924,29 @@ class Cwmassets
             array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
         );
 
+        // ⚠️ Item-scoped on both halves. Empty rules are normal on a section
+        // row — it simply has no override — so only an item row with empty
+        // rules is cleanup material. And an item belongs under its section, so
+        // the acceptable parents are com_proclaim plus every section row.
+        $acceptable = [$parentId];
+
+        foreach (self::declaredSections() as $section) {
+            $sectionId = self::sectionId($section);
+
+            if ($sectionId > 0) {
+                $acceptable[] = $sectionId;
+            }
+        }
+
         try {
             $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__assets'))
-                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
-                ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%.%'))
                 ->where(
                     '(' . $db->quoteName('rules') . ' IN (' . $emptyQuoted . ')'
-                    . ' OR ' . $db->quoteName('parent_id') . ' <> ' . (int) $parentId . ')'
+                    . ' OR ' . $db->quoteName('parent_id')
+                    . ' NOT IN (' . implode(',', array_map('intval', $acceptable)) . '))'
                 );
             $db->setQuery($query);
 
@@ -1029,10 +1043,13 @@ class Cwmassets
 
         // Now delete the asset rows themselves.
         try {
+            // ⚠️ Item rows only. A section asset (com_proclaim.<section>) has
+            // empty rules whenever no override is set — the ordinary state —
+            // and it is load-bearing, because every item asset is parented to
+            // it. Items carry a third segment, which is what separates them.
             $query = $db->createQuery()
                 ->delete($db->quoteName('#__assets'))
-                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
-                ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%.%'))
                 ->where($db->quoteName('rules') . ' IN (' . $emptyQuoted . ')');
             $db->setQuery($query);
             $db->execute();
@@ -1074,17 +1091,49 @@ class Cwmassets
             return 0;
         }
 
+        // ⚠️ One statement per section, because each item belongs under the
+        // parent its own Table::_getAssetParentId() would give it. A single
+        // blanket update onto com_proclaim would move correctly parented items
+        // out of the section whose rules are meant to reach them.
+        $moved = 0;
+
         try {
+            foreach (self::getAssetObjects() as $info) {
+                $section       = $info['assetname'];
+                $sectionParent = self::sectionParentId($section);
+
+                if ($sectionParent < 1) {
+                    continue;
+                }
+
+                $query = $db->createQuery()
+                    ->update($db->quoteName('#__assets'))
+                    ->set($db->quoteName('parent_id') . ' = ' . (int) $sectionParent)
+                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.' . $section . '.%'))
+                    ->where($db->quoteName('parent_id') . ' <> ' . (int) $sectionParent);
+                $db->setQuery($query);
+                $db->execute();
+                $moved += (int) $db->getAffectedRows();
+            }
+
+            // Section rows belong directly under com_proclaim.
             $query = $db->createQuery()
                 ->update($db->quoteName('#__assets'))
                 ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
                 ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
-                ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('name') . ' NOT LIKE ' . $db->quote('com_proclaim.%.%'))
                 ->where($db->quoteName('parent_id') . ' <> ' . (int) $parentId);
             $db->setQuery($query);
             $db->execute();
+            $moved += (int) $db->getAffectedRows();
 
-            return (int) $db->getAffectedRows();
+            // ⚠️ These are raw parent_id writes, which leave lft/rgt pointing at
+            // the old position. That is only safe because fixAllAssets() calls
+            // Asset::rebuild() whenever this returns non-zero — the count below
+            // is what triggers it. Anything calling this directly must rebuild
+            // too, or Access::getAssetRules()'s lft/rgt walk will not see the
+            // new ancestry.
+            return $moved;
         } catch (\Exception $e) {
             Log::add(
                 'Reparent surviving assets error: ' . $e->getMessage(),
@@ -1265,12 +1314,21 @@ class Cwmassets
         // as an ancestor -- an asset row that exists but is silently
         // broken, without a full Asset::rebuild() to catch it.
         // moveByReference() performs a proper nested-set node move.
-        if ((int) ($item->parent_id ?? 0) !== (int) $parentId) {
+        // ⚠️ The target is the record's own section, not com_proclaim — the
+        // same call Table::_getAssetParentId() makes, so the two cannot
+        // disagree. It falls back to com_proclaim when the section is absent.
+        $targetParent = self::sectionParentId($assetName);
+
+        if ($targetParent < 1) {
+            $targetParent = $parentId;
+        }
+
+        if ((int) ($item->parent_id ?? 0) !== (int) $targetParent) {
             $assetTable = new \Joomla\CMS\Table\Asset($db);
 
-            if (!$assetTable->moveByReference($parentId, 'last-child', (int) $item->asset_id)) {
+            if (!$assetTable->moveByReference($targetParent, 'last-child', (int) $item->asset_id)) {
                 Log::add(
-                    'fixSingleRecord: failed to move asset ' . $item->asset_id . ' under parent ' . $parentId,
+                    'fixSingleRecord: failed to move asset ' . $item->asset_id . ' under parent ' . $targetParent,
                     Log::WARNING,
                     'com_proclaim'
                 );
@@ -1453,6 +1511,12 @@ class Cwmassets
             $sourceTbl = $info['name'];
             $assetName = $info['assetname'];
 
+            // ⚠️ Drift is measured against the parent this table's records are
+            // actually given — sectionParentId(), the same call
+            // Table::_getAssetParentId() makes — not against com_proclaim. A
+            // correctly stored record is parented to its section.
+            $expectedParent = self::sectionParentId($assetName);
+
             // numrows/inherited/custom_rules/needs_cleanup/drifted collapsed
             // into one conditional-aggregation query per table (was 5).
             // The LEFT JOIN keeps COUNT(*) equal to the source row count —
@@ -1469,7 +1533,7 @@ class Cwmassets
                             . ', SUM(CASE WHEN ' . $db->quoteName('a.id') . ' IS NOT NULL AND '
                                 . $db->quoteName('a.rules') . ' IN (' . $emptyQuoted . ') THEN 1 ELSE 0 END) AS needs_cleanup'
                             . ', SUM(CASE WHEN ' . $db->quoteName('a.id') . ' IS NOT NULL AND '
-                                . $db->quoteName('a.parent_id') . ' <> ' . (int) $parentId . ' THEN 1 ELSE 0 END) AS drifted'
+                                . $db->quoteName('a.parent_id') . ' <> ' . (int) $expectedParent . ' THEN 1 ELSE 0 END) AS drifted'
                         )
                         ->from($db->quoteName($sourceTbl, 's'))
                         ->leftJoin(
@@ -1578,19 +1642,20 @@ class Cwmassets
             return null;
         }
 
-        $needsCleanup = (int) ($counts['needs_cleanup'] ?? 0);
+        // ⚠️ A section row with empty rules is not cleanup material: it means
+        // no override is set, which is the ordinary state, and the row is
+        // load-bearing because every item asset is parented to it. Reported as
+        // inheriting, which is what it does.
+        $noOverride = (int) ($counts['needs_cleanup'] ?? 0);
 
         return [
-            'realname'  => 'JBS_ADM_ASSETS_SECTION_ROWS',
-            'tablename' => '#__assets',
-            'assetname' => 'section',
-            'numrows'   => $numrows,
-            // A section row is not "inherited" in the per-record sense: nothing
-            // points at it. Carrying the ones with rules of their own under
-            // custom_rules keeps the columns meaning what their headings say.
-            'inherited'     => 0,
-            'custom_rules'  => $numrows - $needsCleanup,
-            'needs_cleanup' => $needsCleanup,
+            'realname'      => 'JBS_ADM_ASSETS_SECTION_ROWS',
+            'tablename'     => '#__assets',
+            'assetname'     => 'section',
+            'numrows'       => $numrows,
+            'inherited'     => $noOverride,
+            'custom_rules'  => $numrows - $noOverride,
+            'needs_cleanup' => 0,
             'drifted'       => (int) ($counts['drifted'] ?? 0),
             'orphans'       => 0,
             'parent_id'     => $parentId,
