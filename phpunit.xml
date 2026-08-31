@@ -40,6 +40,9 @@
 		<testsuite name="Admin Field Tests">
 			<directory>tests/unit/Admin/Field</directory>
 		</testsuite>
+		<testsuite name="Admin Form Tests">
+			<directory>tests/unit/Admin/Form</directory>
+		</testsuite>
 		<testsuite name="Admin Helper Tests">
 			<directory>tests/unit/Admin/Helper</directory>
 		</testsuite>
