@@ -126,9 +126,13 @@ final class OrphanMediaServerCheck implements HealthCheckInterface
         return new HealthResult(
             $this->getId(),
             HealthStatus::Warning,
-            $orphans === 1
+            ($orphans === 1
                 ? Text::_('JBS_HEALTH_ORPHAN_MEDIA_SERVERS_1')
-                : Text::sprintf('JBS_HEALTH_ORPHAN_MEDIA_SERVERS_N', $orphans),
+                : Text::sprintf('JBS_HEALTH_ORPHAN_MEDIA_SERVERS_N', $orphans))
+                // The finding described the problem and stopped. There is no
+                // filter for "a server that no longer exists", so say how to
+                // find them rather than implying the link does it.
+                . ' ' . Text::_('JBS_HEALTH_ORPHAN_MEDIA_SERVERS_FIX'),
             // The count, so clearing it at three raises again at four.
             (string) $orphans,
             'index.php?option=com_proclaim&view=cwmmediafiles',
