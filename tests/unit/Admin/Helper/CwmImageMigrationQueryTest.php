@@ -21,6 +21,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
+use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use Joomla\CMS\Factory;
@@ -32,6 +33,68 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CwmImageMigrationQueryTest extends ProclaimTestCase
 {
+    /**
+     * The reporting side must skip trashed records; the migration side must not.
+     *
+     * A trashed record can be restored, and if its legacy image path was never
+     * migrated it comes back pointing at a file that has moved — so the tools
+     * keep processing it. Only System Health passes the flag, because content
+     * already thrown away is not work to report.
+     *
+     * ⚠️ Asserts both directions against the same fixture. A test that only
+     * checked the exclusion would also pass if the query returned nothing at
+     * all, which is the failure it is meant to distinguish from success.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('Trashed records are excluded on request and included by default')]
+    public function testTrashedRecordsAreExcludedOnlyWhenAsked(): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $db->transactionStart();
+
+        try {
+            $db->setQuery(
+                'INSERT INTO ' . $db->quoteName('#__bsms_studies')
+                . ' (' . $db->quoteName('studytitle') . ', ' . $db->quoteName('alias') . ', '
+                . $db->quoteName('thumbnailm') . ', ' . $db->quoteName('published') . ', '
+                . $db->quoteName('language') . ')'
+                . ' VALUES (' . $db->quote('Trashed fixture') . ', ' . $db->quote('trashed-fixture') . ', '
+                . $db->quote('images/legacy/trashed-fixture.jpg') . ', '
+                . ProclaimComponent::CONDITION_TRASHED . ', ' . $db->quote('*') . ')'
+            )->execute();
+
+            $id = (int) $db->insertid();
+
+            $included = CwmImageMigration::getRecordsNeedingMigration('studies');
+            $excluded = CwmImageMigration::getRecordsNeedingMigration('studies', true);
+
+            $idsIn  = array_map(static fn ($r) => (int) $r->id, $included);
+            $idsOut = array_map(static fn ($r) => (int) $r->id, $excluded);
+
+            // Positive control: the fixture must be visible by default, or the
+            // exclusion below proves nothing.
+            $this->assertContains(
+                $id,
+                $idsIn,
+                'The trashed fixture was not returned by default. The migration tools rely on that, and '
+                . 'without it the exclusion assertion is vacuous.'
+            );
+
+            $this->assertNotContains(
+                $id,
+                $idsOut,
+                'A trashed record was reported as needing migration. System Health would ask an administrator '
+                . 'to fix content they have already thrown away.'
+            );
+        } finally {
+            $db->transactionRollback();
+        }
+    }
+
     /**
      * @return  void
      *

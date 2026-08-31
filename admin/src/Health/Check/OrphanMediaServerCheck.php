@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Health\Check;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use CWM\Component\Proclaim\Administrator\Health\HealthCheckInterface;
 use CWM\Component\Proclaim\Administrator\Health\HealthGroup;
 use CWM\Component\Proclaim\Administrator\Health\HealthResult;
@@ -98,7 +99,11 @@ final class OrphanMediaServerCheck implements HealthCheckInterface
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where($db->quoteName('server_id') . ' > 0')
-                ->where($db->quoteName('server_id') . ' NOT IN (' . $servers . ')');
+                ->where($db->quoteName('server_id') . ' NOT IN (' . $servers . ')')
+                // A media row in the trash points nowhere on purpose. Reporting
+                // it as an orphan to fix asks for work on content already
+                // thrown away.
+                ->where($db->quoteName('published') . ' <> ' . ProclaimComponent::CONDITION_TRASHED);
             $db->setQuery($query);
 
             $orphans = (int) $db->loadResult();

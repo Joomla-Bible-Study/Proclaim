@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Health\Check;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use CWM\Component\Proclaim\Administrator\Health\HealthCheckInterface;
 use CWM\Component\Proclaim\Administrator\Health\HealthGroup;
 use CWM\Component\Proclaim\Administrator\Health\HealthResult;
@@ -194,7 +195,24 @@ final class RestrictedMediaCheck implements HealthCheckInterface
                 '(' . $db->quoteName('m.access') . ' NOT IN (' . $levels . ')'
                 . ' OR ' . $db->quoteName('study.access') . ' NOT IN (' . $levels . ')'
                 . ' OR ' . $db->quoteName('series.access') . ' NOT IN (' . $levels . '))'
+            )
+            // A media file in the trash is not an exposure to act on.
+            ->where($db->quoteName('m.published') . ' <> ' . ProclaimComponent::CONDITION_TRASHED)
+            // ⚠️ Bracketed with an IS NULL, because study is a LEFT JOIN: a
+            // media row whose study_id matches nothing joins to NULL, and
+            // `NULL <> -2` is NULL, so a bare comparison would drop those rows
+            // from the count entirely — hiding real exposures rather than
+            // trashed ones. Written inline: WhereClauseContractTest reads the
+            // argument at the call site, and a variable is invisible to it.
+            ->where(
+                '(' . $db->quoteName('study.published') . ' IS NULL'
+                . ' OR ' . $db->quoteName('study.published') . ' <> '
+                . ProclaimComponent::CONDITION_TRASHED . ')'
             );
+
+        // ⚠️ Deliberately no filter on series.published. A trashed series whose
+        // sermon is still live does not make that sermon's media unreachable,
+        // so excluding it here would hide a genuine exposure.
 
         $db->setQuery($query);
 

@@ -362,6 +362,92 @@ class HealthContractTest extends ProclaimTestCase
     }
 
     /**
+     * Helpers that read content rows on a check's behalf, and the argument that
+     * makes them leave trashed content out.
+     *
+     * @var    array<string, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    private const CONTENT_HELPERS = [
+        'CwmImageMigration::getMigrationCounts'     => 'getMigrationCounts(true)',
+        'CwmImageMigration::getUnresolvableRecords' => 'getUnresolvableRecords(true)',
+    ];
+
+    /**
+     * A check that reads content must say what it thinks of trashed rows.
+     *
+     * Trashed content is content the administrator has already dealt with.
+     * Counting it makes a finding that cannot be cleared by doing what it asks,
+     * and in RestrictedMediaCheck's case raised a *security warning* about a
+     * sermon that had been thrown away.
+     *
+     * ⚠️ This reads source rather than running the checks, because the failure
+     * is invisible on a clean database: a dev site with no trashed content
+     * gives the same answer either way. It is the omission that has to be
+     * caught, not its effect on whatever data happens to be present.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('A check reading content rows constrains their state')]
+    public function testContentChecksExcludeTrashedRows(): void
+    {
+        $offenders = [];
+        $covered   = 0;
+
+        foreach ($this->checkFiles() as $file) {
+            $src  = (string) file_get_contents($file);
+            $name = basename($file);
+
+            $viaHelper = false;
+
+            foreach (self::CONTENT_HELPERS as $helper => $withFlag) {
+                if (str_contains($src, $helper . '(')) {
+                    $viaHelper = true;
+
+                    if (!str_contains($src, $withFlag)) {
+                        $offenders[] = $name . ' calls ' . $helper . '() without excluding trashed';
+                    }
+                }
+            }
+
+            // Direct reads of a content table. Servers and templatecode rows are
+            // configuration rather than content an editor trashes, and
+            // #__bsms_admin is a single settings row.
+            $readsContent = (bool) preg_match(
+                '/#__bsms_(studies|mediafiles|series|teachers|topics|comments|locations|playlists)/',
+                $src
+            );
+
+            if ($readsContent && !str_contains($src, 'CONDITION_TRASHED')) {
+                $offenders[] = $name . ' queries a content table without constraining published state';
+            }
+
+            if ($viaHelper || $readsContent) {
+                $covered++;
+            }
+        }
+
+        // ⚠️ Positive control. If the detection stops matching — a rename, a
+        // moved directory — every assertion above passes against nothing.
+        $this->assertGreaterThanOrEqual(
+            4,
+            $covered,
+            'Fewer content-reading checks were found than exist. The detection above has stopped working, '
+            . 'so this test is no longer guarding anything.'
+        );
+
+        $this->assertSame(
+            [],
+            $offenders,
+            "A health check counts trashed content as a problem:\n  " . implode("\n  ", $offenders)
+            . "\n\nTrashed content is already dealt with. Either constrain the state, or pass the helper's "
+            . 'exclude-trashed argument.'
+        );
+    }
+
+    /**
      * Absolute paths of every check source file.
      *
      * @return  string[]

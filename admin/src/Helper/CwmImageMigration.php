@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -125,14 +126,27 @@ class CwmImageMigration
      *
      * @param   string  $type  Record type: 'studies', 'teachers', or 'series'
      *
+     * @param   string  $type            Record type: 'studies', 'teachers' or 'series'
+     * @param   bool    $excludeTrashed  Skip records in the trash
+     *
      * @return  array  Records with images not in the new folder structure
      *
      * @since 10.1.0
      */
-    public static function getRecordsNeedingMigration(string $type): array
+    public static function getRecordsNeedingMigration(string $type, bool $excludeTrashed = false): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();
+
+        // ⚠️ Defaults to including trashed records, and the migration tools rely
+        // on that. A trashed record can be restored, and if its legacy image
+        // path was never migrated it comes back pointing at a file that has
+        // moved. Only the reporting side passes true: a record in the trash is
+        // not work anyone needs to be told about.
+        //
+        // The condition is repeated inline in each branch rather than built
+        // into a variable, because WhereClauseContractTest reads the literal
+        // argument at the call site and cannot verify a variable holds no OR.
 
         // SQL exclusion for core component images
         $coreExclude = ' NOT LIKE ' . $db->q('media/com_proclaim/images/%');
@@ -150,6 +164,12 @@ class CwmImageMigration
                     ->where('LENGTH(' . $col . ') > 1')
                     ->where($col . ' NOT LIKE ' . $db->q('images/biblestudy/studies/%-%/%'))
                     ->where($col . $coreExclude);
+
+                if ($excludeTrashed) {
+                    $query->where(
+                        $db->quoteName('published') . ' <> ' . ProclaimComponent::CONDITION_TRASHED
+                    );
+                }
                 break;
 
             case 'teachers':
@@ -166,6 +186,12 @@ class CwmImageMigration
                     ->where('LENGTH(' . $col . ') > 1')
                     ->where($col . ' NOT LIKE ' . $db->q('images/biblestudy/teachers/%-%/%'))
                     ->where($col . $coreExclude);
+
+                if ($excludeTrashed) {
+                    $query->where(
+                        $db->quoteName('published') . ' <> ' . ProclaimComponent::CONDITION_TRASHED
+                    );
+                }
                 break;
 
             case 'series':
@@ -180,6 +206,12 @@ class CwmImageMigration
                     ->where('LENGTH(' . $col . ') > 1')
                     ->where($col . ' NOT LIKE ' . $db->q('images/biblestudy/series/%-%/%'))
                     ->where($col . $coreExclude);
+
+                if ($excludeTrashed) {
+                    $query->where(
+                        $db->quoteName('published') . ' <> ' . ProclaimComponent::CONDITION_TRASHED
+                    );
+                }
                 break;
 
             default:
@@ -203,12 +235,12 @@ class CwmImageMigration
      *
      * @since 10.1.0
      */
-    public static function getMigrationCounts(): array
+    public static function getMigrationCounts(bool $excludeTrashed = false): array
     {
         $counts = [
-            'studies'  => \count(self::getRecordsNeedingMigration('studies')),
-            'teachers' => \count(self::getRecordsNeedingMigration('teachers')),
-            'series'   => \count(self::getRecordsNeedingMigration('series')),
+            'studies'  => \count(self::getRecordsNeedingMigration('studies', $excludeTrashed)),
+            'teachers' => \count(self::getRecordsNeedingMigration('teachers', $excludeTrashed)),
+            'series'   => \count(self::getRecordsNeedingMigration('series', $excludeTrashed)),
         ];
 
         $counts['total'] = $counts['studies'] + $counts['teachers'] + $counts['series'];
@@ -761,12 +793,12 @@ class CwmImageMigration
      *
      * @since 10.1.0
      */
-    public static function getUnresolvableRecords(): array
+    public static function getUnresolvableRecords(bool $excludeTrashed = false): array
     {
         $unresolvable = [];
 
         foreach (['studies', 'teachers', 'series'] as $type) {
-            $records = self::getRecordsNeedingMigration($type);
+            $records = self::getRecordsNeedingMigration($type, $excludeTrashed);
 
             foreach ($records as $row) {
                 $imagePath = trim($row->image_path ?? '');
