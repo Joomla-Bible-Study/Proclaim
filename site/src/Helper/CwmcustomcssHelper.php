@@ -52,12 +52,17 @@ class CwmcustomcssHelper
     private static bool $applied = false;
 
     /**
-     * Add the component and template sheets to the document, in that order.
+     * Add the active template's sheet to the document.
      *
      * Inline rather than a generated file: the asset manifest is built from
      * `build/media_source/` and overwritten on every build, so a user sheet
      * cannot be declared in it. Revisit if sheets grow large enough that losing
      * browser caching matters.
+     *
+     * Styling is a template concern, so the template sheet and the per-section
+     * sheets are the whole of it. There was a site-wide sheet alongside them
+     * whose field never rendered — it sat outside the form's `params` group, so
+     * nothing could edit it and no value was ever stored.
      *
      * @return  void
      *
@@ -71,15 +76,7 @@ class CwmcustomcssHelper
 
         self::$applied = true;
 
-        $css = '';
-
-        foreach ([self::componentCss(), self::templateCss()] as $sheet) {
-            $sheet = self::sanitise($sheet);
-
-            if ($sheet !== '') {
-                $css .= $sheet . "\n";
-            }
-        }
+        $css = self::sanitise(self::templateCss());
 
         if ($css === '') {
             return;
@@ -216,26 +213,6 @@ class CwmcustomcssHelper
         // Matches </style, </STYLE, </ style and the like, which is what a
         // browser's tokeniser accepts as ending the element.
         return (string) preg_replace('#<\s*/\s*style#i', '<\\/style', $css);
-    }
-
-    /**
-     * The site-wide sheet from `#__bsms_admin.params`.
-     *
-     * @return  string
-     *
-     * @since   10.5.8
-     */
-    private static function componentCss(): string
-    {
-        $admin = Cwmparams::getAdmin();
-
-        if (!isset($admin->params)) {
-            return '';
-        }
-
-        $params = $admin->params instanceof Registry ? $admin->params : new Registry($admin->params);
-
-        return (string) $params->get(self::PARAM, '');
     }
 
     /**

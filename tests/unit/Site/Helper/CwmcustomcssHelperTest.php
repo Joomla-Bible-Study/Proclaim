@@ -82,12 +82,17 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         $this->assertSame('', CwmcustomcssHelper::sanitise("  \n\t "));
     }
 
-    #[TestDox('both levels store under the same param name')]
-    public function testParamNameIsShared(): void
+    #[TestDox('the template sheet stores under the documented param name')]
+    public function testParamName(): void
     {
-        // The component sheet lives in #__bsms_admin.params and the template
-        // sheet in #__bsms_templates.params; sharing the key is what lets the
-        // helper read them the same way.
+        // The template sheet lives in #__bsms_templates.params.custom_css, and
+        // the name is part of the contract: a backup restores the value under
+        // this key, so renaming it would silently drop restored styling.
+        //
+        // There was a site-wide sheet under the same name in
+        // #__bsms_admin.params. Its field sat outside the admin form's `params`
+        // group, so it never rendered and no value was ever stored; styling is
+        // a template concern and it was removed rather than repaired.
         $this->assertSame('custom_css', CwmcustomcssHelper::PARAM);
     }
 
