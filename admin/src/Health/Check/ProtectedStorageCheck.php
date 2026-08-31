@@ -82,6 +82,31 @@ final class ProtectedStorageCheck implements HealthCheckInterface
     }
 
     /**
+     * The sentence for a folder that is not confirmed protected.
+     *
+     * @param   string  $stored  The recorded verdict.
+     * @param   int     $files   How many media files the folder holds.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function describe(string $stored, int $files): string
+    {
+        if ($files === 0) {
+            return Text::_('JBS_HEALTH_PROTECTED_STORAGE_EMPTY');
+        }
+
+        if ($stored === CwmmediaProtectionHelper::EXPOSED) {
+            return Text::_('JBS_HEALTH_PROTECTED_STORAGE_EXPOSED')
+                . ' ' . Text::_('JBS_HEALTH_PROTECTED_STORAGE_FIX');
+        }
+
+        return Text::_('JBS_HEALTH_PROTECTED_STORAGE_UNVERIFIED')
+            . ' ' . Text::_('JBS_HEALTH_PROTECTED_STORAGE_UNVERIFIED_FIX');
+    }
+
+    /**
      * @inheritDoc
      *
      * @since  10.6.0
@@ -106,18 +131,27 @@ final class ProtectedStorageCheck implements HealthCheckInterface
             );
         }
 
+        // ⚠️ Severity follows what is actually at stake. With nothing stored in
+        // the folder there is no exposure to warn about — the deny rules being
+        // unproven is a readiness question, worth reporting before anyone
+        // relies on them, but not a fault. Reported as a Warning regardless,
+        // this sat orange on every install for a folder holding only its own
+        // guard files, and on a local or firewalled site the probe can never
+        // succeed, so it never cleared.
+        $stored_files = CwmprotectedStorage::fileCount();
+
         if ($stored !== CwmmediaProtectionHelper::PROTECTED) {
             return new HealthResult(
                 $this->getId(),
-                HealthStatus::Warning,
-                $stored === CwmmediaProtectionHelper::EXPOSED
-                    ? Text::_('JBS_HEALTH_PROTECTED_STORAGE_EXPOSED')
-                . ' ' . Text::_('JBS_HEALTH_PROTECTED_STORAGE_FIX')
-                    : Text::_('JBS_HEALTH_PROTECTED_STORAGE_UNVERIFIED')
-                . ' ' . Text::_('JBS_HEALTH_PROTECTED_STORAGE_UNVERIFIED_FIX'),
+                $stored_files === 0 ? HealthStatus::Notice : HealthStatus::Warning,
+                // ⚠️ One statement, not a warning with a disclaimer bolted on.
+                // Stacking "not treated as safe" against "nothing is exposed"
+                // made a paragraph that alarms and then withdraws it; the empty
+                // case gets its own calm wording instead.
+                $this->describe($stored, $stored_files),
                 // The verdict, so quietening an EXPOSED site does not also
                 // quieten it once the verdict changes to something else.
-                $stored,
+                $stored . ':' . ($stored_files === 0 ? 'empty' : 'holding'),
                 'index.php?option=com_proclaim&view=cwmmediafiles&filter[restricted]=1',
                 Text::_('JBS_HEALTH_PROTECTED_STORAGE_ACTION')
             );
