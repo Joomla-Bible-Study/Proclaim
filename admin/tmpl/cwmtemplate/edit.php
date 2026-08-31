@@ -300,7 +300,6 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <div class="row">
             <div class="col-lg-9">
                 <?php echo $this->form->renderField('title'); ?>
-                <?php echo $this->form->renderField('text'); ?>
                 <hr />
                 <h4><?php echo Text::_('JBS_TPL_CONTENT_SCOPE'); ?></h4>
                 <?php foreach ($this->form->getFieldset('CONTENT_SCOPE') as $field) :
