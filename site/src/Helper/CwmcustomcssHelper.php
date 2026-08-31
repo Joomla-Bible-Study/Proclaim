@@ -78,7 +78,18 @@ class CwmcustomcssHelper
 
         $css = self::sanitise(self::templateCss());
 
-        if ($css === '') {
+        // ⚠️ `=== ''` is not enough, and the difference takes the whole front
+        // end down. WebAssetManager::__call() rejects content that is empty(),
+        // and empty('0') is true — so a sheet of exactly "0" passes this guard
+        // and then throws BadMethodCallException('Content is required') from
+        // Dispatcher::dispatch(), which runs on every Proclaim page.
+        //
+        // "0" is not CSS. It is what a template carries when the field has been
+        // saved from a control that stores a scalar zero, and it reached this
+        // far because the previous code appended "\n" to every sheet: "0\n" is
+        // not empty(), so the same data was harmless until that concatenation
+        // went away.
+        if ($css === '' || $css === '0') {
             return;
         }
 

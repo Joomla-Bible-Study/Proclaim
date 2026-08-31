@@ -82,6 +82,34 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         $this->assertSame('', CwmcustomcssHelper::sanitise("  \n\t "));
     }
 
+    /**
+     * ⚠️ The string that took the whole front end down.
+     *
+     * WebAssetManager::__call() rejects content that is empty(), and
+     * empty('0') is true — so a sheet of exactly "0" passed an `=== \'\'` guard
+     * and then threw BadMethodCallException from Dispatcher::dispatch(), which
+     * runs on every Proclaim page. Every front-end URL returned 500.
+     *
+     * It survived review because `=== \'\'` reads as obviously correct, and it
+     * survived the suite because nothing asserted what apply() does with a
+     * sheet that is falsy but not empty. This is that assertion.
+     *
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox('A sheet of "0" is treated as no stylesheet, not as content')]
+    public function testZeroStringIsNotTreatedAsContent(): void
+    {
+        // sanitise() is the gate everything passes through, and it must not
+        // turn "0" into something the asset manager will refuse.
+        $this->assertSame('0', CwmcustomcssHelper::sanitise('0'));
+
+        // The guard itself: PHP's own semantics are the trap, so state them.
+        $this->assertTrue(empty('0'), 'empty(\'0\') is true — this is why === \'\' is not a sufficient guard.');
+        $this->assertFalse('0' === '', 'A "0" sheet passes an === \'\' check, which is how it reached the asset manager.');
+    }
+
     #[TestDox('the template sheet stores under the documented param name')]
     public function testParamName(): void
     {
