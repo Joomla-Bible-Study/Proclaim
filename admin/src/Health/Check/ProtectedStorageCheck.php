@@ -98,7 +98,8 @@ final class ProtectedStorageCheck implements HealthCheckInterface
             return new HealthResult(
                 $this->getId(),
                 HealthStatus::Unknown,
-                Text::_('JBS_HEALTH_PROTECTED_STORAGE_NEVER'),
+                Text::_('JBS_HEALTH_PROTECTED_STORAGE_NEVER')
+                . ' ' . Text::_('JBS_HEALTH_PROTECTED_STORAGE_NEVER_FIX'),
                 'never',
                 'index.php?option=com_proclaim&view=cwmmediafiles&filter[restricted]=1',
                 Text::_('JBS_HEALTH_PROTECTED_STORAGE_ACTION')
@@ -112,7 +113,8 @@ final class ProtectedStorageCheck implements HealthCheckInterface
                 $stored === CwmmediaProtectionHelper::EXPOSED
                     ? Text::_('JBS_HEALTH_PROTECTED_STORAGE_EXPOSED')
                 . ' ' . Text::_('JBS_HEALTH_PROTECTED_STORAGE_FIX')
-                    : Text::_('JBS_HEALTH_PROTECTED_STORAGE_UNVERIFIED'),
+                    : Text::_('JBS_HEALTH_PROTECTED_STORAGE_UNVERIFIED')
+                . ' ' . Text::_('JBS_HEALTH_PROTECTED_STORAGE_UNVERIFIED_FIX'),
                 // The verdict, so quietening an EXPOSED site does not also
                 // quieten it once the verdict changes to something else.
                 $stored,
@@ -125,7 +127,8 @@ final class ProtectedStorageCheck implements HealthCheckInterface
             return new HealthResult(
                 $this->getId(),
                 HealthStatus::Notice,
-                Text::_('JBS_HEALTH_PROTECTED_STORAGE_STALE'),
+                Text::_('JBS_HEALTH_PROTECTED_STORAGE_STALE')
+                . ' ' . Text::_('JBS_HEALTH_PROTECTED_STORAGE_STALE_FIX'),
                 'stale',
                 'index.php?option=com_proclaim&view=cwmmediafiles&filter[restricted]=1',
                 Text::_('JBS_HEALTH_PROTECTED_STORAGE_ACTION')
