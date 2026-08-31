@@ -55,7 +55,10 @@ class CwmcommentsModel extends ListModel
                 'full_name',
                 'comment.full_name',
                 'access',
-                'comment.access',
+                // ⚠️ study.access, not comment.access: the column shows the
+                // message's level, so ordering has to use the same value or the
+                // list sorts by something it is not displaying.
+                'study.access',
                 'access_level',
                 'language',
                 'comment.language',
@@ -236,25 +239,33 @@ class CwmcommentsModel extends ListModel
             $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('comment.study_id')
         );
 
-        // Join over the asset groups.
+        // ⚠️ Access comes from the message, not the comment.
+        //
+        // A comment is only reachable through its sermon, so the sermon's level
+        // is the one that decides who may see it — and #__bsms_comments.access
+        // is not maintained: storecomment() never sets it, so every comment
+        // submitted from the site keeps the schema default of 0. Zero is not a
+        // view level, so filtering on the comment's own value hid every such
+        // comment from every moderator who is not a Super User, which is the
+        // audience the moderation screen exists for.
         $query->select($db->quoteName('ag.title', 'access_level'));
         $query->join(
             'LEFT',
-            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('comment.access')
+            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('study.access')
         );
 
         // Filter by access level (dropdown — was defined in XML but never applied to query)
         $access = $this->getState('filter.access');
 
         if (is_numeric($access)) {
-            $query->where($db->quoteName('comment.access') . ' = ' . (int) $access);
+            $query->where($db->quoteName('study.access') . ' = ' . (int) $access);
         }
 
         // Restrict non-admin users to their authorised view levels
         $user = $this->getCurrentUser();
 
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->quoteName('comment.access'), $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('study.access'), $user->getAuthorisedViewLevels());
 
             // Location-based filtering via parent study
             if (CwmlocationHelper::isEnabled()) {
