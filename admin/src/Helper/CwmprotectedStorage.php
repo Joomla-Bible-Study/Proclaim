@@ -111,6 +111,45 @@ class CwmprotectedStorage
     }
 
     /**
+     * Whether a URL or path points at a file inside the protected directory.
+     *
+     * ⚠️ Decided from the resolved filesystem path, not from a flag on the
+     * record. The filesystem is the only thing that can be right about where a
+     * file actually is: a stored marker can disagree with it the moment anyone
+     * moves a file by hand, and the delivery decision has to follow the file.
+     *
+     * realpath() also collapses `..`, so a crafted path cannot claim to be
+     * inside the directory while resolving outside it.
+     *
+     * @param   string  $target  An absolute path, or a URL under this site.
+     *
+     * @return  bool  False for anything outside the directory, including
+     *                anything that does not resolve at all.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function holds(string $target): bool
+    {
+        if ($target === '') {
+            return false;
+        }
+
+        $path = parse_url($target, PHP_URL_PATH) ?: $target;
+        $root = rtrim(JPATH_ROOT, '/\\');
+
+        // A site URL arrives as a web path; an absolute filesystem path is
+        // already rooted. Both end up compared as real paths.
+        $candidate = str_starts_with($path, $root) ? $path : $root . '/' . ltrim(rawurldecode($path), '/');
+        $real      = realpath($candidate);
+
+        if ($real === false) {
+            return false;
+        }
+
+        return str_starts_with($real, self::path() . '/');
+    }
+
+    /**
      * The URL that directory would be served from, if the server let it.
      *
      * @return  string

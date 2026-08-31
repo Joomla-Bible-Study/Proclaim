@@ -53,6 +53,36 @@ class CwmsermonsController extends BaseController
     }
 
     /**
+     * Serve a media file for playback rather than download.
+     *
+     * The route a file in protected storage plays through. That directory is
+     * configured to refuse direct web requests, so the browser cannot fetch the
+     * file itself — this hands the same bytes over after the same access check,
+     * which is the point of putting the file there: the level is enforced on
+     * the file, not only on the link to it.
+     *
+     * ⚠️ Only files inside the protected directory are routed here. Everything
+     * else keeps the direct URL it has always had, so nothing about existing
+     * media changes.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function stream(): void
+    {
+        $input = Factory::getApplication()->getInput();
+        $mid   = $input->getInt('mid') ?: $input->getInt('id');
+
+        // Counted as a play, not a download: this is the player asking.
+        CwmanalyticsHelper::logEvent('play', 0, $mid);
+
+        $downloader = new Cwmdownload();
+        $downloader->download($mid, true);
+    }
+
+    /**
      * Add hits to the play count. Used in direct link redirects
      *
      * @return  void
