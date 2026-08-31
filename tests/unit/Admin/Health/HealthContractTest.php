@@ -448,6 +448,64 @@ class HealthContractTest extends ProclaimTestCase
     }
 
     /**
+     * A finding may only link with a filter the list can show and clear.
+     *
+     * `getUserStateFromRequest()` persists a filter into user state, so a link
+     * carrying `&filter[x]=y` does not just filter that page load — it leaves
+     * the list filtered the next time the administrator opens it from the menu.
+     * If the filter form has no field for `x` there is no chip explaining why
+     * and no way to clear it, which is worse than an honest unfiltered list.
+     *
+     * ⚠️ Two separate requirements, and a link needs both: the model has to
+     * apply the state (or the filter is a silent no-op, #1753), and the form
+     * has to render it (or the state is invisible).
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('A finding that links with a filter uses one the list can show and clear')]
+    public function testLinkedFiltersAreVisibleOnTheirList(): void
+    {
+        $root      = \dirname(__DIR__, 4);
+        $offenders = [];
+        $checked   = 0;
+
+        foreach ($this->checkFiles() as $file) {
+            $src = (string) file_get_contents($file);
+
+            if (!preg_match_all('/view=(cwm[a-z]+)&filter\[([a-z_]+)\]/', $src, $matches, PREG_SET_ORDER)) {
+                continue;
+            }
+
+            foreach ($matches as [$link, $view, $filter]) {
+                $checked++;
+                $form = $root . '/admin/forms/filter_' . $view . '.xml';
+
+                if (!is_file($form)) {
+                    $offenders[] = basename($file) . ": no filter form for $view, so $link cannot be cleared";
+                    continue;
+                }
+
+                if (!str_contains((string) file_get_contents($form), 'name="' . $filter . '"')) {
+                    $offenders[] = basename($file) . ": $link filters on '$filter', which filter_$view.xml has no "
+                        . 'field for — the filter would stick with nothing on screen to clear it';
+                }
+            }
+        }
+
+        // ⚠️ Positive control. Zero links found means the pattern stopped
+        // matching, not that every link is fine.
+        $this->assertGreaterThan(
+            0,
+            $checked,
+            'No filtered action links were found. The detection has stopped working, so this guards nothing.'
+        );
+
+        $this->assertSame([], $offenders, implode("\n  ", $offenders));
+    }
+
+    /**
      * Absolute paths of every check source file.
      *
      * @return  string[]

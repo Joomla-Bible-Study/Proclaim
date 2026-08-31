@@ -111,6 +111,7 @@ final class ProtectedStorageCheck implements HealthCheckInterface
                 HealthStatus::Warning,
                 $stored === CwmmediaProtectionHelper::EXPOSED
                     ? Text::_('JBS_HEALTH_PROTECTED_STORAGE_EXPOSED')
+                . ' ' . Text::_('JBS_HEALTH_PROTECTED_STORAGE_FIX')
                     : Text::_('JBS_HEALTH_PROTECTED_STORAGE_UNVERIFIED'),
                 // The verdict, so quietening an EXPOSED site does not also
                 // quieten it once the verdict changes to something else.

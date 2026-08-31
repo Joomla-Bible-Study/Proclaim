@@ -98,7 +98,11 @@ final class LegacyServersCheck implements HealthCheckInterface
             Text::plural('JBS_HEALTH_LEGACY_SERVERS_PENDING_N', $pending['servers'], $pending['media']),
             // Both counts, so migrating some of them resurfaces the notice.
             $pending['servers'] . ':' . $pending['media'],
-            'index.php?option=com_proclaim&view=cwmservers',
+            // Filtered to the servers this finding is about. The servers model
+            // already applies filter.type, and the list now carries a Server Type
+            // field, so the filter shows as a chip the administrator can clear —
+            // without it the link would leave an invisible, sticky filter behind.
+            'index.php?option=com_proclaim&view=cwmservers&filter[type]=legacy',
             Text::_('JBS_HEALTH_LEGACY_SERVERS_ACTION')
         );
     }
