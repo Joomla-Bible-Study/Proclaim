@@ -178,7 +178,6 @@ class CwmcommentsModel extends ListModel
                         'comment.user_email',
                         'comment.comment_date',
                         'comment.comment_text',
-                        'comment.access',
                         'comment.language',
                         'comment.asset_id',
                         'comment.checked_out',
