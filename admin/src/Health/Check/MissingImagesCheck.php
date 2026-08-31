@@ -80,7 +80,10 @@ final class MissingImagesCheck implements HealthCheckInterface
      */
     public function run(): HealthResult
     {
-        $unresolvable = CwmImageMigration::getUnresolvableRecords();
+        // Trashed records excluded: content already thrown away is not work
+        // to report. The migration tools keep the default and still process
+        // it, so a restored record's images are not left behind.
+        $unresolvable = CwmImageMigration::getUnresolvableRecords(true);
 
         if ($unresolvable['count'] === 0) {
             return new HealthResult(

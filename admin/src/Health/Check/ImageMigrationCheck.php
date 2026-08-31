@@ -79,7 +79,10 @@ final class ImageMigrationCheck implements HealthCheckInterface
      */
     public function run(): HealthResult
     {
-        $counts = CwmImageMigration::getMigrationCounts();
+        // Trashed records excluded: content already thrown away is not work
+        // to report. The migration tools keep the default and still process
+        // it, so a restored record's images are not left behind.
+        $counts = CwmImageMigration::getMigrationCounts(true);
 
         if ($counts['total'] === 0) {
             return new HealthResult(
