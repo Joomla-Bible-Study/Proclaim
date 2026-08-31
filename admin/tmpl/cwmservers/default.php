@@ -166,7 +166,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php
                                     $options = [
-                                        'task_prefix' => 'server.',
+                                        // ⚠️ The PLURAL controller, as every other list uses.
+                                        // 'server.' resolves to no controller at all, so the
+                                        // status button dispatched task=server.publish and the
+                                        // dispatcher answered "Invalid controller class: server".
+                                        'task_prefix' => 'cwmservers.',
                                         'disabled'    => $workflow_state || !$canChange,
                                         'id'          => 'state-' . $item->id,
                                     ];
@@ -178,7 +182,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                     <div class="float-left">
                                         <?php if ($item->checked_out) : ?>
                                             <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
-                                                $item->checked_out_time, 'server.', $canCheckin); ?>
+                                                $item->checked_out_time, 'cwmservers.', $canCheckin); ?>
                                         <?php endif; ?>
                                         <?php
                                 if ($canEdit || $canEditOwn) : ?>
