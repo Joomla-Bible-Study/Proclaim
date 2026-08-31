@@ -141,7 +141,38 @@ class CwmserverController extends FormController
 
         $data  = $input->get('jform', [], 'post');
         $sname = $data['server_name'] ?? '';
-        $type  = json_decode(base64_decode($data['type'] ?? ''), true, 512, JSON_THROW_ON_ERROR);
+
+        // ⚠️ This is request data, and it was decoded straight into
+        // JSON_THROW_ON_ERROR with nothing to catch the throw. Submitting the
+        // form without a type — a stale form, a modal that never set the field,
+        // a re-post — reached json_decode('') and put a white error page in
+        // front of the administrator instead of the screen they asked for.
+        $type = [];
+        $raw  = base64_decode((string) ($data['type'] ?? ''), true);
+
+        if (\is_string($raw) && $raw !== '') {
+            try {
+                $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+
+                if (\is_array($decoded)) {
+                    $type = $decoded;
+                }
+            } catch (\JsonException) {
+                // Not a type payload. Handled below, as "none chosen".
+            }
+        }
+
+        // Nothing usable came back. Say so and return them to the form rather
+        // than storing an empty type and redirecting as though it worked.
+        if (($type['name'] ?? '') === '') {
+            $app->enqueueMessage(Text::_('JBS_SVR_TYPE_NOT_RECOGNISED'), 'warning');
+
+            $this->setRedirect(
+                Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false)
+            );
+
+            return;
+        }
 
         $recordId = $type['id'] ?? 0;
 
