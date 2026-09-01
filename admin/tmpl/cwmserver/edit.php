@@ -39,7 +39,15 @@ $wa->useScript('keepalive')
         "
 	Joomla.submitbutton = function (task, type) {
 		if (task == 'cwmserver.setType') {
-			document.getElementById('item-form').elements['jform[type]'].value = type;
+			/* The type field is a ModalSelectField: a readonly title input and a
+			   hidden value input SHARE the name jform[type], so
+			   elements['jform[type]'] is a RadioNodeList and assigning .value to
+			   it does nothing at all. Write to the hidden value input by id, and
+			   mirror it into the visible one so the choice shows immediately. */
+			var typeValue = document.getElementById('jform_type_id');
+			var typeTitle = document.getElementById('jform_type');
+			if (typeValue) { typeValue.value = type; }
+			if (typeTitle) { typeTitle.value = type; }
 			Joomla.submitform(task, document.getElementById('item-form'));
 		} else if (task == 'cwmserver.cancel') {
 			Joomla.submitform(task, document.getElementById('item-form'));

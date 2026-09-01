@@ -127,12 +127,18 @@ final class RestrictedMediaCheck implements HealthCheckInterface
         return new HealthResult(
             $this->getId(),
             HealthStatus::Warning,
-            $exposed === 1
+            ($exposed === 1
                 ? Text::_('JBS_HEALTH_RESTRICTED_MEDIA_1')
-                : Text::sprintf('JBS_HEALTH_RESTRICTED_MEDIA_N', $exposed),
+                : Text::sprintf('JBS_HEALTH_RESTRICTED_MEDIA_N', $exposed))
+                . ' ' . Text::_('JBS_HEALTH_RESTRICTED_MEDIA_FIX'),
             // The count, so quietening at one does not hide the second.
             (string) $exposed,
-            'index.php?option=com_proclaim&view=cwmmediafiles',
+            // ⚠️ A superset, and the right one. The exact set needs each
+            // file's resolved URL, which is not a column — but the restriction
+            // half is, and while the protected folder is served every
+            // restricted file is reachable. Narrowing thousands of rows to the
+            // restricted ones is what makes the finding actionable.
+            'index.php?option=com_proclaim&view=cwmmediafiles&filter[restricted]=1',
             Text::_('JBS_HEALTH_RESTRICTED_MEDIA_ACTION')
         );
     }
