@@ -35,15 +35,6 @@ use Joomla\Registry\Registry;
 class Cwmdownload
 {
     /**
-     * Method to send a file to the browser
-     *
-     * @param   int  $mid  ID of media
-     *
-     * @return void
-     * @throws \Exception If the template or media is not found.
-     * @since 6.1.2
-     */
-    /**
      * Types that may be served inline, and nothing else.
      *
      * ⚠️ An allowlist, not a denylist. `inline` tells the browser to render the
@@ -62,6 +53,18 @@ class Cwmdownload
         'video/x-matroska', 'video/x-ms-wmv', 'video/x-msvideo',
     ];
 
+    /**
+     * Method to send a file to the browser
+     *
+     * @param   int   $mid     ID of media
+     * @param   bool  $inline  Offer the file for playback in the page rather than as a download.
+     *                         Honoured only for the types on INLINE_TYPES; anything else is
+     *                         sent as an attachment regardless.
+     *
+     * @return void
+     * @throws \Exception If the template or media is not found.
+     * @since 6.1.2
+     */
     public function download(int $mid, bool $inline = false): void
     {
         // Clears file status cache
