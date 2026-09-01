@@ -141,12 +141,33 @@ class CwmserverController extends FormController
 
         $data  = $input->get('jform', [], 'post');
         $sname = $data['server_name'] ?? '';
-        $type  = json_decode(base64_decode($data['type'] ?? ''), true, 512, JSON_THROW_ON_ERROR);
 
-        $recordId = $type['id'] ?? 0;
+        // ⚠️ A plain server-type key, e.g. "youtube". It used to be decoded as
+        // base64 JSON, which never worked: the type field is a
+        // ModalSelectField, and its readonly title input and hidden value input
+        // share the name jform[type]. The picker's assignment to
+        // elements['jform[type]'] hit a RadioNodeList and did nothing, so what
+        // arrived here was the hidden input's key, not the payload — which
+        // base64_decode then turned into rubbish and json_decode threw on,
+        // taking the whole screen down with it.
+        //
+        // Read as request data, so a stale form or a hand-made POST is a
+        // message rather than an error page.
+        $typeKey  = strtolower(trim((string) ($data['type'] ?? '')));
+        $recordId = (int) ($data['id'] ?? 0);
+
+        if ($typeKey === '' || !preg_match('/^[a-z0-9_-]+$/', $typeKey)) {
+            $app->enqueueMessage(Text::_('JBS_SVR_TYPE_NOT_RECOGNISED'), 'warning');
+
+            $this->setRedirect(
+                Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false)
+            );
+
+            return;
+        }
 
         // Save the endpoint in the session
-        $app->setUserState('com_proclaim.edit.cwmserver.type', $type['name'] ?? '');
+        $app->setUserState('com_proclaim.edit.cwmserver.type', $typeKey);
         $app->setUserState('com_proclaim.edit.cwmserver.server_name', $sname);
 
         $this->setRedirect(

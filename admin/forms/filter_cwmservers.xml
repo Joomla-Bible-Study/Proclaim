@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fields name="filter">
+    <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fields name="filter">
         <field
                 name="search"
                 type="text"
@@ -36,7 +37,16 @@
                 hint="JOPTION_SELECT_ACCESS"
                 class="js-select-submit-on-change"
         />
-    </fields>
+    <field
+                    name="type"
+                    type="ServerTypeList"
+                    label="JBS_CMN_SERVER_TYPE"
+                    class="js-select-submit-on-change"
+            >
+                <option value="">JBS_CMN_SELECT_SERVER_TYPE</option>
+            </field>
+        </fields>
+    </fieldset>
     <fields name="list">
         <field
                 name="limit"

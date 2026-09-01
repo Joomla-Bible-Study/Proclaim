@@ -82,13 +82,17 @@ $typeIcons = [
             <?php foreach ($this->types as $item) :
                 $typeKey  = strtolower($item->name);
                 $iconData = $typeIcons[$typeKey] ?? ['icon' => 'fa-solid fa-plug', 'color' => '#555555'];
-                $encoded  = base64_encode(json_encode(['id' => $this->recordId, 'name' => $item->name]));
+                // ⚠️ The plain type key, not a base64 JSON blob. The form's
+                // type field is a ModalSelectField, whose hidden input holds
+                // exactly this — so what the picker sends and what the field
+                // stores are now the same thing, and the record id comes from
+                // the form rather than being smuggled alongside it.
             ?>
                 <div class="col">
                     <div class="card h-100 border-2 server-type-card"
                          role="button"
                          tabindex="0"
-                         data-type-payload="<?php echo $this->escape($encoded); ?>">
+                         data-type-payload="<?php echo $this->escape($typeKey); ?>">
                         <div class="card-body text-center py-4">
                             <div class="mb-3">
                                 <span class="<?php echo $this->escape($iconData['icon']); ?> fa-3x"
