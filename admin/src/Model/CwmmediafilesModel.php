@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 use Joomla\Registry\Registry;
@@ -133,6 +134,7 @@ class CwmmediafilesModel extends ListModel
         $id .= ':' . serialize($this->getState('filter.access'));
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.mediaYears');
+        $id .= ':' . $this->getState('filter.restricted');
         $id .= ':' . serialize($this->getState('filter.study_id'));
         $id .= ':' . $this->getState('filter.language');
 
@@ -272,6 +274,16 @@ class CwmmediafilesModel extends ListModel
             $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('mediafile.study_id')
         );
 
+        // Join over the series, through the study. Only the restricted filter
+        // reads it, but a media file inherits its visibility from the series as
+        // well as the study, so a predicate that omits it would miss files
+        // restricted only at that level.
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_series', 'series') . ' ON '
+            . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id')
+        );
+
         // Join over servers
         $query->select($db->quoteName('server.type', 'serverType'));
         $query->select($db->quoteName('server.server_name', 'server_name'));
@@ -293,6 +305,30 @@ class CwmmediafilesModel extends ListModel
                 'LEFT',
                 $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('mediafile.checked_out')
             );
+
+        // Show only media a guest cannot already see.
+        //
+        // ⚠️ The set the protected-storage and restricted-media findings are
+        // about. Their exact reachability test needs each file's resolved URL
+        // and cannot be written in SQL, but the restriction half can — and when
+        // the protected folder is being served, every restricted file is
+        // reachable, so this is the list worth acting on. Without it a finding
+        // that names a handful of files sends the administrator into thousands.
+        if ((int) $this->getState('filter.restricted') === 1) {
+            $guest  = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
+            $levels = array_map('intval', $guest->getAuthorisedViewLevels() ?: [0]);
+            $list   = implode(',', $levels) ?: '0';
+
+            // One bracketed group: where() glues with AND and adds no brackets,
+            // so a top-level OR would bind looser than every condition already
+            // added. Written inline because WhereClauseContractTest reads the
+            // argument at the call site.
+            $query->where(
+                '(' . $db->quoteName('mediafile.access') . ' NOT IN (' . $list . ')'
+                . ' OR ' . $db->quoteName('study.access') . ' NOT IN (' . $list . ')'
+                . ' OR ' . $db->quoteName('series.access') . ' NOT IN (' . $list . '))'
+            );
+        }
 
         // Filter by published state
         $published = $this->getState('filter.published');
