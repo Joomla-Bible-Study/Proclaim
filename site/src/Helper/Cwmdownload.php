@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmediaStreamer;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
@@ -34,15 +35,37 @@ use Joomla\Registry\Registry;
 class Cwmdownload
 {
     /**
+     * Types that may be served inline, and nothing else.
+     *
+     * ⚠️ An allowlist, not a denylist. `inline` tells the browser to render the
+     * response in the page, and the type is derived from a filename an editor
+     * controls — `Cwmmime::fromExtension()` will happily return `text/html` for
+     * a record named `x.html`. Served inline from this site's own origin that
+     * is stored XSS, so anything not on this list is forced back to a download.
+     *
+     * @var    string[]
+     * @since  __DEPLOY_VERSION__
+     */
+    private const INLINE_TYPES = [
+        'audio/aac', 'audio/flac', 'audio/mp4', 'audio/mpeg',
+        'audio/ogg', 'audio/wav', 'audio/x-ms-wma',
+        'video/mp4', 'video/ogg', 'video/quicktime', 'video/webm',
+        'video/x-matroska', 'video/x-ms-wmv', 'video/x-msvideo',
+    ];
+
+    /**
      * Method to send a file to the browser
      *
-     * @param   int  $mid  ID of media
+     * @param   int   $mid     ID of media
+     * @param   bool  $inline  Offer the file for playback in the page rather than as a download.
+     *                         Honoured only for the types on INLINE_TYPES; anything else is
+     *                         sent as an attachment regardless.
      *
      * @return void
      * @throws \Exception If the template or media is not found.
      * @since 6.1.2
      */
-    public function download(int $mid): void
+    public function download(int $mid, bool $inline = false): void
     {
         // Clears file status cache
         clearstatcache();
@@ -161,8 +184,34 @@ class Cwmdownload
         // Content-Length especially, which has to reflect the range served
         // rather than the whole file.
         $safeFilename = preg_replace('/[^\w.\-]/', '_', basename((string) $params->get('filename')));
+
+        // Resolve type and disposition together: a type that may not be shown
+        // in the page must not be announced as one, so both fall back at once.
+        $serveType = 'application/octet-stream';
+
+        if ($inline) {
+            $detected = Cwmmime::fromExtension((string) $params->get('filename'));
+
+            if ($detected !== null && \in_array($detected, self::INLINE_TYPES, true)) {
+                $serveType = $detected;
+            } else {
+                $inline = false;
+            }
+        }
+
         header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename="' . $safeFilename . '"');
+
+        // The declared type is the only one honoured; without this a browser
+        // may sniff the bytes and decide the response is HTML after all.
+        header('X-Content-Type-Options: nosniff');
+
+        // ⚠️ inline is for playback, and a player will not touch a file offered
+        // as an attachment — the browser downloads it instead of handing it to
+        // the media element. Same bytes, same access check, different intent.
+        header(
+            'Content-Disposition: ' . ($inline ? 'inline' : 'attachment')
+            . '; filename="' . $safeFilename . '"'
+        );
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
@@ -174,7 +223,7 @@ class Cwmdownload
         // down the remote path.
         CwmmediaStreamer::serve(
             $download_file,
-            'application/octet-stream',
+            $serveType,
             (string) (parse_url(Uri::root(), PHP_URL_HOST) ?: ''),
             (string) $input->server->getString('HTTP_RANGE', ''),
             (string) $input->server->getString('HTTP_IF_MODIFIED_SINCE', ''),

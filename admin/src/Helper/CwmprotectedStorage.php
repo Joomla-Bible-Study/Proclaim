@@ -111,6 +111,88 @@ class CwmprotectedStorage
     }
 
     /**
+     * How many media files the protected directory actually holds.
+     *
+     * ⚠️ The question that decides whether any of this is worth reporting. The
+     * folder ships with `.htaccess` and `web.config` and nothing else, so an
+     * install that has never put a file there has nothing at risk regardless of
+     * what the deny rules do — and warning that restricted files kept there are
+     * publicly downloadable, when none are kept there, is noise on every site.
+     *
+     * The guard files are excluded because they are ours, not media, and they
+     * are the whole contents of an unused folder.
+     *
+     * @return  int  Zero when the directory is absent or holds only its guards.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function fileCount(): int
+    {
+        $path = self::path();
+
+        if (!is_dir($path)) {
+            return 0;
+        }
+
+        $found = 0;
+
+        foreach (glob($path . '/*') ?: [] as $entry) {
+            if (!is_file($entry)) {
+                continue;
+            }
+
+            $name = basename($entry);
+
+            if ($name === 'web.config' || str_starts_with($name, '.')) {
+                continue;
+            }
+
+            $found++;
+        }
+
+        return $found;
+    }
+
+    /**
+     * Whether a URL or path points at a file inside the protected directory.
+     *
+     * ⚠️ Decided from the resolved filesystem path, not from a flag on the
+     * record. The filesystem is the only thing that can be right about where a
+     * file actually is: a stored marker can disagree with it the moment anyone
+     * moves a file by hand, and the delivery decision has to follow the file.
+     *
+     * realpath() also collapses `..`, so a crafted path cannot claim to be
+     * inside the directory while resolving outside it.
+     *
+     * @param   string  $target  An absolute path, or a URL under this site.
+     *
+     * @return  bool  False for anything outside the directory, including
+     *                anything that does not resolve at all.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function holds(string $target): bool
+    {
+        if ($target === '') {
+            return false;
+        }
+
+        $path = parse_url($target, PHP_URL_PATH) ?: $target;
+        $root = rtrim(JPATH_ROOT, '/\\');
+
+        // A site URL arrives as a web path; an absolute filesystem path is
+        // already rooted. Both end up compared as real paths.
+        $candidate = str_starts_with($path, $root) ? $path : $root . '/' . ltrim(rawurldecode($path), '/');
+        $real      = realpath($candidate);
+
+        if ($real === false) {
+            return false;
+        }
+
+        return str_starts_with($real, self::path() . '/');
+    }
+
+    /**
      * The URL that directory would be served from, if the server let it.
      *
      * @return  string

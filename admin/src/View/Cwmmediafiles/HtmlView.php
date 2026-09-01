@@ -310,6 +310,19 @@ class HtmlView extends BaseHtmlView
             return;
         }
 
+        // ⚠️ Nothing is at risk if nothing is stored there. This banner told
+        // every site to "treat restricted files kept there as publicly
+        // downloadable" while the folder held only its own deny rules — a
+        // permanent orange warning about an empty directory, and on a local or
+        // firewalled install the probe can never succeed, so it never cleared.
+        //
+        // Whether the deny rules work is worth knowing before relying on them,
+        // but that is a readiness question for System Health, not a warning on
+        // a list screen about files that do not exist.
+        if (CwmprotectedStorage::fileCount() === 0) {
+            return;
+        }
+
         $guest  = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
         $levels = $guest->getAuthorisedViewLevels() ?: [0];
         $levels = array_map('intval', $levels);
