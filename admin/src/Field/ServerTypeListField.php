@@ -29,13 +29,13 @@ use Joomla\Database\DatabaseInterface;
  * broken screen, and `legacy` is not an addon at all — it is the 9.x type a
  * migration retires, which is precisely the one worth filtering to.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.3
  */
 class ServerTypeListField extends ListField
 {
     /**
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.3
      */
     protected $type = 'ServerTypeList';
 
@@ -44,7 +44,7 @@ class ServerTypeListField extends ListField
      *
      * @return  array  The field option objects.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.3
      */
     protected function getOptions(): array
     {

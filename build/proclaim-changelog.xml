@@ -19,6 +19,28 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.6.3                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.6.3</version>
+        <date>2026-09-01</date>
+        <note>
+            <item>The site-wide Custom CSS tab showed a description and no editor. It never worked, no site could have saved anything in it, and it has been removed. Custom CSS on a template is unaffected and is where styling belongs.</item>
+            <item>The Comments screen offered an Access field that could not appear. Comments take their visibility from the message they belong to, which is now also how the moderation list decides what to show you — previously it could hide comments left by visitors from anyone who was not a Super User.</item>
+            <item>fix(health): stop reporting trashed content as work to do by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2021</item>
+            <item>fix(health): say what to do about a finding, and link where it can be seen by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2022</item>
+            <item>refactor(admin): drop the site-wide Custom CSS tab, which never worked by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2026</item>
+            <item>fix(admin): render the fields the templates ask for, and guard the whole class by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2030</item>
+            <item>fix(site): a custom CSS sheet of &quot;0&quot; no longer fatals every front-end page by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2034</item>
+            <item>fix(servers): three live bugs on the servers screens by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2036</item>
+            <item>feat(media): filter the list to restricted files, and point the findings at it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2032</item>
+            <item>chore(release): open the 10.6.3 cycle, with notes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2038</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.6.2                                                   -->
     <!-- ============================================================ -->
     <changelog>
