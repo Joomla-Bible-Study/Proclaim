@@ -24,6 +24,12 @@ Several health findings described a problem and stopped. They now say what the r
 
 The protected media folder also no longer warns that files kept there are publicly downloadable when nothing is kept there.
 
+## Finding the media a warning is about
+
+When Proclaim reported that restricted recordings were reachable by anyone holding their address, the button opened the whole media library. On a site with thousands of files that is not something you can act on.
+
+It now opens the list filtered to restricted media, with a **Visibility** filter you can see and clear like any other. On our test data that is the difference between 112 rows and 14.
+
 ## Settings that were never reachable
 
 Two fields were asked for by a screen but never declared by its form, so they simply did not appear:
