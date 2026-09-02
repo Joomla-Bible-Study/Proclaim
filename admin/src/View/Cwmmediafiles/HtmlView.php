@@ -16,13 +16,11 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmmediaProtectionHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\Button\DropdownButton;
 use Joomla\CMS\Toolbar\Toolbar;
@@ -108,14 +106,6 @@ class HtmlView extends BaseHtmlView
     protected ?object $state = null;
 
     /**
-     * All transitions, which can be executed of one if the items
-     *
-     * @var  array
-     * @since 4.0.0
-     */
-    protected array $transitions = [];
-
-    /**
      * Is this view an Empty State
      *
      * @var   bool
@@ -149,12 +139,6 @@ class HtmlView extends BaseHtmlView
         $this->activeFilters = $model->getActiveFilters();
 
         $this->warnIfProtectedStorageIsNotWorking();
-
-        if (ComponentHelper::getParams('com_proclaim')->get('workflow_enabled')) {
-            PluginHelper::importPlugin('workflow');
-
-            $this->transitions = $model->getTransitions();
-        }
 
         // Check for errors.
         if (\count($errors = $model->getErrors())) {
