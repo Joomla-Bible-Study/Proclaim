@@ -47,7 +47,8 @@ class CwmsermonsController extends BaseController
         $input = Factory::getApplication()->getInput();
         $mid   = $input->getInt('mid') ?: $input->getInt('id');
 
-        CwmanalyticsHelper::logEvent('download', 0, $mid);
+        // The event is recorded inside download(), once it knows the visitor
+        // may actually have the file. Logged from here it counted refusals.
         $downloader = new Cwmdownload();
         $downloader->download($mid);
     }
@@ -75,9 +76,8 @@ class CwmsermonsController extends BaseController
         $input = Factory::getApplication()->getInput();
         $mid   = $input->getInt('mid') ?: $input->getInt('id');
 
-        // Counted as a play, not a download: this is the player asking.
-        CwmanalyticsHelper::logEvent('play', 0, $mid);
-
+        // Recorded as a play rather than a download — this is the player
+        // asking — and recorded inside download(), after the access check.
         $downloader = new Cwmdownload();
         $downloader->download($mid, true);
     }
@@ -92,11 +92,20 @@ class CwmsermonsController extends BaseController
      */
     public function playHit(): void
     {
-        $app      = Factory::getApplication();
-        $id       = $app->getInput()->getInt('id', 0);
-        $getMedia = new Cwmmedia();
-        $getMedia->hitPlay($id);
-        CwmanalyticsHelper::logEvent('play', 0, $id);
+        $app = Factory::getApplication();
+        $id  = $app->getInput()->getInt('id', 0);
+
+        // ⚠️ Counting is gated, redirecting is not. This endpoint takes a bare
+        // media id from the request and increments a counter, so without a
+        // check anyone can inflate any message's play count — and needs no
+        // access to the media to do it. The redirect is left alone: it goes
+        // wherever it went before, and refusing to navigate would be a
+        // behaviour change dressed up as a statistics fix.
+        if (Cwmdownload::reachable($id)) {
+            $getMedia = new Cwmmedia();
+            $getMedia->hitPlay($id);
+            CwmanalyticsHelper::logEvent('play', 0, $id);
+        }
 
         // Now the hit has been updated will redirect to the url.
         $return = $app->getInput()->getBase64('return', '');
@@ -123,14 +132,19 @@ class CwmsermonsController extends BaseController
         $app = Factory::getApplication();
         $id  = $app->getInput()->getInt('id', 0);
 
-        if ($id > 0) {
+        // The cheapest way to inflate a counter of the four: no file is
+        // transferred, so a refused visitor could previously drive the play
+        // count of any message at the cost of one request.
+        $counted = Cwmdownload::reachable($id);
+
+        if ($counted) {
             $getMedia = new Cwmmedia();
             $getMedia->hitPlay($id);
             CwmanalyticsHelper::logEvent('play', 0, $id);
         }
 
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['success' => $id > 0], JSON_THROW_ON_ERROR);
+        echo json_encode(['success' => $counted], JSON_THROW_ON_ERROR);
         $app->close();
     }
 
