@@ -319,7 +319,7 @@ class HtmlView extends BaseHtmlView
         // Whether the deny rules work is worth knowing before relying on them,
         // but that is a readiness question for System Health, not a warning on
         // a list screen about files that do not exist.
-        if (CwmprotectedStorage::fileCount() === 0) {
+        if (!CwmprotectedStorage::holdsAnything()) {
             return;
         }
 
