@@ -100,6 +100,14 @@ final class CwmprotectedMove
      */
     public static function refusal(object $media): ?string
     {
+        // A legacy server's files often ARE on this filesystem — the type
+        // just predates the move. Telling its owner "not on this site's
+        // filesystem" points them away from the actual next step, which the
+        // legacy-server health check is already asking for: migrate to Local.
+        if (($media->server_type ?? '') === 'legacy') {
+            return 'JBS_MED_PROTECT_REFUSED_SERVER_LEGACY';
+        }
+
         if (($media->server_type ?? '') !== 'local') {
             // A server describes where media lives; only media on this
             // machine's filesystem can be moved into a folder on it.
