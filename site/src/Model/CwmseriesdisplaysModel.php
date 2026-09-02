@@ -318,8 +318,8 @@ class CwmseriesdisplaysModel extends ListModel
         if (!$user->authorise('core.edit.state', 'com_proclaim') && !$user->authorise('core.edit', 'com_proclaim')) {
             $nullDate = $db->quote($db->getNullDate());
             $nowDate  = $db->quote((new Date())->toSql());
-            $query->where('(' . $db->quoteName('se.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_up') . ' <= ' . $nowDate . ')')
-                ->where('(' . $db->quoteName('se.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_down') . ' >= ' . $nowDate . ')');
+            $query->andWhere([$db->quoteName('se.publish_up') . ' = ' . $nullDate, $db->quoteName('se.publish_up') . ' <= ' . $nowDate])
+                ->andWhere([$db->quoteName('se.publish_down') . ' = ' . $nullDate, $db->quoteName('se.publish_down') . ' >= ' . $nowDate]);
         }
 
         //Filter by year

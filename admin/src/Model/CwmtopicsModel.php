@@ -165,7 +165,7 @@ class CwmtopicsModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('topic.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('topic.published') . ' = 0 OR ' . $db->quoteName('topic.published') . ' = 1)');
+            $query->whereIn($db->quoteName('topic.published'), [0, 1]);
         }
 
         // Filter on the language. Set only by the API (?filter[language]=);

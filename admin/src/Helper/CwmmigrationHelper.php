@@ -1090,7 +1090,7 @@ class CwmmigrationHelper
                 ->update($db->quoteName('#__bsms_studies'))
                 ->set($db->quoteName('location_id') . ' = ' . (int) $locationId)
                 ->where($db->quoteName('access') . ' = ' . (int) $accessId)
-                ->where('(' . $db->quoteName('location_id') . ' = 0 OR ' . $db->quoteName('location_id') . ' IS NULL)');
+                ->andWhere([$db->quoteName('location_id') . ' = 0', $db->quoteName('location_id') . ' IS NULL']);
             $db->setQuery($query);
             $db->execute();
             $updated += $db->getAffectedRows();
@@ -1269,7 +1269,8 @@ class CwmmigrationHelper
         $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_studies'))
             ->set($db->quoteName('location_id') . ' = ' . $locationId)
-            ->where('(' . $db->quoteName('location_id') . ' = 0 OR ' . $db->quoteName('location_id') . ' IS NULL)');
+            ->where($db->quoteName('location_id') . ' = 0')
+            ->orWhere($db->quoteName('location_id') . ' IS NULL');
         $db->setQuery($query);
         $db->execute();
 
@@ -1334,7 +1335,7 @@ class CwmmigrationHelper
             ->select([$db->quoteName('id'), $db->quoteName('name')])
             ->from($db->quoteName('#__bsms_teachers'))
             ->where($db->quoteName('published') . ' = 1')
-            ->where('(' . $db->quoteName('user_id') . ' = 0 OR ' . $db->quoteName('user_id') . ' IS NULL)');
+            ->andWhere([$db->quoteName('user_id') . ' = 0', $db->quoteName('user_id') . ' IS NULL']);
         $db->setQuery($query);
 
         return $db->loadObjectList() ?: [];

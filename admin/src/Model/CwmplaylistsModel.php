@@ -229,7 +229,7 @@ class CwmplaylistsModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('playlist.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('playlist.published') . ' = 0 OR ' . $db->quoteName('playlist.published') . ' = 1)');
+            $query->whereIn($db->quoteName('playlist.published'), [0, 1]);
         }
 
         // Add the list ordering clause.

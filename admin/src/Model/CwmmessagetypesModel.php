@@ -246,7 +246,7 @@ class CwmmessagetypesModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('messagetype.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('messagetype.published') . ' = 0 OR ' . $db->quoteName('messagetype.published') . ' = 1)');
+            $query->whereIn($db->quoteName('messagetype.published'), [0, 1]);
         }
 
         // Add the list ordering clause.
