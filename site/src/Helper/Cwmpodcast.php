@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
@@ -241,6 +242,16 @@ class Cwmpodcast
             $episodedetail = '';
 
             foreach ($episodes as $episode) {
+                // ⚠️ Refused, not published broken. The move action refuses
+                // podcast-referenced media, so reaching this means the file
+                // was placed by hand or the podcast was assigned afterwards;
+                // either way an enclosure pointing here 403s for every
+                // subscriber. System Health names the affected files, so the
+                // silence in the feed is not the only report.
+                if ($this->isProtectedFile($episode->params->get('filename'))) {
+                    continue;
+                }
+
                 $episodedate   = $this->formatFeedDate($episode->createdate, $siteTz);
                 $scripture     = $this->getListing()->getScripture($params, $episode, 0, 1);
                 $episode->size = $episode->params->get('size', '30000000');
@@ -1002,6 +1013,36 @@ class Cwmpodcast
      *
      * @since   10.3.0
      */
+    /**
+     * Whether a media filename points into protected storage.
+     *
+     * A feed is a published artifact: its <enclosure> is a direct URL, and the
+     * web server refuses direct requests for the protected folder — for
+     * everyone, which is that folder's whole purpose. An episode built from a
+     * protected file therefore appears in every podcast app and downloads in
+     * none of them, which is worse than the episode being absent.
+     *
+     * Decided from the record's own site-relative filename rather than the
+     * assembled feed URL: the podcast URL form strips the scheme, which makes
+     * parse_url guess, and the filename is the value the move action rewrites.
+     *
+     * @param   ?string  $filename  The media record's filename param.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function isProtectedFile(?string $filename): bool
+    {
+        $filename = ltrim((string) $filename, '/');
+
+        if ($filename === '' || str_contains($filename, '://') || str_starts_with($filename, '//')) {
+            return false;
+        }
+
+        return CwmprotectedStorage::holds(rtrim(JPATH_ROOT, '/\\') . '/' . $filename);
+    }
+
     private function getAlternateEnclosureXml(object $episode, int $podcastId, string $protocol): string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
@@ -1036,6 +1077,13 @@ class Cwmpodcast
             $size       = $altParams->get('size', '');
 
             if (empty($filename)) {
+                continue;
+            }
+
+            // Same rule as the primary enclosure: a protected file cannot be
+            // fetched at a direct URL, and an alternate source that 403s is
+            // noise a podcast app may still try first.
+            if ($this->isProtectedFile($filename)) {
                 continue;
             }
 

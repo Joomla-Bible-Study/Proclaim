@@ -30,6 +30,7 @@ use CWM\Component\Proclaim\Administrator\Health\Check\OrphanMediaServerCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PendingReviewCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PluginEnabledCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PodcastTaskCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedPodcastCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedStorageCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\RecentBackupCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\RestrictedMediaCheck;
@@ -79,6 +80,7 @@ final class HealthRegistry
             new SetupChecklistCheck(),
             new AssetDriftCheck(),
             new ProtectedStorageCheck(),
+            new ProtectedPodcastCheck(),
             new RestrictedMediaCheck(),
             new TemplateCodeCssCheck(),
             new DebugModeCheck(),
