@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 
 /**
@@ -35,6 +36,37 @@ use Joomla\Database\QueryInterface;
  */
 class CwmanalyticsModel extends BaseDatabaseModel
 {
+    /**
+     * Bind the inclusive day window the dashboard asked for.
+     *
+     * One definition of the window instead of twenty-six: the day expansion
+     * and the binding belong together, so a caller cannot bind the date while
+     * hand-appending the time. The :windowStart / :windowEnd markers work
+     * anywhere in the statement — WHERE or a hand-assembled JOIN condition —
+     * because binding is per query, not per clause.
+     *
+     * ⚠️ bind() takes its value by reference, which is why the expanded
+     * strings are assigned to locals first — binding the concatenation
+     * expression directly is a fatal, and each call needs fresh locals so an
+     * earlier query is never silently rebound.
+     *
+     * @param   QueryInterface  $query  The query being built.
+     * @param   string          $start  Window start date, Y-m-d.
+     * @param   string          $end    Window end date, Y-m-d.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function bindCreatedWindow(QueryInterface $query, string $start, string $end): void
+    {
+        $windowStart = $start . ' 00:00:00';
+        $windowEnd   = $end . ' 23:59:59';
+
+        $query->bind(':windowStart', $windowStart, ParameterType::STRING)
+            ->bind(':windowEnd', $windowEnd, ParameterType::STRING);
+    }
+
     /**
      * Load all published locations, optionally restricted to specific view levels.
      *
@@ -215,8 +247,9 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     'COUNT(DISTINCT ' . $db->quoteName('session_hash') . ') AS sessions',
                 ])
                 ->from($db->quoteName('#__bsms_analytics_events'))
-                ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'));
+                ->where($db->quoteName('created') . ' >= :windowStart')
+                ->where($db->quoteName('created') . ' <= :windowEnd');
+            $this->bindCreatedWindow($query, $start, $end);
 
             if ($locationId > 0) {
                 $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
@@ -282,16 +315,18 @@ class CwmanalyticsModel extends BaseDatabaseModel
 
             $query = $db->createQuery()
                 ->select([
-                    'DATE_FORMAT(' . $db->quoteName('created') . ', ' . $db->quote($format) . ') AS period',
+                    'DATE_FORMAT(' . $db->quoteName('created') . ', :bucketFormat) AS period',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
                 ])
                 ->from($db->quoteName('#__bsms_analytics_events'))
-                ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->where($db->quoteName('created') . ' >= :windowStart')
+                ->where($db->quoteName('created') . ' <= :windowEnd')
                 ->group('period')
                 ->order('period ASC');
+            $this->bindCreatedWindow($query, $start, $end);
+            $query->bind(':bucketFormat', $format, ParameterType::STRING);
 
             if ($locationId > 0) {
                 $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
@@ -334,9 +369,10 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     $db->quoteName('#__bsms_studies', 's') .
                     ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('e.study_id')
                 )
-                ->where($db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->where($db->quoteName('e.created') . ' >= :windowStart')
+                ->where($db->quoteName('e.created') . ' <= :windowEnd')
                 ->where($db->quoteName('e.study_id') . ' IS NOT NULL');
+            $this->bindCreatedWindow($query, $start, $end);
 
             if ($locationId > 0) {
                 $query->where($db->quoteName('e.location_id') . ' = ' . (int) $locationId);
@@ -390,8 +426,8 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     'COUNT(*) AS local_total',
                 ])
                 ->from($db->quoteName('#__bsms_analytics_events', 'e'))
-                ->where($db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->where($db->quoteName('e.created') . ' >= :windowStart')
+                ->where($db->quoteName('e.created') . ' <= :windowEnd')
                 ->where($db->quoteName('e.study_id') . ' IS NOT NULL');
 
             if ($locationId > 0) {
@@ -430,6 +466,12 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ->leftJoin('(' . $platSub . ') AS plat ON plat.study_id = ' . $db->quoteName('s.id'))
                 ->where('(COALESCE(loc.local_total, 0) + COALESCE(plat.platform_plays, 0)) > 0')
                 ->order('total DESC');
+
+            // ⚠️ Bound on the OUTER query. $localSub is rendered to a string
+            // when embedded in the leftJoin, and a string carries no bindings —
+            // the markers live in this query's SQL, so this is where their
+            // values must attach.
+            $this->bindCreatedWindow($query, $start, $end);
 
             $db->setQuery($query, 0, (int) $limit);
 
@@ -558,11 +600,12 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     'COUNT(*) AS count',
                 ])
                 ->from($db->quoteName('#__bsms_analytics_events'))
-                ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->where($db->quoteName('created') . ' >= :windowStart')
+                ->where($db->quoteName('created') . ' <= :windowEnd')
                 ->where($db->quoteName('utm_source') . ' IS NOT NULL')
                 ->group([$db->quoteName('utm_source'), $db->quoteName('utm_medium'), $db->quoteName('utm_campaign')])
                 ->order('count DESC');
+            $this->bindCreatedWindow($query, $start, $end);
 
             if ($locationId > 0) {
                 $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
@@ -771,9 +814,10 @@ class CwmanalyticsModel extends BaseDatabaseModel
         $query = $db->createQuery()
             ->select('*')
             ->from($db->quoteName('#__bsms_analytics_events'))
-            ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-            ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+            ->where($db->quoteName('created') . ' >= :windowStart')
+            ->where($db->quoteName('created') . ' <= :windowEnd')
             ->order($db->quoteName('created') . ' ASC');
+        $this->bindCreatedWindow($query, $start, $end);
 
         if ($locationId > 0) {
             $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
@@ -787,10 +831,11 @@ class CwmanalyticsModel extends BaseDatabaseModel
         $tmp = fopen('php://temp', 'w');
 
         if (!empty($rows)) {
-            fputcsv($tmp, array_keys($rows[0]));
+            // Explicit escape: PHP 8.5 deprecates relying on the default.
+            fputcsv($tmp, array_keys($rows[0]), ',', '"', '\\');
 
             foreach ($rows as $row) {
-                fputcsv($tmp, $row);
+                fputcsv($tmp, $row, ',', '"', '\\');
             }
         }
 
@@ -831,11 +876,12 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     'COUNT(*) AS count',
                 ])
                 ->from($db->quoteName('#__bsms_analytics_events'))
-                ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->where($db->quoteName('created') . ' >= :windowStart')
+                ->where($db->quoteName('created') . ' <= :windowEnd')
                 ->where($db->quoteName($column) . ' IS NOT NULL')
                 ->group($db->quoteName($column))
                 ->order('count DESC');
+            $this->bindCreatedWindow($query, $start, $end);
 
             if ($locationId > 0) {
                 $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
@@ -916,6 +962,9 @@ class CwmanalyticsModel extends BaseDatabaseModel
             }
 
             // Raw SQL avoids query-builder quirks with correlated scalar subqueries.
+            // It also keeps the date window quote()d rather than bound: binding
+            // lives on the query builder, and a marker in a plain string ships
+            // to MySQL as literal text.
             // One LEFT JOIN on series_id (no study JOIN) prevents Cartesian product.
             $sql = 'SELECT'
                 . ' sr.' . $db->quoteName('id') . ' AS series_id,'
@@ -1010,13 +1059,14 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ->leftJoin(
                     $db->quoteName('#__bsms_analytics_events', 'e') .
                     ' ON ' . $db->quoteName('e.study_id') . ' = ' . $db->quoteName('s.id') .
-                    ' AND ' . $db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00') .
-                    ' AND ' . $db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59')
+                    ' AND ' . $db->quoteName('e.created') . ' >= :windowStart' .
+                    ' AND ' . $db->quoteName('e.created') . ' <= :windowEnd'
                 )
                 ->where($db->quoteName('s.series_id') . ' = ' . (int) $seriesId)
                 ->whereIn($db->quoteName('s.published'), [1, 2])
                 ->group($db->quoteName('s.id'))
                 ->order($db->quoteName('s.studydate') . ' DESC');
+            $this->bindCreatedWindow($query, $start, $end);
             $db->setQuery($query);
 
             return (array) ($db->loadAssocList() ?? []);
@@ -1077,8 +1127,9 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ])
                 ->from($db->quoteName('#__bsms_analytics_events'))
                 ->where($db->quoteName('study_id') . ' = ' . (int) $studyId)
-                ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'));
+                ->where($db->quoteName('created') . ' >= :windowStart')
+                ->where($db->quoteName('created') . ' <= :windowEnd');
+            $this->bindCreatedWindow($query, $start, $end);
             $db->setQuery($query);
             $row = $db->loadAssoc() ?? [];
 
@@ -1105,17 +1156,19 @@ class CwmanalyticsModel extends BaseDatabaseModel
             $db     = $this->getDatabase();
             $query  = $db->createQuery()
                 ->select([
-                    'DATE_FORMAT(' . $db->quoteName('created') . ', ' . $db->quote($format) . ') AS period',
+                    'DATE_FORMAT(' . $db->quoteName('created') . ', :bucketFormat) AS period',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
                 ])
                 ->from($db->quoteName('#__bsms_analytics_events'))
                 ->where($db->quoteName('study_id') . ' = ' . (int) $studyId)
-                ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->where($db->quoteName('created') . ' >= :windowStart')
+                ->where($db->quoteName('created') . ' <= :windowEnd')
                 ->group('period')
                 ->order('period ASC');
+            $this->bindCreatedWindow($query, $start, $end);
+            $query->bind(':bucketFormat', $format, ParameterType::STRING);
             $db->setQuery($query);
 
             return (array) ($db->loadAssocList() ?? []);
@@ -1160,8 +1213,8 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ->leftJoin(
                     $db->quoteName('#__bsms_analytics_events', 'e') .
                     ' ON ' . $db->quoteName('e.media_id') . ' = ' . $db->quoteName('m.id') .
-                    ' AND ' . $db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00') .
-                    ' AND ' . $db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59')
+                    ' AND ' . $db->quoteName('e.created') . ' >= :windowStart' .
+                    ' AND ' . $db->quoteName('e.created') . ' <= :windowEnd'
                 )
                 ->leftJoin(
                     $db->quoteName('#__bsms_platform_stats', 'ps') .
@@ -1171,6 +1224,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ->whereIn($db->quoteName('m.published'), [1, 2])
                 ->group($db->quoteName('m.id'))
                 ->order($db->quoteName('m.ordering') . ' ASC');
+            $this->bindCreatedWindow($query, $start, $end);
             $db->setQuery($query);
 
             return (array) ($db->loadAssocList() ?? []);
@@ -1361,11 +1415,12 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     $db->quoteName('#__bsms_servers', 'sv') .
                     ' ON ' . $db->quoteName('sv.id') . ' = ' . $db->quoteName('m.server_id')
                 )
-                ->where($db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->where($db->quoteName('e.created') . ' >= :windowStart')
+                ->where($db->quoteName('e.created') . ' <= :windowEnd')
                 ->where($db->quoteName('e.media_id') . ' IS NOT NULL')
                 ->group(['COALESCE(' . $db->quoteName('sv.server_name') . ', ' . $db->quote('Unknown') . ')', 'COALESCE(' . $db->quoteName('sv.type') . ', ' . $db->quote('other') . ')'])
                 ->order('(SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) + SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END)) DESC');
+            $this->bindCreatedWindow($query, $start, $end);
 
             if ($locationId > 0) {
                 $query->where($db->quoteName('e.location_id') . ' = ' . (int) $locationId);
@@ -1505,6 +1560,10 @@ class CwmanalyticsModel extends BaseDatabaseModel
             $db      = $this->getDatabase();
             $filters = $this->buildMessagesFilters($db, $locationId, $search, $status);
 
+            // Raw SQL for the same reason as getSeriesList: correlated scalar
+            // subqueries fight the builder. The date window stays quote()d —
+            // binding lives on the builder, and a marker in a plain string
+            // ships to MySQL as literal text.
             $sql = 'SELECT'
                 . ' st.' . $db->quoteName('id') . ' AS study_id,'
                 . ' st.' . $db->quoteName('studytitle') . ' AS title,'

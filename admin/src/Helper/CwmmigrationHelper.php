@@ -598,6 +598,10 @@ class CwmmigrationHelper
 
         $inserted = 0;
 
+        // Plain-string SQL on purpose: the builder has no INSERT IGNORE, and
+        // idempotence is the whole point of the seed. The values stay
+        // quote()d — binding lives on the builder — and every row is this
+        // file's own catalogue, not input.
         foreach ($translations as $row) {
             $values = $db->quote($row[0]) . ', '
                 . $db->quote($row[1]) . ', '
@@ -628,9 +632,12 @@ class CwmmigrationHelper
         foreach ($renames as $oldAbbr => [$newAbbr, $newName]) {
             $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_bible_translations'))
-                ->set($db->quoteName('abbreviation') . ' = ' . $db->quote($newAbbr))
-                ->set($db->quoteName('name') . ' = ' . $db->quote($newName))
-                ->where($db->quoteName('abbreviation') . ' = ' . $db->quote($oldAbbr));
+                ->set($db->quoteName('abbreviation') . ' = :newabbr')
+                ->set($db->quoteName('name') . ' = :newname')
+                ->where($db->quoteName('abbreviation') . ' = :oldabbr')
+                ->bind(':newabbr', $newAbbr)
+                ->bind(':newname', $newName)
+                ->bind(':oldabbr', $oldAbbr);
             $db->setQuery($query);
             $db->execute();
         }
@@ -711,7 +718,8 @@ class CwmmigrationHelper
                 ->update($db->quoteName('#__bsms_bible_translations'))
                 ->set($db->quoteName('installed') . ' = 1')
                 ->set($db->quoteName('verse_count') . ' = ' . (int) $row->cnt)
-                ->where($db->quoteName('abbreviation') . ' = ' . $db->quote($abbr));
+                ->where($db->quoteName('abbreviation') . ' = :abbr')
+                ->bind(':abbr', $abbr);
             $db->setQuery($query);
             $db->execute();
         }
@@ -757,15 +765,23 @@ class CwmmigrationHelper
         $updated = 0;
 
         foreach ($replacements as $search => $replace) {
+            // ⚠️ Backslash is LIKE's escape character, so the JSON-escaped
+            // search term needs its backslashes doubled for the pattern —
+            // "\/" in a LIKE means an escaped slash and matches a plain "/",
+            // never the literal "\/" the JSON actually stores. Without this
+            // the WHERE matched nothing and the fixer has been a silent no-op
+            // since it shipped: REPLACE was right, the row filter never was.
+            $like  = '%' . str_replace('\\', '\\\\', $search) . '%';
             $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_mediafiles'))
                 ->set(
                     $db->quoteName('params') . ' = REPLACE('
-                    . $db->quoteName('params') . ', '
-                    . $db->quote($search) . ', '
-                    . $db->quote($replace) . ')'
+                    . $db->quoteName('params') . ', :search, :replace)'
                 )
-                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%' . $search . '%'));
+                ->where($db->quoteName('params') . ' LIKE :like')
+                ->bind(':search', $search)
+                ->bind(':replace', $replace)
+                ->bind(':like', $like);
             $db->setQuery($query);
             $db->execute();
             $updated += $db->getAffectedRows();
@@ -979,7 +995,8 @@ class CwmmigrationHelper
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_locations'))
-            ->where($db->quoteName('location_text') . ' = ' . $db->quote($name));
+            ->where($db->quoteName('location_text') . ' = :name')
+            ->bind(':name', $name);
         $db->setQuery($query);
         $existing = (int) $db->loadResult();
 
@@ -987,13 +1004,28 @@ class CwmmigrationHelper
             return $existing;
         }
 
-        // Insert new location
-        $alias              = \Joomla\CMS\Application\ApplicationHelper::stringURLSafe($name);
+        // Insert new location.
+        //
+        // ⚠️ #__bsms_locations has no alias column — the row this replaces set
+        // one, which insertObject() turned into an unknown-column INSERT. The
+        // NOT-NULL companions (params, sortnames, meta fields, xreference,
+        // language) are supplied because under strict-mode MySQL omitting any
+        // one of them fails the whole insert: creating a location from an
+        // access level never worked on such hosts. Surfaced by the
+        // migration-bindings test.
         $row                = new \stdClass();
         $row->location_text = $name;
-        $row->alias         = $alias ?: 'location-' . (int) $accessLevel->id;
         $row->published     = 1;
         $row->access        = 1; // Public
+        $row->language      = '*';
+        $row->params        = '{}';
+        $row->sortname1     = '';
+        $row->sortname2     = '';
+        $row->sortname3     = '';
+        $row->metakey       = '';
+        $row->metadesc      = '';
+        $row->metadata      = '';
+        $row->xreference    = '';
         $db->insertObject('#__bsms_locations', $row);
 
         $newId = (int) $db->insertid();
