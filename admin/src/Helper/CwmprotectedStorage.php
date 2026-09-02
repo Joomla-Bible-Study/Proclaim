@@ -177,13 +177,29 @@ class CwmprotectedStorage
             return false;
         }
 
-        $path = parse_url($target, PHP_URL_PATH) ?: $target;
-        $root = rtrim(JPATH_ROOT, '/\\');
+        // ⚠️ A URL on someone else's host is served by them, whatever its path
+        // spells. Without this a remote server whose media happens to sit under
+        // /images/biblestudy/protected/ would be judged by whether a file of
+        // that name exists here — a coincidence deciding how a file is
+        // delivered. CwmmediaStreamer::serve() checks the host for the same
+        // reason before it resolves anything locally.
+        $host = strtolower((string) (parse_url($target, PHP_URL_HOST) ?: ''));
+        $site = strtolower((string) (parse_url(Uri::root(), PHP_URL_HOST) ?: ''));
 
-        // A site URL arrives as a web path; an absolute filesystem path is
-        // already rooted. Both end up compared as real paths.
-        $candidate = str_starts_with($path, $root) ? $path : $root . '/' . ltrim(rawurldecode($path), '/');
-        $real      = realpath($candidate);
+        if ($host !== '' && $host !== $site) {
+            return false;
+        }
+
+        // Shares the join with the streamer rather than repeating it: the two
+        // have to agree about where a URL lands on disk, or a file can be
+        // judged to be in protected storage and then not found there.
+        $candidate = CwmmediaStreamer::candidatePath($target, Uri::root(true), JPATH_ROOT);
+
+        if ($candidate === '') {
+            return false;
+        }
+
+        $real = realpath($candidate);
 
         if ($real === false) {
             return false;
