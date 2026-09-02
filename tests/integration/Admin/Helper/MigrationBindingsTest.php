@@ -76,6 +76,25 @@ class MigrationBindingsTest extends IntegrationTestCase
     #[TestDox('reconciliation writes a bound verse count for an installed translation')]
     public function testReconcileBibleTranslations(): void
     {
+        // Self-sufficient on purpose: a first draft asserted on kjv's real
+        // verse text, which exists on a dev database and not on CI's clean
+        // one — the same environment-dependence this suite exists to keep out
+        // of the queries themselves. Three seeded verses are the whole world.
+        CwmmigrationHelper::seedBibleTranslations();
+
+        foreach ([1, 2, 3] as $verse) {
+            // Book 99: no Bible has one, so the unique key cannot collide
+            // with real verse data on a dev database that carries the KJV.
+            $row = (object) [
+                'translation' => 'kjv',
+                'book'        => 99,
+                'chapter'     => 1,
+                'verse'       => $verse,
+                'text'        => 'Fixture verse ' . $verse,
+            ];
+            $this->db->insertObject('#__bsms_bible_verses', $row);
+        }
+
         CwmmigrationHelper::reconcileBibleTranslations();
 
         $kjv = $this->db->setQuery(
@@ -86,8 +105,8 @@ class MigrationBindingsTest extends IntegrationTestCase
         )->loadObject();
 
         $this->assertNotNull($kjv, 'kjv is missing from the catalogue.');
-        $this->assertSame(1, (int) $kjv->installed);
-        $this->assertGreaterThan(30000, (int) $kjv->verse_count, 'The bound verse count did not land.');
+        $this->assertSame(1, (int) $kjv->installed, 'A translation with verses was not marked installed.');
+        $this->assertGreaterThanOrEqual(3, (int) $kjv->verse_count, 'The bound verse count did not land.');
     }
 
     #[TestDox('the legacy-path fixer rewrites through its bound REPLACE')]
