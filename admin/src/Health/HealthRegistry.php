@@ -35,6 +35,7 @@ use CWM\Component\Proclaim\Administrator\Health\Check\RecentBackupCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\RestrictedMediaCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SchemaVersionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\SetupChecklistCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SimpleModeCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodeCssCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodeFileCheck;
@@ -75,6 +76,7 @@ final class HealthRegistry
             new SchemaVersionCheck(),
             new PodcastTaskCheck(),
             new SimpleModeCheck(),
+            new SetupChecklistCheck(),
             new AssetDriftCheck(),
             new ProtectedStorageCheck(),
             new RestrictedMediaCheck(),
