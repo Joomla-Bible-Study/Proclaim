@@ -86,11 +86,22 @@ final class SetupChecklistCheck implements HealthCheckInterface
      */
     public function run(): HealthResult
     {
+        // ⚠️ Asked first, and not by looking at the list. getChecklistItems()
+        // consults neither setup flag — it builds its items unconditionally, so
+        // on a site that has never run the wizard it returns every step marked
+        // as not done. Reporting that would describe an install that has not
+        // started as one that has fallen behind, and would put a notice on
+        // every fresh install on the strength of seeded sample records.
+        if (!CwmsetupwizardHelper::wizardComplete()) {
+            return new HealthResult(
+                $this->getId(),
+                HealthStatus::Ok,
+                Text::_('JBS_HEALTH_SETUP_CHECKLIST_NONE')
+            );
+        }
+
         $items = CwmsetupwizardHelper::getChecklistItems();
 
-        // No checklist to report on. getChecklistItems() returns nothing when
-        // the setup wizard has not run, and a site that never ran it has not
-        // left anything unfinished — it has not started.
         if ($items === []) {
             return new HealthResult(
                 $this->getId(),
