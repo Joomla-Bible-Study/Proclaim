@@ -193,22 +193,30 @@ class CwmcsvimportHelper
             'created_by', 'ordering',
         ];
 
+        // Locals, not expressions: bind() takes its value by reference.
+        $language  = (string) ($rowData['language'] ?? '*');
+        $intro     = (string) ($rowData['studyintro'] ?? '');
+        $text      = (string) ($rowData['studytext'] ?? '');
+        $number    = (string) ($rowData['studynumber'] ?? '');
+        $thumbnail = (string) ($rowData['thumbnailm'] ?? '');
+        $byAlias   = (string) ($rowData['created_by_alias'] ?? '');
+
         $values = [
-            $db->quote($title),
-            $db->quote($alias),
-            $db->quote($studyDate),
+            ':title',
+            ':alias',
+            ':studydate',
             $published,
             1,
-            $db->quote($rowData['language'] ?? '*'),
+            ':language',
             0,
-            $db->quote($rowData['studyintro'] ?? ''),
-            $db->quote($rowData['studytext'] ?? ''),
-            $db->quote($rowData['studynumber'] ?? ''),
+            ':intro',
+            ':studytext',
+            ':studynumber',
             (int) $seriesId ?: 'NULL',
             (int) $locationId ?: 'NULL',
             (int) $messageTypeId ?: 'NULL',
-            $db->quote($rowData['thumbnailm'] ?? ''),
-            $db->quote($rowData['created_by_alias'] ?? ''),
+            ':thumbnail',
+            ':byalias',
             (int) ($user ? $user->id : 0),
             0,
         ];
@@ -216,7 +224,16 @@ class CwmcsvimportHelper
         $query = $db->createQuery()
             ->insert($db->quoteName('#__bsms_studies'))
             ->columns($db->quoteName($columns))
-            ->values(implode(', ', $values));
+            ->values(implode(', ', $values))
+            ->bind(':title', $title)
+            ->bind(':alias', $alias)
+            ->bind(':studydate', $studyDate)
+            ->bind(':language', $language)
+            ->bind(':intro', $intro)
+            ->bind(':studytext', $text)
+            ->bind(':studynumber', $number)
+            ->bind(':thumbnail', $thumbnail)
+            ->bind(':byalias', $byAlias);
         $db->setQuery($query);
         $db->execute();
 
@@ -265,18 +282,22 @@ class CwmcsvimportHelper
         $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $user       = Factory::getApplication()->getIdentity();
 
-        $fields = [];
+        $fields   = [];
+        $bindings = [];
 
         if (!empty($rowData['studyintro'])) {
-            $fields[] = $db->quoteName('studyintro') . ' = ' . $db->quote($rowData['studyintro']);
+            $fields[]              = $db->quoteName('studyintro') . ' = :intro';
+            $bindings[':intro']    = (string) $rowData['studyintro'];
         }
 
         if (!empty($rowData['studytext'])) {
-            $fields[] = $db->quoteName('studytext') . ' = ' . $db->quote($rowData['studytext']);
+            $fields[]               = $db->quoteName('studytext') . ' = :studytext';
+            $bindings[':studytext'] = (string) $rowData['studytext'];
         }
 
         if (!empty($rowData['studynumber'])) {
-            $fields[] = $db->quoteName('studynumber') . ' = ' . $db->quote($rowData['studynumber']);
+            $fields[]                 = $db->quoteName('studynumber') . ' = :studynumber';
+            $bindings[':studynumber'] = (string) $rowData['studynumber'];
         }
 
         if (!empty($rowData['series'])) {
@@ -313,6 +334,14 @@ class CwmcsvimportHelper
                 ->update($db->quoteName('#__bsms_studies'))
                 ->set($fields)
                 ->where($db->quoteName('id') . ' = ' . $studyId);
+
+            // Bound through the array element, never the loop variable — bind()
+            // keeps a reference, and a foreach value would leave every marker
+            // pointing at the last field written.
+            foreach (array_keys($bindings) as $marker) {
+                $query->bind($marker, $bindings[$marker]);
+            }
+
             $db->setQuery($query);
             $db->execute();
         }
@@ -374,7 +403,8 @@ class CwmcsvimportHelper
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_teachers'))
-            ->where('LOWER(' . $db->quoteName('teachername') . ') = LOWER(' . $db->quote($name) . ')')
+            ->where('LOWER(' . $db->quoteName('teachername') . ') = LOWER(:name)')
+            ->bind(':name', $name)
             ->setLimit(1);
         $db->setQuery($query);
         $id = (int) $db->loadResult();
@@ -392,10 +422,18 @@ class CwmcsvimportHelper
         // Auto-create
         $alias = OutputFilter::stringURLSafe($name);
 
-        $insert = $db->createQuery()
+        // ⚠️ Every NOT-NULL column with no default is supplied, because under
+        // strict-mode MySQL omitting any one of them fails the whole insert —
+        // auto-create never worked on such hosts. Surfaced by the write-path
+        // test; present since before the binding conversion.
+        $language = '*';
+        $insert   = $db->createQuery()
             ->insert($db->quoteName('#__bsms_teachers'))
-            ->columns($db->quoteName(['teachername', 'alias', 'published']))
-            ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
+            ->columns($db->quoteName(['teachername', 'alias', 'published', 'language', 'address']))
+            ->values(":name, :alias, 1, :language, ''")
+            ->bind(':name', $name)
+            ->bind(':alias', $alias)
+            ->bind(':language', $language);
         $db->setQuery($insert);
         $db->execute();
 
@@ -452,7 +490,8 @@ class CwmcsvimportHelper
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_series'))
-            ->where('LOWER(' . $db->quoteName('series_text') . ') = LOWER(' . $db->quote($name) . ')')
+            ->where('LOWER(' . $db->quoteName('series_text') . ') = LOWER(:name)')
+            ->bind(':name', $name)
             ->setLimit(1);
         $db->setQuery($query);
         $id = (int) $db->loadResult();
@@ -469,10 +508,18 @@ class CwmcsvimportHelper
 
         $alias = OutputFilter::stringURLSafe($name);
 
-        $insert = $db->createQuery()
+        // ⚠️ Every NOT-NULL column with no default is supplied, because under
+        // strict-mode MySQL omitting any one of them fails the whole insert —
+        // auto-create never worked on such hosts. Surfaced by the write-path
+        // test; present since before the binding conversion.
+        $language = '*';
+        $insert   = $db->createQuery()
             ->insert($db->quoteName('#__bsms_series'))
-            ->columns($db->quoteName(['series_text', 'alias', 'published']))
-            ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
+            ->columns($db->quoteName(['series_text', 'alias', 'published', 'language']))
+            ->values(':name, :alias, 1, :language')
+            ->bind(':name', $name)
+            ->bind(':alias', $alias)
+            ->bind(':language', $language);
         $db->setQuery($insert);
         $db->execute();
 
@@ -520,7 +567,8 @@ class CwmcsvimportHelper
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_locations'))
-            ->where('LOWER(' . $db->quoteName('location_text') . ') = LOWER(' . $db->quote($name) . ')')
+            ->where('LOWER(' . $db->quoteName('location_text') . ') = LOWER(:name)')
+            ->bind(':name', $name)
             ->setLimit(1);
         $db->setQuery($query);
         $id = (int) $db->loadResult();
@@ -537,10 +585,23 @@ class CwmcsvimportHelper
 
         $alias = OutputFilter::stringURLSafe($name);
 
-        $insert = $db->createQuery()
+        // ⚠️ #__bsms_locations has no alias column, so the insert this
+        // replaces failed with "Unknown column" on every database — location
+        // auto-create from a CSV has never worked. The NOT-NULL companions
+        // are supplied for strict-mode MySQL, where omitting any one of them
+        // fails the whole insert. Surfaced by the write-path test; both
+        // present since before the binding conversion.
+        $language = '*';
+        $insert   = $db->createQuery()
             ->insert($db->quoteName('#__bsms_locations'))
-            ->columns($db->quoteName(['location_text', 'alias', 'published']))
-            ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
+            ->columns($db->quoteName([
+                'location_text', 'published', 'language',
+                'params', 'sortname1', 'sortname2', 'sortname3',
+                'metakey', 'metadesc', 'metadata', 'xreference',
+            ]))
+            ->values(":name, 1, :language, '{}', '', '', '', '', '', '', ''")
+            ->bind(':name', $name)
+            ->bind(':language', $language);
         $db->setQuery($insert);
         $db->execute();
 
@@ -588,7 +649,8 @@ class CwmcsvimportHelper
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_message_type'))
-            ->where('LOWER(' . $db->quoteName('message_type') . ') = LOWER(' . $db->quote($name) . ')')
+            ->where('LOWER(' . $db->quoteName('message_type') . ') = LOWER(:name)')
+            ->bind(':name', $name)
             ->setLimit(1);
         $db->setQuery($query);
         $id = (int) $db->loadResult();
@@ -608,7 +670,9 @@ class CwmcsvimportHelper
         $insert = $db->createQuery()
             ->insert($db->quoteName('#__bsms_message_type'))
             ->columns($db->quoteName(['message_type', 'alias', 'published']))
-            ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
+            ->values(':name, :alias, 1')
+            ->bind(':name', $name)
+            ->bind(':alias', $alias);
         $db->setQuery($insert);
         $db->execute();
 
@@ -656,7 +720,8 @@ class CwmcsvimportHelper
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_topics'))
-            ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(' . $db->quote($name) . ')')
+            ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(:name)')
+            ->bind(':name', $name)
             ->setLimit(1);
         $db->setQuery($query);
         $id = (int) $db->loadResult();
@@ -673,10 +738,15 @@ class CwmcsvimportHelper
 
         $alias = OutputFilter::stringURLSafe($name);
 
+        // ⚠️ #__bsms_topics has no alias column, so the insert this replaces —
+        // topic_text, alias, published — failed with "Unknown column" on every
+        // database, strict mode or not: auto-creating a topic from a CSV has
+        // never worked. Surfaced by the write-path test.
         $insert = $db->createQuery()
             ->insert($db->quoteName('#__bsms_topics'))
-            ->columns($db->quoteName(['topic_text', 'alias', 'published']))
-            ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
+            ->columns($db->quoteName(['topic_text', 'published', 'language']))
+            ->values(":name, 1, '*'")
+            ->bind(':name', $name);
         $db->setQuery($insert);
         $db->execute();
 
@@ -841,8 +911,10 @@ class CwmcsvimportHelper
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_studies'))
-            ->where('LOWER(' . $db->quoteName('studytitle') . ') = LOWER(' . $db->quote($title) . ')')
-            ->where($db->quoteName('studydate') . ' = ' . $db->quote($date))
+            ->where('LOWER(' . $db->quoteName('studytitle') . ') = LOWER(:title)')
+            ->where($db->quoteName('studydate') . ' = :studydate')
+            ->bind(':title', $title)
+            ->bind(':studydate', $date)
             ->setLimit(1);
         $db->setQuery($query);
 
@@ -1046,7 +1118,8 @@ class CwmcsvimportHelper
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_locations'))
-            ->where('LOWER(' . $db->quoteName('location_text') . ') = LOWER(' . $db->quote($name) . ')')
+            ->where('LOWER(' . $db->quoteName('location_text') . ') = LOWER(:name)')
+            ->bind(':name', $name)
             ->setLimit(1);
         $db->setQuery($query);
 
