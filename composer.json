@@ -134,6 +134,7 @@
     "test:reset-testsite": "cwm-reset-testsite",
     "test:migrations": "@php build/verify-migrations.php",
     "verify:update-stream": "@php build/verify-update-stream.php",
+    "verify:update-offered": "@php build/verify-update-offered.php",
     "test:install": "bash build/test-install.sh",
     "test:uninstall": "bash build/test-uninstall.sh",
     "test:upgrade": "bash build/test-upgrade.sh",
