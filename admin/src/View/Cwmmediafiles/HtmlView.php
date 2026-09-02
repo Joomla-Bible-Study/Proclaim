@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafiles;
 
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CwmmediaProtectionHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedMove;
 use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
@@ -212,11 +213,26 @@ class HtmlView extends BaseHtmlView
                 }
             }
 
+            // Offered only while some local server opts in — a menu entry that
+            // can only ever answer "its server does not offer protected
+            // storage" teaches people the menu is noise. Per-row eligibility
+            // (podcast references above all) is decided by the task, which
+            // reports each skip by name.
+            if ($canDo->get('core.edit') && CwmprotectedMove::anyServerOptedIn(Factory::getContainer()->get(DatabaseInterface::class))) {
+                $childBar->separatorButton('protect-separator');
+                $childBar->standardButton('protect', 'JBS_MED_PROTECT', 'cwmmediafiles.protect')
+                    ->icon('icon-lock')
+                    ->listCheck(true);
+                $childBar->standardButton('unprotect', 'JBS_MED_UNPROTECT', 'cwmmediafiles.unprotect')
+                    ->icon('icon-unlock')
+                    ->listCheck(true);
+            }
+
             // Add a batch button
             if (
                 $user->authorise('core.create', 'com_proclaim.mediafile')
                 && $user->authorise('core.edit', 'com_proclaim.mediafile')
-                && $user->authorise('core.edit.transition', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim.mediafile')
             ) {
                 $childBar->popupButton('batch')
                     ->text('JTOOLBAR_BATCH')

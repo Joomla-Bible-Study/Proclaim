@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait
 use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcaptionValidator;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedMove;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -41,6 +42,89 @@ class CwmmediafileController extends FormController
 {
     use MultiCampusAccessTrait;
     use SectionAccessTrait;
+    /**
+     * Move the open record's file into protected storage, then return to it.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function protect(): void
+    {
+        $this->moveOpenRecord(true);
+    }
+
+    /**
+     * Move the open record's file back out of protected storage.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function unprotect(): void
+    {
+        $this->moveOpenRecord(false);
+    }
+
+    /**
+     * One direction of the protected-storage move for the record being edited.
+     *
+     * Returns to the edit form either way: the move changes the file's
+     * address, and the form on screen should show the address the record now
+     * has rather than the one it was opened with.
+     *
+     * @param   bool  $into  True to move into protected storage, false out.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    private function moveOpenRecord(bool $into): void
+    {
+        $this->checkToken();
+
+        $app = Factory::getApplication();
+        $id  = (int) ($this->input->get('jform', [], 'array')['id'] ?? 0) ?: $this->input->getInt('id');
+
+        $return = Route::_(
+            'index.php?option=' . $this->option . '&view=' . $this->view_item . '&layout=edit&id=' . $id,
+            false
+        );
+
+        if ($id <= 0) {
+            // An unsaved record has no file of record to move.
+            $app->enqueueMessage(Text::_('JBS_MED_PROTECT_REFUSED_NO_FILE'), 'warning');
+            $this->setRedirect($return);
+
+            return;
+        }
+
+        if (!$app->getIdentity()->authorise('core.edit', 'com_proclaim.mediafile')) {
+            $app->enqueueMessage(Text::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'), 'error');
+            $this->setRedirect($return);
+
+            return;
+        }
+
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $result = $into ? CwmprotectedMove::moveIn($db, $id) : CwmprotectedMove::moveOut($db, $id);
+
+        if ($result['ok']) {
+            $app->enqueueMessage(
+                Text::plural($into ? 'JBS_MED_PROTECT_DONE_N' : 'JBS_MED_UNPROTECT_DONE_N', 1)
+            );
+        } else {
+            $app->enqueueMessage(
+                Text::sprintf('JBS_MED_PROTECT_SKIPPED', '#' . $id, Text::_($result['reason'])),
+                'warning'
+            );
+        }
+
+        $this->setRedirect($return);
+    }
 
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
