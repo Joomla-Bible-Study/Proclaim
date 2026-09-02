@@ -267,8 +267,12 @@ class CwmmediafilesModel extends ListModel
             $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('mediafile.language')
         );
 
-        // Join over the studies
+        // Join over the studies. The access level comes along because a media
+        // file inherits its visibility from its message, so the row cannot
+        // explain why a visitor is refused without it — the media's own level
+        // often reads Public while the message is what restricts.
         $query->select($db->quoteName('study.studytitle', 'studytitle'));
+        $query->select($db->quoteName('study.access', 'study_access'));
         $query->join(
             'LEFT',
             $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('mediafile.study_id')
@@ -278,6 +282,7 @@ class CwmmediafilesModel extends ListModel
         // reads it, but a media file inherits its visibility from the series as
         // well as the study, so a predicate that omits it would miss files
         // restricted only at that level.
+        $query->select($db->quoteName('series.access', 'series_access'));
         $query->join(
             'LEFT',
             $db->quoteName('#__bsms_series', 'series') . ' ON '

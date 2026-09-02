@@ -67,7 +67,11 @@ class CwmprotectedMoveTest extends ProclaimTestCase
     public static function refusals(): array
     {
         return [
-            'a YouTube server'  => [['server_type' => 'youtube'], 'JBS_MED_PROTECT_REFUSED_SERVER_TYPE'],
+            'a YouTube server' => [['server_type' => 'youtube'], 'JBS_MED_PROTECT_REFUSED_SERVER_TYPE'],
+            // Named apart from other non-local types: a legacy server's files
+            // often ARE local, and the useful next step is migration, not a
+            // claim that the file lives elsewhere.
+            'a legacy server'   => [['server_type' => 'legacy'], 'JBS_MED_PROTECT_REFUSED_SERVER_LEGACY'],
             'no server at all'  => [['server_type' => null], 'JBS_MED_PROTECT_REFUSED_SERVER_TYPE'],
             'switch off'        => [['server_params' => '{"path":""}'], 'JBS_MED_PROTECT_REFUSED_SERVER_OFF'],
             'switch explicit 0' => [['server_params' => '{"protected_storage":"0"}'], 'JBS_MED_PROTECT_REFUSED_SERVER_OFF'],

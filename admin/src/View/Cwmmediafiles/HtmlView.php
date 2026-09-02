@@ -140,6 +140,7 @@ class HtmlView extends BaseHtmlView
         $this->activeFilters = $model->getActiveFilters();
 
         $this->warnIfProtectedStorageIsNotWorking();
+        $this->prepareRestrictionNotes();
 
         // Check for errors.
         if (\count($errors = $model->getErrors())) {
@@ -302,6 +303,69 @@ class HtmlView extends BaseHtmlView
      *
      * @since   10.5.8
      */
+    /**
+     * The levels a visitor holds, when the restricted filter is active.
+     *
+     * @var    array<int>
+     * @since  __DEPLOY_VERSION__
+     */
+    public array $visitorLevels = [];
+
+    /**
+     * View level titles by id, when the restricted filter is active.
+     *
+     * @var    array<int, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    public array $levelNames = [];
+
+    /**
+     * Whether the rows should explain their restriction.
+     *
+     * @var    bool
+     * @since  __DEPLOY_VERSION__
+     */
+    public bool $explainRestriction = false;
+
+    /**
+     * Give the restricted list what it needs to explain itself.
+     *
+     * The filter answers which files a visitor cannot see; each row then has
+     * to say why, because the restriction is usually inherited — the media's
+     * own level reads Public while its message is what refuses — and an
+     * unexplained row costs whoever meets it a database query.
+     *
+     * Level titles come from the site's own #__viewlevels, never hardcoded:
+     * sites rename them.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function prepareRestrictionNotes(): void
+    {
+        if ((int) $this->state->get('filter.restricted') !== 1) {
+            return;
+        }
+
+        $this->explainRestriction = true;
+
+        $guest = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
+
+        $this->visitorLevels = array_map('intval', $guest->getAuthorisedViewLevels() ?: [0]);
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()
+            ->select($db->quoteName(['id', 'title']))
+            ->from($db->quoteName('#__viewlevels'));
+
+        foreach ($db->setQuery($query)->loadObjectList() ?: [] as $row) {
+            $this->levelNames[(int) $row->id] = (string) $row->title;
+        }
+
+        Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_RESTRICTED_BANNER'), 'info');
+    }
+
     private function warnIfProtectedStorageIsNotWorking(): void
     {
         $status = CwmprotectedStorage::status();
