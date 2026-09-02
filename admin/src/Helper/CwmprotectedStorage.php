@@ -111,7 +111,19 @@ class CwmprotectedStorage
     }
 
     /**
-     * How many media files the protected directory actually holds.
+     * How many entries may be examined before the answer is assumed.
+     *
+     * A bound, not a limit on what may be stored. Reached only by a directory
+     * tree of many folders holding no files, since the scan stops at the first
+     * file it finds — but this runs on every media list render, so it must not
+     * be able to walk an arbitrary tree.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private const SCAN_LIMIT = 5000;
+
+    /**
+     * Whether the protected directory holds any media at all.
      *
      * ⚠️ The question that decides whether any of this is worth reporting. The
      * folder ships with `.htaccess` and `web.config` and nothing else, so an
@@ -122,35 +134,95 @@ class CwmprotectedStorage
      * The guard files are excluded because they are ours, not media, and they
      * are the whole contents of an unused folder.
      *
-     * @return  int  Zero when the directory is absent or holds only its guards.
+     * ⚠️ A boolean rather than a count, because a count is more than either
+     * caller asks for and more than this can honestly promise: it stops at the
+     * first file rather than walking the whole tree, and it stops at
+     * SCAN_LIMIT entries regardless. Returning a number those shortcuts make
+     * wrong would invite someone to display it.
+     *
+     * @return  bool  False only when the directory is absent, or genuinely
+     *                holds nothing but its own guard files.
      *
      * @since   __DEPLOY_VERSION__
      */
-    public static function fileCount(): int
+    public static function holdsAnything(): bool
     {
-        $path = self::path();
+        return self::containsMedia(self::path());
+    }
 
-        if (!is_dir($path)) {
-            return 0;
+    /**
+     * Whether a directory contains anything that is media rather than a guard.
+     *
+     * Takes the directory instead of reading it from the class so the walk can
+     * be exercised against a real tree. The behaviour that matters here is
+     * recursion, and recursion cannot be asserted against a folder whose
+     * location is fixed to JPATH_ROOT.
+     *
+     * ⚠️ Recursive on purpose. A single-level scan reported a folder holding
+     * media in a subdirectory as empty, and an empty folder is precisely the
+     * state System Health describes as "nothing is exposed". Nothing places
+     * files there yet, so every file in it was put there by hand — and an
+     * administrator mirroring their media layout uses subdirectories. The one
+     * path that exists in practice was the one not covered.
+     *
+     * @param   string  $dir  Directory to walk.
+     *
+     * @return  bool  True on the first media file found, or if the scan was
+     *                cut short — an unfinished scan must never be reported as
+     *                an empty folder, which is the reassuring answer.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function containsMedia(string $dir): bool
+    {
+        if (!is_dir($dir)) {
+            return false;
         }
 
-        $found = 0;
+        try {
+            // CATCH_GET_CHILD: a subdirectory this process cannot read is
+            // skipped rather than aborting the walk. Its contents are unknown,
+            // not absent, but refusing to answer at all would leave the caller
+            // with nothing.
+            // ⚠️ SELF_FIRST, not LEAVES_ONLY. LEAVES_ONLY never yields a
+            // directory, so a tree of empty folders produces no entries at all
+            // and the bound below counts nothing while the walk still descends
+            // every one of them — a limit that cannot be reached is not a
+            // limit. Yielding directories too makes the count reflect the work.
+            $walk = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::SELF_FIRST,
+                \RecursiveIteratorIterator::CATCH_GET_CHILD
+            );
+        } catch (\Throwable) {
+            // Unreadable at the top. Same reasoning as the limit below.
+            return true;
+        }
 
-        foreach (glob($path . '/*') ?: [] as $entry) {
-            if (!is_file($entry)) {
+        $seen = 0;
+
+        foreach ($walk as $entry) {
+            if (++$seen > self::SCAN_LIMIT) {
+                return true;
+            }
+
+            if (!$entry->isFile()) {
                 continue;
             }
 
-            $name = basename($entry);
+            $name = $entry->getFilename();
 
+            // Guards are skipped wherever they appear: an administrator who
+            // copies the directory's own deny files into a subfolder has still
+            // not stored media there.
             if ($name === 'web.config' || str_starts_with($name, '.')) {
                 continue;
             }
 
-            $found++;
+            return true;
         }
 
-        return $found;
+        return false;
     }
 
     /**

@@ -85,15 +85,15 @@ final class ProtectedStorageCheck implements HealthCheckInterface
      * The sentence for a folder that is not confirmed protected.
      *
      * @param   string  $stored  The recorded verdict.
-     * @param   int     $files   How many media files the folder holds.
+     * @param   bool    $holds   Whether the folder holds any media of its own.
      *
      * @return  string
      *
      * @since   __DEPLOY_VERSION__
      */
-    private function describe(string $stored, int $files): string
+    private function describe(string $stored, bool $holds): string
     {
-        if ($files === 0) {
+        if (!$holds) {
             return Text::_('JBS_HEALTH_PROTECTED_STORAGE_EMPTY');
         }
 
@@ -138,20 +138,20 @@ final class ProtectedStorageCheck implements HealthCheckInterface
         // this sat orange on every install for a folder holding only its own
         // guard files, and on a local or firewalled site the probe can never
         // succeed, so it never cleared.
-        $stored_files = CwmprotectedStorage::fileCount();
+        $holds_files  = CwmprotectedStorage::holdsAnything();
 
         if ($stored !== CwmmediaProtectionHelper::PROTECTED) {
             return new HealthResult(
                 $this->getId(),
-                $stored_files === 0 ? HealthStatus::Notice : HealthStatus::Warning,
+                $holds_files ? HealthStatus::Warning : HealthStatus::Notice,
                 // ⚠️ One statement, not a warning with a disclaimer bolted on.
                 // Stacking "not treated as safe" against "nothing is exposed"
                 // made a paragraph that alarms and then withdraws it; the empty
                 // case gets its own calm wording instead.
-                $this->describe($stored, $stored_files),
+                $this->describe($stored, $holds_files),
                 // The verdict, so quietening an EXPOSED site does not also
                 // quieten it once the verdict changes to something else.
-                $stored . ':' . ($stored_files === 0 ? 'empty' : 'holding'),
+                $stored . ':' . ($holds_files ? 'holding' : 'empty'),
                 'index.php?option=com_proclaim&view=cwmmediafiles&filter[restricted]=1',
                 Text::_('JBS_HEALTH_PROTECTED_STORAGE_ACTION')
             );
