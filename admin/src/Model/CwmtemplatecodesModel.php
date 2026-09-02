@@ -187,7 +187,7 @@ class CwmtemplatecodesModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('templatecode.published') . ' = ' . (int)$published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('templatecode.published') . ' = 0 OR ' . $db->quoteName('templatecode.published') . ' = 1)');
+            $query->whereIn($db->quoteName('templatecode.published'), [0, 1]);
         }
 
         // Add the list ordering clause

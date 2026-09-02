@@ -520,8 +520,8 @@ class Cwmpagebuilder
                 'com_proclaim'
             ))
         ) {
-            $query->where('(' . $db->quoteName('study.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_up') . ' <= ' . $nowDate . ')')
-                ->where('(' . $db->quoteName('study.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_down') . ' >= ' . $nowDate . ')');
+            $query->andWhere([$db->quoteName('study.publish_up') . ' = ' . $nullDate, $db->quoteName('study.publish_up') . ' <= ' . $nowDate])
+                ->andWhere([$db->quoteName('study.publish_down') . ' = ' . $nullDate, $db->quoteName('study.publish_down') . ' >= ' . $nowDate]);
 
             // Cascading series date window (like Joomla categories)
             $query->where(
@@ -532,7 +532,11 @@ class Cwmpagebuilder
                 . ' OR ' . $db->quoteName('study.series_id') . ' IS NULL)'
             );
         } else {
-            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
+            $query->andWhere([
+                $db->quoteName('series.published') . ' = 1',
+                $db->quoteName('study.series_id') . ' <= 0',
+                $db->quoteName('study.series_id') . ' IS NULL',
+            ]);
         }
 
         // Filter by language
@@ -549,7 +553,11 @@ class Cwmpagebuilder
         $query->order($db->quoteName('studydate') . ' ' . $order);
 
         // Filter only for authorized view
-        $query->where('(' . $db->quoteName('series.access') . ' IN (' . $groups . ') OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
+        $query->andWhere([
+            $db->quoteName('series.access') . ' IN (' . $groups . ')',
+            $db->quoteName('study.series_id') . ' <= 0',
+            $db->quoteName('study.series_id') . ' IS NULL',
+        ]);
         $query->where($db->quoteName('study.access') . ' IN (' . $groups . ')');
 
         $db->setQuery($query, 0, $limit);

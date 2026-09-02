@@ -1028,7 +1028,14 @@ class CwminstallModel extends ListModel
                 $conditions = CwmmigrationHelper::rmoldurl();
                 $query      = $this->getDatabase()->createQuery();
                 $query->delete($this->getDatabase()->quoteName('#__update_sites'));
-                $query->where('(' . implode(' OR ', $conditions) . ')');
+                // The first arm seeds the WHERE that orWhere() extends —
+                // extendWhere() rewrites an existing clause and fatals on none.
+                // rmoldurl() returns a fixed non-empty list.
+                $query->where(array_shift($conditions));
+
+                if ($conditions !== []) {
+                    $query->orWhere($conditions, 'OR');
+                }
                 $this->getDatabase()->setQuery($query);
                 $this->getDatabase()->execute();
                 $this->running = 'Remove Old Update URL\'s';

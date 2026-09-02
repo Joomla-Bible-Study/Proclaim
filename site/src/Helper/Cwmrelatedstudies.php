@@ -389,7 +389,7 @@ class Cwmrelatedstudies
             )
             ->where($db->quoteName('s.id') . ' IN (' . $idList . ')')
             ->where($db->quoteName('s.id') . ' != ' . $studyId)
-            ->where('(' . $db->quoteName('ser.published') . ' = 1 OR ' . $db->quoteName('s.series_id') . ' <= 0)');
+            ->andWhere([$db->quoteName('ser.published') . ' = 1', $db->quoteName('s.series_id') . ' <= 0']);
 
         // Cascading series date window for non-admin users
         $user = Factory::getApplication()->getIdentity();

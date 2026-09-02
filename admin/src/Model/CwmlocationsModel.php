@@ -325,7 +325,7 @@ class CwmlocationsModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('location.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('location.published') . ' = 0 OR ' . $db->quoteName('location.published') . ' = 1)');
+            $query->whereIn($db->quoteName('location.published'), [0, 1]);
         }
 
         // Add the list ordering clause

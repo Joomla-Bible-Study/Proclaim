@@ -188,7 +188,7 @@ class CwmteachersModel extends ListModel
         } elseif (is_numeric($published)) {
             $query->where($db->quoteName('teacher.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('teacher.published') . ' = 0 OR ' . $db->quoteName('teacher.published') . ' = 1)');
+            $query->whereIn($db->quoteName('teacher.published'), [0, 1]);
         }
 
         // Filter by search in title.
@@ -198,6 +198,9 @@ class CwmteachersModel extends ListModel
             if (stripos($search, 'id:') === 0) {
                 $query->where($db->quoteName('teacher.id') . ' = ' . (int) substr($search, 3));
             } else {
+                // Bracketed by hand on purpose: with the All status filter no
+                // earlier branch is guaranteed to have added a WHERE, and
+                // andWhere()/orWhere() extend one that must already exist.
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
                 $query->where('(' . $db->quoteName('teacher.teachername') . ' LIKE ' . $search . ' OR ' . $db->quoteName('teacher.alias') . ' LIKE ' . $search . ')');
             }

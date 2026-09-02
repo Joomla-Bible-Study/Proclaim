@@ -202,7 +202,7 @@ class CwmcommentsModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('comment.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('comment.published') . ' = 0 OR ' . $db->quoteName('comment.published') . ' = 1)');
+            $query->whereIn($db->quoteName('comment.published'), [0, 1]);
         }
 
         // Filter by search in title.

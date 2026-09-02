@@ -504,8 +504,8 @@ class Cwmlanding
                 if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
                     $nullDate = $this->db->quote($this->db->getNullDate());
                     $nowDate  = $this->db->quote((new Date())->toSql());
-                    $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
-                        ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
+                    $query->andWhere([$this->db->quoteName('a.publish_up') . ' = ' . $nullDate, $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate])
+                        ->andWhere([$this->db->quoteName('a.publish_down') . ' = ' . $nullDate, $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate]);
                 }
 
                 $this->addAccessFilter($query);
@@ -849,8 +849,8 @@ class Cwmlanding
             if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
                 $nullDate = $this->db->quote($this->db->getNullDate());
                 $nowDate  = $this->db->quote((new Date())->toSql());
-                $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
-                    ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
+                $query->andWhere([$this->db->quoteName('a.publish_up') . ' = ' . $nullDate, $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate])
+                    ->andWhere([$this->db->quoteName('a.publish_down') . ' = ' . $nullDate, $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate]);
             }
 
             $this->addAccessFilter($query);
@@ -1407,8 +1407,8 @@ class Cwmlanding
         if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
             $nullDate = $this->db->quote($this->db->getNullDate());
             $nowDate  = $this->db->quote((new Date())->toSql());
-            $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
-                ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
+            $query->andWhere([$this->db->quoteName('a.publish_up') . ' = ' . $nullDate, $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate])
+                ->andWhere([$this->db->quoteName('a.publish_down') . ' = ' . $nullDate, $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate]);
         }
 
         $this->addAccessFilter($query);

@@ -105,8 +105,10 @@ class Cwmpodcastsubscribe
         $query->select('*')
             ->from($db->quoteName('#__bsms_podcast', 'p'))
             ->where($db->quoteName('p.published') . ' = 1')
-            ->where('(' . $db->quoteName('p.podcast_subscribe_show') . ' IS NULL OR '
-                . $db->quoteName('p.podcast_subscribe_show') . ' != 1)')
+            ->andWhere([
+                $db->quoteName('p.podcast_subscribe_show') . ' IS NULL',
+                $db->quoteName('p.podcast_subscribe_show') . ' != 1',
+            ])
             ->whereIn($db->quoteName('p.access'), $user->getAuthorisedViewLevels());
 
         $db->setQuery($query);

@@ -340,7 +340,7 @@ class CwmmessagesModel extends ListModel
         } elseif (is_numeric($published)) {
             $query->where($db->quoteName('study.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('study.published') . ' = 0 OR ' . $db->quoteName('study.published') . ' = 1 OR ' . $db->quoteName('study.published') . ' = 2)');
+            $query->whereIn($db->quoteName('study.published'), [0, 1, 2]);
         }
 
         // Filter by search in title.

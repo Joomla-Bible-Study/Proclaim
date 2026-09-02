@@ -237,7 +237,7 @@ class CwmpodcastsModel extends ListModel
         } elseif (is_numeric($published)) {
             $query->where($db->quoteName('podcast.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('podcast.published') . ' = 0 OR ' . $db->quoteName('podcast.published') . ' = 1)');
+            $query->whereIn($db->quoteName('podcast.published'), [0, 1]);
         }
 
         // Filter on the language.
@@ -252,6 +252,9 @@ class CwmpodcastsModel extends ListModel
             if (stripos($search, 'id:') === 0) {
                 $query->where($db->quoteName('podcast.id') . ' = ' . (int) substr($search, 3));
             } else {
+                // Bracketed by hand on purpose: with the All status filter no
+                // earlier branch is guaranteed to have added a WHERE, and
+                // andWhere()/orWhere() extend one that must already exist.
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
                 $query->where('(' . $db->quoteName('podcast.title') . ' LIKE ' . $search . ' OR ' . $db->quoteName('podcast.description') . ' LIKE ' . $search . ')');
             }

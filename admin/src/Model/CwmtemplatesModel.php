@@ -175,7 +175,7 @@ class CwmtemplatesModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('template.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('template.published') . ' = 0 OR ' . $db->quoteName('template.published') . ' = 1)');
+            $query->whereIn($db->quoteName('template.published'), [0, 1]);
         }
 
         // Filter by search in filename or study title
