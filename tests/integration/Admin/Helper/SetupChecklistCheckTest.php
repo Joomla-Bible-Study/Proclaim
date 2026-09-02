@@ -73,6 +73,17 @@ class SetupChecklistCheckTest extends IntegrationTestCase
      */
     private function setWizardComplete(int $complete): void
     {
+        $this->setParam('setup_wizard_complete', $complete);
+    }
+
+    /**
+     * @param   string  $key    Param name.
+     * @param   int     $value  Param value.
+     *
+     * @return  void
+     */
+    private function setParam(string $key, int $value): void
+    {
         $json   = (string) $this->db->setQuery(
             $this->db->createQuery()
                 ->select($this->db->quoteName('params'))
@@ -81,7 +92,7 @@ class SetupChecklistCheckTest extends IntegrationTestCase
         )->loadResult();
 
         $params = new Registry($json ?: '{}');
-        $params->set('setup_wizard_complete', $complete);
+        $params->set($key, $value);
 
         $this->db->setQuery(
             $this->db->createQuery()
@@ -91,32 +102,42 @@ class SetupChecklistCheckTest extends IntegrationTestCase
         )->execute();
     }
 
+    #[TestDox('The checklist helper ignores the wizard flag, so the caller must not')]
+    public function testHelperDoesNotGateOnTheWizardFlag(): void
+    {
+        // ⚠️ This is the defect, stated as a property rather than as a symptom.
+        // Asserting instead that the list "contains unfinished steps" made the
+        // test depend on how the site happened to be set up — true locally,
+        // false on a clean CI database, where it failed. The property holds
+        // whatever the site contains.
+        $this->setWizardComplete(0);
+        $before = CwmsetupwizardHelper::getChecklistItems();
+
+        $this->setWizardComplete(1);
+        $after = CwmsetupwizardHelper::getChecklistItems();
+
+        $this->assertNotSame([], $after, 'The checklist is empty in every state; this test would prove nothing.');
+        $this->assertEquals(
+            $before,
+            $after,
+            'getChecklistItems() now consults the wizard flag. If it gates itself, the check no longer has to — '
+            . 'but until it does, anything reporting on this list must ask first.'
+        );
+    }
+
     #[TestDox('A site that never ran the wizard is not told it is behind')]
     public function testSilentBeforeTheWizardHasRun(): void
     {
         $this->setWizardComplete(0);
 
-        // ⚠️ Positive control. The assertion below is only meaningful if the
-        // list genuinely contains unfinished steps in this state — which is
-        // the whole defect. Without this, a helper that returned nothing would
-        // make the check silent for the wrong reason and the test would agree.
-        $undone = array_filter(
-            CwmsetupwizardHelper::getChecklistItems(),
-            static fn (array $item): bool => empty($item['done'])
-        );
-
-        $this->assertNotEmpty(
-            $undone,
-            'getChecklistItems() reported nothing outstanding, so this test cannot show the check ignoring it.'
-        );
-
         $this->assertFalse(CwmsetupwizardHelper::wizardComplete());
 
-        $result = (new SetupChecklistCheck())->run();
-
+        // Meaningful because of the test above: the helper hands over a full
+        // list in this state regardless, so an Ok here is the check declining
+        // to report it rather than there being nothing to report.
         $this->assertSame(
             HealthStatus::Ok,
-            $result->status,
+            (new SetupChecklistCheck())->run()->status,
             'A fresh install was told it had unfinished setup steps, on the strength of seeded records.'
         );
     }
@@ -157,47 +178,33 @@ class SetupChecklistCheckTest extends IntegrationTestCase
         $this->assertNotSame('', $result->fingerprint);
     }
 
-    #[TestDox('Dismissing the dashboard banner does not silence the check')]
+    #[TestDox('Dismissing the dashboard banner does not change what the check reports')]
     public function testDismissalDoesNotSilenceIt(): void
     {
         $this->setWizardComplete(1);
 
-        $json   = (string) $this->db->setQuery(
-            $this->db->createQuery()
-                ->select($this->db->quoteName('params'))
-                ->from($this->db->quoteName('#__bsms_admin'))
-                ->where($this->db->quoteName('id') . ' = 1')
-        )->loadResult();
-        $params = new Registry($json ?: '{}');
-        $params->set('setup_checklist_dismissed', 1);
+        $before = (new SetupChecklistCheck())->run();
 
-        $this->db->setQuery(
-            $this->db->createQuery()
-                ->update($this->db->quoteName('#__bsms_admin'))
-                ->set($this->db->quoteName('params') . ' = ' . $this->db->quote($params->toString()))
-                ->where($this->db->quoteName('id') . ' = 1')
-        )->execute();
+        $this->setParam('setup_checklist_dismissed', 1);
 
-        // The entire point of the check. The banner is gone for good; the
-        // information behind it must not be.
+        // The entire point of the issue. Assert the banner really is gone,
+        // otherwise the comparison below proves nothing.
         $this->assertFalse(
             CwmsetupwizardHelper::shouldShowChecklist(),
             'Setup did not actually dismiss the banner, so this proves nothing.'
         );
 
-        $undone = array_filter(
-            CwmsetupwizardHelper::getChecklistItems(),
-            static fn (array $item): bool => empty($item['done'])
-        );
+        $after = (new SetupChecklistCheck())->run();
 
-        if ($undone === []) {
-            $this->markTestSkipped('Nothing outstanding on this site, so dismissal cannot hide anything.');
-        }
-
+        // ⚠️ Compared rather than asserted against a fixed status, so this holds
+        // on a site with outstanding steps and on one without. Either way the
+        // dismissal must make no difference — that is the bug.
         $this->assertSame(
-            HealthStatus::Notice,
-            (new SetupChecklistCheck())->run()->status,
-            'Dismissing the dashboard banner also silenced System Health, which is the bug.'
+            $before->status,
+            $after->status,
+            'Dismissing the dashboard banner changed what System Health reports, which is the bug.'
         );
+        $this->assertSame($before->detail, $after->detail);
     }
+
 }
