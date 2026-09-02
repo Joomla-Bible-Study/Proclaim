@@ -19,9 +19,12 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmActionlogListTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmediafilesHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedMove;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Utilities\ArrayHelper;
@@ -53,6 +56,98 @@ class CwmmediafilesController extends AdminController
      * @since 10.3.3
      */
     protected string $actionlogTitleColumn = '';
+
+    /**
+     * Move the selected media files into protected storage.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function protect(): void
+    {
+        $this->moveSelected(true);
+    }
+
+    /**
+     * Move the selected media files back out of protected storage.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function unprotect(): void
+    {
+        $this->moveSelected(false);
+    }
+
+    /**
+     * Run one direction of the protected-storage move over the selection.
+     *
+     * Per-item outcomes, not one verdict: a selection is allowed to mix
+     * eligible and ineligible rows, and the administrator is told which were
+     * skipped and why rather than the whole batch failing over one podcast
+     * reference.
+     *
+     * @param   bool  $into  True to move into protected storage, false out.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    private function moveSelected(bool $into): void
+    {
+        $this->checkToken();
+
+        $app = Factory::getApplication();
+        $ids = array_filter(array_map('intval', (array) $this->input->get('cid', [], 'array')));
+
+        // Moving a file rewrites its record; the permission is the record's.
+        if (!$app->getIdentity()->authorise('core.edit', 'com_proclaim.mediafile')) {
+            $app->enqueueMessage(Text::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'), 'error');
+            $this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+
+            return;
+        }
+
+        if ($ids === []) {
+            $app->enqueueMessage(Text::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 'warning');
+            $this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+
+            return;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $moved = 0;
+
+        foreach ($ids as $id) {
+            $result = $into
+                ? CwmprotectedMove::moveIn($db, $id)
+                : CwmprotectedMove::moveOut($db, $id);
+
+            if ($result['ok']) {
+                $moved++;
+
+                continue;
+            }
+
+            $app->enqueueMessage(
+                Text::sprintf('JBS_MED_PROTECT_SKIPPED', '#' . $id, Text::_($result['reason'])),
+                'warning'
+            );
+        }
+
+        if ($moved > 0) {
+            $app->enqueueMessage(
+                Text::plural($into ? 'JBS_MED_PROTECT_DONE_N' : 'JBS_MED_UNPROTECT_DONE_N', $moved)
+            );
+        }
+
+        $this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+    }
 
     /**
      * Proxy for getModel.
