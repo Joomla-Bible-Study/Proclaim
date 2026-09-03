@@ -37,7 +37,7 @@ $wa->useScript('core')
             // so it must close the dialog itself — the parent no longer navigates.
             var choose = function (type) {
                 window.parent.Joomla.submitbutton('cwmserver.setType', type);
-                var dialog = window.parent.document.querySelector('joomla-dialog');
+                var dialog = window.parent.document.querySelector('joomla-dialog.joomla-dialog-content-select-field');
                 if (dialog && dialog.close) { dialog.close(); }
             };
             document.addEventListener('click', function(e) {
