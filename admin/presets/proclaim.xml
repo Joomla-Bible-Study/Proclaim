@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <menu xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:joomla.org" xsi:schemaLocation="urn:joomla.org menu.xsd">
     <menuitem title="COM_PROCLAIM_MENUS" type="heading" icon="file-alt" class="class:file-alt">
-        <menuitem title="COM_PROCLAIM_MENUS_MESSAGE_MANAGER" type="component" element="com_proclaim" link="index.php?option=com_proclaim&amp;view=cwmmessages" quicktask="index.php?option=com_proclaim&amp;task=cwmmessage.add" quicktask-title="COM_PROCLAIM_MENUS_NEW_ARTICLE"/>
+        <menuitem title="COM_PROCLAIM_MENUS_MESSAGE_MANAGER" type="component" element="com_proclaim" link="index.php?option=com_proclaim&amp;view=cwmmessages" quicktask="index.php?option=com_proclaim&amp;task=cwmmessage.add" quicktask-title="COM_PROCLAIM_MENUS_NEW_MESSAGE"/>
     </menuitem>
     <menuitem title="COM_PROCLAIM_MENUS_MANAGE" type="heading" icon="cog" class="class:file-alt">
         <menuitem title="COM_PROCLAIM_MENUS_WORKFLOW" type="component" element="com_workflow" link="index.php?option=com_workflow&amp;view=workflows&amp;extension=com_proclaim.cwmmessages"/>
