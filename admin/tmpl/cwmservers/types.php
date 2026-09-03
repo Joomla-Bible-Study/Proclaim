@@ -33,21 +33,24 @@ $wa->useScript('core')
     ->useStyle('com_proclaim.server-types')
     ->addInlineScript(
         "document.addEventListener('DOMContentLoaded', function() {
+            // This layout renders inside a joomla-dialog iframe (ModalSelectField),
+            // so it must close the dialog itself — the parent no longer navigates.
+            var choose = function (type) {
+                window.parent.Joomla.submitbutton('cwmserver.setType', type);
+                var dialog = window.parent.document.querySelector('joomla-dialog');
+                if (dialog && dialog.close) { dialog.close(); }
+            };
             document.addEventListener('click', function(e) {
                 var card = e.target.closest('[data-type-payload]');
                 if (!card) return;
-                var type = card.getAttribute('data-type-payload');
-                window.parent.Joomla.submitbutton('cwmserver.setType', type);
-                window.parent.Joomla.Modal.getCurrent().close();
+                choose(card.getAttribute('data-type-payload'));
             });
             document.addEventListener('keydown', function(e) {
                 if (e.key !== 'Enter' && e.key !== ' ') return;
                 var card = e.target.closest('[data-type-payload]');
                 if (!card) return;
                 e.preventDefault();
-                var type = card.getAttribute('data-type-payload');
-                window.parent.Joomla.submitbutton('cwmserver.setType', type);
-                window.parent.Joomla.Modal.getCurrent().close();
+                choose(card.getAttribute('data-type-payload'));
             });
         });"
     );
