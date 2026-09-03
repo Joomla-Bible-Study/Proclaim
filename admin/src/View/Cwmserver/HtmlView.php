@@ -106,8 +106,9 @@ class HtmlView extends BaseHtmlView
         $this->canDo       = ContentHelper::getActions('com_proclaim', 'server', (int)$this->item->id);
         $this->server_form = $model->getAddonServerForm();
 
-        // For modalreturn layout, just load item data and render (no toolbar, no extras)
-        if ($this->getLayout() === 'modalreturn') {
+        // Bare renders: modalreturn for the association flow, tabs for the
+        // in-place type swap — data loaded, no toolbar, no chrome.
+        if (\in_array($this->getLayout(), ['modalreturn', 'tabs'], true)) {
             parent::display($tpl);
 
             return;
