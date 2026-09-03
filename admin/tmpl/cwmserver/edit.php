@@ -32,6 +32,13 @@ $isNewRecord = ((int)$this->item->id === 0 && empty($this->item->type));
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
+    // The in-place type swap injects another addon's fields without a reload,
+    // but a fragment cannot bring core field scripts with it. Load the two
+    // that addon fields lean on up front — conditional display (showon) and the
+    // media picker — so whatever type is swapped in finds them already present
+    // and wires up on the joomla:updated event the swap fires.
+    ->useScript('showon')
+    ->useScript('webcomponent.field-media')
     ->addInlineScript(
         "
 	/* Choosing a type must not submit the form: whatever was typed would ride
@@ -103,12 +110,26 @@ $wa->useScript('keepalive')
 					el.value = value;
 				});
 
+				/* Some addon fields (e.g. YouTube's Test API button) ship their
+				   own <script> inline in the field markup. It rode in with the
+				   fragment but a script inserted via innerHTML never runs, so it
+				   is re-created here to execute against the now-live nodes. */
+				fresh.querySelectorAll('script').forEach(function (old) {
+					var copy = document.createElement('script');
+					if (old.src) { copy.src = old.src; } else { copy.textContent = old.textContent; }
+					if (old.type) { copy.type = old.type; }
+					old.replaceWith(copy);
+				});
+
 				/* Joomla widgets in the fresh region bound their listeners to
 				   the OLD nodes at page load. Core scripts (the modal-select
-				   type field, chosen selects, etc.) re-initialise whatever is
-				   inside the target of a joomla:updated event — the same signal
-				   Joomla fires after its own AJAX form swaps. Without this the
-				   type field's own Select/Clear buttons are dead after a swap. */
+				   type field, chosen selects, showon, the media picker)
+				   re-initialise whatever is inside the target of a
+				   joomla:updated event — the same signal Joomla fires after its
+				   own AJAX form swaps. Without this the type field's own
+				   Select/Clear buttons are dead after a swap. The core scripts
+				   themselves are pre-loaded on this page (see the view) so they
+				   exist to answer the event whatever type is swapped in. */
 				fresh.dispatchEvent(new CustomEvent('joomla:updated', { bubbles: true }));
 
 				/* The calendar and validator do not listen for joomla:updated,
