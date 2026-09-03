@@ -55,35 +55,54 @@ test('picking a type swaps fields in place and preserves typed work', async ({ p
     expect(page.url()).toContain('cwmserver');
 });
 
+test('a failed swap rolls back and says nothing changed', async ({ page }) => {
+    await page.goto(ADD, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('joomla-dialog iframe')).toBeVisible();
+
+    // Make the type fetch fail outright.
+    await page.route('**/*cwmserver.typeFields*', (r) => r.fulfill({ status: 500, body: '' }));
+
+    const frame = page.frameLocator('joomla-dialog iframe');
+    await frame.locator('[data-type-payload="local"]').first().click();
+    await expect(page.locator('joomla-dialog')).toHaveCount(0);
+
+    // The message admits nothing changed — and nothing did: the optimistic
+    // type is rolled back and no addon fields were injected, so a Save here
+    // cannot persist a half-applied server (#2037 failure contract).
+    await expect(page.locator('#system-message-container')).toContainText(/could not be loaded/i);
+    await expect(page.locator('#jform_type_id')).toHaveValue('');
+    await expect(page.locator('#server-tabset-region [name="jform[params][delete_files]"]')).toHaveCount(0);
+});
+
 test('the chosen type persists on save, then clean up', async ({ page }) => {
     await page.goto(ADD, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('joomla-dialog iframe')).toBeVisible();
     await pickType(page, 'local', 'jform[params][delete_files]');
     await page.fill('#jform_server_name', NAME);
     await page.evaluate(() => Joomla.submitbutton('cwmserver.save'));
-    await page.waitForLoadState('domcontentloaded');
-    await expect(page.locator('joomla-alert')).toContainText(/saved/i);
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('#system-message-container')).toContainText(/saved/i);
 
     // Reopen the saved record: the type reached the model via the swap path.
-    await page.goto(LIST + '&filter[search]=' + encodeURIComponent(NAME), { waitUntil: 'domcontentloaded' });
+    await page.goto(LIST + "&filter[published]=&filter[search]=" + encodeURIComponent(NAME), { waitUntil: 'networkidle' });
     await page.locator('tbody tr', { hasText: NAME }).locator('a[href*="cwmserver.edit"]').first().click();
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
     await expect(page.locator('#jform_type_id')).toHaveValue('local');
     await page.evaluate(() => Joomla.submitbutton('cwmserver.cancel'));
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
 
     // Trash, then delete permanently, so the fixture never outlives the test.
-    const row = page.locator('tbody tr', { hasText: NAME });
-    await row.locator('input[name="cid[]"]').check();
+    await page.goto(LIST + "&filter[published]=&filter[search]=" + encodeURIComponent(NAME), { waitUntil: 'networkidle' });
+    await page.locator('tbody tr', { hasText: NAME }).locator('input[name="cid[]"]').check();
     await page.evaluate(() => Joomla.submitform('cwmservers.trash', document.getElementById('adminForm')));
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
 
-    await page.goto(LIST + '&filter[published]=-2&filter[search]=' + encodeURIComponent(NAME), { waitUntil: 'domcontentloaded' });
+    await page.goto(LIST + '&filter[published]=-2&filter[search]=' + encodeURIComponent(NAME), { waitUntil: 'networkidle' });
     await page.locator('tbody tr', { hasText: NAME }).locator('input[name="cid[]"]').check();
     page.once('dialog', (d) => d.accept());
     await page.evaluate(() => Joomla.submitform('cwmservers.delete', document.getElementById('adminForm')));
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
 
-    await page.goto(LIST + '&filter[published]=-2&filter[search]=' + encodeURIComponent(NAME), { waitUntil: 'domcontentloaded' });
+    await page.goto(LIST + '&filter[published]=-2&filter[search]=' + encodeURIComponent(NAME), { waitUntil: 'networkidle' });
     await expect(page.locator('tbody tr', { hasText: NAME })).toHaveCount(0);
 });

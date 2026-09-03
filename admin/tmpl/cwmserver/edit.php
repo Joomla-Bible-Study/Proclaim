@@ -46,9 +46,14 @@ $wa->useScript('keepalive')
 		   hidden value input SHARE the name jform[type], so
 		   elements['jform[type]'] is a RadioNodeList and assigning .value to
 		   it does nothing at all. Write to the hidden value input by id, and
-		   mirror it into the visible one so the choice shows immediately. */
+		   mirror it into the visible one so the choice shows immediately.
+		   Remember the prior pair: if the fetch fails we must put them back,
+		   or the form would carry the new type over the old type's fields —
+		   a Save then would persist a mismatched server. */
 		var typeValue = document.getElementById('jform_type_id');
 		var typeTitle = document.getElementById('jform_type');
+		var prevValue = typeValue ? typeValue.value : '';
+		var prevTitle = typeTitle ? typeTitle.value : '';
 		if (typeValue) { typeValue.value = type; }
 		if (typeTitle) { typeTitle.value = type; }
 
@@ -118,6 +123,11 @@ $wa->useScript('keepalive')
 				}
 			})
 			.catch(function () {
+				/* Only the newest request restores; a superseded one must not
+				   clobber a later choice that already applied. */
+				if (seq !== Joomla.cwmSwapServerType._seq) { return; }
+				if (typeValue) { typeValue.value = prevValue; }
+				if (typeTitle) { typeTitle.value = prevTitle; }
 				Joomla.renderMessages({ error: ['" . $this->escape(Text::_('JBS_SVR_TYPE_SWAP_FAILED')) . "'] });
 			});
 	};
