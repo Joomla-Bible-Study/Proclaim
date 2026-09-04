@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmJsonResponseTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcsvimportHelper;
@@ -53,6 +54,8 @@ use Joomla\Registry\Registry;
  */
 class CwmadminController extends FormController
 {
+    use CwmJsonResponseTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -353,7 +356,7 @@ class CwmadminController extends FormController
     public function resetHitsXHR(): void
     {
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
             $this->app->close();
 
             return;
@@ -367,9 +370,9 @@ class CwmadminController extends FormController
         $db->setQuery($query);
 
         if ($db->execute()) {
-            echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
+            $this->sendJsonPayload(['success' => true, 'updated' => $db->getAffectedRows()]);
         } else {
-            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_HITS')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_HITS')]);
         }
 
         $this->app->close();
@@ -385,7 +388,7 @@ class CwmadminController extends FormController
     public function resetDownloadsXHR(): void
     {
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
             $this->app->close();
 
             return;
@@ -399,9 +402,9 @@ class CwmadminController extends FormController
         $db->setQuery($query);
 
         if ($db->execute()) {
-            echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
+            $this->sendJsonPayload(['success' => true, 'updated' => $db->getAffectedRows()]);
         } else {
-            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS')]);
         }
 
         $this->app->close();
@@ -417,7 +420,7 @@ class CwmadminController extends FormController
     public function resetPlaysXHR(): void
     {
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
             $this->app->close();
 
             return;
@@ -431,9 +434,9 @@ class CwmadminController extends FormController
         $db->setQuery($query);
 
         if ($db->execute()) {
-            echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
+            $this->sendJsonPayload(['success' => true, 'updated' => $db->getAffectedRows()]);
         } else {
-            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_PLAYS')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_PLAYS')]);
         }
 
         $this->app->close();
@@ -451,7 +454,7 @@ class CwmadminController extends FormController
     public function getVideoDescriptionXHR(): void
     {
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
             $this->app->close();
 
             return;
@@ -463,7 +466,7 @@ class CwmadminController extends FormController
         $studyId = $this->input->getInt('study_id', 0);
 
         if (!$studyId) {
-            echo json_encode(['success' => false, 'error' => 'No study ID provided']);
+            $this->sendJsonPayload(['success' => false, 'error' => 'No study ID provided']);
             $this->app->close();
 
             return;
@@ -474,9 +477,9 @@ class CwmadminController extends FormController
         try {
             $description = CwmdescriptionHelper::buildVideoDescription($studyId, $mediaId);
 
-            echo json_encode(['success' => true, 'description' => $description]);
+            $this->sendJsonPayload(['success' => true, 'description' => $description]);
         } catch (\Exception $e) {
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            $this->sendJsonPayload(['success' => false, 'error' => $e->getMessage()]);
         }
 
         $this->app->close();
@@ -494,7 +497,7 @@ class CwmadminController extends FormController
     public function syncVideoDescriptionXHR(): void
     {
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
             $this->app->close();
 
             return;
@@ -507,7 +510,7 @@ class CwmadminController extends FormController
         $mediaId = $this->input->getInt('media_id', 0);
 
         if (!$studyId || !$mediaId) {
-            echo json_encode(['success' => false, 'error' => 'Missing study_id or media_id']);
+            $this->sendJsonPayload(['success' => false, 'error' => 'Missing study_id or media_id']);
             $this->app->close();
 
             return;
@@ -538,7 +541,7 @@ class CwmadminController extends FormController
             $server = $db->loadObject();
 
             if (!$server || empty($server->type)) {
-                echo json_encode(['success' => false, 'error' => 'Could not determine server type']);
+                $this->sendJsonPayload(['success' => false, 'error' => 'Could not determine server type']);
                 $this->app->close();
 
                 return;
@@ -550,14 +553,14 @@ class CwmadminController extends FormController
             $addon = CWMAddon::getInstance($serverType);
 
             if (!$addon->supportsDescriptionSync()) {
-                echo json_encode(['success' => false, 'error' => 'This platform does not support description sync']);
+                $this->sendJsonPayload(['success' => false, 'error' => 'This platform does not support description sync']);
                 $this->app->close();
 
                 return;
             }
 
             if ((int) $server->server_published !== 1) {
-                echo json_encode(['success' => false, 'error' => 'That server is disabled']);
+                $this->sendJsonPayload(['success' => false, 'error' => 'That server is disabled']);
                 $this->app->close();
 
                 return;
@@ -567,7 +570,7 @@ class CwmadminController extends FormController
             // caller to have filtered: the view builds its list from the same
             // gate, but this endpoint is reachable on its own.
             if (!$addon->isDescriptionSyncReady($serverId)) {
-                echo json_encode([
+                $this->sendJsonPayload([
                     'success' => false,
                     'error'   => 'That server is not configured for description sync yet',
                 ]);
@@ -578,9 +581,9 @@ class CwmadminController extends FormController
 
             $result = $addon->syncDescription($mediaId, $description);
 
-            echo json_encode($result);
+            $this->sendJsonPayload($result);
         } catch (\Exception $e) {
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            $this->sendJsonPayload(['success' => false, 'error' => $e->getMessage()]);
         }
 
         $this->app->close();
@@ -883,7 +886,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -902,7 +905,7 @@ class CwmadminController extends FormController
             $images_paths[] = [['type' => $image_type, 'images' => $images]];
         }
 
-        echo json_encode(['total' => $count, 'paths' => $images_paths], JSON_THROW_ON_ERROR);
+        $this->sendJsonPayload(['total' => $count, 'paths' => $images_paths]);
 
         $app->close();
     }
@@ -924,7 +927,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1037,7 +1040,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1048,12 +1051,12 @@ class CwmadminController extends FormController
 
         try {
             $counts = CwmImageMigration::getMigrationCounts();
-            echo json_encode($counts, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($counts);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
                 'error'   => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1076,7 +1079,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1091,12 +1094,12 @@ class CwmadminController extends FormController
 
         try {
             $batch = CwmImageMigration::getBatch($type, $limit, $excludeIds);
-            echo json_encode($batch, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($batch);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'records' => [], 'remaining' => 0,
                 'error'   => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1119,7 +1122,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1129,10 +1132,10 @@ class CwmadminController extends FormController
         $id   = $input->get('id', 0, 'int');
 
         if (empty($type) || empty($id)) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'error'   => 'Missing required parameters (type and id)',
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -1145,7 +1148,7 @@ class CwmadminController extends FormController
             $result = ['success' => false, 'newPath' => null, 'error' => $e->getMessage()];
         }
 
-        echo json_encode($result, JSON_THROW_ON_ERROR);
+        $this->sendJsonPayload($result);
 
         $app->close();
     }
@@ -1166,7 +1169,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1175,12 +1178,12 @@ class CwmadminController extends FormController
         try {
             $orphans = CwmImageCleanup::findOrphanedFolders();
             $totals  = CwmImageCleanup::getTotals($orphans);
-            echo json_encode(['orphans' => $orphans, 'totals' => $totals], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['orphans' => $orphans, 'totals' => $totals]);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'orphans' => [], 'totals' => ['folders' => 0, 'size' => 0, 'size_formatted' => '0 B'],
                 'error'   => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1203,7 +1206,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1212,10 +1215,10 @@ class CwmadminController extends FormController
         $paths = $input->get('paths', [], 'array');
 
         if (empty($paths)) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'deleted' => 0,
                 'errors'  => ['No paths provided'],
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -1223,7 +1226,7 @@ class CwmadminController extends FormController
 
         $result = CwmImageCleanup::deleteOrphans($paths);
 
-        echo json_encode($result, JSON_THROW_ON_ERROR);
+        $this->sendJsonPayload($result);
 
         $app->close();
     }
@@ -1246,7 +1249,7 @@ class CwmadminController extends FormController
 
         if (!Session::checkToken('get')) {
             ob_end_clean();
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1255,13 +1258,13 @@ class CwmadminController extends FormController
         try {
             $report = CwmImageMigration::getLegacyFolderReport();
             ob_end_clean();
-            echo json_encode($report, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($report);
         } catch (\Throwable $e) {
             ob_end_clean();
-            echo json_encode([
+            $this->sendJsonPayload([
                 'folders' => [], 'total_files' => 0, 'total_size' => 0,
                 'error'   => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1283,7 +1286,7 @@ class CwmadminController extends FormController
 
         if (!Session::checkToken('get')) {
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1296,7 +1299,7 @@ class CwmadminController extends FormController
 
         if (!is_file($logFile)) {
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => false, 'message' => 'No cleared images log found.'], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => 'No cleared images log found.']);
             $app->close();
 
             return;
@@ -1329,7 +1332,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1337,9 +1340,9 @@ class CwmadminController extends FormController
 
         try {
             $result = CwmImageMigration::getUnresolvableRecords();
-            echo json_encode($result, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($result);
         } catch (\Throwable $e) {
-            echo json_encode(['records' => [], 'count' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['records' => [], 'count' => 0, 'error' => $e->getMessage()]);
         }
 
         $app->close();
@@ -1362,7 +1365,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1370,9 +1373,9 @@ class CwmadminController extends FormController
 
         try {
             $result = CwmImageMigration::clearUnresolvableImages();
-            echo json_encode(['success' => true, 'cleared' => $result['cleared']], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => true, 'cleared' => $result['cleared']]);
         } catch (\Throwable $e) {
-            echo json_encode(['success' => false, 'cleared' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'cleared' => 0, 'error' => $e->getMessage()]);
         }
 
         $app->close();
@@ -1394,7 +1397,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['error' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1405,12 +1408,12 @@ class CwmadminController extends FormController
 
         try {
             $counts = CwmImageMigration::getWebPMigrationCounts();
-            echo json_encode($counts, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($counts);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
                 'error'   => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1433,7 +1436,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['error' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1448,7 +1451,7 @@ class CwmadminController extends FormController
             $result = ['converted' => 0, 'errors' => 0, 'remaining' => 0, 'error' => $e->getMessage()];
         }
 
-        echo json_encode($result, JSON_THROW_ON_ERROR);
+        $this->sendJsonPayload($result);
 
         $app->close();
     }
@@ -1469,7 +1472,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['error' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1480,9 +1483,9 @@ class CwmadminController extends FormController
 
         try {
             $counts = CwmImageMigration::getThumbRegenerationCounts();
-            echo json_encode($counts, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($counts);
         } catch (\Throwable $e) {
-            echo json_encode(['total' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['total' => 0, 'error' => $e->getMessage()]);
         }
 
         $app->close();
@@ -1505,7 +1508,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['error' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1522,7 +1525,7 @@ class CwmadminController extends FormController
             $result = ['processed' => 0, 'errors' => 0, 'remaining' => 0, 'error' => $e->getMessage()];
         }
 
-        echo json_encode($result, JSON_THROW_ON_ERROR);
+        $this->sendJsonPayload($result);
 
         $app->close();
     }
@@ -1546,7 +1549,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1557,12 +1560,12 @@ class CwmadminController extends FormController
 
         try {
             $counts = CwmImageMigration::getRecoveryCounts();
-            echo json_encode($counts, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($counts);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
                 'error'   => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1588,7 +1591,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1599,15 +1602,15 @@ class CwmadminController extends FormController
 
         try {
             $result = CwmImageMigration::recoverBareIdFolders($type, $limit);
-            echo json_encode($result, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($result);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'recovered'    => 0,
                 'skipped'      => 0,
                 'errors'       => 0,
                 'remaining'    => 0,
                 'errorDetails' => [$e->getMessage()],
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1632,7 +1635,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1643,12 +1646,12 @@ class CwmadminController extends FormController
 
         try {
             $counts = CwmImageMigration::getRelinkCounts();
-            echo json_encode($counts, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($counts);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
                 'error'   => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1675,7 +1678,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1686,15 +1689,15 @@ class CwmadminController extends FormController
 
         try {
             $result = CwmImageMigration::relinkBatch($type, $limit);
-            echo json_encode($result, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($result);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'relinked'     => 0,
                 'skipped'      => 0,
                 'errors'       => 0,
                 'remaining'    => 0,
                 'errorDetails' => [$e->getMessage()],
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1718,7 +1721,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken() && !Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1727,10 +1730,10 @@ class CwmadminController extends FormController
         $paths = $input->get('paths', [], 'array');
 
         if (empty($paths)) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'deleted' => 0,
                 'errors'  => ['No paths provided'],
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -1738,12 +1741,12 @@ class CwmadminController extends FormController
 
         try {
             $result = CwmImageMigration::deleteLegacyFiles($paths);
-            echo json_encode($result, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($result);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'deleted' => 0,
                 'errors'  => [$e->getMessage()],
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1765,7 +1768,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1777,15 +1780,15 @@ class CwmadminController extends FormController
         try {
             $html = Cwmstats::getPlayers();
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => true,
                 'data'    => ['html' => $html],
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1807,7 +1810,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -1819,15 +1822,15 @@ class CwmadminController extends FormController
         try {
             $html = Cwmstats::getPopups();
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => true,
                 'data'    => ['html' => $html],
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1849,10 +1852,10 @@ class CwmadminController extends FormController
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => Text::_('JINVALID_TOKEN'),
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -1863,15 +1866,15 @@ class CwmadminController extends FormController
             $model = $this->getModel('Cwmarchive');
             $msg   = $model->doArchive();
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => true,
                 'message' => $msg,
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1893,10 +1896,10 @@ class CwmadminController extends FormController
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => Text::_('JINVALID_TOKEN'),
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -1905,16 +1908,16 @@ class CwmadminController extends FormController
         try {
             $count = Cwmalias::updateAlias();
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => true,
                 'count'   => $count,
                 'message' => Text::_('JBS_ADM_ALIAS_ROWS') . $count,
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -1940,10 +1943,10 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => Text::_('JINVALID_TOKEN'),
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -1977,19 +1980,19 @@ class CwmadminController extends FormController
                 $message .= ' ' . Text::sprintf('JBS_ADM_SCHEMA_SYNC_SKIPPED', $counts['skipped']);
             }
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => true,
                 'count'   => $total,
                 'counts'  => $counts,
                 'done'    => $result['done'],
                 'cursor'  => ['type' => $result['type'], 'lastId' => $result['lastId']],
                 'message' => $message,
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2043,10 +2046,10 @@ class CwmadminController extends FormController
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => Text::_('JINVALID_TOKEN'),
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -2056,10 +2059,10 @@ class CwmadminController extends FormController
         $to   = $input->getCmd('to', 'x');
 
         if ($from === 'x' || $to === 'x') {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_FROM_TO'),
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -2068,16 +2071,16 @@ class CwmadminController extends FormController
         try {
             $count = $this->getModel()->changePlayer($from, $to);
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => true,
                 'count'   => $count,
                 'message' => Text::sprintf('JBS_ADM_PLAYER_CHANGED', $count),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2100,10 +2103,10 @@ class CwmadminController extends FormController
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => Text::_('JINVALID_TOKEN'),
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -2113,10 +2116,10 @@ class CwmadminController extends FormController
         $to   = $input->getCmd('to', 'x');
 
         if ($from === 'x' || $to === 'x') {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_FROM_TO'),
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -2125,16 +2128,16 @@ class CwmadminController extends FormController
         try {
             $count = $this->getModel()->changePopup($from, $to);
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => true,
                 'count'   => $count,
                 'message' => Text::sprintf('JBS_ADM_POPUP_CHANGED', $count),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2175,10 +2178,10 @@ class CwmadminController extends FormController
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => Text::_('JINVALID_TOKEN'),
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -2196,10 +2199,10 @@ class CwmadminController extends FormController
         // break matching for exactly the records that dropdown keeps
         // selectable. An unrecognized value just matches zero rows below.
         if ($mediaType === 'x' || $mediaType === '' || $player === 'x') {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_MEDIATYPE_PLAYER'),
-            ], JSON_THROW_ON_ERROR);
+            ]);
             $app->close();
 
             return;
@@ -2249,16 +2252,16 @@ class CwmadminController extends FormController
                 $count++;
             }
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => true,
                 'count'   => $count,
                 'message' => Text::sprintf('JBS_ADM_PLAYER_BY_MEDIATYPE_CHANGED', $count),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2288,7 +2291,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get') && !Session::checkToken()) {
-            echo json_encode(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => Text::_('JINVALID_TOKEN')]]], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => Text::_('JINVALID_TOKEN')]]]);
             $app->close();
 
             return;
@@ -2304,7 +2307,7 @@ class CwmadminController extends FormController
         }
 
         if (!\is_array($data) || empty($data['rows'])) {
-            echo json_encode(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => 'No rows provided']]], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => 'No rows provided']]]);
             $app->close();
 
             return;
@@ -2316,14 +2319,14 @@ class CwmadminController extends FormController
 
         try {
             $result = CwmcsvimportHelper::processBatch($rows, $mappings, $settings);
-            echo json_encode($result, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($result);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'imported'     => 0,
                 'skipped'      => 0,
                 'errors'       => [['row' => 0, 'field' => '', 'message' => $e->getMessage()]],
                 'auto_created' => [],
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2344,7 +2347,7 @@ class CwmadminController extends FormController
 
         if (!Session::checkToken('get')) {
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2380,7 +2383,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2390,17 +2393,17 @@ class CwmadminController extends FormController
             $servers  = CwmserverMigrationHelper::scanLegacyServers();
             $existing = CwmserverMigrationHelper::getExistingServersByType();
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success'  => true,
                 'servers'  => $servers,
                 'existing' => $existing,
                 'labels'   => CwmserverMigrationHelper::getTypeLabels(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2425,7 +2428,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get') && !Session::checkToken()) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2440,7 +2443,7 @@ class CwmadminController extends FormController
         }
 
         if (!\is_array($data)) {
-            echo json_encode(['success' => false, 'message' => 'Invalid request body'], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => 'Invalid request body']);
             $app->close();
 
             return;
@@ -2458,17 +2461,17 @@ class CwmadminController extends FormController
             $ids    = CwmserverMigrationHelper::getLegacyMediaFileIds($legacyServerId, $detectedType, $offset, $limit);
             $result = CwmserverMigrationHelper::migrateMediaBatch($ids, $targetServerId, $targetType, $legacyServerParams);
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success'  => true,
                 'migrated' => $result['migrated'],
                 'errors'   => $result['errors'],
                 'fetched'  => \count($ids),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2492,7 +2495,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get') && !Session::checkToken()) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2507,7 +2510,7 @@ class CwmadminController extends FormController
         }
 
         if (!\is_array($data) || empty($data['type']) || empty($data['name'])) {
-            echo json_encode(['success' => false, 'message' => 'Missing type or name'], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => 'Missing type or name']);
             $app->close();
 
             return;
@@ -2520,15 +2523,15 @@ class CwmadminController extends FormController
                 isset($data['locationId']) ? (int) $data['locationId'] : null
             );
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success'  => true,
                 'serverId' => $serverId,
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2552,7 +2555,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2562,7 +2565,7 @@ class CwmadminController extends FormController
         $type     = $app->getInput()->getCmd('type', '');
 
         if ($serverId < 1 || $type === '') {
-            echo json_encode(['success' => false, 'message' => 'Missing serverId or type'], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => 'Missing serverId or type']);
             $app->close();
 
             return;
@@ -2571,15 +2574,15 @@ class CwmadminController extends FormController
         try {
             $details = CwmserverMigrationHelper::getMediaFileDetails($serverId, $type);
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => true,
                 'details' => $details,
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2601,7 +2604,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2610,16 +2613,16 @@ class CwmadminController extends FormController
         try {
             $result = CwmserverMigrationHelper::unpublishEmptyLegacyServers();
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success'     => true,
                 'unpublished' => $result['unpublished'],
                 'skipped'     => $result['skipped'],
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Exception $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2640,7 +2643,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2654,12 +2657,12 @@ class CwmadminController extends FormController
                 $detection['record_counts'] = CwmupgradeHelper::get9xInfo();
             }
 
-            echo json_encode($detection, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($detection);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'detected' => false,
                 'error'    => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2680,7 +2683,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2690,16 +2693,16 @@ class CwmadminController extends FormController
             $backup = new Cwmbackup();
             $result = $backup->exportdb(2);
 
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success'  => (bool) $result,
                 'filename' => $result ? 'backup created' : '',
                 'message'  => $result ? 'Backup completed' : 'Backup failed',
-            ], JSON_THROW_ON_ERROR);
+            ]);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2720,7 +2723,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2729,13 +2732,13 @@ class CwmadminController extends FormController
         try {
             $result            = CwmupgradeHelper::convertIniToJson();
             $result['success'] = true;
-            echo json_encode($result, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($result);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success'   => false,
                 'converted' => 0,
                 'message'   => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2756,7 +2759,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2766,22 +2769,22 @@ class CwmadminController extends FormController
             $resetResult = CwmupgradeHelper::resetSchemaVersion();
 
             if (!$resetResult) {
-                echo json_encode([
+                $this->sendJsonPayload([
                     'success' => false,
                     'message' => 'Could not reset schema version',
-                ], JSON_THROW_ON_ERROR);
+                ]);
                 $app->close();
 
                 return;
             }
 
             $migrationResult = CwmupgradeHelper::runSchemaMigration();
-            echo json_encode($migrationResult, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($migrationResult);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2802,7 +2805,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2811,13 +2814,13 @@ class CwmadminController extends FormController
         try {
             $result            = CwmupgradeHelper::runDataFixes();
             $result['success'] = empty($result['errors']);
-            echo json_encode($result, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($result);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'steps'   => [],
                 'errors'  => [$e->getMessage()],
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2838,7 +2841,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2846,12 +2849,12 @@ class CwmadminController extends FormController
 
         try {
             $result = CwmupgradeHelper::rebuildAssets();
-            echo json_encode($result, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($result);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2872,7 +2875,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload(['success' => false, 'message' => Text::_('JINVALID_TOKEN')]);
             $app->close();
 
             return;
@@ -2887,12 +2890,12 @@ class CwmadminController extends FormController
             $dropped      = $verifyResult['success'] ? CwmupgradeHelper::cleanup9xArtifacts() : 0;
 
             $verifyResult['artifacts_dropped'] = $dropped;
-            echo json_encode($verifyResult, JSON_THROW_ON_ERROR);
+            $this->sendJsonPayload($verifyResult);
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJsonPayload([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
         $app->close();
@@ -2914,7 +2917,7 @@ class CwmadminController extends FormController
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get') && !Session::checkToken('post')) {
-            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
             $this->app->close();
 
             return;
@@ -2925,7 +2928,7 @@ class CwmadminController extends FormController
         $apiKey   = $input->getString('api_key', '');
 
         if (empty($apiKey)) {
-            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_AI_NO_API_KEY')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JBS_CMN_AI_NO_API_KEY')]);
             $this->app->close();
 
             return;
@@ -2933,9 +2936,9 @@ class CwmadminController extends FormController
 
         try {
             $models = CwmaiHelper::fetchAvailableModels($provider, $apiKey);
-            echo json_encode(['success' => true, 'models' => $models]);
+            $this->sendJsonPayload(['success' => true, 'models' => $models]);
         } catch (\Exception $e) {
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            $this->sendJsonPayload(['success' => false, 'error' => $e->getMessage()]);
         }
 
         $this->app->close();
@@ -2970,7 +2973,7 @@ class CwmadminController extends FormController
     public function resetYoutubeQuotaXHR(): void
     {
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->sendJsonPayload(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
             $this->app->close();
 
             return;
@@ -2979,7 +2982,7 @@ class CwmadminController extends FormController
         $serverId = $this->input->getInt('server_id', 0);
 
         if ($serverId <= 0) {
-            echo json_encode(['success' => false, 'error' => 'Invalid server ID']);
+            $this->sendJsonPayload(['success' => false, 'error' => 'Invalid server ID']);
             $this->app->close();
 
             return;
@@ -2993,7 +2996,7 @@ class CwmadminController extends FormController
             ['server_id' => $serverId]
         );
 
-        echo json_encode(['success' => true]);
+        $this->sendJsonPayload(['success' => true]);
         $this->app->close();
     }
 }

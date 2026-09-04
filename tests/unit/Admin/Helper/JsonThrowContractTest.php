@@ -259,7 +259,12 @@ class JsonThrowContractTest extends ProclaimTestCase
     {
         $calls = $this->calls();
 
-        $this->assertGreaterThan(300, \count($calls), 'Expected the scan to reach the whole component');
+        // ⚠️ Was 300 before CwmadminController's 155 hand-rolled responses moved
+        // behind CwmJsonResponseTrait::sendJsonPayload(). They did not stop being
+        // guarded — they are now guarded once, inside the trait, instead of 155
+        // times at the call sites. Lower the floor when a migration like that
+        // legitimately removes calls; do not lower it to make a red bar green.
+        $this->assertGreaterThan(180, \count($calls), 'Expected the scan to reach the whole component');
 
         $guarded = array_filter($calls, static fn (array $c): bool => str_contains($c['args'], 'JSON_THROW_ON_ERROR'));
 

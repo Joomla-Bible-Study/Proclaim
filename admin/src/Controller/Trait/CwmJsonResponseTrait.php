@@ -37,6 +37,58 @@ use Joomla\CMS\Log\Log;
 trait CwmJsonResponseTrait
 {
     /**
+     * Send a response body exactly as the caller shaped it.
+     *
+     * The sibling sendJsonResponse() imposes a {success, message, data}
+     * envelope. Most of this component's AJAX predates it and answers with flat,
+     * endpoint-specific keys that the JavaScript reads directly — reshaping
+     * those would mean changing every consumer in lockstep. This gives them the
+     * parts that are not about shape: the throw-on-failure flag, the JSON
+     * headers, stray-output capture, and a log line when encoding fails.
+     *
+     * ⚠️ Unlike sendJsonResponse() this does NOT terminate. Callers already
+     * close the application themselves, and keeping that in their hands is what
+     * lets the body be swapped in without touching any surrounding control flow.
+     *
+     * @param   array  $payload  The response body, sent as-is.
+     *
+     * @return  void
+     *
+     * @throws  \JsonException  If the payload cannot be encoded.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function sendJsonPayload(array $payload): void
+    {
+        // Capture and log any stray output (PHP errors, warnings, etc.) so it
+        // cannot corrupt the JSON body.
+        $strayOutput = '';
+
+        while (ob_get_level()) {
+            $strayOutput .= ob_get_clean();
+        }
+
+        if (!empty($strayOutput)) {
+            Log::add('Stray output captured: ' . substr($strayOutput, 0, 500), Log::WARNING, 'com_proclaim');
+        }
+
+        if (!headers_sent()) {
+            header('Content-Type: application/json; charset=utf-8');
+            header('Cache-Control: no-cache, must-revalidate');
+        }
+
+        try {
+            echo json_encode($payload, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            // Without the flag this produced `false`, i.e. an empty body and a
+            // client-side parse error with nothing logged anywhere.
+            Log::add('Could not encode the JSON response: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+
+            throw $e;
+        }
+    }
+
+    /**
      * Send JSON response and terminate.
      *
      * @param   bool    $success  Success status
