@@ -16,7 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
@@ -901,12 +903,16 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $userId  = Factory::getApplication()->getIdentity()->id ?? 0;
 
         $row = (object) [
-            'title'                  => $title,
-            'description'            => trim($data['podcast_description'] ?? '') ?: '<p>Sermons from ' . $orgName . '</p>',
-            'website'                => Factory::getApplication()->get('live_site', '') ?: Factory::getUri()->root(),
-            'author'                 => $author,
-            'editor_name'            => $author,
-            'editor_email'           => trim($data['podcast_email'] ?? ''),
+            'title'        => $title,
+            'description'  => trim($data['podcast_description'] ?? '') ?: '<p>Sermons from ' . $orgName . '</p>',
+            'website'      => Factory::getApplication()->get('live_site', '') ?: Uri::root(),
+            'author'       => $author,
+            'editor_name'  => $author,
+            'editor_email' => trim($data['podcast_email'] ?? ''),
+            // Legacy feed-link column. Sites upgraded through the era when it
+            // was added carry it NOT NULL with no default, so omitting it makes
+            // the insert fail on exactly the installs most likely to run this.
+            'podcastlink'            => '',
             'filename'               => 'podcast',
             'podcastlimit'           => 50,
             'published'              => 1,
@@ -928,7 +934,11 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $db->insertObject('#__bsms_podcast', $row);
 
             return (int) $db->insertid();
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            // Returning 0 leaves the wizard reporting no podcast; without this
+            // line the reason never surfaced anywhere.
+            Log::add('Setup wizard could not create the podcast: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+
             return 0;
         }
     }
