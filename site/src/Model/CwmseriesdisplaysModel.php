@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Model;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Date\Date;
@@ -348,7 +349,7 @@ class CwmseriesdisplaysModel extends ListModel
             $orderDirn = $this->getState('list.direction', 'DESC');
         }
 
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted($query, $this->filter_fields, $orderCol, $orderDirn, 'se.series_text');
 
 
         return $query;

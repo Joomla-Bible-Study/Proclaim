@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Model;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -718,7 +719,7 @@ class CwmsermonsModel extends ListModel
             $orderDirn = $this->getState('list.direction', 'DESC');
         }
 
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted($query, $this->filter_fields, $orderCol, $orderDirn, 'study.studydate');
 
         CwmDebug::logQuery('sermons.getListQuery', $query);
 

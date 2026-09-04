@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\TagsHelper;
@@ -257,9 +258,12 @@ class CwmseriespodcastlistModel extends ListModel
         }
 
         // Add the list ordering clause.
-        $query->order(
-            $db->escape($this->getState('list.ordering', 'a.id')) . ' ' .
-            $db->escape($this->getState('list.direction', 'ASC'))
+        CwmdbHelper::orderByWhitelisted(
+            $query,
+            $this->filter_fields,
+            $this->getState('list.ordering'),
+            $this->getState('list.direction', 'ASC'),
+            'a.id'
         );
 
         return $query;

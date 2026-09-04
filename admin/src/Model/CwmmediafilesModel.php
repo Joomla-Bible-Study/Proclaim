@@ -406,9 +406,14 @@ class CwmmediafilesModel extends ListModel
                 ->bind(':language', $language);
         }
 
-        // Add the list ordering clause
+        // Add the list ordering clause. list.ordering is whitelisted against
+        // filter_fields in populateState(), so $orderCol is a known column;
+        // the remaps below turn a few of them into the composite sort the grid
+        // needs, built only from constants. Only an explicit DESC stays
+        // descending — an empty direction sorts ascending, as the previous
+        // unquoted clause did implicitly.
         $orderCol  = $this->state->get('list.ordering', 'mediafile.createdate');
-        $orderDirn = $this->state->get('list.direction', 'DESC');
+        $orderDirn = strtoupper((string) $this->state->get('list.direction', 'DESC')) === 'DESC' ? 'DESC' : 'ASC';
 
         // Sqlsrv change
         if ($orderCol === 'study_id') {
@@ -431,7 +436,7 @@ class CwmmediafilesModel extends ListModel
             $orderCol = 'mediafile.study_id ' . $orderDirn . ', mediafile.ordering';
         }
 
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        $query->order($orderCol . ' ' . $orderDirn);
 
         return $query;
     }

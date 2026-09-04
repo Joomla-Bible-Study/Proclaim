@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -329,9 +330,13 @@ class CwmlocationsModel extends ListModel
         }
 
         // Add the list ordering clause
-        $orderCol  = $this->state->get('list.ordering', 'location.id');
-        $orderDirn = $this->state->get('list.direction', 'desc');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted(
+            $query,
+            $this->filter_fields,
+            $this->state->get('list.ordering'),
+            $this->state->get('list.direction', 'desc'),
+            'location.id'
+        );
 
         return $query;
     }
