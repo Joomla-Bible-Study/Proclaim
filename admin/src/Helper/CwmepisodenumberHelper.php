@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Episode numbering (#__bsms_studies.studynumber) within a series.
@@ -76,7 +77,8 @@ class CwmepisodenumberHelper
             ->select($db->quoteName(['id', 'studytitle']))
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('series_id') . ' = ' . $seriesId)
-            ->where($db->quoteName('studynumber') . ' = ' . $db->quote($studynumber));
+            ->where($db->quoteName('studynumber') . ' = :studynumber')
+            ->bind(':studynumber', $studynumber, ParameterType::STRING);
 
         if ($excludeId !== null) {
             $query->where($db->quoteName('id') . ' != ' . $excludeId);

@@ -26,6 +26,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Location model class
@@ -400,10 +401,12 @@ class CwmlocationModel extends AdminModel
         // Save back to component params
         $params->set('location_group_mapping', json_encode($mapping, JSON_THROW_ON_ERROR));
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
+        $paramsJson = $params->toString();
+        $query      = $db->createQuery()
             ->update($db->quoteName('#__extensions'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->set($db->quoteName('params') . ' = :params')
+            ->bind(':params', $paramsJson, ParameterType::STRING)
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
             ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
         $db->setQuery($query);

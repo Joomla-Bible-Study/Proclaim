@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 
 /**
@@ -243,7 +244,8 @@ class CwmpodcastsModel extends ListModel
 
         // Filter on the language.
         if ($language = $this->getState('filter.language')) {
-            $query->where($db->quoteName('podcast.language') . ' = ' . $db->quote($language));
+            $query->where($db->quoteName('podcast.language') . ' = :language')
+            ->bind(':language', $language, ParameterType::STRING);
         }
 
         // Filter by search in filename or study title

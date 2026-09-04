@@ -21,6 +21,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Helper for managing the many-to-many relationship between studies and topics
@@ -52,7 +53,8 @@ class CwmstudytopicHelper
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_topics'))
-            ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(' . $db->quote($text) . ')')
+            ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(:text)')
+            ->bind(':text', $text, ParameterType::STRING)
             ->setLimit(1);
         $db->setQuery($query);
 

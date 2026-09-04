@@ -33,6 +33,7 @@ use Joomla\CMS\Table\Extension as ExtensionTable;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Versioning\VersionableModelTrait;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -805,10 +806,12 @@ class CwmadminModel extends AdminModel
             $reg->set('media_use_button_icon', $post['media_use_button_icon']);
 
             try {
+                $paramsJson  = $reg->toString();
                 $updateQuery = $db->createQuery();
                 $updateQuery->update($db->quoteName('#__bsms_mediafiles'))
-                    ->set($db->quoteName('params') . ' = ' . $db->quote($reg->toString()))
-                    ->where($db->quoteName('id') . ' = ' . (int) $media->id);
+                    ->set($db->quoteName('params') . ' = :params')
+                    ->where($db->quoteName('id') . ' = ' . (int) $media->id)
+                    ->bind(':params', $paramsJson, ParameterType::STRING);
                 $db->setQuery($updateQuery);
                 $db->execute();
                 $added += $db->getAffectedRows();
