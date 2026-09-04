@@ -159,12 +159,12 @@ class Cwmstats
             CwmlocationHelper::applySecurityFilter($query, 's');
 
             if (!empty($start)) {
-                $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(:start)')
+                $query->where($db->quoteName('s.studydate') . ' > :start')
                     ->bind(':start', $start, ParameterType::STRING);
             }
 
             if (!empty($end)) {
-                $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(:end)')
+                $query->where($db->quoteName('s.studydate') . ' < :end')
                     ->bind(':end', $end, ParameterType::STRING);
             }
 
@@ -215,12 +215,12 @@ class Cwmstats
             CwmlocationHelper::applySecurityFilter($query, 's');
 
             if (!empty($start)) {
-                $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(:start)')
+                $query->where($db->quoteName('s.studydate') . ' > :start')
                     ->bind(':start', $start, ParameterType::STRING);
             }
 
             if (!empty($end)) {
-                $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(:end)')
+                $query->where($db->quoteName('s.studydate') . ' < :end')
                     ->bind(':end', $end, ParameterType::STRING);
             }
 
