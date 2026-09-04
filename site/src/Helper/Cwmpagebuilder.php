@@ -21,6 +21,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -543,7 +544,7 @@ class Cwmpagebuilder
         $language = $params->get('language', '*');
 
         if ($language === '*') {
-            $query->where($db->quoteName('study.language') . ' IN (' . $db->quote($language) . ',' . $db->quote('*') . ')');
+            $query->whereIn($db->quoteName('study.language'), [$language, '*'], ParameterType::STRING);
         } elseif ($language !== '*') {
             $query->where(
                 $db->quoteName('study.language') . ' IN (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'

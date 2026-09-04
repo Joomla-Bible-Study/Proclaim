@@ -42,6 +42,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
@@ -2236,10 +2237,12 @@ class CwmadminController extends FormController
 
                 $reg->set('player', $player);
 
+                $paramsJson  = $reg->toString();
                 $updateQuery = $db->createQuery()
                     ->update($db->quoteName('#__bsms_mediafiles'))
-                    ->set($db->quoteName('params') . ' = ' . $db->quote($reg->toString()))
-                    ->where($db->quoteName('id') . ' = ' . (int) $media->id);
+                    ->set($db->quoteName('params') . ' = :params')
+                    ->where($db->quoteName('id') . ' = ' . (int) $media->id)
+                    ->bind(':params', $paramsJson, ParameterType::STRING);
 
                 $db->setQuery($updateQuery);
                 $db->execute();

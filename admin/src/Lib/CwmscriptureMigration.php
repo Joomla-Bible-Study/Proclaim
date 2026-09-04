@@ -20,6 +20,7 @@ use CWM\Library\Scripture\Helper\ScriptureHelper as CwmscriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Finishes what the schema update started.
@@ -101,7 +102,8 @@ class CwmscriptureMigration
 
                 $update = $db->createQuery()
                     ->update($db->quoteName('#__bsms_study_scriptures'))
-                    ->set($db->quoteName('reference_text') . ' = ' . $db->quote($text))
+                    ->set($db->quoteName('reference_text') . ' = :text')
+                    ->bind(':text', $text, ParameterType::STRING)
                     ->where($db->quoteName('id') . ' = ' . (int) $row->id);
                 $db->setQuery($update);
                 $db->execute();

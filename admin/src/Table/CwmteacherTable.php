@@ -22,6 +22,7 @@ use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -191,7 +192,8 @@ class CwmteacherTable extends Table
             $query = $db->createQuery();
             $query->select($db->quoteName(['id', 'teachername']))
                 ->from($db->quoteName('#__bsms_teachers'))
-                ->where('LOWER(' . $db->quoteName('alias') . ') = LOWER(' . $db->quote($this->alias) . ')');
+                ->where('LOWER(' . $db->quoteName('alias') . ') = LOWER(:alias)')
+                ->bind(':alias', $this->alias, ParameterType::STRING);
 
             // Exclude self on edit
             if (!empty($this->id)) {
