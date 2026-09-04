@@ -3130,8 +3130,10 @@ class CWMAddonYoutube extends CWMAddon
             // Save VTT file
             $subtitleDir = JPATH_ROOT . '/media/biblestudy/subtitles';
 
-            if (!is_dir($subtitleDir)) {
-                mkdir($subtitleDir, 0755, true);
+            // Re-check after mkdir: a concurrent request may have created it
+            // between the test and the call, which is not a failure.
+            if (!is_dir($subtitleDir) && !mkdir($subtitleDir, 0755, true) && !is_dir($subtitleDir)) {
+                return ['success' => false, 'error' => 'Could not create the subtitle directory'];
             }
 
             $safeLang = preg_replace('/[^a-zA-Z0-9_-]/', '', $srclang);

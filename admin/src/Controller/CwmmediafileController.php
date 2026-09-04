@@ -22,6 +22,7 @@ use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcaptionValidator;
 use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedMove;
+use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;

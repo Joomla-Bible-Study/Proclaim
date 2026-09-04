@@ -311,6 +311,10 @@ class Cwmssconvert
             $sermonscripture->chapter_end   = '';
             $sermonscripture->verse_begin   = '';
             $sermonscripture->verse_end     = '';
+
+            // Without this the empties are overwritten below, and every
+            // string call downstream is handed null.
+            return $sermonscripture;
         }
 
         $bookname = substr_count(strtolower($sermon), 'genesis');
