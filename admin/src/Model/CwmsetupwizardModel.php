@@ -18,6 +18,7 @@ use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -59,11 +60,13 @@ class CwmsetupwizardModel extends BaseDatabaseModel
      */
     private function saveAdminParams(Registry $params): void
     {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
+        $paramsJson = $params->toString();
+        $query      = $db->createQuery()
             ->update($db->quoteName('#__bsms_admin'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = 1');
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = 1')
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($query);
         $db->execute();
     }
@@ -95,11 +98,13 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $params = new Registry($json ?: '{}');
         $params->set($key, $value);
 
-        $query = $db->createQuery()
+        $paramsJson = $params->toString();
+        $query      = $db->createQuery()
             ->update($db->quoteName('#__extensions'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->set($db->quoteName('params') . ' = :params')
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
-            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($query);
         $db->execute();
     }
@@ -374,8 +379,9 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_servers'))
-                ->where($db->quoteName('type') . ' = ' . $db->quote($type))
-                ->where($db->quoteName('published') . ' >= 0');
+                ->where($db->quoteName('type') . ' = :type')
+                ->where($db->quoteName('published') . ' >= 0')
+                ->bind(':type', $type, ParameterType::STRING);
             $db->setQuery($query);
 
             if ((int) $db->loadResult() > 0) {
@@ -654,10 +660,12 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $task = $taskMap[$key];
 
             // Check if this task type already exists
-            $query = $db->createQuery()
+            $taskType = $task['type'];
+            $query    = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__scheduler_tasks'))
-                ->where($db->quoteName('type') . ' = ' . $db->quote($task['type']));
+                ->where($db->quoteName('type') . ' = :type')
+                ->bind(':type', $taskType, ParameterType::STRING);
             $db->setQuery($query);
 
             if ((int) $db->loadResult() > 0) {
@@ -794,8 +802,9 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__menu'))
-            ->where($db->quoteName('menutype') . ' = ' . $db->quote($menuType))
-            ->where($db->quoteName('level') . ' = 0');
+            ->where($db->quoteName('menutype') . ' = :menutype')
+            ->where($db->quoteName('level') . ' = 0')
+            ->bind(':menutype', $menuType, ParameterType::STRING);
         $db->setQuery($query, 0, 1);
         $parentId = (int) $db->loadResult() ?: 1;
 
@@ -972,10 +981,12 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $params->set('show_comments', !empty($data['enable_comments']) ? '1' : '');
 
         // Save
-        $query = $db->createQuery()
+        $paramsJson = $params->toString();
+        $query      = $db->createQuery()
             ->update($db->quoteName('#__bsms_templates'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = 1');
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = 1')
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($query);
         $db->execute();
     }
