@@ -35,6 +35,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
+use Joomla\Http\HttpFactory;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
@@ -46,6 +47,14 @@ use Joomla\Utilities\ArrayHelper;
  */
 class Cwmpodcast
 {
+    /**
+     * Seconds to wait on the enclosure HEAD probe.
+     *
+     * @var   int
+     * @since __DEPLOY_VERSION__
+     */
+    private const REMOTE_HEADER_TIMEOUT = 30;
+
     /**
      * @var int
      * @since 7.0.0
@@ -2899,40 +2908,32 @@ class Cwmpodcast
     {
         $startNs = CwmDebug::isEnabled() ? hrtime(true) : null;
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; Proclaim Podcast/1.0)');
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlErr  = curl_error($ch);
-        curl_close($ch);
-
-        $elapsed = $startNs !== null ? (hrtime(true) - $startNs) / 1_000_000 : 0.0;
-        CwmDebug::logApi('podcast.remoteHeaders', 'HEAD', $url, (int) $httpCode, $elapsed);
-
-        if ($httpCode < 200 || $httpCode >= 400 || $response === false) {
-            if ($response === false && $curlErr !== '') {
-                CwmDebug::error('Remote header check failed for ' . $url . ': ' . $curlErr, null, 'api');
-            }
+        try {
+            $response = HttpFactory::getHttp()->head(
+                $url,
+                ['User-Agent' => 'Mozilla/5.0 (compatible; Proclaim Podcast/1.0)'],
+                self::REMOTE_HEADER_TIMEOUT
+            );
+        } catch (\Exception $e) {
+            CwmDebug::error('Remote header check failed for ' . $url, $e, 'api');
 
             return null;
         }
 
-        $headers     = [];
-        $headerLines = explode("\r\n", $response);
+        $httpCode = $response->getStatusCode();
+        $elapsed  = $startNs !== null ? (hrtime(true) - $startNs) / 1_000_000 : 0.0;
+        CwmDebug::logApi('podcast.remoteHeaders', 'HEAD', $url, $httpCode, $elapsed);
 
-        foreach ($headerLines as $line) {
-            if (str_contains($line, ':')) {
-                [$key, $value]                   = explode(':', $line, 2);
-                $headers[strtolower(trim($key))] = trim($value);
-            }
+        if ($httpCode < 200 || $httpCode >= 400) {
+            return null;
+        }
+
+        // Callers read 'content-length'/'content-type', so flatten the PSR-7
+        // name => values map back to the lowercased single-string shape.
+        $headers = [];
+
+        foreach (array_keys($response->getHeaders()) as $name) {
+            $headers[strtolower($name)] = $response->getHeaderLine($name);
         }
 
         return $headers;
