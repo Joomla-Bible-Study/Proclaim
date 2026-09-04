@@ -47,6 +47,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -1959,8 +1960,9 @@ class CWMAddonYoutube extends CWMAddon
             $insert->insert($db->quoteName('#__bsms_topics'))
                 ->columns($db->quoteName(['topic_text', 'published', 'language']))
                 ->values(
-                    $db->quote($tag) . ', 1, ' . $db->quote('*')
-                );
+                    ':tag, 1, ' . $db->quote('*')
+                )
+                ->bind(':tag', $tag, ParameterType::STRING);
             $db->setQuery($insert);
 
             try {
@@ -2192,10 +2194,12 @@ class CWMAddonYoutube extends CWMAddon
         $params->set('live_stream_key', $details['stream_key']);
         $params->set('live_rtmp_url', $details['rtmp_url']);
 
-        $update = $db->createQuery()
+        $paramsJson = $params->toString();
+        $update     = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId)
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($update);
         $db->execute();
 
@@ -2237,10 +2241,12 @@ class CWMAddonYoutube extends CWMAddon
         // Set a simple flag for the status field to detect connection
         $params->set('access_token', $tokenData['access_token'] ?? '1');
 
-        $update = $db->createQuery()
+        $paramsJson = $params->toString();
+        $update     = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId)
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($update);
         $db->execute();
 
@@ -2271,10 +2277,12 @@ class CWMAddonYoutube extends CWMAddon
         $params->remove('oauth_refresh_token');
         $params->remove('access_token');
 
-        $update = $db->createQuery()
+        $paramsJson = $params->toString();
+        $update     = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId)
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($update);
         $db->execute();
 
