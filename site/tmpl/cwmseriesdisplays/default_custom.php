@@ -55,15 +55,6 @@ if ($this->params->get('show_series_title') > 0) {
 ?>
             </h1>
             <!--header-->
-            <div id="bsdropdownmenu">
-                <?php
-//                @todo Need to find the correct solution for this section, as it looks to be broken.
-if ($this->params->get('search_series') > 0) {
-    echo $this->lists['seriesid'];
-}
-?>
-            </div>
-            <!--dropdownmenu-->
             <?php
             switch ($this->params->get('series_wrapcode')) {
                 case '0':
