@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
@@ -340,7 +341,7 @@ class CwmmessagesModel extends ListModel
         } elseif (is_numeric($published)) {
             $query->where($db->quoteName('study.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('study.published') . ' = 0 OR ' . $db->quoteName('study.published') . ' = 1 OR ' . $db->quoteName('study.published') . ' = 2)');
+            $query->whereIn($db->quoteName('study.published'), [0, 1, 2]);
         }
 
         // Filter by search in title.
@@ -366,9 +367,13 @@ class CwmmessagesModel extends ListModel
         }
 
         // Add the list ordering clause
-        $orderCol  = $this->state->get('list.ordering', 'study.studydate');
-        $orderDirn = $this->state->get('list.direction', 'DESC');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted(
+            $query,
+            $this->filter_fields,
+            $this->state->get('list.ordering'),
+            $this->state->get('list.direction', 'DESC'),
+            'study.studydate'
+        );
 
         CwmDebug::logQuery('messages.getListQuery', $query);
 

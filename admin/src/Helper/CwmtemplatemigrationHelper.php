@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -543,9 +544,11 @@ class CwmtemplatemigrationHelper
 
             // Save if any parameters were converted
             if ($updated) {
+                $paramsJson  = $registry->toString();
                 $updateQuery = $this->db->createQuery()
                     ->update($this->db->quoteName('#__bsms_admin'))
-                    ->set($this->db->quoteName('params') . ' = ' . $this->db->quote($registry->toString()))
+                    ->set($this->db->quoteName('params') . ' = :params')
+                    ->bind(':params', $paramsJson, ParameterType::STRING)
                     ->where($this->db->quoteName('id') . ' = ' . (int) $admin->id);
                 $this->db->setQuery($updateQuery)->execute();
                 $updatedCount++;
@@ -811,7 +814,8 @@ class CwmtemplatemigrationHelper
     {
         $query = $this->db->createQuery()
             ->update($this->db->quoteName('#__bsms_templates'))
-            ->set($this->db->quoteName('params') . ' = ' . $this->db->quote($params))
+            ->set($this->db->quoteName('params') . ' = :params')
+            ->bind(':params', $params, ParameterType::STRING)
             ->where($this->db->quoteName('id') . ' = ' . $templateId);
 
         return $this->db->setQuery($query)->execute();

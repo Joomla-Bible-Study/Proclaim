@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Health;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -168,11 +169,13 @@ final class HealthQuietStore
 
         $params->set(self::PARAM_KEY, $map === [] ? '' : json_encode($map, JSON_THROW_ON_ERROR));
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
+        $paramsJson = $params->toString();
+        $query      = $db->createQuery()
             ->update($db->quoteName('#__bsms_admin'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = 1');
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = 1')
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($query);
         $db->execute();
     }

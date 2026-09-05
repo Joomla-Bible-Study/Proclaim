@@ -21,15 +21,15 @@
     "@rollup/plugin-terser": "^1.0.0",
     "@types/jest": "^30.0.0",
     "csso": "^5.0.5",
-    "eslint": "^10.9.0",
+    "eslint": "^10.9.1",
     "globals": "^17.11.0",
     "intl-tel-input": "^29.2.3",
-    "jest": "^30.4.2",
-    "jest-environment-jsdom": "^30.4.1",
-    "rollup": "^4.62.5",
+    "jest": "^30.5.0",
+    "jest-environment-jsdom": "^30.5.0",
+    "rollup": "^4.63.1",
     "rollup-plugin-gzip": "^4.1.1",
     "sortablejs": "^1.15.7",
-    "terser": "^5.50.0"
+    "terser": "^5.51.2"
   },
   "babel": {
     "presets": [
@@ -70,6 +70,7 @@
   "allowScripts": {
     "core-js@3.50.0": true,
     "unrs-resolver@1.12.2": true,
-    "fsevents@2.3.3": true
+    "fsevents@2.3.3": true,
+    "@parcel/watcher@2.6.0": true
   }
 }

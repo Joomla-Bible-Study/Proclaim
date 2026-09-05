@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmJsonResponseTrait;
+use CWM\Component\Proclaim\Administrator\Model\CwmsetupwizardModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;

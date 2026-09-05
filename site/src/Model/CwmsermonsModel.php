@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Model;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -615,13 +616,17 @@ class CwmsermonsModel extends ListModel
             );
         } else {
             // Admin: only check series published state
-            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
+            $query->andWhere([
+                $db->quoteName('series.published') . ' = 1',
+                $db->quoteName('study.series_id') . ' <= 0',
+                $db->quoteName('study.series_id') . ' IS NULL',
+            ]);
         }
 
         // Filter by start and end dates for messages.
         if (!$canEditState && !$canEdit) {
-            $query->where('(' . $db->quoteName('study.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_up') . ' <= ' . $nowDate . ')')
-                ->where('(' . $db->quoteName('study.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_down') . ' >= ' . $nowDate . ')');
+            $query->andWhere([$db->quoteName('study.publish_up') . ' = ' . $nullDate, $db->quoteName('study.publish_up') . ' <= ' . $nowDate])
+                ->andWhere([$db->quoteName('study.publish_down') . ' = ' . $nullDate, $db->quoteName('study.publish_down') . ' >= ' . $nowDate]);
         }
 
         // Begin the filters for menu items
@@ -714,7 +719,7 @@ class CwmsermonsModel extends ListModel
             $orderDirn = $this->getState('list.direction', 'DESC');
         }
 
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted($query, $this->filter_fields, $orderCol, $orderDirn, 'study.studydate');
 
         CwmDebug::logQuery('sermons.getListQuery', $query);
 

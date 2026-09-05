@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafile;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmediaProtectionHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedMove;
 use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use Joomla\CMS\Factory;
@@ -240,6 +241,26 @@ class HtmlView extends BaseHtmlView
             // Can't save the record if it's checked out and editable
             if (!$checkedOut && $itemEditable) {
                 $toolbar->apply('cwmmediafile.apply');
+            }
+
+            // One direction only, decided by where the file actually is. The
+            // task re-checks eligibility (podcast references above all) and
+            // says why when it refuses; this only decides which label fits.
+            if (!$checkedOut && $itemEditable) {
+                $registry = new Registry($this->item->params ?? '{}');
+                $filename = ltrim((string) $registry->get('filename', ''), '/');
+                $held     = $filename !== ''
+                    && CwmprotectedStorage::holds(rtrim(JPATH_ROOT, '/\\') . '/' . $filename);
+
+                if ($held) {
+                    $toolbar->standardButton('unprotect', 'JBS_MED_UNPROTECT', 'cwmmediafile.unprotect')
+                        ->icon('icon-unlock')
+                        ->listCheck(false);
+                } elseif (CwmprotectedMove::anyServerOptedIn(Factory::getContainer()->get(DatabaseInterface::class))) {
+                    $toolbar->standardButton('protect', 'JBS_MED_PROTECT', 'cwmmediafile.protect')
+                        ->icon('icon-lock')
+                        ->listCheck(false);
+                }
             }
 
             $saveGroup = $toolbar->dropdownButton('save-group');

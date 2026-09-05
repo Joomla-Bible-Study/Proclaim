@@ -184,7 +184,15 @@ class CwmdescriptionHelper
         $result = strtr($format, $replacements);
 
         // Clean up dangling separators left by empty placeholders (e.g. "Title — ")
-        $result = preg_replace('/\s*[—–\-]+\s*$/m', '', $result);
+        // ⚠️ /u is load-bearing: the class holds an em and an en dash, and
+        // without it PCRE matches their individual bytes, so any character
+        // whose encoding ends in 0x80/0x93/0x94 (À, Ô, œ, Cyrillic Г/Д …) loses
+        // its trailing byte at end of line and the string stops being UTF-8.
+        $cleaned = preg_replace('/\s*[—–\-]+\s*$/mu', '', $result);
+
+        // preg_replace returns null when the subject is not valid UTF-8; keep
+        // the uncleaned text rather than blanking the whole description.
+        $result = $cleaned ?? $result;
 
         // Clean up lines that are only labels with empty values (e.g. "Topics: ")
         $result = preg_replace('/^\S+:\s*$/m', '', $result);

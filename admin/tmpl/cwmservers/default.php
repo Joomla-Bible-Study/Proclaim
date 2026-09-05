@@ -38,41 +38,6 @@ $trashed   = $this->state->get('filter.published') == -2;
 $locationEnabled = CwmlocationHelper::isEnabled();
 $columns         = $locationEnabled ? 5 : 4;
 
-$workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_enabled');
-$workflow_state    = false;
-$workflow_featured = false;
-if ($workflow_enabled) :
-
-    // @todo move the script to a file
-    $js = <<<JS
-	(function() {
-		document.addEventListener('DOMContentLoaded', function() {
-		  var elements = [].slice.call(document.querySelectorAll('.message-status'));
-	
-		  elements.forEach(function (element) {
-			element.addEventListener('click', function(event) {
-				event.stopPropagation();
-			});
-		  });
-		});
-	})();
-	JS;
-
-    $wa->getRegistry()->addExtensionRegistryFile('com_workflow');
-    $wa->useScript('com_workflow.admin-items-workflow-buttons')
-        ->addInlineScript($js, [], ['type' => 'module']);
-
-
-    $workflow_state    = Factory::getApplication()->bootComponent('com_proclaim')->isFunctionalityUsed(
-        'core.state',
-        'com_proclaim.server'
-    );
-    $workflow_featured = Factory::getApplication()->bootComponent('com_prcolaim')->isFunctionalityUsed(
-        'core.featured',
-        'com_proclaim.server'
-    );
-endif;
-
 $sortFields = $this->getSortFields();
 ?>
 <form action="<?php
@@ -171,7 +136,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                         // status button dispatched task=server.publish and the
                                         // dispatcher answered "Invalid controller class: server".
                                         'task_prefix' => 'cwmservers.',
-                                        'disabled'    => $workflow_state || !$canChange,
+                                        'disabled'    => !$canChange,
                                         'id'          => 'state-' . $item->id,
                                     ];
 

@@ -21,6 +21,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -69,10 +70,12 @@ class CwmcpanelController extends BaseController
         $params = new Registry($db->loadResult() ?: '{}');
         $params->set('simple_mode_display', 0);
 
-        $query = $db->createQuery()
+        $paramsJson = $params->toString();
+        $query      = $db->createQuery()
             ->update($db->quoteName('#__bsms_admin'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = 1');
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = 1')
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($query);
         $db->execute();
 

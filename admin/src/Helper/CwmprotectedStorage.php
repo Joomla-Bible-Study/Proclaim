@@ -111,6 +111,176 @@ class CwmprotectedStorage
     }
 
     /**
+     * How many entries may be examined before the answer is assumed.
+     *
+     * A bound, not a limit on what may be stored. Reached only by a directory
+     * tree of many folders holding no files, since the scan stops at the first
+     * file it finds — but this runs on every media list render, so it must not
+     * be able to walk an arbitrary tree.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private const SCAN_LIMIT = 5000;
+
+    /**
+     * Whether the protected directory holds any media at all.
+     *
+     * ⚠️ The question that decides whether any of this is worth reporting. The
+     * folder ships with `.htaccess` and `web.config` and nothing else, so an
+     * install that has never put a file there has nothing at risk regardless of
+     * what the deny rules do — and warning that restricted files kept there are
+     * publicly downloadable, when none are kept there, is noise on every site.
+     *
+     * The guard files are excluded because they are ours, not media, and they
+     * are the whole contents of an unused folder.
+     *
+     * ⚠️ A boolean rather than a count, because a count is more than either
+     * caller asks for and more than this can honestly promise: it stops at the
+     * first file rather than walking the whole tree, and it stops at
+     * SCAN_LIMIT entries regardless. Returning a number those shortcuts make
+     * wrong would invite someone to display it.
+     *
+     * @return  bool  False only when the directory is absent, or genuinely
+     *                holds nothing but its own guard files.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function holdsAnything(): bool
+    {
+        return self::containsMedia(self::path());
+    }
+
+    /**
+     * Whether a directory contains anything that is media rather than a guard.
+     *
+     * Takes the directory instead of reading it from the class so the walk can
+     * be exercised against a real tree. The behaviour that matters here is
+     * recursion, and recursion cannot be asserted against a folder whose
+     * location is fixed to JPATH_ROOT.
+     *
+     * ⚠️ Recursive on purpose. A single-level scan reported a folder holding
+     * media in a subdirectory as empty, and an empty folder is precisely the
+     * state System Health describes as "nothing is exposed". Nothing places
+     * files there yet, so every file in it was put there by hand — and an
+     * administrator mirroring their media layout uses subdirectories. The one
+     * path that exists in practice was the one not covered.
+     *
+     * @param   string  $dir  Directory to walk.
+     *
+     * @return  bool  True on the first media file found, or if the scan was
+     *                cut short — an unfinished scan must never be reported as
+     *                an empty folder, which is the reassuring answer.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function containsMedia(string $dir): bool
+    {
+        if (!is_dir($dir)) {
+            return false;
+        }
+
+        try {
+            // CATCH_GET_CHILD: a subdirectory this process cannot read is
+            // skipped rather than aborting the walk. Its contents are unknown,
+            // not absent, but refusing to answer at all would leave the caller
+            // with nothing.
+            // ⚠️ SELF_FIRST, not LEAVES_ONLY. LEAVES_ONLY never yields a
+            // directory, so a tree of empty folders produces no entries at all
+            // and the bound below counts nothing while the walk still descends
+            // every one of them — a limit that cannot be reached is not a
+            // limit. Yielding directories too makes the count reflect the work.
+            $walk = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::SELF_FIRST,
+                \RecursiveIteratorIterator::CATCH_GET_CHILD
+            );
+        } catch (\Throwable) {
+            // Unreadable at the top. Same reasoning as the limit below.
+            return true;
+        }
+
+        $seen = 0;
+
+        foreach ($walk as $entry) {
+            if (++$seen > self::SCAN_LIMIT) {
+                return true;
+            }
+
+            if (!$entry->isFile()) {
+                continue;
+            }
+
+            $name = $entry->getFilename();
+
+            // Guards are skipped wherever they appear: an administrator who
+            // copies the directory's own deny files into a subfolder has still
+            // not stored media there.
+            if ($name === 'web.config' || str_starts_with($name, '.')) {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether a URL or path points at a file inside the protected directory.
+     *
+     * ⚠️ Decided from the resolved filesystem path, not from a flag on the
+     * record. The filesystem is the only thing that can be right about where a
+     * file actually is: a stored marker can disagree with it the moment anyone
+     * moves a file by hand, and the delivery decision has to follow the file.
+     *
+     * realpath() also collapses `..`, so a crafted path cannot claim to be
+     * inside the directory while resolving outside it.
+     *
+     * @param   string  $target  An absolute path, or a URL under this site.
+     *
+     * @return  bool  False for anything outside the directory, including
+     *                anything that does not resolve at all.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function holds(string $target): bool
+    {
+        if ($target === '') {
+            return false;
+        }
+
+        // ⚠️ A URL on someone else's host is served by them, whatever its path
+        // spells. Without this a remote server whose media happens to sit under
+        // /images/biblestudy/protected/ would be judged by whether a file of
+        // that name exists here — a coincidence deciding how a file is
+        // delivered. CwmmediaStreamer::serve() checks the host for the same
+        // reason before it resolves anything locally.
+        $host = strtolower((string) (parse_url($target, PHP_URL_HOST) ?: ''));
+        $site = strtolower((string) (parse_url(Uri::root(), PHP_URL_HOST) ?: ''));
+
+        if ($host !== '' && $host !== $site) {
+            return false;
+        }
+
+        // Shares the join with the streamer rather than repeating it: the two
+        // have to agree about where a URL lands on disk, or a file can be
+        // judged to be in protected storage and then not found there.
+        $candidate = CwmmediaStreamer::candidatePath($target, Uri::root(true), JPATH_ROOT);
+
+        if ($candidate === '') {
+            return false;
+        }
+
+        $real = realpath($candidate);
+
+        if ($real === false) {
+            return false;
+        }
+
+        return str_starts_with($real, self::path() . '/');
+    }
+
+    /**
      * The URL that directory would be served from, if the server let it.
      *
      * @return  string

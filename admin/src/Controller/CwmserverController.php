@@ -134,6 +134,54 @@ class CwmserverController extends FormController
      * @throws \Exception
      * @since   9.0.0
      */
+    /**
+     * Render the tab-set region for a chosen server type, for the in-place swap.
+     *
+     * The other half of the picker: types.php calls submitbutton with the
+     * chosen key, and instead of submitting the whole form — losing whatever
+     * was typed, turning every failure into a navigation — the edit screen
+     * fetches this fragment and swaps it in. The type lands in user state
+     * exactly as setType() put it, so the model renders the same form either
+     * way and a subsequent save reads the same state it always has.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function typeFields(): void
+    {
+        $app = Factory::getApplication();
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $app->setHeader('status', '403 Forbidden');
+            $app->sendHeaders();
+            echo Text::_('JINVALID_TOKEN');
+            $app->close();
+        }
+
+        // Same rule as setType(): a plain key, or nothing happens.
+        $typeKey = strtolower(trim($this->input->getString('type', '')));
+
+        if ($typeKey === '' || !preg_match('/^[a-z0-9_-]+$/', $typeKey)) {
+            $app->setHeader('status', '400 Bad Request');
+            $app->sendHeaders();
+            echo Text::_('JBS_SVR_TYPE_NOT_RECOGNISED');
+            $app->close();
+        }
+
+        $app->setUserState('com_proclaim.edit.cwmserver.type', $typeKey);
+
+        $model = $this->getModel('Cwmserver', 'Administrator', []);
+        $view  = $this->getView('Cwmserver', 'html');
+        $view->setModel($model, true);
+        $view->setLayout('tabs');
+        $view->document = $app->getDocument();
+
+        $view->display();
+        $app->close();
+    }
+
     public function setType(): void
     {
         $app   = Factory::getApplication();
