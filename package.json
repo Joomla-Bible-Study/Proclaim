@@ -21,7 +21,7 @@
     "@rollup/plugin-terser": "^1.0.0",
     "@types/jest": "^30.0.0",
     "csso": "^5.0.5",
-    "eslint": "^10.9.1",
+    "eslint": "^10.10.0",
     "globals": "^17.11.0",
     "intl-tel-input": "^29.2.3",
     "jest": "^30.5.0",
