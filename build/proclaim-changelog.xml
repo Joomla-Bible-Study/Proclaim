@@ -19,6 +19,37 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.7.0                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.7.0</version>
+        <date>2026-09-15</date>
+        <note>
+            <item>files are served from protected storage rather than linked to (#2042), and the site&#x27;s base path is no longer repeated when a URL is mapped to disk (#2045/#2049);</item>
+            <item>Proclaim can move a file in itself, instead of telling you to do it by hand (#2041/#2059);</item>
+            <item>the podcast feed no longer emits an enclosure for a protected file, and System Health says so (#2044/#2060);</item>
+            <item>System Health looks inside the folder rather than at its top level, so the count is right (#2046/#2051);</item>
+            <item>the restricted-media list explains why each file is on it and what state it is in (#2061/#2062).</item>
+            <item>Setup wizard fatal creating the podcast — Factory::getUri() is a Joomla 3 method (#2075). While testing it, a second defect surfaced: the insert omitted podcastlink, which is NOT NULL on sites upgraded through the era it was added, and a swallowing catch turned that into *&quot;wizard silently creates no podcast&quot;*. Both dev databases are in that state, so it likely affects most upgraded installs.</item>
+            <item>500 for a guest viewing an unpublished sermon — Text was never imported (#2076).</item>
+            <item>UTF-8 titles corrupted by the description cleanup: a dash-class regex without /u ate the trailing byte of À, Ô, œ, Cyrillic Г/Д (#2077).</item>
+            <item>TLS verification was disabled on the podcast enclosure probe (#2078) — an on-path attacker could dictate the enclosure length and type written into the feed. Now uses Joomla&#x27;s HTTP client, so verification follows core config.</item>
+            <item>Play/download events were logged before the access check, counting views the visitor could not have (#2047).</item>
+            <item>Choosing a server type no longer submits the form and reloads the page, losing typed work (#2037).</item>
+            <item>Cross-chapter passages (Genesis 1:26-2:3 and every reference of that shape) threw instead of returning verses on locally-stored translations.</item>
+            <item>*Remove all translations* and the provider clean-up fatalled on methods that were never written; both now work, and that screen reports failures instead of hanging.</item>
+            <item>Query modernisation (#1994) completed — every quote($var) on a builder query is bound; ORDER BY is whitelisted rather than wrapped in a no-op escape(); OR groups use the builder. Phase 4 was retired with the MySQL-only decision (#1857).</item>
+            <item>#2089 — CwmadminController&#x27;s 155 hand-rolled JSON responses now go through the shared trait. ⚠️ Payloads were verified byte-identical programmatically (155 before, 155 after, zero differing), so no JavaScript consumer is affected.</item>
+            <item>Six locales synced; menu preset quicktask strings added.</item>
+            <item>Dependency bumps — github/codeql-action v4.37.9 → v4.38.0 and friendsofphp/php-cs-fixer v3.95.24 → v3.95.25. Workflow file and composer.lock only; neither reaches the shipped payload.</item>
+            <item>Release review: v10.7.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2094</item>
+            <item>release: merge development into main for 10.7.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2107</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.6.3                                                   -->
     <!-- ============================================================ -->
     <changelog>
