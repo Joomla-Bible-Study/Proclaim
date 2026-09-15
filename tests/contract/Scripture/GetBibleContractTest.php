@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Contract\Scripture;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
@@ -23,9 +24,15 @@ use PHPUnit\Framework\TestCase;
  * shape, the fixture goes on describing the old one, and the suite stays green
  * while the live path is broken for everyone.
  *
- * This is the one test that pays that cost back, with a single request. It is
- * deliberately in its own suite — "Scripture Contract Tests" is absent from the
- * composer test scripts — so it runs nightly rather than per commit.
+ * This is the one test that pays that cost back, with a single request. Two
+ * things keep it off the per-commit path: it lives in its own suite, which the
+ * composer test:unit/test:integration lists do not name, and it carries the
+ * 'network' group, which `composer test` excludes. ⚠️ Both are needed — a bare
+ * `phpunit` run executes every suite in phpunit.xml, this one included, so the
+ * suite alone would not have kept it out of `composer test` or `composer check`.
+ *
+ * `composer test:contract` names the suite explicitly and applies no exclusion,
+ * so it still runs.
  *
  * ⚠️ A network failure skips rather than fails. From here an unreachable host
  * and a decommissioned API look identical, and a runner with no egress must not
@@ -37,6 +44,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @since __DEPLOY_VERSION__
  */
+#[Group('network')]
 class GetBibleContractTest extends TestCase
 {
     /**
