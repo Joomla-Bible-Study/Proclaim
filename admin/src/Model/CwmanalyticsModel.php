@@ -56,7 +56,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private function bindCreatedWindow(QueryInterface $query, string $start, string $end): void
     {

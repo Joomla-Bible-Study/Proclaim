@@ -69,7 +69,7 @@ class CwmsermonsController extends BaseController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public function stream(): void
     {

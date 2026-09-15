@@ -307,7 +307,7 @@ class HtmlView extends BaseHtmlView
      * The levels a visitor holds, when the restricted filter is active.
      *
      * @var    array<int>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public array $visitorLevels = [];
 
@@ -315,7 +315,7 @@ class HtmlView extends BaseHtmlView
      * View level titles by id, when the restricted filter is active.
      *
      * @var    array<int, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public array $levelNames = [];
 
@@ -323,7 +323,7 @@ class HtmlView extends BaseHtmlView
      * Whether the rows should explain their restriction.
      *
      * @var    bool
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public bool $explainRestriction = false;
 
@@ -340,7 +340,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private function prepareRestrictionNotes(): void
     {

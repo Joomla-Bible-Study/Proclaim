@@ -49,7 +49,7 @@ class CwmmediafileController extends FormController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public function protect(): void
     {
@@ -62,7 +62,7 @@ class CwmmediafileController extends FormController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public function unprotect(): void
     {
@@ -81,7 +81,7 @@ class CwmmediafileController extends FormController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private function moveOpenRecord(bool $into): void
     {

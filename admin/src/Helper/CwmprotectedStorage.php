@@ -118,7 +118,7 @@ class CwmprotectedStorage
      * file it finds — but this runs on every media list render, so it must not
      * be able to walk an arbitrary tree.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private const SCAN_LIMIT = 5000;
 
@@ -143,7 +143,7 @@ class CwmprotectedStorage
      * @return  bool  False only when the directory is absent, or genuinely
      *                holds nothing but its own guard files.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function holdsAnything(): bool
     {
@@ -171,7 +171,7 @@ class CwmprotectedStorage
      *                cut short — an unfinished scan must never be reported as
      *                an empty folder, which is the reassuring answer.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function containsMedia(string $dir): bool
     {
@@ -241,7 +241,7 @@ class CwmprotectedStorage
      * @return  bool  False for anything outside the directory, including
      *                anything that does not resolve at all.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function holds(string $target): bool
     {

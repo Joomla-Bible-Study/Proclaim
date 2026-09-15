@@ -63,7 +63,7 @@ class CwmmediafilesController extends AdminController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public function protect(): void
     {
@@ -76,7 +76,7 @@ class CwmmediafilesController extends AdminController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public function unprotect(): void
     {
@@ -96,7 +96,7 @@ class CwmmediafilesController extends AdminController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private function moveSelected(bool $into): void
     {

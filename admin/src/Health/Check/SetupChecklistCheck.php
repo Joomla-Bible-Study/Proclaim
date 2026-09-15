@@ -35,14 +35,14 @@ use Joomla\CMS\Language\Text;
  * Never more than a Notice. An unfinished checklist on a working site is
  * information, not a fault, and nothing here is broken.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.0
  */
 final class SetupChecklistCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function getId(): string
     {
@@ -52,7 +52,7 @@ final class SetupChecklistCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function getGroup(): HealthGroup
     {
@@ -62,7 +62,7 @@ final class SetupChecklistCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function getTitle(): string
     {
@@ -72,7 +72,7 @@ final class SetupChecklistCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function isPassive(): bool
     {
@@ -82,7 +82,7 @@ final class SetupChecklistCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function run(): HealthResult
     {

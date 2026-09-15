@@ -51,7 +51,7 @@ class Cwmpodcast
      * Seconds to wait on the enclosure HEAD probe.
      *
      * @var   int
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.0
      */
     private const REMOTE_HEADER_TIMEOUT = 30;
 
@@ -1039,7 +1039,7 @@ class Cwmpodcast
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private function isProtectedFile(?string $filename): bool
     {

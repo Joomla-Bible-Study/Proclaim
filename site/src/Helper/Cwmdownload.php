@@ -45,7 +45,7 @@ class Cwmdownload
      * is stored XSS, so anything not on this list is forced back to a download.
      *
      * @var    string[]
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     private const INLINE_TYPES = [
         'audio/aac', 'audio/flac', 'audio/mp4', 'audio/mpeg',
@@ -68,7 +68,7 @@ class Cwmdownload
      * @return  ?object  The row, with study_access and series_access, or null
      *                   when there is no such media file or it is unpublished.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function loadMedia(int $mid): ?object
     {
@@ -114,7 +114,7 @@ class Cwmdownload
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function reachable(int $mid): bool
     {
