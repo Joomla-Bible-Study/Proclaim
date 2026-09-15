@@ -147,7 +147,7 @@ class CwmserverController extends FormController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public function typeFields(): void
     {

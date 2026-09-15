@@ -115,7 +115,7 @@ class CwmmediaStreamer
      *
      * @return  string  The path to test. Empty when $target carries no path at all.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function candidatePath(string $target, string $base, string $root): string
     {

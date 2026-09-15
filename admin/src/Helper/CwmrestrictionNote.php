@@ -30,7 +30,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
  * applies: every level must be satisfied independently — Joomla view levels
  * are unordered sets, so there is no "most restrictive" to reduce to.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.0
  */
 final class CwmrestrictionNote
 {
@@ -49,7 +49,7 @@ final class CwmrestrictionNote
      * @return  list<array{member: string, level: int}>  In chain order:
      *                                                   media, message, series.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function restrictedBy(
         ?int $mediaAccess,

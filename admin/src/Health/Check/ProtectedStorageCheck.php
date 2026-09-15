@@ -89,7 +89,7 @@ final class ProtectedStorageCheck implements HealthCheckInterface
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private function describe(string $stored, bool $holds): string
     {

@@ -42,7 +42,7 @@ use Joomla\Registry\Registry;
  *     on a setting, because a file the web server refuses is not made to
  *     work by one.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.0
  */
 final class CwmprotectedMove
 {
@@ -50,14 +50,14 @@ final class CwmprotectedMove
      * Param key holding the pre-move path, so moving out restores rather
      * than guesses. Lives on the media record because the move does.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public const PREVIOUS_PATH_PARAM = 'preprotect_filename';
 
     /**
      * Where a file with no recorded previous home is moved out to.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public const FALLBACK_DIR = 'images/biblestudy/media';
 
@@ -71,7 +71,7 @@ final class CwmprotectedMove
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function podcastReferenced(?string $podcastId): bool
     {
@@ -96,7 +96,7 @@ final class CwmprotectedMove
      *
      * @return  ?string  A language key naming the refusal, or null.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function refusal(object $media): ?string
     {
@@ -146,7 +146,7 @@ final class CwmprotectedMove
      *
      * @return  bool  True when at least one published local server opts in.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function anyServerOptedIn(DatabaseInterface $db): bool
     {
@@ -173,7 +173,7 @@ final class CwmprotectedMove
      *
      * @return  ?object
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private static function load(DatabaseInterface $db, int $id): ?object
     {
@@ -201,7 +201,7 @@ final class CwmprotectedMove
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private static function store(DatabaseInterface $db, int $id, Registry $params): bool
     {
@@ -229,7 +229,7 @@ final class CwmprotectedMove
      *
      * @return  array{ok: bool, reason: ?string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function moveIn(DatabaseInterface $db, int $id): array
     {
@@ -293,7 +293,7 @@ final class CwmprotectedMove
      *
      * @return  array{ok: bool, reason: ?string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function moveOut(DatabaseInterface $db, int $id): array
     {

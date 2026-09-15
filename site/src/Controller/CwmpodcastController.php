@@ -45,7 +45,7 @@ class CwmpodcastController extends BaseController
      *
      * @return  array<int>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private function viewLevels(): array
     {

@@ -56,7 +56,7 @@ trait CwmJsonResponseTrait
      *
      * @throws  \JsonException  If the payload cannot be encoded.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     private function sendJsonPayload(array $payload): void
     {

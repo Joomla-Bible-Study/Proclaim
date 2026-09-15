@@ -195,7 +195,7 @@ class CwmsetupwizardHelper
      * @return  bool  False when the wizard has not been completed, or the
      *                settings row cannot be read.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function wizardComplete(): bool
     {

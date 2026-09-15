@@ -40,14 +40,14 @@ use Joomla\Registry\Registry;
  * the other way round: a file placed in the folder by hand, or a podcast
  * assigned to media that was already protected. Both are one edit away.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.0
  */
 final class ProtectedPodcastCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function getId(): string
     {
@@ -57,7 +57,7 @@ final class ProtectedPodcastCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function getGroup(): HealthGroup
     {
@@ -67,7 +67,7 @@ final class ProtectedPodcastCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function getTitle(): string
     {
@@ -77,7 +77,7 @@ final class ProtectedPodcastCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function isPassive(): bool
     {
@@ -87,7 +87,7 @@ final class ProtectedPodcastCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.0
      */
     public function run(): HealthResult
     {

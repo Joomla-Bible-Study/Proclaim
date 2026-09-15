@@ -709,7 +709,7 @@ class CwmdbHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.0
      */
     public static function orderByWhitelisted(
         DatabaseQuery $query,
