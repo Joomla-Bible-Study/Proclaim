@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -234,7 +235,8 @@ class CwmupgradeHelper
 
                     $update = $db->createQuery()
                         ->update($db->quoteName($table['name']))
-                        ->set($db->quoteName('params') . ' = ' . $db->quote($json))
+                        ->set($db->quoteName('params') . ' = :params')
+                        ->bind(':params', $json, ParameterType::STRING)
                         ->where($db->quoteName('id') . ' = ' . (int) $row->id);
                     $db->setQuery($update);
                     $db->execute();

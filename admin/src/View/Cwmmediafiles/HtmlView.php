@@ -13,16 +13,15 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafiles;
 
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CwmmediaProtectionHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedMove;
 use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\Button\DropdownButton;
 use Joomla\CMS\Toolbar\Toolbar;
@@ -108,14 +107,6 @@ class HtmlView extends BaseHtmlView
     protected ?object $state = null;
 
     /**
-     * All transitions, which can be executed of one if the items
-     *
-     * @var  array
-     * @since 4.0.0
-     */
-    protected array $transitions = [];
-
-    /**
      * Is this view an Empty State
      *
      * @var   bool
@@ -149,12 +140,7 @@ class HtmlView extends BaseHtmlView
         $this->activeFilters = $model->getActiveFilters();
 
         $this->warnIfProtectedStorageIsNotWorking();
-
-        if (ComponentHelper::getParams('com_proclaim')->get('workflow_enabled')) {
-            PluginHelper::importPlugin('workflow');
-
-            $this->transitions = $model->getTransitions();
-        }
+        $this->prepareRestrictionNotes();
 
         // Check for errors.
         if (\count($errors = $model->getErrors())) {
@@ -228,11 +214,26 @@ class HtmlView extends BaseHtmlView
                 }
             }
 
+            // Offered only while some local server opts in — a menu entry that
+            // can only ever answer "its server does not offer protected
+            // storage" teaches people the menu is noise. Per-row eligibility
+            // (podcast references above all) is decided by the task, which
+            // reports each skip by name.
+            if ($canDo->get('core.edit') && CwmprotectedMove::anyServerOptedIn(Factory::getContainer()->get(DatabaseInterface::class))) {
+                $childBar->separatorButton('protect-separator');
+                $childBar->standardButton('protect', 'JBS_MED_PROTECT', 'cwmmediafiles.protect')
+                    ->icon('icon-lock')
+                    ->listCheck(true);
+                $childBar->standardButton('unprotect', 'JBS_MED_UNPROTECT', 'cwmmediafiles.unprotect')
+                    ->icon('icon-unlock')
+                    ->listCheck(true);
+            }
+
             // Add a batch button
             if (
                 $user->authorise('core.create', 'com_proclaim.mediafile')
                 && $user->authorise('core.edit', 'com_proclaim.mediafile')
-                && $user->authorise('core.edit.transition', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim.mediafile')
             ) {
                 $childBar->popupButton('batch')
                     ->text('JTOOLBAR_BATCH')
@@ -302,11 +303,87 @@ class HtmlView extends BaseHtmlView
      *
      * @since   10.5.8
      */
+    /**
+     * The levels a visitor holds, when the restricted filter is active.
+     *
+     * @var    array<int>
+     * @since  __DEPLOY_VERSION__
+     */
+    public array $visitorLevels = [];
+
+    /**
+     * View level titles by id, when the restricted filter is active.
+     *
+     * @var    array<int, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    public array $levelNames = [];
+
+    /**
+     * Whether the rows should explain their restriction.
+     *
+     * @var    bool
+     * @since  __DEPLOY_VERSION__
+     */
+    public bool $explainRestriction = false;
+
+    /**
+     * Give the restricted list what it needs to explain itself.
+     *
+     * The filter answers which files a visitor cannot see; each row then has
+     * to say why, because the restriction is usually inherited — the media's
+     * own level reads Public while its message is what refuses — and an
+     * unexplained row costs whoever meets it a database query.
+     *
+     * Level titles come from the site's own #__viewlevels, never hardcoded:
+     * sites rename them.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function prepareRestrictionNotes(): void
+    {
+        if ((int) $this->state->get('filter.restricted') !== 1) {
+            return;
+        }
+
+        $this->explainRestriction = true;
+
+        $guest = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
+
+        $this->visitorLevels = array_map('intval', $guest->getAuthorisedViewLevels() ?: [0]);
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()
+            ->select($db->quoteName(['id', 'title']))
+            ->from($db->quoteName('#__viewlevels'));
+
+        foreach ($db->setQuery($query)->loadObjectList() ?: [] as $row) {
+            $this->levelNames[(int) $row->id] = (string) $row->title;
+        }
+
+        Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_RESTRICTED_BANNER'), 'info');
+    }
+
     private function warnIfProtectedStorageIsNotWorking(): void
     {
         $status = CwmprotectedStorage::status();
 
         if ($status === CwmmediaProtectionHelper::PROTECTED) {
+            return;
+        }
+
+        // ⚠️ Nothing is at risk if nothing is stored there. This banner told
+        // every site to "treat restricted files kept there as publicly
+        // downloadable" while the folder held only its own deny rules — a
+        // permanent orange warning about an empty directory, and on a local or
+        // firewalled install the probe can never succeed, so it never cleared.
+        //
+        // Whether the deny rules work is worth knowing before relying on them,
+        // but that is a readiness question for System Health, not a warning on
+        // a list screen about files that do not exist.
+        if (!CwmprotectedStorage::holdsAnything()) {
             return;
         }
 

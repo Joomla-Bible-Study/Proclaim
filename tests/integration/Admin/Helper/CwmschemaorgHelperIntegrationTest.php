@@ -248,6 +248,47 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * hasJoomlaSchema() swallows any query exception and returns false, so a
+     * broken context match is invisible unless a seeded row is asserted present.
+     *
+     * @return  void
+     */
+    #[TestDox('hasJoomlaSchema() finds a seeded row by its exact itemId and context, and only that pair')]
+    public function testHasJoomlaSchemaMatchesOnItemIdAndContext(): void
+    {
+        $itemId = $this->insertSchemaRow('com_proclaim.cwmmessage', 'CreativeWork', ['@type' => 'CreativeWork', 'name' => 'X']);
+
+        $this->assertTrue(CwmschemaorgHelper::hasJoomlaSchema($itemId, 'com_proclaim.cwmmessage'));
+        // A different context must not match the same itemId — proves the
+        // context predicate is actually applied, not swallowed.
+        $this->assertFalse(CwmschemaorgHelper::hasJoomlaSchema($itemId, 'com_proclaim.other'));
+        $this->assertFalse(CwmschemaorgHelper::hasJoomlaSchema($itemId + 777, 'com_proclaim.cwmmessage'));
+    }
+
+    /**
+     * ensureSermonAuthor() reads the sermon's schema row by (itemId, context)
+     * and, when it has no author, writes the linked teacher names in. A broken
+     * context match reads no row and silently leaves the schema untouched.
+     *
+     * @return  void
+     */
+    #[TestDox('ensureSermonAuthor() writes the linked teacher as author on an author-less sermon schema')]
+    public function testEnsureSermonAuthorFillsAuthorFromTeachers(): void
+    {
+        $context = 'com_proclaim.cwmmessage';
+        $itemId  = $this->insertSchemaRow($context, 'CreativeWork', ['@type' => 'CreativeWork', 'name' => 'A sermon']);
+
+        // ensureSermonAuthor() joins study_teachers -> teachers on the itemId.
+        $teacherId = $this->insertTeacher('Jane Preacher');
+        $this->insertStudyTeacher($itemId, $teacherId, 0);
+
+        CwmschemaorgHelper::ensureSermonAuthor($itemId);
+
+        $schema = $this->loadStoredSchema($itemId, $context);
+        $this->assertSame('Jane Preacher', $schema['author']['name'] ?? null);
+    }
+
+    /**
      * @param   int     $itemId   Item ID.
      * @param   string  $context  Context string.
      *

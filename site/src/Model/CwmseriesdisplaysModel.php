@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Model;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Date\Date;
@@ -318,8 +319,8 @@ class CwmseriesdisplaysModel extends ListModel
         if (!$user->authorise('core.edit.state', 'com_proclaim') && !$user->authorise('core.edit', 'com_proclaim')) {
             $nullDate = $db->quote($db->getNullDate());
             $nowDate  = $db->quote((new Date())->toSql());
-            $query->where('(' . $db->quoteName('se.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_up') . ' <= ' . $nowDate . ')')
-                ->where('(' . $db->quoteName('se.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_down') . ' >= ' . $nowDate . ')');
+            $query->andWhere([$db->quoteName('se.publish_up') . ' = ' . $nullDate, $db->quoteName('se.publish_up') . ' <= ' . $nowDate])
+                ->andWhere([$db->quoteName('se.publish_down') . ' = ' . $nullDate, $db->quoteName('se.publish_down') . ' >= ' . $nowDate]);
         }
 
         //Filter by year
@@ -348,7 +349,7 @@ class CwmseriesdisplaysModel extends ListModel
             $orderDirn = $this->getState('list.direction', 'DESC');
         }
 
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted($query, $this->filter_fields, $orderCol, $orderDirn, 'se.series_text');
 
 
         return $query;

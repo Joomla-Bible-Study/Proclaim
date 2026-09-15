@@ -29,6 +29,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtopicSuggestionHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
+use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
 use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;

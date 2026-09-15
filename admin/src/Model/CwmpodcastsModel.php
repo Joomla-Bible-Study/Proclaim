@@ -16,10 +16,12 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 
 /**
@@ -237,12 +239,13 @@ class CwmpodcastsModel extends ListModel
         } elseif (is_numeric($published)) {
             $query->where($db->quoteName('podcast.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('podcast.published') . ' = 0 OR ' . $db->quoteName('podcast.published') . ' = 1)');
+            $query->whereIn($db->quoteName('podcast.published'), [0, 1]);
         }
 
         // Filter on the language.
         if ($language = $this->getState('filter.language')) {
-            $query->where($db->quoteName('podcast.language') . ' = ' . $db->quote($language));
+            $query->where($db->quoteName('podcast.language') . ' = :language')
+            ->bind(':language', $language, ParameterType::STRING);
         }
 
         // Filter by search in filename or study title
@@ -252,15 +255,22 @@ class CwmpodcastsModel extends ListModel
             if (stripos($search, 'id:') === 0) {
                 $query->where($db->quoteName('podcast.id') . ' = ' . (int) substr($search, 3));
             } else {
+                // Bracketed by hand on purpose: with the All status filter no
+                // earlier branch is guaranteed to have added a WHERE, and
+                // andWhere()/orWhere() extend one that must already exist.
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
                 $query->where('(' . $db->quoteName('podcast.title') . ' LIKE ' . $search . ' OR ' . $db->quoteName('podcast.description') . ' LIKE ' . $search . ')');
             }
         }
 
         // Add the list ordering clause
-        $orderCol  = $this->state->get('list.ordering', 'podcast.id');
-        $orderDirn = $this->state->get('list.direction', 'desc');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted(
+            $query,
+            $this->filter_fields,
+            $this->state->get('list.ordering'),
+            $this->state->get('list.direction', 'desc'),
+            'podcast.id'
+        );
 
         return $query;
     }

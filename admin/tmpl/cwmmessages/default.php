@@ -45,18 +45,6 @@ $wa->useScript('table.columns')
 
 CwmlangHelper::registerAllForJs();
 
-$workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_enabled');
-$workflow_state    = false;
-$workflow_featured = false;
-
-if ($workflow_enabled) :
-    $wa->getRegistry()->addExtensionRegistryFile('com_workflow');
-    $wa->useScript('com_workflow.admin-items-workflow-buttons');
-
-    $workflow_state    = Factory::getApplication()->bootComponent('com_proclaim')->isFunctionalityUsed('core.state', 'com_proclaim.message');
-    $workflow_featured = Factory::getApplication()->bootComponent('com_proclaim')->isFunctionalityUsed('core.featured', 'com_proclaim.messages');
-endif;
-
 if (str_contains($listOrder, 'publish_up')) {
     $orderingColumn = 'publish_up';
 } elseif (str_contains($listOrder, 'publish_down')) {
@@ -282,7 +270,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                     <?php
                             $options = [
                                 'task_prefix' => 'cwmmessages.',
-                                'disabled'    => $workflow_state || !$canChange,
+                                'disabled'    => !$canChange,
                                 'id'          => 'state-' . $item->id,
                             ];
 

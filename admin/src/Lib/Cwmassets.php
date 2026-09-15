@@ -504,9 +504,9 @@ class Cwmassets
             ->values(
                 (int) $rootId . ', 0, 0, 1, ' .
                 $db->quote('com_proclaim') . ', ' .
-                $db->quote('com_proclaim') . ', ' .
-                $db->quote($defaultRules)
-            );
+                $db->quote('com_proclaim') . ', :rules'
+            )
+            ->bind(':rules', $defaultRules, ParameterType::STRING);
 
         try {
             $db->setQuery($query);
@@ -973,6 +973,10 @@ class Cwmassets
      */
     public static function hasAnyDrift(DatabaseInterface $db, int $parentId): bool
     {
+        // Left interpolated on purpose: EMPTY_RULE_VARIANTS is a fixed
+        // constant, not input, so quoting it carries no escaping responsibility
+        // to move to a bind — and it feeds raw CASE/IN expressions below where a
+        // placeholder cannot go.
         $emptyQuoted = implode(
             ',',
             array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
@@ -1035,14 +1039,16 @@ class Cwmassets
 
         foreach ($orphanMap as $prefix => $sourceTable) {
             try {
-                $query = $db->createQuery()
+                $namePattern = $prefix . '%';
+                $query       = $db->createQuery()
                     ->select('COUNT(*)')
                     ->from($db->quoteName('#__assets'))
-                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote($prefix . '%'))
+                    ->where($db->quoteName('name') . ' LIKE :namePattern')
                     ->where(
                         'CAST(SUBSTRING(' . $db->quoteName('name') . ', ' . (\strlen($prefix) + 1) . ') AS UNSIGNED)'
                         . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName($sourceTable) . ')'
-                    );
+                    )
+                    ->bind(':namePattern', $namePattern, ParameterType::STRING);
                 $db->setQuery($query);
 
                 if ((int) $db->loadResult() > 0) {
@@ -1076,6 +1082,10 @@ class Cwmassets
     public static function pruneEmptyAssetRows(DatabaseInterface $db): int
     {
         $deleted     = 0;
+        // Left interpolated on purpose: EMPTY_RULE_VARIANTS is a fixed
+        // constant, not input, so quoting it carries no escaping responsibility
+        // to move to a bind — and it feeds raw CASE/IN expressions below where a
+        // placeholder cannot go.
         $emptyQuoted = implode(
             ',',
             array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
@@ -1338,7 +1348,8 @@ class Cwmassets
             $query = $db->createQuery()
                 ->select($db->quoteName(['id', 'rules']))
                 ->from($db->quoteName('#__assets'))
-                ->where($db->quoteName('name') . ' = ' . $db->quote($assetFullName));
+                ->where($db->quoteName('name') . ' = :assetName')
+                ->bind(':assetName', $assetFullName, ParameterType::STRING);
             $db->setQuery($query);
             $existing = $db->loadObject();
 
@@ -1407,8 +1418,9 @@ class Cwmassets
 
             $query = $db->createQuery()
                 ->update($db->quoteName('#__assets'))
-                ->set($db->quoteName('name') . ' = ' . $db->quote($assetFullName))
-                ->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
+                ->set($db->quoteName('name') . ' = :assetName')
+                ->where($db->quoteName('id') . ' = ' . (int) $item->asset_id)
+                ->bind(':assetName', $assetFullName, ParameterType::STRING);
             $db->setQuery($query);
             $db->execute();
 
@@ -1440,9 +1452,11 @@ class Cwmassets
 
         foreach ($assetMap as $prefix => $sourceTable) {
             try {
-                $query = $db->createQuery()
+                $namePattern = $prefix . '%';
+                $query       = $db->createQuery()
                     ->delete($db->quoteName('#__assets'))
-                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote($prefix . '%'))
+                    ->where($db->quoteName('name') . ' LIKE :namePattern')
+                    ->bind(':namePattern', $namePattern, ParameterType::STRING)
                     ->where(
                         'CAST(SUBSTRING(' . $db->quoteName('name') . ', ' . (\strlen($prefix) + 1) . ') AS UNSIGNED)'
                         . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName($sourceTable) . ')'
@@ -1572,6 +1586,10 @@ class Cwmassets
         $parentMap = self::sectionParentMap($db, $parentId);
         $status    = [];
 
+        // Left interpolated on purpose: EMPTY_RULE_VARIANTS is a fixed
+        // constant, not input, so quoting it carries no escaping responsibility
+        // to move to a bind — and it feeds raw CASE/IN expressions below where a
+        // placeholder cannot go.
         $emptyQuoted = implode(
             ',',
             array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
@@ -1626,6 +1644,10 @@ class Cwmassets
             $prefixLen = \strlen($prefix) + 1;
 
             try {
+                // Raw string query (setQuery has no query object to bind on);
+                // the prefix stays quoted rather than bound. Moving it to a
+                // placeholder would mean rebuilding this LEFT JOIN + CAST as a
+                // builder query — out of scope for a value-binding pass.
                 $db->setQuery(
                     'SELECT COUNT(*) FROM ' . $db->quoteName('#__assets', 'a')
                     . ' LEFT JOIN ' . $db->quoteName($sourceTbl, 's')

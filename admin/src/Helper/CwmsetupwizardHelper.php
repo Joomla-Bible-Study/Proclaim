@@ -180,6 +180,45 @@ class CwmsetupwizardHelper
     }
 
     /**
+     * Whether the setup wizard has been completed on this site.
+     *
+     * ⚠️ Separate from shouldShowChecklist() on purpose. That answers whether
+     * to draw the dashboard banner and so also consults the dismissal flag;
+     * this answers only whether the checklist means anything yet.
+     *
+     * The distinction matters because getChecklistItems() does not consult
+     * either flag — it builds its list unconditionally, so on a site that has
+     * never run the wizard it returns every step marked as not done. Anything
+     * reporting on that list has to ask this first, or it describes an install
+     * that has not started as one that has fallen behind.
+     *
+     * @return  bool  False when the wizard has not been completed, or the
+     *                settings row cannot be read.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function wizardComplete(): bool
+    {
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()
+                ->select($db->quoteName('params'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
+            $db->setQuery($query, 0, 1);
+            $json = $db->loadResult();
+
+            if (!$json) {
+                return false;
+            }
+
+            return (int) (new Registry($json))->get('setup_wizard_complete', 0) === 1;
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
+    /**
      * Build the post-wizard checklist items based on ministry style.
      *
      * Each item checks the database to determine if it's been completed.

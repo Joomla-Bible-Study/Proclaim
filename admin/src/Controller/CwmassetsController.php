@@ -157,6 +157,8 @@ class CwmassetsController extends BaseController
             $asset['realname'] = Text::_($asset['realname']);
         }
 
+        unset($asset);
+
         $this->sendJsonResponse(true, '', ['assets' => $assets]);
     }
 

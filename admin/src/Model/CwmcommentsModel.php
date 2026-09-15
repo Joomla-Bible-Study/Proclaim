@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use Joomla\CMS\Factory;
@@ -202,7 +203,7 @@ class CwmcommentsModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('comment.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('comment.published') . ' = 0 OR ' . $db->quoteName('comment.published') . ' = 1)');
+            $query->whereIn($db->quoteName('comment.published'), [0, 1]);
         }
 
         // Filter by search in title.
@@ -306,9 +307,13 @@ class CwmcommentsModel extends ListModel
             ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('comment.checked_out'));
 
         // Add the list ordering clause
-        $orderCol  = $this->state->get('list.ordering', 'study.studytitle');
-        $orderDirn = $this->state->get('list.direction', 'asc');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted(
+            $query,
+            $this->filter_fields,
+            $this->state->get('list.ordering'),
+            $this->state->get('list.direction', 'asc'),
+            'study.studytitle'
+        );
 
         return $query;
     }

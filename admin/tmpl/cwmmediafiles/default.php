@@ -19,6 +19,8 @@ use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
+use CWM\Component\Proclaim\Administrator\Helper\CwmrestrictionNote;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
@@ -208,6 +210,48 @@ if ($saveOrder && !empty($this->items)) {
                                             <?php echo $this->escape($resourceValue ?: Text::_('JBS_MED_RESOURCE_NAME')); ?>
                                         <?php endif; ?>
                                     </div>
+                                    <?php if ($this->explainRestriction) : ?>
+                                        <?php
+                                        $why = [];
+
+                                        foreach (
+                                            CwmrestrictionNote::restrictedBy(
+                                                isset($item->access) ? (int) $item->access : null,
+                                                isset($item->study_access) ? (int) $item->study_access : null,
+                                                isset($item->series_access) ? (int) $item->series_access : null,
+                                                $this->visitorLevels
+                                            ) as $link
+                                        ) {
+                                            $why[] = Text::sprintf(
+                                                'JBS_MED_RESTRICTED_WHY_' . strtoupper($link['member']),
+                                                $this->levelNames[$link['level']] ?? ('#' . $link['level'])
+                                            );
+                                        }
+
+                                        // Where the file actually is decides what the
+                                        // restriction is worth: protected means handled,
+                                        // a direct address is the case worth acting on,
+                                        // another host is not this site's to protect.
+                                        $file = ltrim((string) $item->params->get('filename', ''), '/');
+
+                                        if ($file === '' || str_contains($file, '://') || str_starts_with((string) $item->params->get('filename', ''), '//')) {
+                                            $stateKey = 'JBS_MED_RESTRICTED_STATE_REMOTE';
+                                            $stateCls = 'text-body-secondary';
+                                        } elseif (CwmprotectedStorage::holds(rtrim(JPATH_ROOT, '/\\') . '/' . $file)) {
+                                            $stateKey = 'JBS_MED_RESTRICTED_STATE_PROTECTED';
+                                            $stateCls = 'text-success';
+                                        } else {
+                                            $stateKey = 'JBS_MED_RESTRICTED_STATE_DIRECT';
+                                            $stateCls = 'text-warning';
+                                        }
+                                        ?>
+                                        <div class="small text-body-secondary">
+                                            <?php if ($why !== []) : ?>
+                                                <?php echo Text::sprintf('JBS_MED_RESTRICTED_BY', implode(Text::_('JBS_MED_RESTRICTED_WHY_JOIN'), $why)); ?>
+                                            <?php endif; ?>
+                                            <span class="<?php echo $stateCls; ?>"><?php echo Text::_($stateKey); ?></span>
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
                                     <?php echo $this->escape($item->studytitle); ?>

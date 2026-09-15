@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 
 /**
  * Streams a media file to the client, honouring Range, HEAD and
@@ -91,6 +92,55 @@ class CwmmediaStreamer
         self::streamRemoteFile($target, $range, $ifModifiedSince, $ifNoneMatch, $headOnly);
     }
     /**
+     * Where on disk a target would live, before asking whether it is there.
+     *
+     * ⚠️ Pure string arithmetic, deliberately separated from the filesystem
+     * checks around it, because getting this wrong is invisible from the
+     * outside: a mis-joined path simply fails to resolve and the caller
+     * concludes the file is not local. Separated out, the join can be asserted
+     * directly, without a web server and without depending on where the repo
+     * happens to be checked out.
+     *
+     * $base is the site's own path within the domain: empty at a domain root,
+     * `/joomla` for a site at `https://example.com/joomla/`. A URL carries it
+     * and JPATH_ROOT already ends in it, so joining the two without removing
+     * it first produces `/var/www/html/joomla/joomla/...`.
+     *
+     * An absolute filesystem path is passed through untouched — it is already
+     * rooted, and stripping a base from it would corrupt it.
+     *
+     * @param   string  $target  A URL on this site, or an absolute filesystem path.
+     * @param   string  $base    The site's base path, as Uri::root(true) returns it.
+     * @param   string  $root    The web root, as JPATH_ROOT holds it.
+     *
+     * @return  string  The path to test. Empty when $target carries no path at all.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function candidatePath(string $target, string $base, string $root): string
+    {
+        $path = (string) (parse_url($target, PHP_URL_PATH) ?: '');
+
+        if ($path === '') {
+            return '';
+        }
+
+        $root = rtrim($root, '/\\');
+        $base = rtrim($base, '/');
+
+        // Already a filesystem path: nothing to join, nothing to strip.
+        if (str_starts_with($path, $root . '/')) {
+            return $path;
+        }
+
+        if ($base !== '' && str_starts_with($path, $base . '/')) {
+            $path = substr($path, \strlen($base));
+        }
+
+        return $root . '/' . ltrim(rawurldecode($path), '/');
+    }
+
+    /**
      * Map a same-host target URL back to a filesystem path, refusing anything
      * that resolves outside the web root (defense in depth — $target is
      * server-derived, never request-supplied, but this keeps that guarantee
@@ -104,14 +154,14 @@ class CwmmediaStreamer
      */
     private static function resolveLocalPath(string $target): ?string
     {
-        $urlPath = parse_url($target, PHP_URL_PATH);
+        $webRoot   = rtrim(JPATH_ROOT, '/');
+        $candidate = self::candidatePath($target, Uri::root(true), $webRoot);
 
-        if (empty($urlPath)) {
+        if ($candidate === '') {
             return null;
         }
 
-        $webRoot = rtrim(JPATH_ROOT, '/');
-        $real    = realpath($webRoot . '/' . ltrim(rawurldecode($urlPath), '/'));
+        $real = realpath($candidate);
 
         if ($real === false || !str_starts_with($real, $webRoot . '/') || !is_readable($real)) {
             return null;

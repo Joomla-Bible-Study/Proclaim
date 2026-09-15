@@ -426,7 +426,13 @@ class Cwmshowscripture
                     $clauses[] = $db->quoteName('source') . ' IN (' . implode(',', $quoted) . ')';
                 }
 
-                $query->where('(' . implode(' OR ', $clauses) . ')');
+                // installed = 1 is always present and seeds the WHERE the
+                // optional source arm extends with OR.
+                $query->where(array_shift($clauses));
+
+                if ($clauses !== []) {
+                    $query->orWhere($clauses, 'OR');
+                }
 
                 $db->setQuery($query);
                 $translationsCacheByKey[$cacheKey] = $db->loadObjectList() ?: [];

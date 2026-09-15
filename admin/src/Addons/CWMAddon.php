@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Filesystem\Path;
 use Joomla\Http\HttpFactory;
 use Joomla\Http\Response;
@@ -1281,6 +1282,10 @@ abstract class CWMAddon
         $db  = Factory::getContainer()->get(DatabaseInterface::class);
         $now = Factory::getDate()->toSql();
 
+        // Assembled as a raw string, not the builder: this is an
+        // INSERT ... ON DUPLICATE KEY UPDATE with a column set that varies per
+        // call, which the query builder cannot express — so setQuery() gets a
+        // string and there is no query object to bind these values on.
         $columns = ['media_id', 'server_id', 'platform', 'platform_id', 'synced_at'];
         $values  = [
             (int) $mediaId,
@@ -1336,8 +1341,9 @@ abstract class CWMAddon
         $now   = Factory::getDate()->toSql();
         $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
-            ->set($db->quoteName('stats_synced_at') . ' = ' . $db->quote($now))
-            ->where($db->quoteName('id') . ' = ' . $serverId);
+            ->set($db->quoteName('stats_synced_at') . ' = :now')
+            ->where($db->quoteName('id') . ' = ' . $serverId)
+            ->bind(':now', $now, ParameterType::STRING);
         $db->setQuery($query)->execute();
     }
 
@@ -1382,8 +1388,9 @@ abstract class CWMAddon
             $query->leftJoin(
                 $db->quoteName('#__bsms_platform_stats', 'ps')
                 . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
-                . ' AND ' . $db->quoteName('ps.platform') . ' = ' . $db->quote($platform)
-            );
+                . ' AND ' . $db->quoteName('ps.platform') . ' = :platform'
+            )
+                ->bind(':platform', $platform, ParameterType::STRING);
 
             // Never-synced first (NULL synced_at), then oldest-synced
             $query->order($db->quoteName('ps.synced_at') . ' IS NULL DESC')

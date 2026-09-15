@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bible studies/sermons. It supports teachers, series, topics, locations, media files, podcasting, and social sharing with customizable templates.
+Proclaim (CWM Proclaim) is a Joomla 5+ component (minimum 5.4.0, Joomla 6 supported) for managing and displaying Bible studies/sermons. It supports teachers, series, topics, locations, media files, podcasting, and social sharing with customizable templates.
 
 **PHP Requirement:** 8.3.0+
 **Namespace:** `CWM\Component\Proclaim`

@@ -86,14 +86,6 @@ class HtmlView extends BaseHtmlView
     public ?object $canDo = null;
 
     /**
-     * All transitions, which can be executed if the items
-     *
-     * @var  array
-     * @since 4.0.0
-     */
-    protected array $transitions = [];
-
-    /**
      * Is this view an Empty State
      *
      * @var   bool

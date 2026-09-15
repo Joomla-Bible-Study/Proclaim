@@ -19,11 +19,13 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMFancyBox;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMHtml5Inline;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
@@ -623,6 +625,22 @@ class Cwmmedia
         $filesize = $this->getFluidFilesize($media, $params);
 
         $path = Cwmhelper::mediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
+
+        // ⚠️ A file in the protected directory cannot be fetched by the browser
+        // — the web server is configured to refuse it, which is the whole point
+        // of putting it there. Play it through Proclaim instead, which serves
+        // the same bytes after the same access check.
+        //
+        // Keyed on where the file actually is, not on a server setting: the
+        // per-server option governs whether files may be *moved* there, and a
+        // file already in the directory has to play whatever that option says.
+        // Everything outside it keeps the direct URL it has always had.
+        if (CwmprotectedStorage::holds($path)) {
+            $path = Route::_(
+                'index.php?option=com_proclaim&task=cwmsermons.stream&id=' . (int) $media->id,
+                false
+            );
+        }
 
         switch ($player->player) {
             case 0: // Direct

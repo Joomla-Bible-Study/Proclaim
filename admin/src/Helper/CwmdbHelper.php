@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Filesystem\Folder;
 
 /**
@@ -680,5 +681,61 @@ class CwmdbHelper
                 }
             }
         }
+    }
+
+    /**
+     * Apply a whitelisted ORDER BY to a list query.
+     *
+     * `ListModel::populateState()` already validates the incoming list ordering
+     * against the model's `filter_fields` and the direction against ASC/DESC,
+     * but the `$db->escape()` the call sites used to wrap these in did nothing:
+     * `escape()` is for a quoted string context, and an ORDER BY value is not
+     * quoted. This re-checks the column against the same whitelist at the point
+     * of use and quotes it as the identifier it is, so the guarantee is visible
+     * where the SQL is built.
+     *
+     * The column may arrive either as a plain name or, from `list.fullordering`,
+     * as a combined "column direction" pair — that form is split apart. An empty
+     * direction is preserved as ASC, which is exactly what the old unquoted
+     * `ORDER BY col ` left MySQL to apply implicitly; the caller keeps ownership
+     * of the *absent*-state default by passing it to `getState()` as it always
+     * has.
+     *
+     * @param   DatabaseQuery  $query          The query to add the ORDER BY to.
+     * @param   string[]       $filterFields   The model's whitelist of orderable columns.
+     * @param   ?string        $column         The requested order column (or a "column direction" pair).
+     * @param   ?string        $direction      The requested direction, or '' when $column carries it.
+     * @param   string         $defaultColumn  The column to fall back to when the request is not whitelisted.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function orderByWhitelisted(
+        DatabaseQuery $query,
+        array $filterFields,
+        ?string $column,
+        ?string $direction,
+        string $defaultColumn
+    ): void {
+        $column    = trim((string) $column);
+        $direction = strtoupper(trim((string) $direction));
+
+        // A list.fullordering value arrives as "column direction" with no
+        // separate direction argument; pull the two apart before validating.
+        if ($direction === '' && preg_match('/^(.+?)\s+(ASC|DESC)$/i', $column, $matches)) {
+            $column    = trim($matches[1]);
+            $direction = strtoupper($matches[2]);
+        }
+
+        if (!\in_array($column, $filterFields, true)) {
+            $column = $defaultColumn;
+        }
+
+        // Anything that is not an explicit DESC becomes ASC — including the
+        // empty direction, which is what the previous unquoted clause did.
+        $direction = \in_array($direction, ['ASC', 'DESC'], true) ? $direction : 'ASC';
+
+        $query->order($query->quoteName($column) . ' ' . $direction);
     }
 }

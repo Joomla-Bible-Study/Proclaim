@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmediaStreamer;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
@@ -34,15 +36,116 @@ use Joomla\Registry\Registry;
 class Cwmdownload
 {
     /**
+     * Types that may be served inline, and nothing else.
+     *
+     * ⚠️ An allowlist, not a denylist. `inline` tells the browser to render the
+     * response in the page, and the type is derived from a filename an editor
+     * controls — `Cwmmime::fromExtension()` will happily return `text/html` for
+     * a record named `x.html`. Served inline from this site's own origin that
+     * is stored XSS, so anything not on this list is forced back to a download.
+     *
+     * @var    string[]
+     * @since  __DEPLOY_VERSION__
+     */
+    private const INLINE_TYPES = [
+        'audio/aac', 'audio/flac', 'audio/mp4', 'audio/mpeg',
+        'audio/ogg', 'audio/wav', 'audio/x-ms-wma',
+        'video/mp4', 'video/ogg', 'video/quicktime', 'video/webm',
+        'video/x-matroska', 'video/x-ms-wmv', 'video/x-msvideo',
+    ];
+
+    /**
+     * Load a published media file together with the access levels it inherits.
+     *
+     * The study and series levels come along because a media file is only as
+     * reachable as the message it belongs to. Kept as one query with one
+     * caller-visible shape so that everything deciding whether someone may
+     * have this media asks the same question — a second copy of these joins is
+     * a second chance to leave one of them out.
+     *
+     * @param   int  $mid  Media file id.
+     *
+     * @return  ?object  The row, with study_access and series_access, or null
+     *                   when there is no such media file or it is unpublished.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function loadMedia(int $mid): ?object
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery();
+
+        $query->select(
+            $db->quoteName('#__bsms_mediafiles') . '.*,'
+            . $db->quoteName('#__bsms_servers.id', 'ssid') . ', ' . $db->quoteName('#__bsms_servers.params', 'sparams')
+            . ', ' . $db->quoteName('study.access', 'study_access')
+            . ', ' . $db->quoteName('series.access', 'series_access')
+        )
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_servers') . ' ON ('
+                . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_studies', 'study') . ' ON ('
+                . $db->quoteName('study.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'series') . ' ON ('
+                . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id') . ')'
+            )
+            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . $mid)
+            ->where($db->quoteName('#__bsms_mediafiles.published') . ' = 1');
+
+        $db->setQuery($query, 0, 1);
+
+        return $db->loadObject();
+    }
+
+    /**
+     * Whether the visitor making this request may reach this media file.
+     *
+     * The reachability question on its own, for callers that record something
+     * about a media file without serving it. A counter is a statement that
+     * something happened, and a request that would have been refused did not
+     * happen — it was turned away.
+     *
+     * @param   int  $mid  Media file id.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function reachable(int $mid): bool
+    {
+        if ($mid <= 0) {
+            return false;
+        }
+
+        $media = self::loadMedia($mid);
+
+        if (!$media) {
+            return false;
+        }
+
+        $user = Factory::getApplication()->getIdentity();
+
+        return self::isAccessible($media, $user?->getAuthorisedViewLevels() ?? []);
+    }
+
+    /**
      * Method to send a file to the browser
      *
-     * @param   int  $mid  ID of media
+     * @param   int   $mid     ID of media
+     * @param   bool  $inline  Offer the file for playback in the page rather than as a download.
+     *                         Honoured only for the types on INLINE_TYPES; anything else is
+     *                         sent as an attachment regardless.
      *
      * @return void
      * @throws \Exception If the template or media is not found.
      * @since 6.1.2
      */
-    public function download(int $mid): void
+    public function download(int $mid, bool $inline = false): void
     {
         // Clears file status cache
         clearstatcache();
@@ -69,33 +172,7 @@ class Cwmdownload
         $registry->loadString($template->params);
         $params = $registry;
 
-        // The study and series levels come along because a media file is only
-        // as reachable as the message it belongs to — see the access check below.
-        $query = $db->createQuery();
-        $query->select(
-            $db->quoteName('#__bsms_mediafiles') . '.*,'
-            . $db->quoteName('#__bsms_servers.id', 'ssid') . ', ' . $db->quoteName('#__bsms_servers.params', 'sparams')
-            . ', ' . $db->quoteName('study.access', 'study_access')
-            . ', ' . $db->quoteName('series.access', 'series_access')
-        )
-            ->from($db->quoteName('#__bsms_mediafiles'))
-            ->leftJoin(
-                $db->quoteName('#__bsms_servers') . ' ON ('
-                . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
-            )
-            ->leftJoin(
-                $db->quoteName('#__bsms_studies', 'study') . ' ON ('
-                . $db->quoteName('study.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
-            )
-            ->leftJoin(
-                $db->quoteName('#__bsms_series', 'series') . ' ON ('
-                . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id') . ')'
-            )
-            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . $mid)
-            ->where($db->quoteName('#__bsms_mediafiles.published') . ' = 1');
-        $db->setQuery($query, 0, 1);
-
-        $media = $db->loadObject();
+        $media = self::loadMedia($mid);
 
         if (!$media) {
             $this->sendError($app, 404, 'Media not found');
@@ -124,6 +201,13 @@ class Cwmdownload
 
         // Increment download count after validation
         $this->hitDownloads($mid);
+
+        // ⚠️ Logged here rather than by the controller that called us, which
+        // logged before this method ran and therefore counted requests this
+        // check then refused. A counter that includes the traffic it turned
+        // away is not measuring what its name says, and nothing downstream can
+        // separate the two afterwards.
+        CwmanalyticsHelper::logEvent($inline ? 'play' : 'download', 0, $mid);
 
         $reg = new Registry();
         $reg->loadString($media->sparams);
@@ -161,8 +245,34 @@ class Cwmdownload
         // Content-Length especially, which has to reflect the range served
         // rather than the whole file.
         $safeFilename = preg_replace('/[^\w.\-]/', '_', basename((string) $params->get('filename')));
+
+        // Resolve type and disposition together: a type that may not be shown
+        // in the page must not be announced as one, so both fall back at once.
+        $serveType = 'application/octet-stream';
+
+        if ($inline) {
+            $detected = Cwmmime::fromExtension((string) $params->get('filename'));
+
+            if ($detected !== null && \in_array($detected, self::INLINE_TYPES, true)) {
+                $serveType = $detected;
+            } else {
+                $inline = false;
+            }
+        }
+
         header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename="' . $safeFilename . '"');
+
+        // The declared type is the only one honoured; without this a browser
+        // may sniff the bytes and decide the response is HTML after all.
+        header('X-Content-Type-Options: nosniff');
+
+        // ⚠️ inline is for playback, and a player will not touch a file offered
+        // as an attachment — the browser downloads it instead of handing it to
+        // the media element. Same bytes, same access check, different intent.
+        header(
+            'Content-Disposition: ' . ($inline ? 'inline' : 'attachment')
+            . '; filename="' . $safeFilename . '"'
+        );
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
@@ -174,7 +284,7 @@ class Cwmdownload
         // down the remote path.
         CwmmediaStreamer::serve(
             $download_file,
-            'application/octet-stream',
+            $serveType,
             (string) (parse_url(Uri::root(), PHP_URL_HOST) ?: ''),
             (string) $input->server->getString('HTTP_RANGE', ''),
             (string) $input->server->getString('HTTP_IF_MODIFIED_SINCE', ''),

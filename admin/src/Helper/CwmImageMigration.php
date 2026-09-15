@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
 
@@ -2204,13 +2205,16 @@ class CwmImageMigration
                 // Update DB columns
                 $update = $db->createQuery()
                     ->update($db->quoteName($cfg['table']))
-                    ->set($db->quoteName($imageCol) . ' = ' . $db->quote($imageRelPath))
-                    ->set($db->quoteName($thumbCol) . ' = ' . $db->quote($thumbRelPath))
-                    ->where($db->quoteName('id') . ' = ' . (int) $record->id);
+                    ->set($db->quoteName($imageCol) . ' = :imageRel')
+                    ->set($db->quoteName($thumbCol) . ' = :thumbRel')
+                    ->where($db->quoteName('id') . ' = ' . (int) $record->id)
+                    ->bind(':imageRel', $imageRelPath, ParameterType::STRING)
+                    ->bind(':thumbRel', $thumbRelPath, ParameterType::STRING);
 
                 // Teachers also store original path in teacher_image
                 if (!empty($cfg['extraImageCol'])) {
-                    $update->set($db->quoteName($cfg['extraImageCol']) . ' = ' . $db->quote($imageRelPath));
+                    $update->set($db->quoteName($cfg['extraImageCol']) . ' = :imageRelExtra')
+                        ->bind(':imageRelExtra', $imageRelPath, ParameterType::STRING);
                 }
 
                 $db->setQuery($update)->execute();

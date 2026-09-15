@@ -35,6 +35,26 @@ use Joomla\Registry\Registry;
 class CwmpodcastController extends BaseController
 {
     /**
+     * View levels held by whoever is making this request.
+     *
+     * Both endpoints are read by podcast clients with no session, so this is
+     * normally the guest's levels — which is the point. An empty result means
+     * an identity that holds nothing, not an identity that holds everything,
+     * so it falls back to a set that matches no real view level rather than to
+     * no filter at all.
+     *
+     * @return  array<int>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function viewLevels(): array
+    {
+        $levels = Factory::getApplication()->getIdentity()?->getAuthorisedViewLevels() ?? [];
+
+        return array_map('intval', $levels) ?: [0];
+    }
+
+    /**
      * Serve JSON chapters for a media file.
      *
      * URL: index.php?option=com_proclaim&task=cwmpodcast.chapters&media_id={id}
@@ -54,22 +74,18 @@ class CwmpodcastController extends BaseController
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
-            ->select($db->quoteName('params'))
-            ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('id') . ' = ' . $mediaId)
-            ->where($db->quoteName('published') . ' = 1');
+        $media = CwmpodcastTrackHelper::findPublishedMedia($db, $mediaId, $this->viewLevels());
 
-        $db->setQuery($query);
-        $rawParams = $db->loadResult();
-
-        if (empty($rawParams)) {
+        // Chapter titles and timings describe the recording, so they are only
+        // for whoever may reach the recording. Same lookup as track(), so the
+        // two endpoints cannot drift into disagreeing about who that is.
+        if (!$media || empty($media->params)) {
             $this->sendJson(['version' => '1.2.0', 'chapters' => []], 404);
 
             return;
         }
 
-        $params   = new Registry($rawParams);
+        $params   = new Registry($media->params);
         $chapters = $params->get('chapters', []);
 
         $output = ['version' => '1.2.0', 'chapters' => []];
@@ -126,7 +142,7 @@ class CwmpodcastController extends BaseController
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $media = CwmpodcastTrackHelper::findPublishedMedia($db, $mediaId);
+        $media = CwmpodcastTrackHelper::findPublishedMedia($db, $mediaId, $this->viewLevels());
 
         if (!$media) {
             $this->fail($app, 404);
@@ -248,7 +264,19 @@ class CwmpodcastController extends BaseController
     {
         $app = Factory::getApplication();
         $app->setHeader('Content-Type', 'application/json; charset=utf-8');
-        $app->setHeader('Status', (string) $status);
+        $app->setHeader('Status', $status . ' ' . match ($status) {
+            400     => 'Bad Request',
+            403     => 'Forbidden',
+            404     => 'Not Found',
+            default => 'OK',
+        });
+
+        // ⚠️ Headers set on the application are normally flushed by respond()
+        // at the end of execute(), which close() below never reaches. Without
+        // this the status is dropped and a refusal answers 200 carrying an
+        // empty payload — indistinguishable, to a client, from a recording
+        // that genuinely has no chapters.
+        $app->sendHeaders();
 
         try {
             echo json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);

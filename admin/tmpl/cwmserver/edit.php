@@ -14,10 +14,10 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
@@ -29,26 +29,133 @@ $input = $app->getInput();
 
 $isNewRecord = ((int)$this->item->id === 0 && empty($this->item->type));
 
-// Addons declare their own advanced settings; see the simplemode checks below.
-$simple = Cwmhelper::getSimpleView();
-
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
+    // The in-place type swap injects another addon's fields without a reload,
+    // but a fragment cannot bring core field scripts with it. Load the two
+    // that addon fields lean on up front — conditional display (showon) and the
+    // media picker — so whatever type is swapped in finds them already present
+    // and wires up on the joomla:updated event the swap fires.
+    ->useScript('showon')
+    ->useScript('webcomponent.field-media')
     ->addInlineScript(
         "
+	/* Choosing a type must not submit the form: whatever was typed would ride
+	   through a submit never meant to save, and every failure would become a
+	   navigation. Instead the tab region is re-rendered server-side for the
+	   chosen type and swapped in place, then the typed values are put back. */
+	Joomla.cwmSwapServerType = function (type) {
+		var form   = document.getElementById('item-form');
+		var region = document.getElementById('server-tabset-region');
+
+		/* The type field is a ModalSelectField: a readonly title input and a
+		   hidden value input SHARE the name jform[type], so
+		   elements['jform[type]'] is a RadioNodeList and assigning .value to
+		   it does nothing at all. Write to the hidden value input by id, and
+		   mirror it into the visible one so the choice shows immediately.
+		   Remember the prior pair: if the fetch fails we must put them back,
+		   or the form would carry the new type over the old type's fields —
+		   a Save then would persist a mismatched server. */
+		var typeValue = document.getElementById('jform_type_id');
+		var typeTitle = document.getElementById('jform_type');
+		var prevValue = typeValue ? typeValue.value : '';
+		var prevTitle = typeTitle ? typeTitle.value : '';
+		if (typeValue) { typeValue.value = type; }
+		if (typeTitle) { typeTitle.value = type; }
+
+		if (!region) {
+			/* No region to swap (unexpected markup): fall back to the old
+			   round trip rather than doing nothing. */
+			Joomla.submitform('cwmserver.setType', form);
+			return;
+		}
+
+		var snapshot = new FormData(form);
+		var recordId = (document.getElementById('jform_id') || { value: 0 }).value || 0;
+		var url = 'index.php?option=com_proclaim&task=cwmserver.typeFields&tmpl=component'
+			+ '&type=' + encodeURIComponent(type) + '&id=' + encodeURIComponent(recordId)
+			+ '&' + " . json_encode(Session::getFormToken()) . " + '=1';
+
+		/* A quick change of mind can start a second swap before the first
+		   response lands; whichever arrives LAST would win regardless of
+		   which was chosen last. Only the newest request may apply. */
+		var seq = Joomla.cwmSwapServerType._seq = (Joomla.cwmSwapServerType._seq || 0) + 1;
+
+		fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+			.then(function (response) {
+				if (!response.ok) { throw new Error(String(response.status)); }
+				return response.text();
+			})
+			.then(function (html) {
+				if (seq !== Joomla.cwmSwapServerType._seq) { return; }
+				var tpl = document.createElement('template');
+				tpl.innerHTML = html.trim();
+				var fresh = tpl.content.getElementById('server-tabset-region');
+				if (!fresh) { throw new Error('fragment'); }
+				/* Re-query rather than trust the closure: an earlier swap may
+				   have replaced the node this call started from. */
+				document.getElementById('server-tabset-region').replaceWith(fresh);
+
+				/* Put back what was typed. The swap replaced empty fields with
+				   empty fields; the person's work is the part that must not be
+				   collateral. Old addon fields simply no longer exist. */
+				snapshot.forEach(function (value, name) {
+					if (name === 'task' || name === 'return' || name.indexOf('jform[type]') === 0) { return; }
+					var el = form.elements[name];
+					if (!el) { return; }
+					if (el instanceof RadioNodeList) { el.value = value; return; }
+					if (el.type === 'file') { return; }
+					if (el.type === 'checkbox') { el.checked = value === '1' || value === 'on'; return; }
+					el.value = value;
+				});
+
+				/* Some addon fields (e.g. YouTube's Test API button) ship their
+				   own <script> inline in the field markup. It rode in with the
+				   fragment but a script inserted via innerHTML never runs, so it
+				   is re-created here to execute against the now-live nodes. */
+				fresh.querySelectorAll('script').forEach(function (old) {
+					var copy = document.createElement('script');
+					if (old.src) { copy.src = old.src; } else { copy.textContent = old.textContent; }
+					if (old.type) { copy.type = old.type; }
+					old.replaceWith(copy);
+				});
+
+				/* Joomla widgets in the fresh region bound their listeners to
+				   the OLD nodes at page load. Core scripts (the modal-select
+				   type field, chosen selects, showon, the media picker)
+				   re-initialise whatever is inside the target of a
+				   joomla:updated event — the same signal Joomla fires after its
+				   own AJAX form swaps. Without this the type field's own
+				   Select/Clear buttons are dead after a swap. The core scripts
+				   themselves are pre-loaded on this page (see the view) so they
+				   exist to answer the event whatever type is swapped in. */
+				fresh.dispatchEvent(new CustomEvent('joomla:updated', { bubbles: true }));
+
+				/* The calendar and validator do not listen for joomla:updated,
+				   so they are re-attached by hand. */
+				if (window.JoomlaCalendar) {
+					fresh.querySelectorAll('.field-calendar').forEach(function (el) {
+						try { JoomlaCalendar.init(el); } catch (e) { /* cosmetic */ }
+					});
+				}
+				if (document.formvalidator && document.formvalidator.attachToForm) {
+					try { document.formvalidator.attachToForm(form); } catch (e) { /* cosmetic */ }
+				}
+			})
+			.catch(function () {
+				/* Only the newest request restores; a superseded one must not
+				   clobber a later choice that already applied. */
+				if (seq !== Joomla.cwmSwapServerType._seq) { return; }
+				if (typeValue) { typeValue.value = prevValue; }
+				if (typeTitle) { typeTitle.value = prevTitle; }
+				Joomla.renderMessages({ error: ['" . $this->escape(Text::_('JBS_SVR_TYPE_SWAP_FAILED')) . "'] });
+			});
+	};
+
 	Joomla.submitbutton = function (task, type) {
 		if (task == 'cwmserver.setType') {
-			/* The type field is a ModalSelectField: a readonly title input and a
-			   hidden value input SHARE the name jform[type], so
-			   elements['jform[type]'] is a RadioNodeList and assigning .value to
-			   it does nothing at all. Write to the hidden value input by id, and
-			   mirror it into the visible one so the choice shows immediately. */
-			var typeValue = document.getElementById('jform_type_id');
-			var typeTitle = document.getElementById('jform_type');
-			if (typeValue) { typeValue.value = type; }
-			if (typeTitle) { typeTitle.value = type; }
-			Joomla.submitform(task, document.getElementById('item-form'));
+			Joomla.cwmSwapServerType(type);
 		} else if (task == 'cwmserver.cancel') {
 			Joomla.submitform(task, document.getElementById('item-form'));
 		} else if (task == 'cwmserver.apply' || document.formvalidator.isValid(document.getElementById('item-form'))) {
@@ -61,8 +168,10 @@ $wa->useScript('keepalive')
 
 if ($isNewRecord) {
     $wa->addInlineScript(
-        "document.addEventListener('DOMContentLoaded', function () {
-            var btn = document.getElementById('jform_type_select');
+        "window.addEventListener('load', function () {
+            var value = document.getElementById('jform_type_id');
+            var wrap  = value && value.closest('.js-modal-content-select-field');
+            var btn   = wrap && wrap.querySelector('[data-button-action=\"select\"]');
             if (btn) { btn.click(); }
         });"
     );
@@ -76,137 +185,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=' . $currentL
         echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
       class="form-validate" enctype="multipart/form-data">
     <div class="main-card">
-        <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general']); ?>
-
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
-        <div class="row">
-            <div class="col-lg-9">
-                <?php echo $this->form->renderField('server_name'); ?>
-                <?php echo $this->form->renderField('type'); ?>
-            </div>
-            <div class="col-lg-3">
-                <?php
-                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-                <?php
-                if (isset($this->item->id, $this->item->addon)) : ?>
-                    <span style="font-weight:bold">
-                        <?php
-                        echo $this->escape($this->item->addon->name); ?>
-                    </span>
-                    <?php
-                endif; ?>
-                <?php
-                if (isset($this->item->id, $this->item->addon)) : ?>
-                    <p><?php
-                        echo $this->escape($this->item->addon->description); ?></p>
-                    <?php
-                endif; ?>
-                <?php
-                echo LayoutHelper::render('joomla.edit.global', $this); ?>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php
-        if ($this->server_form !== null) : ?>
-            <?php
-            if ($this->server_form->getFieldsets('params')) : ?>
-                <?php
-                foreach ($this->server_form->getFieldsets('params') as $fieldsets) : ?>
-                    <?php
-                    // An addon marks its own advanced settings with
-                    // simplemode="hide", on the fieldset or on a single field.
-                    // The addon knows what is advanced about itself, and a
-                    // third-party one gets the same treatment without this
-                    // template knowing it exists.
-                    if ($simple->mode && ($fieldsets->simplemode ?? '') === 'hide') {
-                        continue;
-                    }
-                    ?>
-                    <?php
-                    echo HTMLHelper::_(
-                        'uitab.addTab',
-                        'myTab',
-                        strtolower(Text::_($fieldsets->label)),
-                        Text::_($fieldsets->label)
-                    ); ?>
-                    <div class="row">
-                        <div class="col-12 col-lg-12">
-                            <?php
-                            foreach ($this->server_form->getFieldset($fieldsets->name) as $field) : ?>
-                                <?php
-                                if ($simple->mode && $field->getAttribute('simplemode') === 'hide') {
-                                    continue;
-                                }
-                                ?>
-                                <?php echo $field->renderField(); ?>
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                    <?php
-                    echo HTMLHelper::_('uitab.endTab'); ?>
-                    <?php
-                endforeach; ?>
-                <?php
-            endif; ?>
-            <?php
-            if ($this->server_form->getFieldsets('media')) : ?>
-                <?php
-                echo HTMLHelper::_('uitab.addTab', 'myTab', 'media_settings', Text::_('JBS_SVR_MEDIA_SETTINGS')); ?>
-                <div class="row">
-                    <div class="accordion" id="accordionlist">
-                        <?php
-                foreach ($this->server_form->getFieldsets('media') as $name => $fieldset) : ?>
-                    <?php
-                    if ($simple->mode && ($fieldset->simplemode ?? '') === 'hide') {
-                        continue;
-                    }
-                    ?>
-                            <div class="accordion-item">
-                                <h2 class="accordion-heading" id="<?php
-                        echo Text::_($name) ?>">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapse<?php
-                                    echo Text::_($name) ?>" aria-expanded="false"
-                                            aria-controls="collapse<?php
-                                    echo Text::_($name) ?>">
-                                        <?php
-                                echo Text::_($fieldset->label); ?>
-                                    </button>
-                                </h2>
-                                <div id="collapse<?php
-                        echo Text::_($name) ?>" class="accordion-collapse collapse"
-                                     aria-labelledby="heading<?php
-                                echo $name; ?>"
-                                     data-bs-parent="#accordionlist">
-                                    <div class="accordion-body">
-                                        <?php
-                                foreach ($this->server_form->getFieldset($name) as $field) : ?>
-                                    <?php
-                                    if ($simple->mode && $field->getAttribute('simplemode') === 'hide') {
-                                        continue;
-                                    }
-                                    ?>
-                                            <?php echo $field->renderField(); ?>
-                                            <?php
-                                endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php
-                endforeach; ?>
-                    </div>
-                </div>
-                <?php
-                echo HTMLHelper::_('uitab.endTab'); ?>
-                <?php
-            endif; ?>
-            <?php
-        endif; ?>
-        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
+        <?php echo $this->loadTemplate('tabset'); ?>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php
         echo $input->getBase64('return'); ?>"/>

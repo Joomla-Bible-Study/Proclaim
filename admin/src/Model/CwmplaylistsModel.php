@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -229,13 +230,17 @@ class CwmplaylistsModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('playlist.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('playlist.published') . ' = 0 OR ' . $db->quoteName('playlist.published') . ' = 1)');
+            $query->whereIn($db->quoteName('playlist.published'), [0, 1]);
         }
 
         // Add the list ordering clause.
-        $orderCol  = $this->state->get('list.ordering', 'playlist.ordering');
-        $orderDirn = $this->state->get('list.direction', 'asc');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted(
+            $query,
+            $this->filter_fields,
+            $this->state->get('list.ordering'),
+            $this->state->get('list.direction', 'asc'),
+            'playlist.ordering'
+        );
 
         return $query;
     }

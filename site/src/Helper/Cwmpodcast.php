@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
@@ -34,6 +35,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
+use Joomla\Http\HttpFactory;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
@@ -45,6 +47,14 @@ use Joomla\Utilities\ArrayHelper;
  */
 class Cwmpodcast
 {
+    /**
+     * Seconds to wait on the enclosure HEAD probe.
+     *
+     * @var   int
+     * @since __DEPLOY_VERSION__
+     */
+    private const REMOTE_HEADER_TIMEOUT = 30;
+
     /**
      * @var int
      * @since 7.0.0
@@ -241,6 +251,16 @@ class Cwmpodcast
             $episodedetail = '';
 
             foreach ($episodes as $episode) {
+                // ⚠️ Refused, not published broken. The move action refuses
+                // podcast-referenced media, so reaching this means the file
+                // was placed by hand or the podcast was assigned afterwards;
+                // either way an enclosure pointing here 403s for every
+                // subscriber. System Health names the affected files, so the
+                // silence in the feed is not the only report.
+                if ($this->isProtectedFile($episode->params->get('filename'))) {
+                    continue;
+                }
+
                 $episodedate   = $this->formatFeedDate($episode->createdate, $siteTz);
                 $scripture     = $this->getListing()->getScripture($params, $episode, 0, 1);
                 $episode->size = $episode->params->get('size', '30000000');
@@ -1002,6 +1022,36 @@ class Cwmpodcast
      *
      * @since   10.3.0
      */
+    /**
+     * Whether a media filename points into protected storage.
+     *
+     * A feed is a published artifact: its <enclosure> is a direct URL, and the
+     * web server refuses direct requests for the protected folder — for
+     * everyone, which is that folder's whole purpose. An episode built from a
+     * protected file therefore appears in every podcast app and downloads in
+     * none of them, which is worse than the episode being absent.
+     *
+     * Decided from the record's own site-relative filename rather than the
+     * assembled feed URL: the podcast URL form strips the scheme, which makes
+     * parse_url guess, and the filename is the value the move action rewrites.
+     *
+     * @param   ?string  $filename  The media record's filename param.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function isProtectedFile(?string $filename): bool
+    {
+        $filename = ltrim((string) $filename, '/');
+
+        if ($filename === '' || str_contains($filename, '://') || str_starts_with($filename, '//')) {
+            return false;
+        }
+
+        return CwmprotectedStorage::holds(rtrim(JPATH_ROOT, '/\\') . '/' . $filename);
+    }
+
     private function getAlternateEnclosureXml(object $episode, int $podcastId, string $protocol): string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
@@ -1036,6 +1086,13 @@ class Cwmpodcast
             $size       = $altParams->get('size', '');
 
             if (empty($filename)) {
+                continue;
+            }
+
+            // Same rule as the primary enclosure: a protected file cannot be
+            // fetched at a direct URL, and an alternate source that 403s is
+            // noise a podcast app may still try first.
+            if ($this->isProtectedFile($filename)) {
                 continue;
             }
 
@@ -2851,40 +2908,32 @@ class Cwmpodcast
     {
         $startNs = CwmDebug::isEnabled() ? hrtime(true) : null;
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; Proclaim Podcast/1.0)');
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlErr  = curl_error($ch);
-        curl_close($ch);
-
-        $elapsed = $startNs !== null ? (hrtime(true) - $startNs) / 1_000_000 : 0.0;
-        CwmDebug::logApi('podcast.remoteHeaders', 'HEAD', $url, (int) $httpCode, $elapsed);
-
-        if ($httpCode < 200 || $httpCode >= 400 || $response === false) {
-            if ($response === false && $curlErr !== '') {
-                CwmDebug::error('Remote header check failed for ' . $url . ': ' . $curlErr, null, 'api');
-            }
+        try {
+            $response = HttpFactory::getHttp()->head(
+                $url,
+                ['User-Agent' => 'Mozilla/5.0 (compatible; Proclaim Podcast/1.0)'],
+                self::REMOTE_HEADER_TIMEOUT
+            );
+        } catch (\Exception $e) {
+            CwmDebug::error('Remote header check failed for ' . $url, $e, 'api');
 
             return null;
         }
 
-        $headers     = [];
-        $headerLines = explode("\r\n", $response);
+        $httpCode = $response->getStatusCode();
+        $elapsed  = $startNs !== null ? (hrtime(true) - $startNs) / 1_000_000 : 0.0;
+        CwmDebug::logApi('podcast.remoteHeaders', 'HEAD', $url, $httpCode, $elapsed);
 
-        foreach ($headerLines as $line) {
-            if (str_contains($line, ':')) {
-                [$key, $value]                   = explode(':', $line, 2);
-                $headers[strtolower(trim($key))] = trim($value);
-            }
+        if ($httpCode < 200 || $httpCode >= 400) {
+            return null;
+        }
+
+        // Callers read 'content-length'/'content-type', so flatten the PSR-7
+        // name => values map back to the lowercased single-string shape.
+        $headers = [];
+
+        foreach (array_keys($response->getHeaders()) as $name) {
+            $headers[strtolower($name)] = $response->getHeaderLine($name);
         }
 
         return $headers;

@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Administrator\Health\HealthStatus;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Whether a plugin Proclaim depends on is installed and enabled. Disabling
@@ -100,13 +101,19 @@ final class PluginEnabledCheck implements HealthCheckInterface
      */
     public function run(): HealthResult
     {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        // $folder/$element are readonly properties; bind() takes its value by
+        // reference, so copy them into locals it can bind.
+        $folder  = $this->folder;
+        $element = $this->element;
+        $query   = $db->createQuery()
             ->select($db->quoteName('enabled'))
             ->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
-            ->where($db->quoteName('folder') . ' = ' . $db->quote($this->folder))
-            ->where($db->quoteName('element') . ' = ' . $db->quote($this->element));
+            ->where($db->quoteName('folder') . ' = :folder')
+            ->where($db->quoteName('element') . ' = :element')
+            ->bind(':folder', $folder, ParameterType::STRING)
+            ->bind(':element', $element, ParameterType::STRING);
         $db->setQuery($query, 0, 1);
 
         $enabled = $db->loadResult();

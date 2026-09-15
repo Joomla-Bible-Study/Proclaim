@@ -351,4 +351,22 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
 
         $this->assertSame(0, $ref->invoke($this->helper(), self::UID));
     }
+
+    /**
+     * The uid lookups are covered by the tour tests above; this pins the one
+     * other bound query — the post-install message existence check by title_key.
+     *
+     * @return  void
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox("postInstallMessageExists() runs its bound title_key query")]
+    public function testPostInstallMessageExistsBindExecutes(): void
+    {
+        $ref    = new \ReflectionMethod(CwmguidedtourHelper::class, 'postInstallMessageExists');
+        $result = $ref->invoke($this->helper(), 'com_proclaim_no_such_title_key');
+
+        // A broken :titleKey bind throws before it can answer; a clean run
+        // returns a bool (false for this deliberately-absent key).
+        $this->assertIsBool($result);
+    }
 }

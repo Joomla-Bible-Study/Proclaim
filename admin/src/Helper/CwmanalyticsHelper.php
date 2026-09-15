@@ -211,21 +211,47 @@ class CwmanalyticsHelper
                     $studyId > 0 ? (int) $studyId : 'NULL',
                     $mediaId > 0 ? (int) $mediaId : 'NULL',
                     $locationId > 0 ? (int) $locationId : 'NULL',
-                    $db->quote($type),
-                    $refInfo['type'] !== '' ? $db->quote($refInfo['type']) : 'NULL',
-                    $referrerUrl !== null ? $db->quote($referrerUrl) : 'NULL',
-                    $referrerDomain !== null ? $db->quote($referrerDomain) : 'NULL',
-                    $utmSource !== '' ? $db->quote(substr($utmSource, 0, 255)) : 'NULL',
-                    $utmMedium !== '' ? $db->quote(substr($utmMedium, 0, 255)) : 'NULL',
-                    $utmCampaign !== '' ? $db->quote(substr($utmCampaign, 0, 255)) : 'NULL',
-                    $db->quote($uaInfo['device']),
-                    $db->quote($uaInfo['browser']),
-                    $db->quote($uaInfo['os']),
-                    $language !== '' ? $db->quote($language) : 'NULL',
+                    ':eventtype',
+                    ':reftype',
+                    ':refurl',
+                    ':refdomain',
+                    ':utmsource',
+                    ':utmmedium',
+                    ':utmcampaign',
+                    ':device',
+                    ':browser',
+                    ':os',
+                    ':lang',
                     $app->getIdentity()?->guest ? 1 : 0,
-                    $sessionHash !== null ? $db->quote($sessionHash) : 'NULL',
-                    $db->quote($now),
+                    ':sessionhash',
+                    ':created',
                 ]));
+
+            // Locals, not expressions: bind() takes its value by reference,
+            // and a null local binds as SQL NULL — which is what every "or
+            // NULL" ternary above was spelling by hand.
+            $refType   = $refInfo['type'] !== '' ? $refInfo['type'] : null;
+            $utmSrc    = $utmSource !== '' ? substr($utmSource, 0, 255) : null;
+            $utmMed    = $utmMedium !== '' ? substr($utmMedium, 0, 255) : null;
+            $utmCamp   = $utmCampaign !== '' ? substr($utmCampaign, 0, 255) : null;
+            $langOrNul = $language !== '' ? $language : null;
+            $device    = $uaInfo['device'];
+            $browser   = $uaInfo['browser'];
+            $os        = $uaInfo['os'];
+
+            $query->bind(':eventtype', $type)
+                ->bind(':reftype', $refType)
+                ->bind(':refurl', $referrerUrl)
+                ->bind(':refdomain', $referrerDomain)
+                ->bind(':utmsource', $utmSrc)
+                ->bind(':utmmedium', $utmMed)
+                ->bind(':utmcampaign', $utmCamp)
+                ->bind(':device', $device)
+                ->bind(':browser', $browser)
+                ->bind(':os', $os)
+                ->bind(':lang', $langOrNul)
+                ->bind(':sessionhash', $sessionHash)
+                ->bind(':created', $now);
 
             $db->setQuery($query);
             $db->execute();
@@ -623,6 +649,11 @@ class CwmanalyticsHelper
                 'event_type', 'referrer_type', 'country_code', 'device_type',
             ];
 
+            // The rollup block builds plain-string SQL (the ON DUPLICATE KEY
+            // INSERT…SELECT and per-group NULL-aware deletes fight the
+            // builder), so $cutoff stays quote()d here: binding lives on the
+            // query builder, and a marker in a plain string ships to MySQL as
+            // literal text. $cutoff is computed internally, never user input.
             $pending = $db->setQuery(
                 'SELECT DISTINCT ' . implode(',', array_map([$db, 'quoteName'], $groupCols))
                 . ', YEAR(' . $db->quoteName('created') . ') AS y'
@@ -707,7 +738,8 @@ class CwmanalyticsHelper
             if ($purge) {
                 $purgeQuery = $db->createQuery()
                     ->delete($db->quoteName('#__bsms_analytics_events'))
-                    ->where($db->quoteName('created') . ' < ' . $db->quote($cutoff));
+                    ->where($db->quoteName('created') . ' < :cutoff')
+                    ->bind(':cutoff', $cutoff);
                 $db->setQuery($purgeQuery);
                 $db->execute();
                 $result['purged'] = $db->getAffectedRows();
