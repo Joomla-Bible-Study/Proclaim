@@ -79,6 +79,59 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * ⚠️ check() is the only place a user sees this refused. Without it the
+     * save reports success and silently writes nothing, because the write path
+     * refuses the same name further down.
+     */
+    #[DataProvider('unsafeFilenameProvider')]
+    public function testCheckThrowsForUnsafeFilename(string $name): void
+    {
+        $this->table->filename = $name;
+        $this->table->type     = 1;
+        $this->expectException(\UnexpectedValueException::class);
+        $this->table->check();
+    }
+
+    /**
+     * Filenames that could place the layout outside its directory.
+     */
+    public static function unsafeFilenameProvider(): array
+    {
+        return [
+            'traversal'        => ['../../../configuration'],
+            'reachable escape' => ['x/../../../configuration'],
+            'backslash'        => ['..\\..\\configuration'],
+            'nested path'      => ['sub/evil'],
+            'leading slash'    => ['/etc/passwd'],
+            'leading dot'      => ['.htaccess'],
+            'space in name'    => ['my layout'],
+        ];
+    }
+
+    /**
+     * The other half. A fix that refused everything would pass the test above
+     * and make every existing record unsavable.
+     */
+    #[DataProvider('ordinaryFilenameProvider')]
+    public function testCheckPassesForOrdinaryFilename(string $name): void
+    {
+        $this->table->filename = $name;
+        $this->table->type     = 1;
+        $this->assertTrue($this->table->check());
+    }
+
+    public static function ordinaryFilenameProvider(): array
+    {
+        return [
+            'the seeded name' => ['easy'],
+            'underscored'     => ['my_layout'],
+            'hyphenated'      => ['my-layout'],
+            'mixed case'      => ['MyLayout'],
+            'dotted'          => ['layout.v2'],
+        ];
+    }
+
     public function testCheckThrowsWhenTypeZero(): void
     {
         $this->table->filename = 'mytemplate';
