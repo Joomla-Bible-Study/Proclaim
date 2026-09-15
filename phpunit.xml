@@ -111,6 +111,13 @@
 		<testsuite name="Integration Site Helper Tests">
 			<directory>tests/integration/Site/Helper</directory>
 		</testsuite>
+
+		<!-- Talks to the live GetBible API. Deliberately absent from the
+		     composer test scripts: run nightly via `composer test:contract`,
+		     not on every commit. -->
+		<testsuite name="Scripture Contract Tests">
+			<directory>tests/contract/Scripture</directory>
+		</testsuite>
 	</testsuites>
 
 	<php>

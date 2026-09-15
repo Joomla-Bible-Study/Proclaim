@@ -1,0 +1,94 @@
+name: Scripture API contract
+
+# The scripture suites run against build/fixtures/getbible-kjv-colossians.json,
+# a recorded capture of the real GetBible response, so the release gate is
+# hermetic and never leaves the runner. That trade has one failure mode: the API
+# changes shape, the fixture goes on describing the old one, and every suite
+# stays green while the live path is broken for users.
+#
+# This job is what pays that back — one request a night against the live API,
+# asserting the response still carries the fields GetBibleProvider reads and
+# still matches the committed capture.
+#
+# ⚠️ Not part of ci.yml on purpose. Per-commit runs must not depend on a third
+# party being up, and must not add to anyone's API quota.
+
+on:
+  schedule:
+    # 06:00 UTC daily
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+
+      - name: Install deps
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run the GetBible contract test
+        id: contract
+        run: |
+          set +e
+          OUT=$(composer test:contract 2>&1)
+          CODE=$?
+          set -e
+          {
+            echo "## GetBible contract test (exit $CODE)"
+            echo
+            echo '```'
+            echo "$OUT"
+            echo '```'
+          } > /tmp/report.md
+          echo "$OUT"
+          echo "exit=$CODE" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update tracking issue
+        if: steps.contract.outputs.exit != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          TITLE="GetBible API contract drifted"
+          BODY=$(cat /tmp/report.md)
+          BODY="$BODY
+
+          ---
+
+          The recorded fixture no longer matches what GetBible returns, so the
+          scripture suites are passing against a response shape that no longer
+          exists. Re-capture and commit it:
+
+          \`\`\`
+          php build/seed-scripture-fixture.php --refresh
+          \`\`\`
+
+          Then check whether \`GetBibleProvider\` needs to read the new shape as
+          well — the fixture refresh alone only makes the tests agree with the
+          API again, it does not make the provider parse it.
+
+          _Opened by the nightly \`Scripture API contract\` workflow._"
+
+          EXISTING=$(gh issue list --repo "$REPO" --state open \
+            --search "in:title \"$TITLE\"" --json number --jq '.[0].number // empty')
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --repo "$REPO" --body "$BODY"
+          else
+            gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" \
+              --label "type: bug" --label "area: scripture" || \
+            gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY"
+          fi
