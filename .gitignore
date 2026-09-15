@@ -124,3 +124,6 @@ build.properties
 
 # Local Codex CLI config, not part of the extension
 .codex/
+
+# Local-only security audit notes — never commit
+.security-notes/
