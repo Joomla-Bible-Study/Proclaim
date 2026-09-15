@@ -90,6 +90,8 @@
             { "source": "build/media_source/js",  "output": "media/js" },
             { "source": "build/media_source/css", "output": "media/css" }
         ],
+        "_verifyMediaFreshness_comment": "The other half of verifyMediaSources: that check catches a built file whose source is GONE, this one catches a built file whose source MOVED ON — edited, never rebuilt, so the zip ships the previous build's behaviour under a new version number with nothing to notice it by. Reuses the pairs above. Compares mtimes in the working tree, because zip entry mtimes are normalised on write and cannot be read back. Safe here because media/js and media/css are generated and gitignored; it would misfire on a tree that COMMITS its built output. Needs cwm/build-tools >= 1.34; older versions ignore the key and the check silently does not run. Background: cwm-build-tools#159.",
+        "verifyMediaFreshness": true,
         "versionPrompt": {
             "enabled": true,
             "timeout": 10
