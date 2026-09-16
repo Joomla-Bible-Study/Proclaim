@@ -9,9 +9,13 @@
 # This job stands up everything from nothing: a MySQL service, a Joomla site
 # installed headlessly by core's own CLI installer, the built pkg_proclaim
 # zip deployed by the same `composer test:install` harness a release uses,
-# and the API acceptance suite (#1330) driven by Playwright against PHP's
-# built-in server. No secrets, no persistent state, reproducible by any
-# contributor's fork.
+# and the Playwright suites driven against PHP's built-in server. No secrets,
+# no persistent state, reproducible by any contributor's fork.
+#
+# It runs once per Joomla major. For a long time it ran only the API spec, so
+# ten browser spec files executed on one developer's laptop and nowhere else
+# — and the job reported green while they were failing there, which is worse
+# than untested because a reviewer reasonably reads that green as coverage.
 #
 # Scheduled nightly (regressions surface within a day, not at release time),
 # manually dispatchable, and run on pull requests that touch what it guards.
@@ -51,23 +55,50 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# issues: write is for the nightly failure issue at the end of the job. Declared
-# explicitly rather than relying on the repository default, so tightening that
-# default later cannot silently take the monitoring away again.
+# Declared explicitly rather than relying on the repository default, so
+# tightening that default later cannot silently take the monitoring away again.
+# issues: write is granted on the notify job alone, which is the only one that
+# writes — the matrix legs check out and run tests and need nothing more.
 permissions:
   contents: read
-  issues: write
 
 env:
-  JOOMLA_VERSION: '5.4.3'
   SITE_DIR: /home/runner/joomla-site
   SITE_URL: http://127.0.0.1:8890
 
 jobs:
-  api-acceptance:
-    name: Package install + API acceptance
+  e2e:
+    name: ${{ matrix.label }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
+
+    # One leg per Joomla major, because the two diverge and a failure on one
+    # side is exactly what this matrix exists to catch: during the 10.7.0
+    # release gate every servertype test failed on 5.4.7 and passed on 6.1.3
+    # against identical code, and there was no CI signal either way.
+    #
+    # fail-fast is off so a broken J6 leg still reports the J5 result. A leg
+    # that goes red tells you which Joomla it was from its own name.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: 'Package install + E2E (Joomla 5)'
+            joomla: '5.4.3'
+            props: j5dev
+            # ⚠️ The J5 projects testIgnore the WCAG scans. That is the
+            # config's own decision -- Proclaim renders the same markup on
+            # both, so scanning twice costs a second full pass and reports
+            # every violation twice -- and matrixing this way honours it
+            # rather than overriding it here. The scans run on the J6 leg.
+            projects: '--project=admin-j5 --project=site-j5'
+          - label: 'Package install + E2E (Joomla 6)'
+            joomla: '6.1.3'
+            props: j6dev
+            projects: '--project=admin-j6 --project=site-j6'
+
+    env:
+      JOOMLA_VERSION: ${{ matrix.joomla }}
 
     services:
       mysql:
@@ -178,6 +209,14 @@ jobs:
       - name: Write build.properties for the disposable site
         # The harness discovers the test site by role, not by name (#1353),
         # so this one file is the only wiring the whole chain needs.
+        #
+        # The browser projects are wired through the same file rather than
+        # through anything CI-specific. playwright.config.js reads this leg's
+        # baseURL from builder.<props>.url and global-setup.js authenticates
+        # the site whose storageState the selected projects declare, so
+        # pointing those keys at the disposable site is the entire change --
+        # no CI branch in the Playwright config, which would be a second way
+        # of doing what the property layer already does.
         run: |
           cat > build.properties <<EOF
           builder.installs=ci
@@ -188,6 +227,9 @@ jobs:
           builder.ci.password=admin1234567
           builder.ci.email=admin@example.com
           builder.ci.version=${JOOMLA_VERSION}
+          builder.${{ matrix.props }}.url=${SITE_URL}
+          builder.${{ matrix.props }}.username=admin
+          builder.${{ matrix.props }}.password=admin1234567
           EOF
 
       - name: Serve the site
@@ -212,17 +254,33 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: REST API acceptance suite
-        # The #1330 spec: plugin visible in the admin UI, 401-not-404 without
-        # a token, 200 + JSON:API with one obtained through the admin
-        # profile, public_reads round-tripped through the plugin edit form.
-        run: npx playwright test --project=api-test
+      - name: E2E suite — API acceptance and the browser specs
+        # ⚠️ One invocation, not one per project. global-setup.js recovers the
+        # --project filter from argv to decide which sites need an admin
+        # session, so separate runs repeat the whole setup and re-login for
+        # each. Passing every project on one command line authenticates once.
+        #
+        # api-test is the #1330 spec: plugin visible in the admin UI,
+        # 401-not-404 without a token, 200 + JSON:API with a token from the
+        # admin profile, public_reads round-tripped through the edit form.
+        #
+        # The admin/site projects are the ten browser specs that until now ran
+        # on one developer's laptop and nowhere else. They have real content to
+        # work with: the install seeds a published study, a media file and a
+        # template, and test:install seeds the site menus and a scripture
+        # fixture on top.
+        #
+        # site-helium is deliberately absent. It needs a Gantry + Helium
+        # install that exists on one local site only, and it pins a template
+        # style by id that differs per site, so there is nothing for it to
+        # assert against here.
+        run: npx playwright test --project=api-test ${{ matrix.projects }}
 
       - name: Upload Playwright report on failure
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.props }}
           path: |
             build/reports/e2e
             test-results
@@ -232,22 +290,39 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: php-server-log
+          name: php-server-log-${{ matrix.props }}
           path: /tmp/php-server.log
           retention-days: 7
 
-      # A nightly nobody hears about is not a monitor. Until now the only thing
-      # a scheduled failure produced was two artifacts on a page no one opens,
-      # so this job failed on 2026-08-07 and again on 2026-08-08 without ever
-      # reaching a human. A failure on a pull request is already visible on that
-      # pull request; the scheduled run is the one with no audience, so only it
-      # opens an issue.
-      #
-      # One issue, reopened and updated rather than one per night, and closed
-      # automatically when the job comes back green — the same shape
-      # vendor-check.yml uses, so there is one pattern here rather than two.
+  # A nightly nobody hears about is not a monitor. Until now the only thing a
+  # scheduled failure produced was two artifacts on a page no one opens, so this
+  # job failed on 2026-08-07 and again on 2026-08-08 without ever reaching a
+  # human. A failure on a pull request is already visible on that pull request;
+  # the scheduled run is the one with no audience, so only it opens an issue.
+  #
+  # One issue, reopened and updated rather than one per night, and closed
+  # automatically when the job comes back green — the same shape vendor-check.yml
+  # uses, so there is one pattern here rather than two.
+  #
+  # ⚠️ Its own job rather than a step on each matrix leg. Two legs reaching the
+  # create step together would each find no open issue and each open one, which
+  # is exactly the duplicate the label lookup below exists to prevent. Running
+  # once after both legs keeps the "one issue" property that the matrix would
+  # otherwise have quietly broken, and reports for the workflow rather than for
+  # whichever leg happened to finish first.
+  notify:
+    name: Nightly failure issue
+    needs: e2e
+    if: always() && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
       - name: Open or update the nightly failure issue
-        if: failure() && github.event_name == 'schedule'
+        if: needs.e2e.result == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -259,9 +334,10 @@ jobs:
 
           **Run:** $RUN_URL
 
-          The Playwright report and the PHP server log are attached to that run as
-          artifacts, kept for 7 days. This issue is updated on each further failure
-          and closed automatically once the nightly is green again.
+          The run page shows which Joomla leg failed. The Playwright report and the
+          PHP server log are attached to that run as artifacts, one set per leg,
+          kept for 7 days. This issue is updated on each further failure and closed
+          automatically once the nightly is green again.
 
           A red nightly does not block merges: E2E is deliberately not a required
           check, because its path filter means it does not report at all on most
@@ -286,7 +362,7 @@ jobs:
           fi
 
       - name: Close the nightly failure issue when green
-        if: success() && github.event_name == 'schedule'
+        if: needs.e2e.result == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
