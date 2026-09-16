@@ -142,7 +142,18 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     <span class="me-auto">
                         <strong><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?></strong>
                         <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
-                        <button type="button" class="btn btn-link btn-sm p-0 align-baseline"
+                        <?php // ⚠️ Two classes, and each earns its place.
+                            // text-info-emphasis is what actually changes the colour: .alert-link
+                            // and .btn are both single-class selectors, so .btn wins on order and
+                            // adding .alert-link alone left the contrast exactly where it was
+                            // (measured 4.29 either way, against 4.5 required at this size).
+                            // The utility carries !important, so it wins, and it resolves through
+                            // the template's own --info-text-emphasis — which flips in dark mode,
+                            // where a literal would not.
+                            // .alert-link is kept for its underline: without it this control is
+                            // distinguished from the sentence around it by colour alone. ?>
+                        <button type="button"
+                                class="btn btn-link btn-sm p-0 align-baseline alert-link text-info-emphasis"
                                 data-bs-toggle="collapse" data-bs-target="#simpleModeHidden"
                                 aria-expanded="false" aria-controls="simpleModeHidden">
                             <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_WHAT'); ?>

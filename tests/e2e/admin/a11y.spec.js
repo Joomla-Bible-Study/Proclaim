@@ -111,6 +111,9 @@ const WIZARDS = [
 /**
  * Screens whose scan is known to fail, and the issue tracking each.
  *
+ * Empty, and that is the desired state — an entry here is a debt, not a
+ * configuration. The two it held were fixed in #2117.
+ *
  * ⚠️ `test.fail()`, not `test.skip()`. The test still runs; Playwright expects
  * it to fail and reports **"Expected to fail, but passed"** the moment it stops
  * failing. So fixing one of these turns CI red until its entry is removed here
@@ -120,10 +123,7 @@ const WIZARDS = [
  *
  * @type {Map<string, string>}
  */
-const KNOWN_VIOLATIONS = new Map([
-    ['control panel', '#2117 — .btn-link contrast 4.29, needs 4.5:1'],
-    ['location wizard', '#2117 — .text-warning contrast 1.67, needs 3:1'],
-]);
+const KNOWN_VIOLATIONS = new Map([]);
 
 test.describe('Admin accessibility (WCAG 2.2 AA) @a11y', () => {
     /**
