@@ -51,10 +51,6 @@ test.describe('Non-drag movement alternatives @a11y-interaction', () => {
     });
 
     test('a layout-editor element moves within its row by button', async ({ page }) => {
-        // ⚠️ Quarantined, not skipped: Playwright runs this and reports
-        // "Expected to fail, but passed" once it stops failing, so the fix
-        // turns CI red until this line is removed. See #2119.
-        test.fail(true, '#2119 — the layout editor does not render on a fresh install');
         // Open the first template's edit form — the layout editor lives there.
         await page.goto('/administrator/index.php?option=com_proclaim&view=cwmtemplates', {
             waitUntil: 'networkidle',
