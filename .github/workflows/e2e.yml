@@ -367,6 +367,12 @@ jobs:
           check, because its path filter means it does not report at all on most
           pull requests and a required check that never reports blocks them forever."
 
+          # ⚠️ Both label names must exist in the repository. `gh issue create`
+          # fails outright on an unknown one, and this call has no fallback, so
+          # a typo here means the nightly silently has no audience at all —
+          # which is what `bug` (the repo uses `type: bug`) and a then-missing
+          # `ci: nightly` did until they were corrected.
+          #
           # Found by label, not by title search. `--search "in:title …"` is fuzzy
           # — it matches a renamed or similarly-titled issue — and it reads
           # GitHub's search index, which lags creation by seconds to minutes. A
@@ -381,7 +387,7 @@ jobs:
             gh issue create --repo "$REPO" \
               --title "$TITLE" \
               --label "$LABEL" \
-              --label "bug" \
+              --label "type: bug" \
               --body "$BODY"
           fi
 
