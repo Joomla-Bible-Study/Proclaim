@@ -157,7 +157,15 @@ $wa->addInlineScript(
                     </div>
                     <div class="col-sm-4">
                         <div class="card border-0 bg-body-tertiary text-center py-3">
-                            <div class="display-6 fw-bold text-<?php echo empty($this->currentMapping) ? 'warning' : 'success'; ?>">
+                            <?php // ⚠️ The -emphasis variants, not the plain ones. At display-6
+                                // the warning amber renders 1.68 against this card, where 3 is the
+                                // floor even for large text. Both states are switched, not just the
+                                // failing one: display-6 is fluid (calc(1.375rem + 1.5vw)), so at a
+                                // narrow viewport this drops below the large-text threshold and the
+                                // requirement becomes 4.5 — which the plain green met with almost
+                                // nothing to spare at 4.62. Measured against the rendered page:
+                                // warning 1.68 -> 8.41, success 4.62 -> 13.03. ?>
+                            <div class="display-6 fw-bold text-<?php echo empty($this->currentMapping) ? 'warning' : 'success'; ?>-emphasis">
                                 <?php echo empty($this->currentMapping) ? Text::_('JBS_WIZARD_NONE') : Text::_('JBS_WIZARD_YES'); ?>
                             </div>
                             <div class="text-body-secondary"><?php echo Text::_('JBS_WIZARD_MAPPING_EXISTS'); ?></div>
