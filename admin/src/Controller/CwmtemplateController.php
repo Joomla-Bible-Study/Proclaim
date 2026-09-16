@@ -299,14 +299,31 @@ class CwmtemplateController extends FormController
             // it produces Joomla's whole error page, banner and main menu and
             // all, nested inside the Layout Editor tab. That is what a fresh
             // install has been showing.
+            // ⚠️ Name the array-valued params. Joomla's field layouts pass the
+            // value straight to htmlspecialchars(), so one array among a few
+            // hundred params fails the whole fieldset with a message that says
+            // only "array given" -- and the stack ends in Joomla's layout, not
+            // in anything of ours. Without this the next person starts where
+            // this one did: knowing a param is wrong and not which.
+            $arrayParams = [];
+
+            if (isset($form)) {
+                foreach ((array) $form->getData()->get('params', []) as $key => $value) {
+                    if (\is_array($value)) {
+                        $arrayParams[] = $key;
+                    }
+                }
+            }
+
             Log::add(
                 \sprintf(
-                    'loadLayoutEditor failed for template %d: %s: %s at %s:%d',
+                    'loadLayoutEditor failed for template %d: %s: %s at %s:%d. Array-valued params: %s',
                     $id,
                     $e::class,
                     $e->getMessage(),
                     $e->getFile(),
-                    $e->getLine()
+                    $e->getLine(),
+                    $arrayParams ? implode(', ', $arrayParams) : 'none'
                 ),
                 Log::ERROR,
                 'com_proclaim'
