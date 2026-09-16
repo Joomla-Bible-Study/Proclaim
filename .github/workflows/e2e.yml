@@ -318,17 +318,24 @@ jobs:
           path: /tmp/php-server.log
           retention-days: 7
 
-      # ⚠️ Joomla's own log, which the PHP server log does not contain. An
+      # Proclaim's own log, which the PHP server log does not contain: an
       # exception a component catches never reaches the server log at all --
-      # the request simply answers 500 and the reason is gone. Diagnosing
-      # #2119 cost a round trip for exactly that: the log recorded the 500 and
-      # nothing about what raised it.
-      - name: Upload the site log on failure
+      # the request answers 500 and the reason is gone. Diagnosing #2119 cost a
+      # round trip for exactly that.
+      #
+      # ⚠️ Proclaim's four log files by name, not the whole logs directory.
+      # This repository is public, so an artifact is downloadable by anyone for
+      # as long as it is retained. The site it comes from is disposable -- built
+      # from nothing in this run and destroyed with the runner -- but that is a
+      # reason the contents are uninteresting, not a reason to collect more of
+      # them than the job needs. Joomla's own logs, and anything another
+      # extension writes beside them, are not this job's business.
+      - name: Upload Proclaim's log on failure
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: site-log-${{ matrix.props }}
-          path: ${{ env.SITE_DIR }}/administrator/logs
+          name: proclaim-log-${{ matrix.props }}
+          path: ${{ env.SITE_DIR }}/administrator/logs/com_proclaim.*.php
           retention-days: 7
           if-no-files-found: ignore
 
