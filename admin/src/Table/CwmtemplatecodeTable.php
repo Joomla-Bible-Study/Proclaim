@@ -23,6 +23,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Filesystem\File;
 
 /**
@@ -164,6 +165,80 @@ class CwmtemplatecodeTable extends Table
         6 => 'components/com_proclaim/tmpl/cwmseriesdisplay',
         7 => 'modules/mod_proclaim/tmpl',
     ];
+
+    /**
+     * The layouts the package itself ships, by template type.
+     *
+     * ⚠️ A record writes `default_<filename>.php` into its type's directory, so
+     * a record named after one of these **overwrites a file the package ships**
+     * -- and deleting that record then removes it. The shipped `default.php`
+     * for each view calls these sublayouts unconditionally
+     * (`cwmsermon/default.php:70` does `loadTemplate('footer')`), and Joomla
+     * throws a 500 when a sublayout is missing. So the failure is not "an
+     * update reverts my customization", it is the front end going down.
+     *
+     * Kept as a list rather than detected at runtime because a file on disk
+     * cannot say whether the package put it there. `ShippedLayoutsTest` walks
+     * the real directories and fails if this drifts from them in either
+     * direction.
+     *
+     * @var    array<int, array<int, string>>
+     * @since  __DEPLOY_VERSION__
+     */
+    public const array SHIPPED_LAYOUTS = [
+        1 => ['formfooter', 'formheader', 'main', 'simple', 'simple2'],
+        2 => ['commentsform', 'footer', 'footerlink', 'header', 'main', 'simple'],
+        3 => ['main'],
+        4 => ['cards', 'list', 'main'],
+        5 => ['custom', 'main'],
+        6 => ['custom', 'main'],
+        7 => ['main', 'simple'],
+    ];
+
+    /**
+     * Names refused for every type, whether or not the package ships one there.
+     *
+     * ⚠️ Kept as its own list on purpose. These five have always been refused
+     * for all seven types, and several types ship no file of that name -- so
+     * deriving the refusals from SHIPPED_LAYOUTS alone would *permit* around
+     * twenty names that are refused today. Widening what is allowed is not what
+     * this list is for.
+     *
+     * @var    array<int, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    private const array RESERVED_FILENAMES = ['main', 'simple', 'custom', 'formheader', 'formfooter'];
+
+    /**
+     * Whether the package ships a layout of this name for this type.
+     *
+     * @param   int          $type      The record's template type
+     * @param   string|null  $filename  The record's filename
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function isShippedLayout(int $type, ?string $filename): bool
+    {
+        return \in_array(trim((string) $filename), self::SHIPPED_LAYOUTS[$type] ?? [], true);
+    }
+
+    /**
+     * Whether a name may not be used for a new record of this type.
+     *
+     * @param   int          $type      The record's template type
+     * @param   string|null  $filename  The record's filename
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function isReservedFilename(int $type, ?string $filename): bool
+    {
+        return \in_array(trim((string) $filename), self::RESERVED_FILENAMES, true)
+            || self::isShippedLayout($type, $filename);
+    }
 
     /**
      * The pattern a layout filename must match in full.
@@ -355,6 +430,48 @@ class CwmtemplatecodeTable extends Table
     }
 
     /**
+     * Whether this record already carries this name and type in the database.
+     *
+     * The test for "the user is editing something that already exists" rather
+     * than creating a collision. Only the names added to the refusal list in
+     * __DEPLOY_VERSION__ can reach it: the five in RESERVED_FILENAMES have
+     * always been refused, so no stored row can hold one.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function keepsItsStoredFilename(): bool
+    {
+        if ((int) $this->id <= 0) {
+            return false;
+        }
+
+        // ⚠️ A local, not $this->id. bind() holds the value by reference, and
+        // a typed property bound by-ref is the documented hazard.
+        $id = (int) $this->id;
+
+        $db    = $this->getDatabase();
+        $query = $db->createQuery()
+            ->select($db->quoteName(['filename', 'type']))
+            ->from($db->quoteName('#__bsms_templatecode'))
+            ->where($db->quoteName('id') . ' = :id')
+            ->bind(':id', $id, ParameterType::INTEGER);
+
+        try {
+            $stored = $db->setQuery($query)->loadObject();
+        } catch (\Exception) {
+            // ⚠️ Refuse on a failed read rather than grandfather blindly --
+            // the permissive branch is the one that overwrites a shipped file.
+            return false;
+        }
+
+        return $stored !== null
+            && trim((string) $stored->filename) === trim((string) $this->filename)
+            && (int) $stored->type === (int) $this->type;
+    }
+
+    /**
      * Perform pre-save checks on the table properties.
      *
      * @return  bool  True if checks pass.
@@ -370,14 +487,16 @@ class CwmtemplatecodeTable extends Table
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_FILENAME_REQUIRED'));
         }
 
-        if (
-            $this->filename === 'main' ||
-            $this->filename === 'simple' ||
-            $this->filename === 'custom' ||
-            $this->filename === 'formheader' ||
-            $this->filename === 'formfooter'
-        ) {
-            throw new \UnexpectedValueException(Text::_('JBS_STYLE_RESTRICTED_FILE_NAME'));
+        // ⚠️ Grandfathered, not waived. A record created before this rule
+        // existed already overwrote the shipped layout, so its code is the only
+        // copy at that path -- refusing the save would strand it with no way to
+        // get the content back out. A new record of that name is refused.
+        if (self::isReservedFilename((int) $this->type, $this->filename) && !$this->keepsItsStoredFilename()) {
+            throw new \UnexpectedValueException(
+                self::isShippedLayout((int) $this->type, $this->filename)
+                    ? Text::sprintf('JBS_STYLE_SHIPPED_FILE_NAME', (string) $this->filename)
+                    : Text::_('JBS_STYLE_RESTRICTED_FILE_NAME')
+            );
         }
 
         // ⚠️ Rejected here as well as in the write path, so the user gets a
@@ -507,6 +626,26 @@ class CwmtemplatecodeTable extends Table
         $templateType = (int) $this->type;
 
         $file = self::layoutPathForRecord($templateType, $this->filename);
+
+        if (self::isShippedLayout($templateType, $this->filename)) {
+            // ⚠️ The row goes, the file stays. This name can only belong to a
+            // record that predates the refusal in check(), and the file at that
+            // path is one the package ships: `default.php` calls it with
+            // loadTemplate() unconditionally, and Joomla answers a missing
+            // sublayout with a 500. Deleting it would take the front end down.
+            Factory::getApplication()->enqueueMessage(
+                Text::sprintf('JBS_STYLE_SHIPPED_FILE_KEPT', (string) $this->filename),
+                'warning'
+            );
+            Log::add(
+                'Template code ' . (int) $this->id . ' deleted, but ' . $file
+                . ' was kept: it is a layout the package ships.',
+                Log::WARNING,
+                'com_proclaim'
+            );
+
+            return parent::delete($pk);
+        }
 
         if ($file === null) {
             // The row is still removed — refusing to delete it would strand a

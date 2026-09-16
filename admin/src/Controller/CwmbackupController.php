@@ -1143,6 +1143,20 @@ class CwmbackupController extends BaseController
                 // never ran on a restore. A dump is attacker-supplied input.
                 $filepath = CwmtemplatecodeTable::layoutPathForRecord($type, $record->filename);
 
+                // ⚠️ A dump carrying a row named after a shipped layout would
+                // overwrite that layout on every restore, and nobody is
+                // watching this path to read a warning. Refuse it here too.
+                if (CwmtemplatecodeTable::isShippedLayout($type, $record->filename)) {
+                    Log::add(
+                        'Refusing to write templatecode ID ' . $record->id . ': filename '
+                        . var_export($record->filename, true) . ' names a layout the package ships,'
+                        . ' and rewriting it would replace the shipped file.',
+                        Log::WARNING,
+                        'com_proclaim'
+                    );
+                    continue;
+                }
+
                 if ($filepath === null) {
                     Log::add(
                         'Refusing to write templatecode ID ' . $record->id . ': filename '
