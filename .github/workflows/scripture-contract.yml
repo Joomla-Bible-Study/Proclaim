@@ -101,13 +101,20 @@ jobs:
           # ⚠️ `unverified` is reported, not shrugged off. A skip on a curl
           # error exits 0, so without this a week of blocked egress would be a
           # week of green nightlies that contacted nothing.
+          # ⚠️ Classified on the output with colour stripped. PHPUnit writes
+          # its summary as `\e[30;42mOK (2 tests, …)`, so a pattern anchored to
+          # the start of the line never matches a real run — a passing check
+          # read as "nothing ran" on the first dispatch of this very step. The
+          # report below keeps the raw output.
+          CLEAN=$(printf '%s' "$OUT" | sed -e 's/\x1b\[[0-9;]*m//g')
+
           STATUS=ok
 
-          if echo "$OUT" | grep -q 'Error in bootstrap script'; then
+          if echo "$CLEAN" | grep -q 'Error in bootstrap script'; then
             STATUS=unverified
-          elif ! echo "$OUT" | grep -qE '^(OK|OK, but|FAILURES|ERRORS|Tests: )'; then
+          elif ! echo "$CLEAN" | grep -qE '^(OK|OK, but|FAILURES|ERRORS|Tests: )'; then
             STATUS=unverified
-          elif echo "$OUT" | grep -qE 'Skipped: [1-9]|No tests executed'; then
+          elif echo "$CLEAN" | grep -qE 'Skipped: [1-9]|No tests executed'; then
             STATUS=unverified
           elif [ "$CODE" != "0" ]; then
             STATUS=drift
