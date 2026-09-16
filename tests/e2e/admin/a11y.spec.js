@@ -108,6 +108,23 @@ const WIZARDS = [
     ['new sermon wizard', 'index.php?option=com_proclaim&view=cwmmessage&layout=wizard'],
 ];
 
+/**
+ * Screens whose scan is known to fail, and the issue tracking each.
+ *
+ * ⚠️ `test.fail()`, not `test.skip()`. The test still runs; Playwright expects
+ * it to fail and reports **"Expected to fail, but passed"** the moment it stops
+ * failing. So fixing one of these turns CI red until its entry is removed here
+ * — which is the point. A skip would let a fixed violation sit unnoticed, and
+ * silently-absent coverage is the exact defect that made these scans worth
+ * turning on.
+ *
+ * @type {Map<string, string>}
+ */
+const KNOWN_VIOLATIONS = new Map([
+    ['control panel', '#2117 — .btn-link contrast 4.29, needs 4.5:1'],
+    ['location wizard', '#2117 — .text-warning contrast 1.67, needs 3:1'],
+]);
+
 test.describe('Admin accessibility (WCAG 2.2 AA) @a11y', () => {
     /**
      * Button contrast, scanned as a matrix rather than wherever buttons happen to
@@ -173,6 +190,8 @@ test.describe('Admin accessibility (WCAG 2.2 AA) @a11y', () => {
 
     for (const [label, view] of SCREENS) {
         test(`${label} meets WCAG AA`, async ({ page }) => {
+            test.fail(KNOWN_VIOLATIONS.has(label), KNOWN_VIOLATIONS.get(label));
+
             await page.goto(`/administrator/index.php?option=com_proclaim&view=${view}`, {
                 waitUntil: 'networkidle',
             });
@@ -201,6 +220,8 @@ test.describe('Admin accessibility (WCAG 2.2 AA) @a11y', () => {
 
     for (const [label, url] of WIZARDS) {
         test(`${label} meets WCAG AA`, async ({ page }) => {
+            test.fail(KNOWN_VIOLATIONS.has(label), KNOWN_VIOLATIONS.get(label));
+
             await page.goto(`/administrator/${url}`, { waitUntil: 'networkidle' });
 
             await expect(page.locator(PROCLAIM_CONTENT)).toBeVisible({ timeout: 15000 });

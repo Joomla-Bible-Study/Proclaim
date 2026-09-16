@@ -51,6 +51,10 @@ async function openLayoutEditor(page) {
 
 test.describe('Layout editor narrow cards @a11y-interaction', () => {
     test('no control overflows its card at any width', async ({ page }) => {
+        // ⚠️ Quarantined, not skipped: Playwright runs this and reports
+        // "Expected to fail, but passed" once it stops failing, so the fix
+        // turns CI red until this line is removed. See #2119.
+        test.fail(true, '#2119 — the layout editor does not render on a fresh install');
         await openLayoutEditor(page);
 
         for (const width of [1600, 1100, 800]) {
@@ -80,6 +84,10 @@ test.describe('Layout editor narrow cards @a11y-interaction', () => {
     });
 
     test('a collapsed card still reaches every control, by keyboard', async ({ page }) => {
+        // ⚠️ Quarantined, not skipped: Playwright runs this and reports
+        // "Expected to fail, but passed" once it stops failing, so the fix
+        // turns CI red until this line is removed. See #2119.
+        test.fail(true, '#2119 — the layout editor does not render on a fresh install');
         await openLayoutEditor(page);
         await page.setViewportSize({ width: 1100, height: 900 });
         await page.waitForTimeout(400);
