@@ -36,6 +36,43 @@ jobs:
           php-version: '8.3'
           tools: composer:v2
 
+      # ⚠️ The suite's bootstrap boots the real Joomla framework through
+      # libraries/bootstrap.php, which requires libraries/vendor/autoload.php —
+      # and a git clone of joomla-cms does not carry a vendor directory. Without
+      # these three steps PHPUnit dies in the bootstrap, no test runs, and the
+      # job below reports whatever that looks like as an API change.
+      #
+      # That is not hypothetical: it is what this workflow did on its first and
+      # only run, filing an issue saying the GetBible contract had drifted when
+      # in fact nothing had been contacted. Copied from ci.yml, which has had
+      # this right all along.
+      #
+      # ⚠️ Before `composer install`, not after. Proclaim's own install hook
+      # auto-clones ../joomla-cms when it is absent, so running it first
+      # leaves a non-empty directory and `git clone` exits 128. ci.yml
+      # clones first for this reason; copying its steps without its order
+      # reproduced the failure on the first try.
+      #
+      # GetBibleContractTest itself extends plain TestCase and needs nothing
+      # from Joomla — it is the shared bootstrap in phpunit.xml that does. A
+      # suite-specific bootstrap would save the clone; that is shared
+      # infrastructure and a separate change.
+      - name: Clone joomla-cms for the test framework
+        run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
+
+      - name: Cache joomla-cms composer dependencies
+        id: joomla-cms-cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/../joomla-cms/libraries/vendor
+          key: joomla-cms-vendor-5.4.3-${{ runner.os }}
+
+      - name: Install joomla-cms composer dependencies
+        if: steps.joomla-cms-cache.outputs.cache-hit != 'true'
+        run: |
+          cd $GITHUB_WORKSPACE/../joomla-cms
+          composer install --no-dev --no-interaction --prefer-dist
+
       - name: Install deps
         run: composer install --no-interaction --no-progress --prefer-dist
 
@@ -46,29 +83,67 @@ jobs:
           OUT=$(composer test:contract 2>&1)
           CODE=$?
           set -e
+
+          echo "$OUT"
+
+          # ⚠️ Classified on whether tests *ran*, not on the exit code.
+          # PHPUnit returns 2 both for a broken bootstrap and for an error
+          # thrown inside a test — so a genuine response-shape change that
+          # made the provider throw would look exactly like a broken harness,
+          # which is the same misreading this workflow already made once in
+          # the other direction.
+          #
+          #   drift      — tests ran and something failed
+          #   unverified — nothing was checked: the harness died, or the test
+          #                skipped itself because GetBible was unreachable
+          #   ok         — tests ran and passed
+          #
+          # ⚠️ `unverified` is reported, not shrugged off. A skip on a curl
+          # error exits 0, so without this a week of blocked egress would be a
+          # week of green nightlies that contacted nothing.
+          # ⚠️ Classified on the output with colour stripped. PHPUnit writes
+          # its summary as `\e[30;42mOK (2 tests, …)`, so a pattern anchored to
+          # the start of the line never matches a real run — a passing check
+          # read as "nothing ran" on the first dispatch of this very step. The
+          # report below keeps the raw output.
+          CLEAN=$(printf '%s' "$OUT" | sed -e 's/\x1b\[[0-9;]*m//g')
+
+          STATUS=ok
+
+          if echo "$CLEAN" | grep -q 'Error in bootstrap script'; then
+            STATUS=unverified
+          elif ! echo "$CLEAN" | grep -qE '^(OK|OK, but|FAILURES|ERRORS|Tests: )'; then
+            STATUS=unverified
+          elif echo "$CLEAN" | grep -qE 'Skipped: [1-9]|No tests executed'; then
+            STATUS=unverified
+          elif [ "$CODE" != "0" ]; then
+            STATUS=drift
+          fi
+
           {
-            echo "## GetBible contract test (exit $CODE)"
+            echo "## GetBible contract test (exit $CODE, $STATUS)"
             echo
             echo '```'
             echo "$OUT"
             echo '```'
           } > /tmp/report.md
-          echo "$OUT"
-          echo "exit=$CODE" >> "$GITHUB_OUTPUT"
 
-      - name: Open or update tracking issue
-        if: steps.contract.outputs.exit != '0'
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the tracking issue
+        if: steps.contract.outputs.status != 'ok'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          STATUS: ${{ steps.contract.outputs.status }}
+          LABEL: 'ci: nightly'
         run: |
-          TITLE="GetBible API contract drifted"
-          BODY=$(cat /tmp/report.md)
-          BODY="$BODY
+          REPORT=$(cat /tmp/report.md)
 
-          ---
-
-          The recorded fixture no longer matches what GetBible returns, so the
+          if [ "$STATUS" = "drift" ]; then
+            TITLE="GetBible API contract drifted"
+            ADVICE="The recorded fixture no longer matches what GetBible returns, so the
           scripture suites are passing against a response shape that no longer
           exists. Re-capture and commit it:
 
@@ -78,17 +153,74 @@ jobs:
 
           Then check whether \`GetBibleProvider\` needs to read the new shape as
           well — the fixture refresh alone only makes the tests agree with the
-          API again, it does not make the provider parse it.
-
-          _Opened by the nightly \`Scripture API contract\` workflow._"
-
-          EXISTING=$(gh issue list --repo "$REPO" --state open \
-            --search "in:title \"$TITLE\"" --json number --jq '.[0].number // empty')
-
-          if [ -n "$EXISTING" ]; then
-            gh issue comment "$EXISTING" --repo "$REPO" --body "$BODY"
+          API again, it does not make the provider parse it."
           else
-            gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" \
-              --label "type: bug" --label "area: scripture" || \
-            gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY"
+            TITLE="The GetBible contract check did not verify anything"
+            ADVICE="⚠️ **This is not a report that the API changed.** No assertion about
+          GetBible was made: either the test harness failed before any test ran, or
+          the test skipped itself because GetBible could not be reached.
+
+          Do **not** refresh the fixture in response to this. There is no evidence
+          the fixture is wrong, and re-recording it against an unreachable or
+          erroring endpoint would replace a good capture with a bad one.
+
+          Read the output above for which it was. A bootstrap error is this
+          workflow's own setup; a skip is egress or the upstream host."
           fi
+
+          BODY="$REPORT
+
+          ---
+
+          $ADVICE
+
+          **Run:** $RUN_URL
+
+          _Opened by the nightly \`Scripture API contract\` workflow. Updated on each
+          further failure and closed automatically once the check is green again._"
+
+          # ⚠️ Found by label, not by title search. A title search is fuzzy and
+          # reads GitHub's lagging search index, so a re-run inside that window
+          # opens a duplicate — and this workflow reports under two different
+          # titles, which a title search cannot reconcile at all.
+          #
+          # Both labels must exist in the repository: `gh issue create` fails on
+          # an unknown one. This workflow previously asked for `area: scripture`,
+          # which does not exist, and its `||` fallback quietly filed the issue
+          # with no labels at all — leaving nothing for the lookup to find next
+          # time.
+          NUM=$(gh issue list --repo "$REPO" --state open --label "$LABEL" --json number --jq '.[0].number // ""')
+
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --repo "$REPO" --body "$BODY"
+          else
+            gh issue create --repo "$REPO" \
+              --title "$TITLE" \
+              --label "$LABEL" \
+              --label "type: bug" \
+              --body "$BODY"
+          fi
+
+      - name: Close the tracking issue when the check is green
+        if: steps.contract.outputs.status == 'ok'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          LABEL: 'ci: nightly'
+        run: |
+          NUM=$(gh issue list --repo "$REPO" --state open --label "$LABEL" --json number --jq '.[0].number // ""')
+
+          if [ -n "$NUM" ]; then
+            gh issue close "$NUM" --repo "$REPO" \
+              --comment "The GetBible contract check passed on $(date -u +%Y-%m-%d): $RUN_URL. Closing automatically."
+          fi
+
+      # ⚠️ The job fails when the check did not pass. Previously `set +e` swallowed
+      # the exit code and the run went green while filing a bug — so the Actions
+      # list showed a healthy nightly for a check that had never once succeeded.
+      - name: Fail the job when the check did not pass
+        if: steps.contract.outputs.status != 'ok'
+        run: |
+          echo "Contract check status: ${{ steps.contract.outputs.status }}"
+          exit 1
