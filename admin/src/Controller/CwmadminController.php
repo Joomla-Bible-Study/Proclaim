@@ -2916,16 +2916,22 @@ class CwmadminController extends FormController
     {
         header('Content-Type: application/json; charset=utf-8');
 
-        if (!Session::checkToken('get') && !Session::checkToken('post')) {
+        // ⚠️ POST only, and read from the POST body rather than the merged
+        // request. A key sent as a query parameter is written verbatim into
+        // the web server's access log on every call, where it outlives and
+        // out-reaches the component parameter it is stored in. Accepting a GET
+        // here at all would let a cached copy of the old script, or a crafted
+        // URL, put it back in the log after the browser side was fixed.
+        if (!Session::checkToken('post')) {
             $this->sendJsonPayload(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
             $this->app->close();
 
             return;
         }
 
-        $input    = $this->input;
-        $provider = $input->getString('provider', 'claude');
-        $apiKey   = $input->getString('api_key', '');
+        $post     = $this->input->post;
+        $provider = $post->getString('provider', 'claude');
+        $apiKey   = $post->getString('api_key', '');
 
         if (empty($apiKey)) {
             $this->sendJsonPayload(['success' => false, 'error' => Text::_('JBS_CMN_AI_NO_API_KEY')]);
