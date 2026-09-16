@@ -361,13 +361,16 @@ class CWMAddonResi extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $input = Factory::getApplication()->getInput();
+        // ⚠️ Read from the POST body, not the merged request. Accepting these
+        // from the query string is what put the client secret in the access
+        // log, and a cached copy of the old field script would put it back.
+        $post = Factory::getApplication()->getInput()->post;
 
         return $this->testCredentials(
-            $input->getInt('server_id', 0),
+            $post->getInt('server_id', 0),
             // Allow testing unsaved credentials passed directly from the form
-            $input->getString('client_id', ''),
-            $input->getString('client_secret', '')
+            $post->getString('client_id', ''),
+            $post->getString('client_secret', '')
         );
     }
 

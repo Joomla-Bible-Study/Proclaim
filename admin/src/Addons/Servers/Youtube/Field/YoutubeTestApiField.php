@@ -159,14 +159,20 @@ class YoutubeTestApiField extends FormField
         testBtn.disabled = true;
         resultEl.innerHTML = '';
 
-        // Make request
-        const url = baseUrl + '&api_key=' + encodeURIComponent(apiKey) + '&channel_id=' + encodeURIComponent(channelId);
+        // ⚠️ POST, with the credentials in the body. As query parameters the
+        // API key was written verbatim into the web server's access log on
+        // every click — a file read by more people, kept longer and shipped
+        // further than the server record the key is stored in.
+        const body = new URLSearchParams();
+        body.append('api_key', apiKey);
+        body.append('channel_id', channelId);
 
-        fetch(url, {
-            method: 'GET',
+        fetch(baseUrl, {
+            method: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
-            }
+            },
+            body: body
         })
         .then(response => response.json())
         .then(data => {

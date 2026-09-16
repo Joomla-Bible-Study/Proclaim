@@ -797,9 +797,12 @@ class CWMAddonYoutube extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app       = Factory::getApplication();
-        $apiKey    = $app->getInput()->getString('api_key', '');
-        $channelId = $app->getInput()->getString('channel_id', '');
+        // ⚠️ Read from the POST body, not the merged request. Accepting these
+        // from the query string is what put the key in the access log, and a
+        // cached copy of the old field script would put it back.
+        $post      = Factory::getApplication()->getInput()->post;
+        $apiKey    = $post->getString('api_key', '');
+        $channelId = $post->getString('channel_id', '');
 
         return $this->testApiConnection($apiKey, $channelId);
     }
