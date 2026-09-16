@@ -287,6 +287,66 @@ class CwmtemplatesController extends AdminController
     }
 
     /**
+     * The filename offered to the browser for an exported template.
+     *
+     * ⚠️ Separate from the path on disk. This value reaches a
+     * `Content-Disposition` header, where the rules are not the filesystem's:
+     * a bare `"` ends the quoted filename and lets further parameters be
+     * appended. `File::makeSafe()` leaves only `A-Za-z0-9._-` and spaces, so
+     * no quote, separator, control character or percent survives it.
+     *
+     * @param   int          $id     The template's id, for a title that sanitises away
+     * @param   string|null  $title  The template's title, as entered
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function exportDownloadName(int $id, ?string $title): string
+    {
+        $safe = File::makeSafe((string) $title);
+
+        return ($safe === '' ? 'template-' . $id : $safe) . '.sql';
+    }
+
+    /**
+     * Where an export is staged on disk before it is streamed.
+     *
+     * ⚠️ Takes no arguments, and that is the point. The path used to be
+     * `/tmp/<template title>.sql`, and a title is free text -- `File::write()`
+     * creates the intermediate directory, so the separators in
+     * `x/../../evil` resolved and the file landed outside `/tmp`. A builder
+     * with nothing to pass it cannot be handed a title by a later caller.
+     *
+     * The name is also random rather than merely fixed, so a file left behind
+     * by a failed stream is not sitting at a name its requester chose: Joomla's
+     * default temp directory is reachable under many server configurations and
+     * ships with an `index.html` rather than a deny rule.
+     *
+     * ⚠️ Staged under the **configured** `tmp_path`, as CwmbackupController
+     * already does for its own SQL exports -- not a hard-coded `JPATH_ROOT/tmp`.
+     * An administrator who has moved the temp directory outside the web root
+     * has done the thing that makes a leftover unreachable, and hard-coding
+     * would have ignored it.
+     *
+     * @return  string
+     *
+     * @throws  \Random\RandomException
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function exportTempPath(): string
+    {
+        $tmp = (string) Factory::getApplication()->get('tmp_path');
+
+        if ($tmp === '') {
+            $tmp = JPATH_ROOT . '/tmp';
+        }
+
+        return rtrim($tmp, '/\\') . '/proclaim-template-export-' . bin2hex(random_bytes(8)) . '.sql';
+    }
+
+    /**
      * Export the Template
      *
      * @return CwmtemplatesController|false
@@ -328,16 +388,28 @@ class CwmtemplatesController extends AdminController
 
         $objects[]    = $this->getExportSetting($result);
         $filecontents = implode(' ', $objects);
-        $filename     = $result->title . '.sql';
-        $filepath     = JPATH_ROOT . '/tmp/' . $filename;
+
+        // The name offered to the browser and the name written to disk are two
+        // different problems, and are no longer the same string.
+        $downloadName = self::exportDownloadName((int) $result->id, $result->title);
+        $filepath     = self::exportTempPath();
 
         if (!File::write($filepath, $filecontents)) {
             return false;
         }
 
-        $xport = new Cwmbackup();
-        $xport->outputFile($filepath, $filename, 'text/x-sql');
-        File::delete($filepath);
+        try {
+            $xport = new Cwmbackup();
+            $xport->outputFile($filepath, $downloadName, 'text/x-sql');
+        } finally {
+            // ⚠️ In a finally. outputFile() throws when the file cannot be read
+            // or its type cannot be resolved, and an export left in /tmp is
+            // content the site did not mean to keep.
+            if (is_file($filepath)) {
+                File::delete($filepath);
+            }
+        }
+
         $message = Text::_('JBS_TPL_EXPORT_SUCCESS');
 
         return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);

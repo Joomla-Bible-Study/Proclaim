@@ -847,8 +847,11 @@ class Cwmbackup
             set_time_limit(\ini_get('max_execution_time'));
         }
 
-        // Decode URL-encoded strings
-        $name = rawurldecode($name);
+        // ⚠️ The name is not URL-decoded. It reaches a Content-Disposition
+        // header, and decoding here would reintroduce bytes that the caller
+        // had already removed. Every caller passes either a basename of a file
+        // this component generated or a name run through File::makeSafe(), so
+        // there is nothing legitimate left to decode.
 
         header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
         header('Pragma: no-cache');
