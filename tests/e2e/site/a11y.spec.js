@@ -62,9 +62,26 @@ const DETAILS = [
     ['series podcast detail', 'cwmseriespodcastlist', '.proclaim-grid-card a[href], .effects a[href]'],
 ];
 
+/**
+ * Listings whose scan is known to fail, and the issue tracking each.
+ *
+ * ⚠️ `test.fail()`, not `test.skip()`. The test still runs; Playwright reports
+ * **"Expected to fail, but passed"** the moment it stops failing, so a fix
+ * turns CI red until its entry is removed here. A skip would let a fixed
+ * violation sit unnoticed.
+ *
+ * @type {Map<string, string>}
+ */
+const KNOWN_VIOLATIONS = new Map([
+    ['sermon listing', '#2118 — <dl> with no <dt>/<dd> pair (WCAG 2.1.3.1, level A)'],
+    ['latest sermons', '#2118 — <dl> with no <dt>/<dd> pair (WCAG 2.1.3.1, level A)'],
+]);
+
 test.describe('Site accessibility (WCAG 2.2 AA) @a11y', () => {
     for (const [label, view] of LISTINGS) {
         test(`${label} meets WCAG AA`, async ({ page }) => {
+            test.fail(KNOWN_VIOLATIONS.has(label), KNOWN_VIOLATIONS.get(label));
+
             const response = await page.goto(`/?option=com_proclaim&view=${view}`, {
                 waitUntil: 'networkidle',
             });

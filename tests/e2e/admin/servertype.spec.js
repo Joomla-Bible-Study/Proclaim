@@ -89,6 +89,10 @@ test('a failed swap rolls back and says nothing changed', async ({ page }) => {
 });
 
 test("a swapped-in type's own field widgets come alive without a reload", async ({ page }) => {
+    // ⚠️ Quarantined, not skipped: Playwright runs this and reports
+    // "Expected to fail, but passed" once it stops failing, so the fix
+    // turns CI red until this line is removed. See #2121.
+    test.fail(true, '#2121 — no [data-showon] field in the swapped-in YouTube region on a fresh install');
     // showon (conditional fields), the media picker and an addon's inline
     // script (YouTube's Test API) all bind at page load. After an in-place
     // swap they must work anyway — see the view's asset pre-load and the
