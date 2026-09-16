@@ -36,9 +36,6 @@ jobs:
           php-version: '8.3'
           tools: composer:v2
 
-      - name: Install deps
-        run: composer install --no-interaction --no-progress --prefer-dist
-
       # ⚠️ The suite's bootstrap boots the real Joomla framework through
       # libraries/bootstrap.php, which requires libraries/vendor/autoload.php —
       # and a git clone of joomla-cms does not carry a vendor directory. Without
@@ -49,6 +46,12 @@ jobs:
       # only run, filing an issue saying the GetBible contract had drifted when
       # in fact nothing had been contacted. Copied from ci.yml, which has had
       # this right all along.
+      #
+      # ⚠️ Before `composer install`, not after. Proclaim's own install hook
+      # auto-clones ../joomla-cms when it is absent, so running it first
+      # leaves a non-empty directory and `git clone` exits 128. ci.yml
+      # clones first for this reason; copying its steps without its order
+      # reproduced the failure on the first try.
       #
       # GetBibleContractTest itself extends plain TestCase and needs nothing
       # from Joomla — it is the shared bootstrap in phpunit.xml that does. A
@@ -69,6 +72,9 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/../joomla-cms
           composer install --no-dev --no-interaction --prefer-dist
+
+      - name: Install deps
+        run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Run the GetBible contract test
         id: contract
