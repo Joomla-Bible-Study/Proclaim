@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rule;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
@@ -165,23 +166,135 @@ class CwmtemplatecodeTable extends Table
     ];
 
     /**
+     * The pattern a layout filename must match in full.
+     *
+     * ⚠️ The security property is the absence of a path separator, not the
+     * absence of a dot. `default_` and `.php` are wrapped around this value, so
+     * `..` is never a whole path segment and cannot walk anywhere on its own —
+     * but `a/../../../x` is three real segments, and Joomla's `File::write()`
+     * creates the intermediate directory for you, so the escape is reachable.
+     * Dots stay legal because layout names in the wild carry them and rejecting
+     * them would make an existing record unsavable without buying anything.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    private const string FILENAME_PATTERN = '/^[A-Za-z0-9._-]+$/';
+
+    /**
+     * The guard every generated layout opens with.
+     *
+     * Written unconditionally and as real PHP. `?>` swallows the single newline
+     * that follows it, so prepending this changes what the file *outputs* by
+     * nothing at all, whatever the stored code happens to start with.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    public const string LAYOUT_GUARD = '<?php \defined(\'_JEXEC\') or die; ?>' . "\n";
+
+    /**
+     * Whether a filename may be composed into a layout path.
+     *
+     * @param   string|null  $filename  The record's filename, without `default_` or `.php`
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function isValidLayoutFilename(?string $filename): bool
+    {
+        $filename = trim((string) $filename);
+
+        // A leading dot would be composed away by the `default_` prefix, but a
+        // name that tries for one is not a layout name; say so rather than
+        // quietly accepting it.
+        if ($filename === '' || str_starts_with($filename, '.') || str_contains($filename, '..')) {
+            return false;
+        }
+
+        return (bool) preg_match(self::FILENAME_PATTERN, $filename);
+    }
+
+    /**
      * The absolute path a record of this type and filename writes to.
      *
-     * @param   int     $type      The record's template type
-     * @param   string  $filename  The layout filename, including `default_`
+     * ⚠️ Takes the record's `filename` as stored — **not** the composed
+     * `default_x.php`. Composing it here is the point: it was done at four call
+     * sites, and the one that skipped this method is how the restore path came
+     * to have no validation at all. Renamed from `layoutPath()` so that a
+     * caller still passing a composed name fails to resolve instead of
+     * type-checking clean and writing to `default_default_x.php.php`.
      *
-     * @return  string|null  Null for a type with no layout directory
+     * @param   int          $type      The record's template type
+     * @param   string|null  $filename  The record's filename
      *
-     * @since   10.6.0
+     * @return  string|null  Null for an unknown type or a filename that cannot be composed safely
+     *
+     * @since   __DEPLOY_VERSION__
      */
-    public static function layoutPath(int $type, string $filename): ?string
+    public static function layoutPathForRecord(int $type, ?string $filename): ?string
     {
-        if (!isset(self::LAYOUT_DIRECTORIES[$type])) {
+        if (!isset(self::LAYOUT_DIRECTORIES[$type]) || !self::isValidLayoutFilename($filename)) {
             return null;
         }
 
-        return JPATH_ROOT . '/' . self::LAYOUT_DIRECTORIES[$type] . '/' . $filename;
+        $base = JPATH_ROOT . '/' . self::LAYOUT_DIRECTORIES[$type];
+        $path = $base . '/default_' . trim((string) $filename) . '.php';
+
+        // Defence in depth. With separators rejected above the composed path is
+        // already inside $base; this catches the case that check cannot see —
+        // a symlink standing where the layout directory should be.
+        $realBase = realpath($base);
+        $realDir  = realpath(\dirname($path));
+
+        if ($realBase !== false && $realDir !== false && $realDir !== $realBase) {
+            return null;
+        }
+
+        return $path;
     }
+
+    /**
+     * The bytes a layout file is written with.
+     *
+     * @param   string  $templateCode  The record's stored code
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function layoutFileContents(string $templateCode): string
+    {
+        return self::LAYOUT_GUARD . $templateCode;
+    }
+
+    /**
+     * Write a record's layout file.
+     *
+     * The only place a layout is written. Both callers — a save through this
+     * table and a rebuild after a restore — go through here, so the filename
+     * constraint and the guard cannot be true of one and not the other.
+     *
+     * @param   int          $type          The record's template type
+     * @param   string|null  $filename      The record's filename
+     * @param   string       $templateCode  The record's stored code
+     *
+     * @return  bool  False if the path could not be composed or the write failed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function writeLayout(int $type, ?string $filename, string $templateCode): bool
+    {
+        $file = self::layoutPathForRecord($type, $filename);
+
+        if ($file === null) {
+            return false;
+        }
+
+        return File::write($file, self::layoutFileContents($templateCode));
+    }
+
 
     /**
      * Delete the copy an older version wrote to the capitalised directory.
@@ -192,16 +305,16 @@ class CwmtemplatecodeTable extends Table
      * the layout just written. They are only ever different files on the hosts
      * that had the bug in the first place.
      *
-     * @param   int     $type      The record's template type
-     * @param   string  $filename  The layout filename
+     * @param   int          $type      The record's template type
+     * @param   string|null  $filename  The record's filename
      *
      * @return  void
      *
      * @since   10.6.0
      */
-    private static function removeCapitalisedTwin(int $type, string $filename): void
+    private static function removeCapitalisedTwin(int $type, ?string $filename): void
     {
-        $correct = self::layoutPath($type, $filename);
+        $correct = self::layoutPathForRecord($type, $filename);
 
         if ($correct === null || !isset(self::LAYOUT_DIRECTORIES[$type])) {
             return;
@@ -215,7 +328,8 @@ class CwmtemplatecodeTable extends Table
             return;
         }
 
-        $stray = JPATH_ROOT . '/' . \dirname($directory) . '/' . ucfirst($base) . '/' . $filename;
+        $stray = JPATH_ROOT . '/' . \dirname($directory) . '/' . ucfirst($base)
+            . '/default_' . trim((string) $filename) . '.php';
 
         if (!is_file($stray)) {
             return;
@@ -264,6 +378,14 @@ class CwmtemplatecodeTable extends Table
             $this->filename === 'formfooter'
         ) {
             throw new \UnexpectedValueException(Text::_('JBS_STYLE_RESTRICTED_FILE_NAME'));
+        }
+
+        // ⚠️ Rejected here as well as in the write path, so the user gets a
+        // field error instead of a save that reports success and writes nothing.
+        if (!self::isValidLayoutFilename($this->filename)) {
+            throw new \UnexpectedValueException(
+                Text::sprintf('JBS_CMN_ERROR_FILENAME_INVALID', $this->filename)
+            );
         }
 
         $type = (int) $this->type;
@@ -322,24 +444,33 @@ class CwmtemplatecodeTable extends Table
     #[\Override]
     public function store($updateNulls = false): bool
     {
-        // Write the file
-        $templateType = $this->type;
-        $filename     = 'default_' . $this->filename . '.php';
+        $templateType = (int) $this->type;
 
-        $file = self::layoutPath((int) $templateType, $filename);
+        // ⚠️ Named separately from the write failure below. store() is reached
+        // without check() having run -- the template importer loads a row and
+        // stores it to get the file written -- and there the only report of a
+        // refused filename is whatever is said here.
+        if (!self::isValidLayoutFilename($this->filename)) {
+            $reason = Text::sprintf('JBS_CMN_ERROR_FILENAME_INVALID', (string) $this->filename);
 
-        $templateCodeContent = $this->templatecode;
+            Factory::getApplication()->enqueueMessage($reason, 'error');
+            Log::add(
+                'Template code ' . (int) $this->id . ' not saved: ' . $reason,
+                Log::WARNING,
+                'com_proclaim'
+            );
 
-        // Check to see if there is the required code in the file
-        $templateCheckString = "defined('_JEXEC') or die;";
-        $required            = substr_count($templateCodeContent, $templateCheckString);
-
-        if (!$required) {
-            $templateCodeContent = $templateCheckString . $templateCodeContent;
+            return false;
         }
 
-        if (!File::write($file, $templateCodeContent)) {
-            Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_UNIQUE', 'error');
+        if (!self::writeLayout($templateType, $this->filename, (string) $this->templatecode)) {
+            Factory::getApplication()->enqueueMessage(Text::_('JBS_STYLE_FILENAME_NOT_WRITTEN'), 'error');
+            Log::add(
+                'Template code ' . (int) $this->id . ' not saved: layout file could not be written to '
+                . var_export(self::layoutPathForRecord($templateType, $this->filename), true),
+                Log::WARNING,
+                'com_proclaim'
+            );
 
             return false;
         }
@@ -347,7 +478,7 @@ class CwmtemplatecodeTable extends Table
         // An older version of this method wrote to the capitalised directory.
         // On a case-sensitive host that copy is still sitting there, ignored by
         // the front end and confusing to anyone who finds it.
-        self::removeCapitalisedTwin((int) $templateType, $filename);
+        self::removeCapitalisedTwin($templateType, $this->filename);
 
         $result = parent::store($updateNulls);
 
@@ -373,19 +504,29 @@ class CwmtemplatecodeTable extends Table
     #[\Override]
     public function delete($pk = null): bool
     {
-        $filename     = 'default_' . $this->filename . '.php';
-        $templateType = $this->type;
+        $templateType = (int) $this->type;
 
-        $file = self::layoutPath((int) $templateType, $filename);
+        $file = self::layoutPathForRecord($templateType, $this->filename);
 
-        if ($file !== null && file_exists($file) && !File::delete($file)) {
-            Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_DELETED', 'error');
+        if ($file === null) {
+            // The row is still removed — refusing to delete it would strand a
+            // record nothing can edit. Say so, because a layout an older
+            // version wrote under this name is being left behind on disk.
+            Log::add(
+                'Template code ' . (int) $this->id . ' has no composable layout path'
+                . ' (type ' . $templateType . ', filename ' . var_export($this->filename, true) . ');'
+                . ' any file it wrote is left in place.',
+                Log::WARNING,
+                'com_proclaim'
+            );
+        } elseif (file_exists($file) && !File::delete($file)) {
+            Factory::getApplication()->enqueueMessage(Text::_('JBS_STYLE_FILENAME_NOT_DELETED'), 'error');
 
             return false;
         }
 
         // And the one an older version may have written beside it.
-        self::removeCapitalisedTwin((int) $templateType, $filename);
+        self::removeCapitalisedTwin($templateType, $this->filename);
 
         return parent::delete($pk);
     }

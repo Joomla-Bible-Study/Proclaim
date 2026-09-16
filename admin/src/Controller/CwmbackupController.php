@@ -1137,26 +1137,24 @@ class CwmbackupController extends BaseController
                     continue;
                 }
 
-                $directory = JPATH_ROOT . '/' . CwmtemplatecodeTable::LAYOUT_DIRECTORIES[$type] . '/';
-                $filename  = 'default_' . $record->filename . '.php';
-                $filepath  = $directory . $filename;
+                // ⚠️ Through the table, not around it. This method used to
+                // compose the path and call File::write() itself, so the only
+                // filename validation that existed -- CwmtemplatecodeTable's --
+                // never ran on a restore. A dump is attacker-supplied input.
+                $filepath = CwmtemplatecodeTable::layoutPathForRecord($type, $record->filename);
 
-                // Ensure directory exists
-                if (!is_dir($directory)) {
-                    Log::add('Templatecode directory does not exist: ' . $directory, Log::WARNING, 'com_proclaim');
+                if ($filepath === null) {
+                    Log::add(
+                        'Refusing to write templatecode ID ' . $record->id . ': filename '
+                        . var_export($record->filename, true) . ' does not name a layout in '
+                        . CwmtemplatecodeTable::LAYOUT_DIRECTORIES[$type],
+                        Log::WARNING,
+                        'com_proclaim'
+                    );
                     continue;
                 }
 
-                // Prepare content - ensure security check is present
-                $content       = $record->templatecode;
-                $securityCheck = "defined('_JEXEC') or die;";
-
-                if (strpos($content, $securityCheck) === false) {
-                    $content = "<?php\n" . $securityCheck . "\n" . $content;
-                }
-
-                // Write the file
-                if (File::write($filepath, $content)) {
+                if (CwmtemplatecodeTable::writeLayout($type, $record->filename, (string) $record->templatecode)) {
                     $created++;
                     Log::add('Created templatecode file: ' . $filepath, Log::INFO, 'com_proclaim');
                 } else {

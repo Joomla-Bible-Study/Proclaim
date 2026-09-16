@@ -108,12 +108,19 @@ final class TemplateCodeFileCheck implements HealthCheckInterface
 
         $missing = 0;
         $unknown = 0;
+        $invalid = 0;
 
         foreach ($rows as $row) {
-            $path = CwmtemplatecodeTable::layoutPath(
-                (int) $row->type,
-                'default_' . $row->filename . '.php'
-            );
+            // ⚠️ Checked before the path, because both fail the same way --
+            // a null path -- and reporting a bad filename as an unknown type
+            // sends whoever reads this at the wrong column.
+            if (!CwmtemplatecodeTable::isValidLayoutFilename($row->filename)) {
+                $invalid++;
+
+                continue;
+            }
+
+            $path = CwmtemplatecodeTable::layoutPathForRecord((int) $row->type, $row->filename);
 
             if ($path === null) {
                 $unknown++;
@@ -126,7 +133,7 @@ final class TemplateCodeFileCheck implements HealthCheckInterface
             }
         }
 
-        if ($missing === 0 && $unknown === 0) {
+        if ($missing === 0 && $unknown === 0 && $invalid === 0) {
             return new HealthResult(
                 $this->getId(),
                 HealthStatus::Ok,
@@ -134,15 +141,21 @@ final class TemplateCodeFileCheck implements HealthCheckInterface
             );
         }
 
+        if ($invalid > 0) {
+            $message = Text::sprintf('JBS_HEALTH_TEMPLATECODE_FILES_INVALID_NAME', $invalid);
+        } elseif ($unknown > 0 && $missing === 0) {
+            $message = Text::sprintf('JBS_HEALTH_TEMPLATECODE_FILES_UNKNOWN_TYPE', $unknown);
+        } else {
+            $message = Text::sprintf('JBS_HEALTH_TEMPLATECODE_FILES_MISSING', $missing);
+        }
+
         return new HealthResult(
             $this->getId(),
             HealthStatus::Warning,
-            $unknown > 0 && $missing === 0
-                ? Text::sprintf('JBS_HEALTH_TEMPLATECODE_FILES_UNKNOWN_TYPE', $unknown)
-                : Text::sprintf('JBS_HEALTH_TEMPLATECODE_FILES_MISSING', $missing),
-            // Both counts, so a site that fixes one and not the other is still
-            // told about the other.
-            $missing . ':' . $unknown,
+            $message,
+            // Every count, so a site that fixes one and not the others is still
+            // told about the others.
+            $missing . ':' . $unknown . ':' . $invalid,
             'index.php?option=com_proclaim&view=cwmtemplatecodes',
             Text::_('JBS_HEALTH_TEMPLATECODE_FILES_ACTION')
         );
