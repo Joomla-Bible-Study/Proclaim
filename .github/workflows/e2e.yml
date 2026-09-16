@@ -331,7 +331,7 @@ jobs:
       # them than the job needs. Joomla's own logs, and anything another
       # extension writes beside them, are not this job's business.
       - name: Upload Proclaim's log on failure
-        if: failure()
+        if: always()   # TEMPORARY: diagnosing #2119, revert to failure()
         uses: actions/upload-artifact@v7
         with:
           name: proclaim-log-${{ matrix.props }}
