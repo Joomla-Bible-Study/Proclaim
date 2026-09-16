@@ -65,6 +65,9 @@ const DETAILS = [
 /**
  * Listings whose scan is known to fail, and the issue tracking each.
  *
+ * Empty, and that is the desired state — an entry here is a debt, not a
+ * configuration. The two it held were fixed in #2118.
+ *
  * ⚠️ `test.fail()`, not `test.skip()`. The test still runs; Playwright reports
  * **"Expected to fail, but passed"** the moment it stops failing, so a fix
  * turns CI red until its entry is removed here. A skip would let a fixed
@@ -72,10 +75,7 @@ const DETAILS = [
  *
  * @type {Map<string, string>}
  */
-const KNOWN_VIOLATIONS = new Map([
-    ['sermon listing', '#2118 — <dl> with no <dt>/<dd> pair (WCAG 2.1.3.1, level A)'],
-    ['latest sermons', '#2118 — <dl> with no <dt>/<dd> pair (WCAG 2.1.3.1, level A)'],
-]);
+const KNOWN_VIOLATIONS = new Map([]);
 
 test.describe('Site accessibility (WCAG 2.2 AA) @a11y', () => {
     for (const [label, view] of LISTINGS) {

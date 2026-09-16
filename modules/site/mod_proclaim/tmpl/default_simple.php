@@ -41,6 +41,15 @@ foreach ($list as $study) {
             echo $study->studytitle; ?>        </p>
     </div>
     <dl class="article-info text-muted">
+        <?php // ⚠️ A <dl> must open with a <dt>. This block was copied from Joomla's
+            // own info_block layout, which has one, and the <dt> did not come with
+            // it -- so assistive technology announced a definition list and then
+            // found no terms in it. WCAG 2.1.3.1, level A.
+            //
+            // visually-hidden rather than shown: core makes its equivalent optional
+            // because the heading is clutter for a sighted reader, and this layout
+            // has never displayed one. The term is for the screen reader. ?>
+        <dt class="article-info-term visually-hidden"><?php echo Text::_('JBS_CMN_INFO'); ?></dt>
 
         <dd class="createdby" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
             <span class="icon-user icon-fw" aria-hidden="true"></span>
