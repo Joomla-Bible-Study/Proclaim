@@ -251,6 +251,30 @@ jobs:
         # (#1309/#1310/#1331 guards) — build/test-install.sh, unchanged.
         run: composer test:install
 
+      - name: Accept the Proclaim licence for the disposable site
+        # Proclaim's admin dispatcher redirects every view and task to the
+        # licence screen until `license_accepted` is set, so on a site nobody
+        # has clicked through, every admin spec lands on the same page and
+        # fails looking for a field that is not there. That is what the first
+        # run of this matrix showed: ten of twelve failures, all of them this.
+        #
+        # Done here rather than in test-install.sh on purpose. `composer
+        # test:install` asserts what a *clean install* produces, and the gate
+        # standing in the way is part of that — auto-accepting inside the
+        # harness would hide a regression in the gate itself from the release
+        # check that exists to catch one. Accepting it is a test-harness
+        # action, so it lives with the test harness.
+        run: |
+          mysql -h 127.0.0.1 -u root -pjoomla_ci joomla_ci -e "
+            UPDATE jos_extensions
+               SET params = JSON_SET(IF(JSON_VALID(params), params, '{}'), '\$.license_accepted', '1')
+             WHERE type = 'component' AND element = 'com_proclaim';"
+          mysql -h 127.0.0.1 -u root -pjoomla_ci joomla_ci -N -e "
+            SELECT JSON_EXTRACT(params, '\$.license_accepted')
+              FROM jos_extensions
+             WHERE type = 'component' AND element = 'com_proclaim';" | grep -q '"1"' \
+            || { echo 'licence acceptance did not take'; exit 1; }
+
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
