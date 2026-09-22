@@ -142,8 +142,16 @@ class CwmmediafileModel extends AdminModel
             // Implode only if they selected at least one podcast. Otherwise, just clear the podcast_id field
             $data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(",", $data['podcast_id']);
 
-            $params = new Registry();
-            $params->loadArray($data['params']);
+            // Registry::loadArray() has a strict `array` type hint, so it throws
+            // a TypeError -- not an \Exception, and so invisible to every
+            // catch (\Exception) between here and the API dispatcher -- the
+            // moment $data['params'] is anything else. That happens on every
+            // API PATCH that omits params: the core ApiController backfills
+            // every unset column from the raw table row before this runs, and
+            // the stored params column is a JSON string, not a decoded array.
+            // The Registry constructor dispatches on the value's actual shape
+            // (array, JSON string, or empty), so it takes both cleanly.
+            $params = new Registry($data['params'] ?? []);
 
             $table = Factory::getApplication()->bootComponent('com_proclaim')
                 ->getMVCFactory()->createTable('Cwmserver', 'Administrator');
