@@ -2722,6 +2722,15 @@ class com_proclaimInstallerScript extends InstallerScript
                 $this->migratePodcastAlternateLinks();
             });
 
+            // Retire the alternate-link columns now platform_links has carried
+            // them. Carry any straggler first (idempotent), then drop --
+            // the drop cannot go in update SQL because that runs before this and
+            // would remove the columns before the carry could read them.
+            $this->step('Retire podcast alt links', '11.0.0', function () {
+                $this->migratePodcastAlternateLinks();
+                $this->dropPodcastAlternateColumns();
+            });
+
             // Legacy image field into podcastimage, where podcastimage is empty
             $this->step('Podcast images', '10.1.0', function () {
                 $this->migratePodcastImageField();
@@ -3623,6 +3632,42 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Drop the retired podcast alternate-link columns.
+     *
+     * Runs after migratePodcastAlternateLinks() has carried the data into
+     * platform_links. Done in PHP, one guarded ALTER per column, because
+     * DROP COLUMN is not idempotent and a re-run must not error.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function dropPodcastAlternateColumns(): void
+    {
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $table = $db->getPrefix() . 'bsms_podcast';
+
+            foreach (['alternatelink', 'alternateimage', 'alternatewords'] as $column) {
+                $query = $db->getQuery(true)
+                    ->select('COUNT(*)')
+                    ->from('INFORMATION_SCHEMA.COLUMNS')
+                    ->where('TABLE_SCHEMA = DATABASE()')
+                    ->where($db->quoteName('TABLE_NAME') . ' = ' . $db->quote($table))
+                    ->where($db->quoteName('COLUMN_NAME') . ' = ' . $db->quote($column));
+                $db->setQuery($query);
+
+                if ((int) $db->loadResult() > 0) {
+                    $db->setQuery('ALTER TABLE ' . $db->quoteName($table) . ' DROP COLUMN ' . $db->quoteName($column));
+                    $db->execute();
+                }
+            }
+        } catch (\Exception) {
+            // Non-fatal — column may already be gone
+        }
+    }
+
+    /**
      * Drop legacy/orphaned Proclaim tables that the current codebase no
      * longer references.
      *
@@ -3915,6 +3960,11 @@ class com_proclaimInstallerScript extends InstallerScript
             $db->setQuery($query);
 
             if ((int) $db->loadResult() === 0) {
+                return;
+            }
+
+            // Nothing to carry once the legacy column is gone (retired in 11.0).
+            if (!CwmdbHelper::columnExists('#__bsms_podcast', 'alternatelink')) {
                 return;
             }
 
