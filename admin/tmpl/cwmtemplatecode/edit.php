@@ -44,6 +44,15 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
       method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
     <div class="main-card">
         <?php
+        // What is typed here becomes a PHP file the front end runs. Said at the
+        // point of editing, because the permission that allows it is an
+        // ordinary-looking Edit that a site may have delegated.
+        ?>
+        <div class="alert alert-warning d-flex align-items-start" role="alert">
+            <span class="icon-warning-2 me-2 mt-1" aria-hidden="true"></span>
+            <div><?php echo Text::_('JBS_TPLCODE_EXECUTES_WARNING'); ?></div>
+        </div>
+        <?php
         echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>
 
         <?php
