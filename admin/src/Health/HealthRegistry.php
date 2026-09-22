@@ -34,6 +34,7 @@ use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedPodcastCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedStorageCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\RecentBackupCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\RestrictedMediaCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\SchemaorgContextCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SchemaVersionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SetupChecklistCheck;
@@ -85,6 +86,7 @@ final class HealthRegistry
             new TemplateCodeCssCheck(),
             new DebugModeCheck(),
             new OrphanMediaServerCheck(),
+            new SchemaorgContextCheck(),
             new TmpPathCheck(),
             new TemplateCodeFileCheck(),
             new RecentBackupCheck(),
