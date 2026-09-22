@@ -298,10 +298,6 @@
                min="0" max="20"
                buttons="add,remove,move" />
 
-        <!-- Legacy alternate link fields — hidden for migration, remove in 11.0 -->
-        <field name="alternatelink" type="hidden" filter="string"/>
-        <field name="alternateimage" type="hidden"/>
-        <field name="alternatewords" type="hidden"/>
 
         <!-- Legacy image — hidden, superseded by podcastimage. Dead but kept:
              a historical MODIFY on the column blocks a clean ChangeSet drop. -->

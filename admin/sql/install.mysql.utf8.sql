@@ -294,13 +294,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     `detailstemplateid`       INT(11)                   DEFAULT NULL,
     `asset_id`                INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `access`                  INT(10) UNSIGNED NOT NULL DEFAULT '1',
-    `alternatelink`           VARCHAR(300)              DEFAULT NULL COMMENT 'replaces podcast file link on subscription',
-    `alternateimage`          VARCHAR(150)              DEFAULT NULL COMMENT 'alternate image path for podcast',
     `platform_links`          TEXT                      DEFAULT NULL,
     `podcast_subscribe_show`  INT(3)                    DEFAULT NULL,
     `podcast_image_subscribe` VARCHAR(255)              DEFAULT NULL COMMENT 'The image to use for the podcast subscription image',
     `podcast_subscribe_desc`  VARCHAR(150)              DEFAULT NULL COMMENT 'Words to go below podcast subscribe image',
-    `alternatewords`          VARCHAR(20)               DEFAULT NULL,
     `linktype`                INT(10)          NOT NULL DEFAULT '0',
     `itunes_category`         VARCHAR(100)     NOT NULL DEFAULT 'Religion & Spirituality',
     `itunes_subcategory`      VARCHAR(100)     NOT NULL DEFAULT 'Christianity',
@@ -825,8 +822,8 @@ VALUES (1, 'Sunday', 'sunday', 1, 7482, 1, 1, NULL);
 -- Dump of table #__bsms_podcast
 -- ------------------------------------------------------------
 
-INSERT IGNORE INTO `#__bsms_podcast` (`id`, `title`, `website`, `podcastlink`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`, `alternatelink`, `alternateimage`, `podcast_subscribe_show`, `podcast_image_subscribe`, `podcast_subscribe_desc`, `alternatewords`, `linktype`)
-VALUES (1, 'My Podcast', 'www.mywebsite.com', 'www.mywebsite.com/PodcastController.php', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com', 50, 1, 0, '', 1, 7483, 1, '', '', 0, '', '', '', 0);
+INSERT IGNORE INTO `#__bsms_podcast` (`id`, `title`, `website`, `podcastlink`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`, `podcast_subscribe_show`, `podcast_image_subscribe`, `podcast_subscribe_desc`, `linktype`)
+VALUES (1, 'My Podcast', 'www.mywebsite.com', 'www.mywebsite.com/PodcastController.php', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com', 50, 1, 0, '', 1, 7483, 1, 0, '', '', 0);
 
 -- Dump of table #__bsms_series
 -- ------------------------------------------------------------

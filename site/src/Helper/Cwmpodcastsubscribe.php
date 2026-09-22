@@ -63,15 +63,6 @@ class Cwmpodcastsubscribe
                 default => $this->buildStandardPodcast($podcast),
             };
 
-            // Fallback to legacy alternate link if no platform_links
-            if (
-                ($podcastshow === 3 || $podcastshow === 4)
-                && empty($podcast->platform_links)
-                && !empty($podcast->alternatelink)
-            ) {
-                $links .= $this->buildAlternatePodcast($podcast);
-            }
-
             $title = htmlspecialchars($podcast->title, ENT_QUOTES, 'UTF-8');
 
             $cards .= '<div class="pcell">'
@@ -246,38 +237,4 @@ class Cwmpodcastsubscribe
         return $html;
     }
 
-    /**
-     * Build Alternate Podcast link (legacy fallback)
-     *
-     * Uses a custom image badge when configured; otherwise detects the
-     * service from the URL and renders the appropriate FontAwesome icon.
-     *
-     * @param   object  $podcast  Podcast info
-     *
-     * @return string
-     *
-     * @since    7.1
-     *
-     * @deprecated 10.1.0  Use buildPlatformLinks() instead. Will be removed in 11.0.
-     */
-    public function buildAlternatePodcast(object $podcast): string
-    {
-        $link  = htmlspecialchars($podcast->alternatelink ?? '', ENT_QUOTES, 'UTF-8');
-        $words = htmlspecialchars($podcast->alternatewords ?? '', ENT_QUOTES, 'UTF-8');
-
-        if (!empty($podcast->alternateimage)) {
-            $image = $this->buildPodcastImage($podcast->alternateimage, $words);
-
-            if ($image) {
-                return '<a href="' . $link . '" class="podcast-badge">' . $image . '</a>';
-            }
-        }
-
-        $iconInfo = CwmpodcastPlatformHelper::detectPlatformByUrl($podcast->alternatelink ?? '');
-
-        return '<a href="' . $link . '">'
-            . '<i class="' . $iconInfo['icon'] . '" aria-hidden="true"></i> '
-            . ($words ?: $iconInfo['label'])
-            . '</a>';
-    }
 }

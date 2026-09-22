@@ -234,10 +234,16 @@ $EXPECTATIONS = [
     '11.0.0' => [
         'columnsAbsent' => [
             '#__bsms_podcast' => [
+                // The itunes:subtitle/keywords leftovers (#2157).
                 'subtitle',
                 'podcastsearch',
                 'episodesubtitle',
                 'customsubtitle',
+                // The alternate-link feature, carried into platform_links first
+                // by the postflight, then dropped (#2161).
+                'alternatelink',
+                'alternateimage',
+                'alternatewords',
             ],
         ],
         'schemaMin' => '11.0.0',

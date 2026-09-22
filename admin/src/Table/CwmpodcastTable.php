@@ -387,24 +387,6 @@ class CwmpodcastTable extends Table
     public ?int $access = null;
 
     /**
-     * Legacy alternate link — replaces the podcast file link on subscription.
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $alternatelink = null;
-
-    /**
-     * Legacy alternate image path for the podcast.
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $alternateimage = null;
-
-    /**
      * Platform links JSON (multi-platform subscription links)
      *
      * @var string|null
@@ -438,15 +420,6 @@ class CwmpodcastTable extends Table
      * @since 9.0.0
      */
     public ?string $podcast_subscribe_desc = null;
-
-    /**
-     * Legacy alternate link label words.
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $alternatewords = null;
 
     /**
      * Params
@@ -552,14 +525,6 @@ class CwmpodcastTable extends Table
                         );
                     }
                 }
-            }
-        }
-
-        // Auto-prepend https:// to URL fields missing a schema
-        // website uses type="url" (Joomla handles validation), podcastlink stores menu item IDs
-        foreach (['alternatelink'] as $field) {
-            if (!empty($this->$field) && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $this->$field)) {
-                $this->$field = 'https://' . $this->$field;
             }
         }
 
