@@ -11,8 +11,8 @@
         "major": "11.0.0"
     },
     "active_development": {
-        "version": "10.7.2",
-        "description": "Use this for @since tags and migrations"
+        "version": "11.0.0",
+        "description": "Use this for @since tags and migrations (11.x line on 11.0.0-dev)"
     },
     "notes": {
         "patch": "Bug fixes only, no new features",
