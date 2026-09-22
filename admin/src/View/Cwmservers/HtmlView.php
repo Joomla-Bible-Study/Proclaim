@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmservers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmserversModel;
 use Joomla\CMS\Factory;
@@ -192,10 +193,26 @@ class HtmlView extends BaseHtmlView
             }
         }
 
+        // Trash lives inside the status dropdown above (as core does). At the
+        // top level only Empty Trash belongs, and only while the trash is what
+        // is on screen — a standalone Trash button here duplicated the one in
+        // the dropdown on every other filter.
         if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
             ToolbarHelper::deleteList('', 'cwmservers.delete', 'JTOOLBAR_EMPTY_TRASH');
-        } elseif ($this->canDo->get('core.delete')) {
-            ToolbarHelper::trash('cwmservers.trash');
+        }
+
+        // A direct path from where legacy servers are now visible (the Type
+        // column) to the migration wizard on the settings screen. Shown only
+        // when there is something to migrate.
+        if ($this->canDo->get('core.edit', 'com_proclaim')) {
+            $pending = CwmserverMigrationHelper::countPendingMigration();
+
+            if ($pending['servers'] > 0) {
+                $toolbar->linkButton('migrate-legacy', 'JBS_SVR_MIGRATE_LEGACY')
+                    ->url('index.php?option=com_proclaim&task=cwmadmin.edit&id=1#servermigration')
+                    ->icon('icon-refresh')
+                    ->buttonClass('btn btn-warning');
+            }
         }
 
         ToolbarHelper::help('servers', true);

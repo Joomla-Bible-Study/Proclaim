@@ -185,6 +185,17 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=' . $currentL
         echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
       class="form-validate" enctype="multipart/form-data">
     <div class="main-card">
+        <?php // An existing server still on the 9.x legacy type: say so where it
+              // is edited, not only on the list, and point at the wizard that
+              // fixes it. New records never carry a type yet, so skip them.
+        if (!$isNewRecord && strtolower((string) $this->item->type) === 'legacy') : ?>
+            <div class="alert alert-warning" role="alert">
+                <?php echo Text::_('JBS_SVR_TYPE_LEGACY_DEPRECATED'); ?>
+                <a class="alert-link" href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1#servermigration'); ?>">
+                    <?php echo Text::_('JBS_SVR_MIGRATE_LEGACY'); ?>
+                </a>
+            </div>
+        <?php endif; ?>
         <?php echo $this->loadTemplate('tabset'); ?>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php
