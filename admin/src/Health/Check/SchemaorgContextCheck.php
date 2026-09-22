@@ -42,7 +42,7 @@ use Joomla\Database\ParameterType;
  * Reported rather than repaired. Which of the two rows is authoritative differs
  * per item, so merging them is a decision, not a rule.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 final class SchemaorgContextCheck implements HealthCheckInterface
 {
@@ -53,7 +53,7 @@ final class SchemaorgContextCheck implements HealthCheckInterface
      * to it. `SchemaorgContextCheckTest` fails if the two lists drift apart.
      *
      * @var    string[]
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private const NON_CANONICAL = [
         'com_proclaim.cwmteacher',
@@ -63,7 +63,7 @@ final class SchemaorgContextCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function getId(): string
     {
@@ -73,7 +73,7 @@ final class SchemaorgContextCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function getGroup(): HealthGroup
     {
@@ -83,7 +83,7 @@ final class SchemaorgContextCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function getTitle(): string
     {
@@ -93,7 +93,7 @@ final class SchemaorgContextCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function isPassive(): bool
     {
@@ -103,7 +103,7 @@ final class SchemaorgContextCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function run(): HealthResult
     {

@@ -10,7 +10,7 @@
  * everything, which is how the panel opens — the filter is opt-in and nothing
  * is hidden until somebody asks for it.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 document.addEventListener('DOMContentLoaded', () => {

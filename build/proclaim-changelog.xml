@@ -19,6 +19,94 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.7.1                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.7.1</version>
+        <date>2026-09-22</date>
+        <note>
+            <item>Your AI provider API key, if you use the AI assistant.</item>
+            <item>Server Test API credentials, including the YouTube Data API key and the</item>
+            <item>The Layout Editor tab showed a Joomla error page instead of the editor.</item>
+            <item>Two accessibility faults: the control panel and location wizard now meet the</item>
+            <item>Saving Administrative Settings removed every System Health finding you had</item>
+            <item>A save that fails validation repopulated the form from the stored record</item>
+            <item>The summary chips are now filters. Click *Needs attention* to see only what</item>
+            <item>A new check reports Schema.org records stored where the edit form cannot see</item>
+            <item>A new check reports which user groups can write template code, as above.</item>
+            <item>chore(deps-dev): bump the composer-minor-and-patch group with 2 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2023</item>
+            <item>chore(deps): cwm/build-tools 1.32.1 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2039</item>
+            <item>chore(deps-dev): bump the npm-minor-and-patch group with 5 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2024</item>
+            <item>ci: bump github/codeql-action from 4.37.8 to 4.37.9 in the actions-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2027</item>
+            <item>chore(deps): allow @parcel/watcher&#x27;s install script by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2040</item>
+            <item>fix(media): serve a file from protected storage instead of linking to it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2042</item>
+            <item>fix(wiki): derive the requirement columns instead of carrying them through by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2048</item>
+            <item>fix(media): stop repeating the site&#x27;s base path when a URL is mapped to disk by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2049</item>
+            <item>fix(health): look inside the protected folder, not just at its top level by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2051</item>
+            <item>fix(analytics): count a play or download only when the visitor may have it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2052</item>
+            <item>build: verify a site on the previous release is actually offered this one by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2053</item>
+            <item>test(health): run every passive check, instead of only reading them by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2054</item>
+            <item>feat(health): report unfinished setup steps, which dismissing the banner hid by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2055</item>
+            <item>chore(deps): refresh dev dependencies flagged by the weekly vendor check by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2056</item>
+            <item>chore(deps): pick up build-tools v1.33.0 before the next release runs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2057</item>
+            <item>fix(admin): remove the half-copied workflow branch, and the batch button it was hiding by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2058</item>
+            <item>feat(media): move a file into protected storage from inside Proclaim by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2059</item>
+            <item>fix(podcast): leave protected files out of the feed, and say so in System Health by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2060</item>
+            <item>feat(admin): make the restricted-media list explain why each file is on it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2062</item>
+            <item>refactor(query): build OR groups with the builder instead of typing brackets by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2063</item>
+            <item>refactor(query): phase 1 of the bind conversion — the four heaviest files by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2064</item>
+            <item>fix(admin): give the menu preset&#x27;s quicktasks their missing strings by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2065</item>
+            <item>chore(language): sync the six locales with this cycle&#x27;s new strings by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2066</item>
+            <item>feat(admin): swap server-type fields in place instead of reloading (#2037) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2067</item>
+            <item>refactor(query): whitelist ORDER BY columns instead of a no-op escape (#1994 phase 3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2069</item>
+            <item>refactor(query): bind the schema.org helper&#x27;s context/schema values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2070</item>
+            <item>refactor(query): bind the asset-lib&#x27;s convertible values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2071</item>
+            <item>refactor(query): bind the setup wizard&#x27;s params/type/menu values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2072</item>
+            <item>fix(stats): date-range filter used a non-existent column, + bind Cwmstats values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2073</item>
+            <item>refactor(query): bind the platform-stats sync&#x27;s values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2074</item>
+            <item>refactor(query): bind the location wizard&#x27;s params/rules values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2081</item>
+            <item>refactor(query): bind the guided-tour helper&#x27;s uid/title_key lookups (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2082</item>
+            <item>refactor(query): bind the YouTube addon&#x27;s params/tag values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2083</item>
+            <item>refactor(query): finish the Phase-1 builder value binds — the convertible tail (#1994) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2084</item>
+            <item>fix(admin,site): two runtime fatals from symbols that never resolve (#2075, #2076) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2085</item>
+            <item>fix(podcast): verify TLS on the enclosure probe (#2078) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2086</item>
+            <item>fix(admin): keep UTF-8 intact when trimming dangling separators (#2077) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2087</item>
+            <item>chore: clear the safe half of the Qodana housekeeping list (#2079) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2088</item>
+            <item>docs(claude-md): state the Joomla 5.4 floor instead of &#x27;Joomla 4+&#x27; by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2080</item>
+            <item>fix(site): drop the series dropdown that reads data the view never builds (#2079) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2090</item>
+            <item>chore: pin the scripture submodules to lib 1.1.21 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2091</item>
+            <item>chore: pin scripturelinks to the released 1.2.14 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2092</item>
+            <item>refactor(admin): send CwmadminController&#x27;s JSON through the shared trait (#2089) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2093</item>
+            <item>ci: run the PR checks on pull requests into main by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2095</item>
+            <item>chore(deps-dev): bump friendsofphp/php-cs-fixer from 3.95.24 to 3.95.25 in the composer-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2102</item>
+            <item>ci: bump github/codeql-action from 4.37.9 to 4.38.0 in the actions-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2104</item>
+            <item>chore(deps): bump the npm-minor-and-patch group across 1 directory with 6 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2105</item>
+            <item>Write template code layouts through one validated path by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2108</item>
+            <item>Stop a template code record overwriting a layout the package ships by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2111</item>
+            <item>Stop a template title choosing an export path or a download header by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2113</item>
+            <item>Stop sending the AI provider API key as a query parameter by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2115</item>
+            <item>Stop sending Test API credentials as query parameters by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2120</item>
+            <item>Run the E2E browser specs in CI, once per Joomla major by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2123</item>
+            <item>Make the nightly monitors able to report by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2124</item>
+            <item>Meet WCAG AA contrast on the control panel and location wizard by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2125</item>
+            <item>Give the article-info definition lists their missing term by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2126</item>
+            <item>Stop wrapping the item when loading template form data by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2128</item>
+            <item>ci: bump github/codeql-action from 4.38.0 to 4.38.1 in the actions-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2132</item>
+            <item>chore(deps-dev): bump the npm-minor-and-patch group with 4 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2131</item>
+            <item>Probe the swapped-in server region with Simple Mode off (#2121) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2133</item>
+            <item>Keep the params the settings form does not define (#2134) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2136</item>
+            <item>Read saved form data under the key the controller writes (#2127) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2137</item>
+            <item>Report Schema.org records the edit form cannot see (#2138) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2140</item>
+            <item>Take the teacher form&#x27;s fallback from getItem(), not the property it fills (#2139) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2141</item>
+            <item>Keep the evidence when an E2E test is flaky, and wait for the dialog&#x27;s document (#2122) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2142</item>
+            <item>Say what granting template-code edit actually grants (#2099) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2143</item>
+            <item>Let the System Health summary chips filter the report by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2144</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.7.0                                                   -->
     <!-- ============================================================ -->
     <changelog>
