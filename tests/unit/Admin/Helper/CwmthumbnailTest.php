@@ -72,4 +72,24 @@ class CwmthumbnailTest extends ProclaimTestCase
 
         $this->assertFalse($result);
     }
+
+    /**
+     * @return  void
+     */
+    #[\PHPUnit\Framework\Attributes\TestDox('JPEG output is named .jpg, not .jpeg')]
+    public function testJpegOutputIsNamedJpg(): void
+    {
+        $this->assertSame('jpg', Cwmthumbnail::extensionForType(IMAGETYPE_JPEG), 'Every other path writes .jpg; JPEG must match.');
+    }
+
+    /**
+     * @return  void
+     */
+    #[\PHPUnit\Framework\Attributes\TestDox('Other image types keep their own extension')]
+    public function testOtherTypesKeepTheirExtension(): void
+    {
+        $this->assertSame('png', Cwmthumbnail::extensionForType(IMAGETYPE_PNG));
+        $this->assertSame('gif', Cwmthumbnail::extensionForType(IMAGETYPE_GIF));
+        $this->assertSame('webp', Cwmthumbnail::extensionForType(IMAGETYPE_WEBP));
+    }
 }
