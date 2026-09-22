@@ -86,7 +86,7 @@ class CwmlocationModel extends AdminModel
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.location.data', []);
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmlocation.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

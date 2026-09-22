@@ -1229,7 +1229,7 @@ class CwmmessageModel extends AdminModel
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.message.data', []);
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmmessage.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

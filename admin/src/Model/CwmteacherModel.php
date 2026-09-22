@@ -631,7 +631,7 @@ class CwmteacherModel extends AdminModel
     protected function loadFormData(): mixed
     {
         // Check the session for previously entered form data.
-        $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', []);
+        $session = Factory::getApplication()->getUserState('com_proclaim.edit.cwmteacher.data', []);
         $data    = empty($session) ? $this->data : $session;
 
         // Auto-populate Schema.org defaults from teacher data.
