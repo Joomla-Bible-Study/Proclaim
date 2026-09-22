@@ -92,7 +92,7 @@ class CwmtopicModel extends AdminModel
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.topic.data', []);
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmtopic.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

@@ -199,7 +199,7 @@ class CwmtemplateModel extends AdminModel
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.template.data', []);
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmtemplate.data', []);
 
         if (empty($data)) {
             // ⚠️ The item itself, not `[$this->getItem()]`. Wrapped, Form::bind()

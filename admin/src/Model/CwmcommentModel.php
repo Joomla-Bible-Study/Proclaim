@@ -312,7 +312,7 @@ class CwmcommentModel extends AdminModel
      */
     protected function loadFormData(): object
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.comment.data', []);
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmcomment.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

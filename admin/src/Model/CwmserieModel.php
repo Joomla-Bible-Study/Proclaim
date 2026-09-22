@@ -605,7 +605,7 @@ class CwmserieModel extends AdminModel
     {
         // Check the session for previously entered form data.
         $app  = Factory::getApplication();
-        $data = $app->getUserState('com_proclaim.edit.serie.data', []);
+        $data = $app->getUserState('com_proclaim.edit.cwmserie.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
