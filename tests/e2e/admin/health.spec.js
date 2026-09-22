@@ -31,6 +31,55 @@ const CPANEL = '/administrator/index.php?option=com_proclaim&view=cwmcpanel';
 const panel = (page) => page.locator('.cwmadmin-panel').filter({ hasText: 'System Health' }).first();
 
 test.describe('System Health', () => {
+    test('the summary chips narrow the report, and put it back', async ({ page }) => {
+        await page.goto(ADMIN);
+
+        const rows = panel(page).locator('.js-health-row');
+        const reset = panel(page).locator('.js-health-filter-reset');
+
+        await expect(rows.first()).toBeVisible({ timeout: 20000 });
+
+        const total = await rows.count();
+
+        // Opens unfiltered: the filter is opt-in, so nothing is hidden and the
+        // reset control has nothing to offer yet.
+        expect(await rows.evaluateAll((els) => els.filter((el) => !el.hidden).length)).toBe(total);
+        await expect(reset).toBeHidden();
+
+        // ⚠️ Warning is the one status a healthy site can lack, so drive
+        // whichever chip is actually on the page rather than assuming one.
+        const chip = panel(page).locator('.js-health-filter').first();
+        const status = await chip.getAttribute('data-status');
+
+        await chip.click();
+        await expect(chip).toHaveAttribute('aria-pressed', 'true');
+
+        const shown = await rows.evaluateAll(
+            (els, want) => els.filter((el) => !el.hidden).map((el) => el.dataset.status)
+                .filter((s) => s !== want).length,
+            status
+        );
+
+        expect(shown).toBe(0);
+        expect(await rows.evaluateAll((els) => els.filter((el) => !el.hidden).length)).toBeGreaterThan(0);
+
+        // A heading left behind by its rows would read as an empty category.
+        const strandedGroups = await panel(page).locator('.js-health-group').evaluateAll(
+            (groups) => groups.filter(
+                (g) => !g.hidden && !Array.from(g.querySelectorAll('.js-health-row')).some((r) => !r.hidden)
+            ).length
+        );
+
+        expect(strandedGroups).toBe(0);
+
+        // Filtering is not a silent visual event.
+        await expect(panel(page).locator('.js-health-filter-status')).not.toBeEmpty();
+
+        await reset.click();
+        expect(await rows.evaluateAll((els) => els.filter((el) => !el.hidden).length)).toBe(total);
+        await expect(reset).toBeHidden();
+    });
+
     test('reports checks, including the ones that are passing', async ({ page }) => {
         await page.goto(ADMIN);
 

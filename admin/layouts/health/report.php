@@ -62,7 +62,13 @@ $taskLink = static fn(string $task, string $check): string => Route::_(
     <h3 class="tab-description"><?php echo Text::_('JBS_HEALTH_TITLE'); ?></h3>
     <p class="text-body-secondary"><?php echo Text::_('JBS_HEALTH_DESC'); ?></p>
 
-    <p class="mb-4 d-flex flex-wrap gap-2">
+    <?php // The summary chips double as the filter. They already carry the
+          // status names and counts, so a separate filter bar would say the
+          // same words twice. Pressing one narrows the list to that status;
+          // pressing none shows everything, which is how the panel opens. ?>
+    <div class="mb-4 d-flex flex-wrap gap-2 align-items-center js-health-filters"
+         role="group"
+         aria-label="<?php echo $e(Text::_('JBS_HEALTH_FILTER_GROUP_LABEL')); ?>">
         <?php foreach ([HealthStatus::Warning, HealthStatus::Notice, HealthStatus::Unknown, HealthStatus::Ok] as $status) :
             $count = (int) ($summary[$status->value] ?? 0);
 
@@ -71,15 +77,29 @@ $taskLink = static fn(string $task, string $check): string => Route::_(
                 continue;
             endif;
             ?>
-            <span class="badge bg-<?php echo $status->contextClass(); ?>">
+            <button type="button"
+                    class="badge bg-<?php echo $status->contextClass(); ?> border-0 js-health-filter"
+                    data-status="<?php echo $e($status->value); ?>"
+                    aria-pressed="false">
                 <?php echo Text::sprintf('JBS_HEALTH_SUMMARY_COUNT', $count, Text::_($status->labelKey())); ?>
-            </span>
+            </button>
         <?php endforeach; ?>
-    </p>
+
+        <button type="button" class="btn btn-sm btn-link p-0 ms-1 js-health-filter-reset" hidden>
+            <?php echo Text::_('JBS_HEALTH_FILTER_SHOW_ALL'); ?>
+        </button>
+    </div>
+
+    <?php // Announced on change so a filter is not a silent visual event. ?>
+    <p class="visually-hidden js-health-filter-status"
+       role="status"
+       aria-live="polite"
+       data-template="<?php echo $e(Text::_('JBS_HEALTH_FILTER_ANNOUNCE')); ?>"></p>
 
     <?php foreach ($report as $groupValue => $rows) :
         $group = HealthGroup::from($groupValue);
         ?>
+        <div class="js-health-group">
         <h4 class="h6 text-uppercase fw-bold health-section">
             <?php echo Text::_($group->labelKey()); ?>
         </h4>
@@ -89,7 +109,8 @@ $taskLink = static fn(string $task, string $check): string => Route::_(
                 $check  = $row['check'];
                 $result = $row['result'];
                 ?>
-                <li class="list-group-item bg-transparent px-0 py-2">
+                <li class="list-group-item bg-transparent px-0 py-2 js-health-row"
+                    data-status="<?php echo $e($result->status->value); ?>">
                     <div class="d-flex align-items-start gap-2 flex-wrap">
                         <?php // ⚠️ Inner flex must not wrap, so only the buttons drop to a
                               // second line and every title starts at the same edge.
@@ -151,5 +172,10 @@ $taskLink = static fn(string $task, string $check): string => Route::_(
                 </li>
             <?php endforeach; ?>
         </ul>
+        </div>
     <?php endforeach; ?>
+
+    <p class="text-body-secondary mt-3 mb-0 js-health-filter-empty" hidden>
+        <?php echo Text::_('JBS_HEALTH_FILTER_NONE_MATCH'); ?>
+    </p>
 </div>
