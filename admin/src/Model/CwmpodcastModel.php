@@ -101,7 +101,7 @@ class CwmpodcastModel extends AdminModel
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.podcast.data', []);
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmpodcast.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

@@ -128,4 +128,49 @@ class CwmmediaTest extends ProclaimTestCase
     {
         $this->assertSame('1', Cwmmedia::normalizeIconClass('1'));
     }
+
+    /**
+     * An unconfigured site must still get a download control.
+     *
+     * ⚠️ `download_use_button_icon` is not written by the installer, and the
+     * switch in downloadButton() only answers 2, 3 and 4. Returning null there
+     * produced `<a href="…"></a>` in the caller: zero-sized, so invisible to a
+     * mouse, and an unlabelled stop in the tab order for a keyboard.
+     *
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public function testDownloadButtonRendersWithoutAConfiguredStyle(): void
+    {
+        $helper = new Cwmmedia();
+
+        foreach ([[], ['download_use_button_icon' => ''], ['download_use_button_icon' => '0'], ['download_use_button_icon' => '1']] as $case) {
+            $markup = $helper->downloadButton(new \Joomla\Registry\Registry($case));
+
+            $this->assertNotNull($markup, 'An unset or unrecognised style must still render a control.');
+            $this->assertNotSame('', trim((string) $markup));
+            $this->assertStringContainsString('<span', (string) $markup);
+        }
+    }
+
+    /**
+     * The styles the settings form does offer keep rendering.
+     *
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public function testDownloadButtonStillHonoursTheConfiguredStyles(): void
+    {
+        $helper = new Cwmmedia();
+
+        foreach (['2' => '<button', '3' => '<button', '4' => '<span'] as $style => $expected) {
+            $markup = (string) $helper->downloadButton(
+                new \Joomla\Registry\Registry(['download_use_button_icon' => $style])
+            );
+
+            $this->assertStringContainsString($expected, $markup, "Style {$style} stopped rendering its own markup.");
+        }
+    }
 }

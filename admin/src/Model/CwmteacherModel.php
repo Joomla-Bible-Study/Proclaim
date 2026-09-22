@@ -631,8 +631,14 @@ class CwmteacherModel extends AdminModel
     protected function loadFormData(): mixed
     {
         // Check the session for previously entered form data.
-        $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', []);
-        $data    = empty($session) ? $this->data : $session;
+        $session = Factory::getApplication()->getUserState('com_proclaim.edit.cwmteacher.data', []);
+
+        // getItem(), not the $data property it fills. The property is only
+        // populated because getForm() calls getItem() before loading the form,
+        // and a typed property read before assignment is a fatal Error rather
+        // than a null -- a coupling to another method that nothing here states.
+        // getItem() returns the same cached value, so this costs no query.
+        $data = empty($session) ? $this->getItem() : $session;
 
         // Auto-populate Schema.org defaults from teacher data.
         // Always set defaults — Joomla's system plugin onContentPrepareData will

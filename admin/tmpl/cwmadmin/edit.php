@@ -34,6 +34,7 @@ $wa->useScript('keepalive')
     ->useScript('com_proclaim.csv-import')
     ->useScript('com_proclaim.server-migration')
     ->useScript('com_proclaim.admin-youtube-log')
+    ->useScript('com_proclaim.health-filter')
     ->useStyle('com_proclaim.general');
 
 // Auto-register all component language strings for JavaScript.

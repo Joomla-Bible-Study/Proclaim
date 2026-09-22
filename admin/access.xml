@@ -93,12 +93,21 @@
         <action name="core.edit.state" title="JACTION_EDITSTATE"/>
         <action name="core.edit.own" title="JACTION_EDITOWN"/>
     </section>
+    <!--
+        ⚠️ Template code is PHP that Proclaim writes into the site's layout
+        directories and the front end executes. The three actions that put a
+        file there are therefore equivalent to Super User, and say so here
+        rather than in a wiki page nobody reads while granting them.
+    -->
     <section name="templatecode">
-        <action name="core.create" title="JACTION_CREATE"/>
+        <action name="core.create" title="JBS_ACTION_TEMPLATECODE_CREATE"
+                description="JBS_ACTION_TEMPLATECODE_POWER_DESC"/>
         <action name="core.delete" title="JACTION_DELETE"/>
-        <action name="core.edit" title="JACTION_EDIT"/>
+        <action name="core.edit" title="JBS_ACTION_TEMPLATECODE_EDIT"
+                description="JBS_ACTION_TEMPLATECODE_POWER_DESC"/>
         <action name="core.edit.state" title="JACTION_EDITSTATE"/>
-        <action name="core.edit.own" title="JACTION_EDITOWN"/>
+        <action name="core.edit.own" title="JBS_ACTION_TEMPLATECODE_EDIT_OWN"
+                description="JBS_ACTION_TEMPLATECODE_POWER_DESC"/>
     </section>
     <section name="admin">
         <action name="core.edit" title="JACTION_EDIT"/>

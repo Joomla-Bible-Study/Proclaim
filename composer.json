@@ -86,7 +86,7 @@
     "roave/security-advisories": "dev-latest",
     "pdepend/pdepend": "^2.16",
     "phpmd/phpmd": "^2.15",
-    "cwm/build-tools": "^1.32",
+    "cwm/build-tools": "^1.34",
     "joomla/database": "^4.0",
     "joomla/registry": "^4.0",
     "joomla/di": "^4.0",
@@ -123,7 +123,7 @@
     }
   },
   "scripts": {
-    "test": "phpunit",
+    "test": "phpunit --exclude-group network",
     "test:unit": "phpunit --testsuite 'Asset Contract Tests,Query Contract Tests,Migration SQL Contract Tests,Repo Contract Tests,Language Contract Tests,Admin Field Tests,Admin Form Tests,Admin Helper Tests,Admin Health Tests,Admin Lib Tests,Admin Api Controller Tests,Admin Api View Tests,Admin Bible Tests,Admin Controller Tests,Admin View Tests,Admin Table Tests,Admin Model Tests,Site Helper Tests,Site Controller Tests,Site Model Tests,Site Bible Tests,Plugin Schemaorg Tests'",
     "test:integration": "phpunit --testsuite 'Integration Admin Helper Tests,Integration Admin Lib Tests,Integration Admin Table Tests,Integration Admin Model Tests,Integration Admin Addon Tests,Integration Site Model Tests,Integration Site Helper Tests'",
     "test:js": "npm test",

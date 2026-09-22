@@ -9,15 +9,40 @@ const { test, expect } = require('@playwright/test');
 
 const ADD = '/administrator/index.php?option=com_proclaim&task=cwmserver.add';
 const LIST = '/administrator/index.php?option=com_proclaim&view=cwmservers';
+const SETTINGS = '/administrator/index.php?option=com_proclaim&task=cwmadmin.edit&id=1';
 const NAME = 'zz e2e type-swap fixture';
 
 const FIELD = '.js-modal-content-select-field:has(#jform_type_id)';
+
+// The picker's iframe, once its own document has parsed.
+//
+// ⚠️ `expect(page.locator('joomla-dialog iframe')).toBeVisible()` proves the
+// iframe ELEMENT is visible in the parent. It says nothing about the document
+// inside, whose click handler is bound on DOMContentLoaded:
+//
+//     document.addEventListener('DOMContentLoaded', function () {
+//         document.addEventListener('click', ...);   // calls dialog.close()
+//     });
+//
+// A click landing before that has nothing listening, so the dialog never
+// closes and the wait for it to go has no cause to wait on. That is the shape
+// of the reported failure: the dialog stays open for the whole window rather
+// than closing slowly.
+async function dialogFrame(page) {
+    const handle = await page.locator('joomla-dialog iframe').elementHandle();
+    const frame  = await handle.contentFrame();
+
+    await frame.waitForLoadState('domcontentloaded');
+
+    return frame;
+}
 
 // Pick a type from the open dialog and wait for its addon fields to actually
 // land in the region — "region visible" alone is the empty shell before the
 // fetch resolves.
 async function pickType(page, key, addonField) {
-    const frame = page.frameLocator('joomla-dialog iframe');
+    const frame = await dialogFrame(page);
+
     await frame.locator(`[data-type-payload="${key}"]`).first().click();
     await expect(page.locator('joomla-dialog')).toHaveCount(0);
     await expect(page.locator(`#server-tabset-region [name="${addonField}"]`).first()).toBeAttached();
@@ -44,6 +69,51 @@ async function gotoList(page, url) {
             await page.waitForTimeout(500);
         }
     }
+}
+
+// Set Proclaim's Simple Mode and return the value as found, so a caller can
+// put the site back the way it was.
+//
+// Simple Mode drops every fieldset an addon marks simplemode="hide". YouTube
+// keeps its conditional fields and its media field in ones that are, so with
+// it on there is nothing for the widget probes below to bind to (#2121).
+//
+// Writes only when the value actually has to change. Saving this form rewrites
+// the whole settings row, and a run has no business doing that to a site that
+// is already configured the way the test needs; the no-change path leaves the
+// edit view by its own cancel task instead.
+async function setSimpleMode(page, value) {
+    await page.goto(SETTINGS, { waitUntil: 'domcontentloaded' });
+
+    // Both halves of the pair, exactly one of them selected: a positive signal
+    // that the settings form rendered at all. Reading :checked straight off a
+    // login page, or off a param stored as "" rather than "0"/"1", reports a
+    // selector that matched nothing instead of the reason it did not.
+    const radios = page.locator('input[name="jform[params][simple_mode]"]');
+    await expect(radios).toHaveCount(2);
+    await expect(radios.and(page.locator(':checked'))).toHaveCount(1);
+
+    const found = await radios.and(page.locator(':checked')).inputValue();
+
+    if (found === value) {
+        await page.evaluate(() => Joomla.submitbutton('cwmadmin.cancel'));
+        await page.waitForLoadState('networkidle');
+
+        return found;
+    }
+
+    await page.evaluate((v) => {
+        const radio = document.querySelector(`input[name="jform[params][simple_mode]"][value="${v}"]`);
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
+    }, value);
+
+    // save, not apply: nothing below needs the form left open.
+    await page.evaluate(() => Joomla.submitbutton('cwmadmin.save'));
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('#system-message-container')).toContainText(/saved/i);
+
+    return found;
 }
 
 test('picking a type swaps fields in place and preserves typed work', async ({ page }) => {
@@ -76,7 +146,8 @@ test('a failed swap rolls back and says nothing changed', async ({ page }) => {
     // Make the type fetch fail outright.
     await page.route('**/*cwmserver.typeFields*', (r) => r.fulfill({ status: 500, body: '' }));
 
-    const frame = page.frameLocator('joomla-dialog iframe');
+    const frame = await dialogFrame(page);
+
     await frame.locator('[data-type-payload="local"]').first().click();
     await expect(page.locator('joomla-dialog')).toHaveCount(0);
 
@@ -93,35 +164,50 @@ test("a swapped-in type's own field widgets come alive without a reload", async 
     // script (YouTube's Test API) all bind at page load. After an in-place
     // swap they must work anyway — see the view's asset pre-load and the
     // fragment script re-execution.
-    await page.goto(ADD, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('joomla-dialog iframe')).toBeVisible();
-    await pickType(page, 'local', 'jform[params][delete_files]');
-    await reopenPicker(page);
-    await pickType(page, 'youtube', 'jform[params][api_key]');
+    //
+    // Two of the three live in simplemode="hide" fieldsets, so this needs
+    // Simple Mode off to have anything to look at. Restore it either way:
+    // it is a site-wide setting, not this test's to leave changed.
+    const wasSimple = await setSimpleMode(page, '0');
 
-    const showon = '#server-tabset-region [data-showon]';
-    const groupDisplay = () => page.evaluate((s) => {
-        const el = document.querySelector(s);
-        return getComputedStyle(el.closest('.control-group') || el).display;
-    }, showon);
+    try {
+        await page.goto(ADD, { waitUntil: 'domcontentloaded' });
+        await expect(page.locator('joomla-dialog iframe')).toBeVisible();
+        await pickType(page, 'local', 'jform[params][delete_files]');
+        await reopenPicker(page);
+        await pickType(page, 'youtube', 'jform[params][api_key]');
 
-    // A live-event field is hidden until stream_mode is 'direct' — proof
-    // showon.js loaded and wired the swapped-in markup.
-    await expect.poll(groupDisplay).toBe('none');
-    await page.evaluate(() => {
-        const sm = document.querySelector('#server-tabset-region [name="jform[params][stream_mode]"]');
-        sm.value = 'direct';
-        sm.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-    await expect.poll(groupDisplay).not.toBe('none');
+        const showon = '#server-tabset-region [data-showon]';
+        const groupDisplay = () => page.evaluate((s) => {
+            const el = document.querySelector(s);
+            return getComputedStyle(el.closest('.control-group') || el).display;
+        }, showon);
 
-    // The media picker script is present for the swapped-in media field.
-    expect(await page.evaluate(() => [...document.scripts].some((s) => /joomla-field-media/.test(s.src)))).toBe(true);
+        // Assert the probe exists before reading through it: a region without
+        // a conditional field is a finding, and it should read as one rather
+        // than as a TypeError inside a page.evaluate (#2121).
+        await expect(page.locator(showon).first()).toBeAttached();
 
-    // The addon's inline Test API handler was re-executed: clicking it writes
-    // into its result area instead of doing nothing.
-    await page.evaluate(() => document.getElementById('youtube-test-api-btn').click());
-    await expect(page.locator('#youtube-test-api-result')).not.toBeEmpty();
+        // A live-event field is hidden until stream_mode is 'direct' — proof
+        // showon.js loaded and wired the swapped-in markup.
+        await expect.poll(groupDisplay).toBe('none');
+        await page.evaluate(() => {
+            const sm = document.querySelector('#server-tabset-region [name="jform[params][stream_mode]"]');
+            sm.value = 'direct';
+            sm.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        await expect.poll(groupDisplay).not.toBe('none');
+
+        // The media picker script is present for the swapped-in media field.
+        expect(await page.evaluate(() => [...document.scripts].some((s) => /joomla-field-media/.test(s.src)))).toBe(true);
+
+        // The addon's inline Test API handler was re-executed: clicking it writes
+        // into its result area instead of doing nothing.
+        await page.evaluate(() => document.getElementById('youtube-test-api-btn').click());
+        await expect(page.locator('#youtube-test-api-result')).not.toBeEmpty();
+    } finally {
+        await setSimpleMode(page, wasSimple);
+    }
 });
 
 test('the chosen type persists on save, then clean up', async ({ page }) => {

@@ -1,6 +1,6 @@
 {
   "name": "com_proclaim",
-  "version": "10.7.0",
+  "version": "10.7.1",
   "description": "CWM Proclaim - A Joomla! Extension for Church Media Management",
   "license": "GPL-2.0-or-later",
   "repository": {
@@ -13,20 +13,20 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@babel/core": "^8.0.1",
-    "@babel/preset-env": "^8.0.2",
+    "@babel/core": "^8.0.6",
+    "@babel/preset-env": "^8.0.6",
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "^1.63.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
     "@types/jest": "^30.0.0",
     "csso": "^5.0.5",
-    "eslint": "^10.9.1",
+    "eslint": "^10.10.0",
     "globals": "^17.11.0",
     "intl-tel-input": "^29.2.3",
-    "jest": "^30.5.0",
-    "jest-environment-jsdom": "^30.5.0",
-    "rollup": "^4.63.1",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
+    "rollup": "^4.63.2",
     "rollup-plugin-gzip": "^4.1.1",
     "sortablejs": "^1.15.7",
     "terser": "^5.51.2"
@@ -57,7 +57,7 @@
     "lint:js": "eslint --no-config-lookup -c eslint.config.mjs --max-warnings=0 ."
   },
   "dependencies": {
-    "@fancyapps/ui": "^6.1.11",
+    "@fancyapps/ui": "^6.1.15",
     "chart.js": "^4.5.1"
   },
   "overrides": {

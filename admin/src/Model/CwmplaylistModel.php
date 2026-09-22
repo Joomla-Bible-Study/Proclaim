@@ -125,7 +125,7 @@ class CwmplaylistModel extends AdminModel
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.playlist.data', []);
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmplaylist.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

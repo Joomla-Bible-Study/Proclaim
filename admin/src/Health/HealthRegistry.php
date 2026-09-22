@@ -34,12 +34,14 @@ use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedPodcastCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedStorageCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\RecentBackupCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\RestrictedMediaCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\SchemaorgContextCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SchemaVersionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SetupChecklistCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SimpleModeCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodeCssCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodeFileCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodePermissionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TmpPathCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\YoutubeQuotaCheck;
 use Joomla\CMS\Factory;
@@ -85,6 +87,8 @@ final class HealthRegistry
             new TemplateCodeCssCheck(),
             new DebugModeCheck(),
             new OrphanMediaServerCheck(),
+            new SchemaorgContextCheck(),
+            new TemplateCodePermissionCheck(),
             new TmpPathCheck(),
             new TemplateCodeFileCheck(),
             new RecentBackupCheck(),
