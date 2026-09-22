@@ -548,8 +548,8 @@ class Cwmthumbnail
             }
         }
 
-        // Get extension for output type
-        $extension = image_type_to_extension($outputType, false);
+        // Get extension for output type.
+        $extension = self::extensionForType($outputType);
 
         // Remove old extension and add new one
         $filenameBase  = pathinfo($filename, PATHINFO_FILENAME);
@@ -631,5 +631,26 @@ class Cwmthumbnail
         }
 
         return true;
+    }
+
+    /**
+     * The file extension for a GD image type constant.
+     *
+     * ⚠️ `image_type_to_extension()` returns "jpeg" for IMAGETYPE_JPEG, but
+     * every other thumbnail path here writes and looks for ".jpg". A JPEG
+     * thumbnail named ".jpeg" is then searched for as ".jpg" and reads as
+     * missing, so JPEG is canonicalised to "jpg".
+     *
+     * @param   int  $outputType  A GD IMAGETYPE_* constant.
+     *
+     * @return  string  The extension without a leading dot.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function extensionForType(int $outputType): string
+    {
+        return $outputType === IMAGETYPE_JPEG
+            ? 'jpg'
+            : image_type_to_extension($outputType, false);
     }
 }

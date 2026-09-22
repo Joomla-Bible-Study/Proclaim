@@ -1283,6 +1283,158 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Bring a site's stored upload policy up to date with the formats a media
+     * component must accept.
+     *
+     * Two gates decide an upload, both read from this component's own params:
+     * `upload_extensions` (the extension allow-list) and `upload_mime` (the MIME
+     * allow-list, checked when Check MIME is on). A format missing from either
+     * is rejected. A stored value overrides the config default and is never
+     * refreshed, so a site carried across an upgrade or a migration keeps
+     * whatever it had — which is why `.jpeg` and `.webp` uploads fail on old
+     * sites while working on a fresh install.
+     *
+     * This heals the stored value in place:
+     *   - jpg and jpeg are one format; if the list allows one it must allow the
+     *     other (canUpload matches the lower-cased file extension exactly, so a
+     *     list carrying only `JPG`/`JPEG` in upper case matches nothing).
+     *   - webp and avif are added to any list that already permits images.
+     *   - the matching image MIME types are added so the second gate agrees.
+     *
+     * Only image-permitting lists are touched, so an audio/video-only policy is
+     * left alone. Nothing is removed -- trimming obsolete entries is a separate,
+     * deliberate change.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function normaliseUploadMediaTypes(): void
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+
+        $params  = new \Joomla\Registry\Registry($db->setQuery($query)->loadResult() ?: '{}');
+        $changed = false;
+
+        // Extension gate. An empty stored list means "fall back to the
+        // built-in default", which already covers these formats, so leave it be.
+        $exts      = self::splitCsv((string) $params->get('upload_extensions', ''));
+        $augmented = self::augmentImageExtensions($exts);
+
+        if ($augmented !== $exts) {
+            $params->set('upload_extensions', implode(',', $augmented));
+            $changed = true;
+        }
+
+        // MIME gate -- kept in step with the image formats above.
+        $mimes    = self::splitCsv((string) $params->get('upload_mime', ''));
+        $augMimes = self::augmentImageMimes($mimes);
+
+        if ($augMimes !== $mimes) {
+            $params->set('upload_mime', implode(',', $augMimes));
+            $changed = true;
+        }
+
+        if (!$changed) {
+            return;
+        }
+
+        $update = $db->createQuery()
+            ->update($db->quoteName('#__extensions'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+        $db->setQuery($update)->execute();
+    }
+
+    /**
+     * Split a comma-separated list into trimmed, non-empty entries.
+     *
+     * @param   string  $csv  The stored comma-separated value.
+     *
+     * @return  string[]
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function splitCsv(string $csv): array
+    {
+        return array_values(array_filter(array_map('trim', explode(',', $csv)), static fn (string $v): bool => $v !== ''));
+    }
+
+    /**
+     * The extension list, with jpg/jpeg made equivalent and modern image
+     * formats added -- but only when it already permits images.
+     *
+     * jpg and jpeg are one format, so a list allowing either must allow both;
+     * canUpload matches the lower-cased file extension exactly, so the added
+     * tokens are lower case whatever case is already present. webp and avif are
+     * added because a current media component should accept them. An audio- or
+     * video-only list is returned unchanged, and nothing is ever removed.
+     *
+     * @param   string[]  $exts  The stored extension list.
+     *
+     * @return  string[]
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function augmentImageExtensions(array $exts): array
+    {
+        if ($exts === []) {
+            return $exts;
+        }
+
+        $lower = array_map('strtolower', $exts);
+
+        if (array_intersect(['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'avif'], $lower) === []) {
+            return $exts;
+        }
+
+        $add = [];
+
+        foreach (['jpg', 'jpeg', 'webp', 'avif'] as $ext) {
+            if (!\in_array($ext, $exts, true)) {
+                $add[] = $ext;
+            }
+        }
+
+        return array_merge($exts, $add);
+    }
+
+    /**
+     * The MIME list, with the image types that match augmentImageExtensions().
+     *
+     * An empty list is left empty; nothing is removed.
+     *
+     * @param   string[]  $mimes  The stored MIME list.
+     *
+     * @return  string[]
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function augmentImageMimes(array $mimes): array
+    {
+        if ($mimes === []) {
+            return $mimes;
+        }
+
+        $add = [];
+
+        foreach (['image/jpeg', 'image/webp', 'image/avif'] as $mime) {
+            if (!\in_array($mime, $mimes, true)) {
+                $add[] = $mime;
+            }
+        }
+
+        return array_merge($mimes, $add);
+    }
+
+
+    /**
      * Find the installation path for an extension
      *
      * @param   string  $src       The source directory
@@ -2192,6 +2344,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // The analytics aggregate key cannot be reworked in SQL at all; this is
         // where it is brought to its intended columns. No-op when already correct.
         $this->task('Analytics index', fn () => $this->reconcileAnalyticsAggregateIndex());
+        $this->task('Upload media types', fn () => $this->normaliseUploadMediaTypes());
 
         // Seeded on update as well as install: access.xml can gain a section in
         // any release, and a section with no asset is a permission the UI can
