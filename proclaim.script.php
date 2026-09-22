@@ -1452,6 +1452,108 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Drop the retired jwplayer_* params from the stored display settings.
+     *
+     * JW Player is no longer bundled, and the front end now reads the plain
+     * player_* keys. The four jwplayer_* keys the player still consulted are
+     * carried across to their player_* equivalent where that is unset, so a
+     * site that customised a JW Player value keeps it; the other ten keys are
+     * dropped outright. Operates on the #__bsms_admin singleton, where these
+     * settings live, and is a no-op once the keys are gone.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function migrateJwplayerParams(): void
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_admin'))
+            ->where($db->quoteName('id') . ' = 1');
+
+        $stored = $db->setQuery($query)->loadResult();
+
+        // No settings row yet (a fresh install seeds it without jwplayer_*).
+        if ($stored === null || $stored === '') {
+            return;
+        }
+
+        try {
+            $before = json_decode($stored, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            // A malformed params column is left for getAdmin()'s own repair path
+            // rather than rewritten blindly here.
+            return;
+        }
+
+        if (!\is_array($before)) {
+            return;
+        }
+
+        $after = self::stripJwplayerParams($before);
+
+        if ($after === $before) {
+            return;
+        }
+
+        try {
+            $encoded = json_encode($after, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            // Could not re-encode; leave the stored value alone rather than
+            // write an empty string over it.
+            return;
+        }
+
+        $update = $db->createQuery()
+            ->update($db->quoteName('#__bsms_admin'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($encoded))
+            ->where($db->quoteName('id') . ' = 1');
+        $db->setQuery($update)->execute();
+    }
+
+    /**
+     * Copy the read jwplayer_* values onto their player_* equivalents, then
+     * remove every jwplayer_* key.
+     *
+     * Pure so it can be tested without a database. The copy only fills a
+     * player_* key that is not already set, so an explicit player_* value wins
+     * and re-running the migration changes nothing.
+     *
+     * @param   array<string, mixed>  $params  The decoded display-settings params.
+     *
+     * @return  array<string, mixed>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function stripJwplayerParams(array $params): array
+    {
+        // The four keys the front end read, and the player_* key each fell
+        // through to.
+        $carryOver = [
+            'jwplayer_image'    => 'player_image',
+            'jwplayer_mute'     => 'player_mute',
+            'jwplayer_logo'     => 'player_logo',
+            'jwplayer_logolink' => 'player_logolink',
+        ];
+
+        foreach ($carryOver as $old => $new) {
+            if (\array_key_exists($old, $params) && !\array_key_exists($new, $params)) {
+                $params[$new] = $params[$old];
+            }
+        }
+
+        foreach (array_keys($params) as $key) {
+            if (str_starts_with((string) $key, 'jwplayer_')) {
+                unset($params[$key]);
+            }
+        }
+
+        return $params;
+    }
+
+    /**
      * Split a comma-separated list into trimmed, non-empty entries.
      *
      * @param   string  $csv  The stored comma-separated value.
@@ -2444,6 +2546,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // where it is brought to its intended columns. No-op when already correct.
         $this->task('Analytics index', fn () => $this->reconcileAnalyticsAggregateIndex());
         $this->task('Upload media types', fn () => $this->normaliseUploadMediaTypes());
+        $this->task('JW Player cleanup', fn () => $this->migrateJwplayerParams());
 
         // Seeded on update as well as install: access.xml can gain a section in
         // any release, and a section with no asset is a permission the UI can

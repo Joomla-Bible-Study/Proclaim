@@ -179,10 +179,6 @@ class CwmadminModel extends AdminModel
         // attaches metadata to the end. Then grab the URL from the array and save it.
         $image = HTMLHelper::cleanImageURL($params->get('media_image'));
         $params->set('media_image', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('jwplayer_logo'));
-        $params->set('jwplayer_logo', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('jwplayer_image'));
-        $params->set('jwplayer_image', $image->url);
         $image = HTMLHelper::cleanImageURL($params->get('default_study_image'));
         $params->set('default_study_image', $image->url);
         $image = HTMLHelper::cleanImageURL($params->get('default_showHide_image'));
