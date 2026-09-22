@@ -57,6 +57,14 @@ module.exports = defineConfig({
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
 
+        // ⚠️ on-first-retry, which is the only setting that catches a flake.
+        // A test that fails and then passes leaves the run green, so anything
+        // conditioned on failure keeps nothing — which is why the servertype
+        // dialog flake has been diagnosed from a five-line error excerpt and
+        // nothing else. A retry only happens in CI, so this costs local runs
+        // nothing and costs CI a trace only on a run that already misbehaved.
+        trace: 'on-first-retry',
+
         // Run new headless — real Chromium with no window — rather than
         // Playwright's default, which for `headless: true` is
         // chrome-headless-shell.
