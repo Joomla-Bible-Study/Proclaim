@@ -665,7 +665,7 @@ class Cwmmedia
                         break;
 
                     case 3: // Squeezebox view
-                        return $this->renderSB($media, $params, $player, $image, $path, true);
+                        return $this->renderSB($media, $params, $player, $image, $path);
 
                     case 1: // Popup window
                         CWMFancyBox::framework();
@@ -857,14 +857,13 @@ class Cwmmedia
     }
 
     /**
-     * Render Squeezebox
+     * Render the Fancybox (lightbox) popup for a media item.
      *
      * @param   object    $media   Media
      * @param   Registry  $params  Params.
      * @param   object    $player  Player settings
      * @param   string    $image   The image
      * @param   string    $path    The path to the media
-     * @param   bool      $direct  If coming from Direct
      *
      * @return string
      *
@@ -875,14 +874,9 @@ class Cwmmedia
         Registry $params,
         object $player,
         string $image,
-        string $path,
-        bool $direct = false
+        string $path
     ): string {
         CWMFancyBox::framework();
-
-        if ($player->player === '7' && !$direct) {
-            $player->playerheight = '40';
-        }
 
         if ($params->get('media_popout_yes', true)) {
             $popout = $params->get('media_popout_text', Text::_('JBS_CMN_POPOUT'));
