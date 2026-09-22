@@ -39,6 +39,14 @@ delegating this is deliberate, the finding can be dismissed.
   WCAG AA contrast requirement, and article information lists are marked up so a
   screen reader can read them.
 
+## The download button appears again
+
+On a site with Simple Mode switched off that had never chosen a download button
+style, the download control on a media file rendered as an empty link: nothing
+to click, and nothing a screen reader could announce. The style is not one the
+installer sets, so this was the state of any site that had not picked one
+deliberately. It now falls back to a labelled download icon.
+
 ## The admin no longer discards your work
 
 - **Saving Administrative Settings** removed every System Health finding you had

@@ -1082,7 +1082,14 @@ class Cwmmedia
         }
 
         if ($link_type > 0) {
-            $downloadLink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;id=' .
+            // ⚠️ aria-label on the anchor, not a title on whatever it wraps.
+            // The name of a link comes from its contents, and every branch here
+            // wraps an icon whose own title does not reliably become that name.
+            // Naming the anchor means no future change to the image can leave
+            // the link nameless again.
+            $downloadLink = '<a style="color: #5F5A58;" aria-label="'
+                . htmlspecialchars(Text::_('JBS_MED_DOWNLOAD'), ENT_QUOTES, 'UTF-8')
+                . '" href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;id=' .
                 $media->study_id . '&amp;mid=' . $media->id . '&amp;task=Cwmsermon.download">' . $download_image . '</a>';
 
             // Check to see if they want to use a popup
@@ -1091,7 +1098,9 @@ class Cwmmedia
             $opt   = $input->get('option');
 
             if (($opt === 'com_proclaim') && $params->get('useterms') > 0) {
-                $downloadLink = '<a style="color: #5F5A58;" href="#modal-test-modal" data-bs-toggle="modal"' .
+                $downloadLink = '<a style="color: #5F5A58;" aria-label="'
+                    . htmlspecialchars(Text::_('JBS_MED_DOWNLOAD'), ENT_QUOTES, 'UTF-8')
+                    . '" href="#modal-test-modal" data-bs-toggle="modal" ' .
                     'class="btn btn-default btn-small btn-sm">' . $download_image . '</a>';
                 $modalParams  = [
                     'title'       => Text::_('JBS_TERMS_TITLE'),
@@ -1129,7 +1138,6 @@ class Cwmmedia
     public function downloadButton(Registry $download): ?string
     {
 
-        $downloadImage = null;
         // btn-primary, not btn-outline-primary. Three things disagreed with that
         // outline default: the settings form offers only solid variants, so it
         // could not be chosen or restored; the setup wizard already writes
@@ -1144,6 +1152,16 @@ class Cwmmedia
         $button        = $download->get('download_button_type', 'btn-primary');
         $buttonText    = $download->get('download_button_text', 'Audio');
         $textSize      = $download->get('download_icon_text_size', '24');
+
+        // ⚠️ A rendered default, not null. The switch below only answers 2, 3
+        // and 4, and `download_use_button_icon` is not written by the installer
+        // -- so a site that never chose a style matched no case and this
+        // returned null. The caller wraps the result in an anchor, so that site
+        // served `<a href="…"></a>`: zero-sized, invisible to a mouse, and an
+        // unlabelled stop in the tab order for everyone else.
+        $downloadImage = '<span class="fa-solid fa-circle-chevron-down" title="'
+            . htmlspecialchars((string) $buttonText, ENT_QUOTES, 'UTF-8')
+            . '" style="font-size:' . $textSize . 'px;"></span>';
 
         if ($download->get('download_button_color')) {
             $color = 'style="background-color:' . $download->get('download_button_color') . ';"';
