@@ -300,7 +300,7 @@ class CwmtemplatesController extends AdminController
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     public static function exportDownloadName(int $id, ?string $title): string
     {
@@ -333,7 +333,7 @@ class CwmtemplatesController extends AdminController
      *
      * @throws  \Random\RandomException
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     public static function exportTempPath(): string
     {

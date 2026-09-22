@@ -39,7 +39,7 @@ use Joomla\Database\DatabaseInterface;
  * would be the worse failure. What is not acceptable is it being true without
  * anyone having decided it.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 final class TemplateCodePermissionCheck implements HealthCheckInterface
 {
@@ -50,7 +50,7 @@ final class TemplateCodePermissionCheck implements HealthCheckInterface
      * nothing. `core.edit.state` only publishes what already exists.
      *
      * @var    string[]
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private const WRITING_ACTIONS = ['core.create', 'core.edit', 'core.edit.own'];
 
@@ -58,14 +58,14 @@ final class TemplateCodePermissionCheck implements HealthCheckInterface
      * The asset the template-code section's rules hang on.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private const SECTION_ASSET = 'com_proclaim.templatecode';
 
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function getId(): string
     {
@@ -75,7 +75,7 @@ final class TemplateCodePermissionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function getGroup(): HealthGroup
     {
@@ -85,7 +85,7 @@ final class TemplateCodePermissionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function getTitle(): string
     {
@@ -95,7 +95,7 @@ final class TemplateCodePermissionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function isPassive(): bool
     {
@@ -105,7 +105,7 @@ final class TemplateCodePermissionCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public function run(): HealthResult
     {

@@ -163,7 +163,7 @@ class CwmadminModel extends AdminModel
      * The single `#__bsms_admin` row the component's settings live in.
      *
      * @var  int
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private const SETTINGS_ROW_ID = 1;
 
@@ -218,7 +218,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  array  The params array to store.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     private function paramsToStore(array $data): array
     {
@@ -266,7 +266,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  int
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     private static function settingsRowId(array $data): int
     {
@@ -284,7 +284,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  string[]  Bare field names, e.g. `simple_mode`.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     private static function formParamNames(Form $form): array
     {
@@ -307,7 +307,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     private static function mergeStoredParams(array $stored, array $submitted, array $formNames): array
     {

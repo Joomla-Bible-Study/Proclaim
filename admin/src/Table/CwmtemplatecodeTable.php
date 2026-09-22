@@ -183,7 +183,7 @@ class CwmtemplatecodeTable extends Table
      * direction.
      *
      * @var    array<int, array<int, string>>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public const array SHIPPED_LAYOUTS = [
         1 => ['formfooter', 'formheader', 'main', 'simple', 'simple2'],
@@ -205,7 +205,7 @@ class CwmtemplatecodeTable extends Table
      * this list is for.
      *
      * @var    array<int, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private const array RESERVED_FILENAMES = ['main', 'simple', 'custom', 'formheader', 'formfooter'];
 
@@ -217,7 +217,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     public static function isShippedLayout(int $type, ?string $filename): bool
     {
@@ -232,7 +232,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     public static function isReservedFilename(int $type, ?string $filename): bool
     {
@@ -252,7 +252,7 @@ class CwmtemplatecodeTable extends Table
      * them would make an existing record unsavable without buying anything.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private const string FILENAME_PATTERN = '/^[A-Za-z0-9._-]+$/';
 
@@ -264,7 +264,7 @@ class CwmtemplatecodeTable extends Table
      * nothing at all, whatever the stored code happens to start with.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     public const string LAYOUT_GUARD = '<?php \defined(\'_JEXEC\') or die; ?>' . "\n";
 
@@ -275,7 +275,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     public static function isValidLayoutFilename(?string $filename): bool
     {
@@ -306,7 +306,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @return  string|null  Null for an unknown type or a filename that cannot be composed safely
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     public static function layoutPathForRecord(int $type, ?string $filename): ?string
     {
@@ -337,7 +337,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     public static function layoutFileContents(string $templateCode): string
     {
@@ -357,7 +357,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @return  bool  False if the path could not be composed or the write failed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     public static function writeLayout(int $type, ?string $filename, string $templateCode): bool
     {
@@ -434,12 +434,12 @@ class CwmtemplatecodeTable extends Table
      *
      * The test for "the user is editing something that already exists" rather
      * than creating a collision. Only the names added to the refusal list in
-     * __DEPLOY_VERSION__ can reach it: the five in RESERVED_FILENAMES have
+     * 10.7.1 can reach it: the five in RESERVED_FILENAMES have
      * always been refused, so no stored row can hold one.
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.1
      */
     private function keepsItsStoredFilename(): bool
     {
