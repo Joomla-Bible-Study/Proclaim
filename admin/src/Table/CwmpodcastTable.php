@@ -104,15 +104,6 @@ class CwmpodcastTable extends Table
     public ?string $description = null;
 
     /**
-     * Subtitle
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $subtitle = null;
-
-    /**
      * Image
      *
      * @var string|null
@@ -156,15 +147,6 @@ class CwmpodcastTable extends Table
      * @since 9.0.0
      */
     public ?string $podcastimage = null;
-
-    /**
-     * Podcast Search Words
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $podcastsearch = null;
 
     /**
      * File Name
@@ -237,24 +219,6 @@ class CwmpodcastTable extends Table
      * @since 9.0.0
      */
     public ?string $custom = null;
-
-    /**
-     * Details template ID
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $episodesubtitle = null;
-
-    /**
-     * Custom
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $customsubtitle = null;
 
     /**
      * Details template ID

@@ -19,8 +19,6 @@
                description="JBS_PDC_PODCAST_DESCRIPTION_DESC" height="200"
                buttons="true" filter="safehtml" required="true"/>
 
-        <!-- Legacy subtitle — hidden, deprecated by Apple in 2018 -->
-        <field name="subtitle" type="hidden"/>
 
         <field name="website" type="url" label="JBS_PDC_WEBSITE_URL"
                description="JBS_PDC_WEBSITE_URL_DESC"
@@ -44,8 +42,6 @@
         <field name="copyright" type="text" label="JBS_PDC_COPYRIGHT_HOLDER"
                description="JBS_PDC_COPYRIGHT_HOLDER_DESC" size="50"/>
 
-        <!-- Legacy podcastsearch — hidden, itunes:keywords deprecated by Apple in 2018 -->
-        <field name="podcastsearch" type="hidden"/>
 
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
                description="JBS_FLD_LOCATION_DESC" global="true">
@@ -242,8 +238,6 @@
         <field name="custom" type="Custom" codeset="podcast" input="textarea"
                label="JBS_CMN_CUSTOM" description="JBS_PDC_EPISODES_CUSTOM_DESC" cols="48" rows="2"/>
 
-        <!-- Legacy episodesubtitle — hidden, itunes:subtitle deprecated by Apple in 2018 -->
-        <field name="episodesubtitle" type="hidden"/>
 
         <field name="linktype" type="list" default="0"
                label="JBS_PDC_LINKTYPE" description="JBS_PDC_LINKTYPE_DESC">
@@ -252,8 +246,6 @@
             <option value="2">JBS_PDC_LINK_MEDIA_PLAYER</option>
         </field>
 
-        <!-- Legacy customsubtitle — hidden, itunes:subtitle deprecated by Apple in 2018 -->
-        <field name="customsubtitle" type="hidden"/>
 
         <!-- Podcasting 2.0 optional settings -->
         <field name="funding_url" type="url" label="JBS_PDC_FUNDING_URL"
@@ -311,7 +303,8 @@
         <field name="alternateimage" type="hidden"/>
         <field name="alternatewords" type="hidden"/>
 
-        <!-- Legacy image field — hidden for migration, remove in 11.0 -->
+        <!-- Legacy image — hidden, superseded by podcastimage. Dead but kept:
+             a historical MODIFY on the column blocks a clean ChangeSet drop. -->
         <field name="image" type="hidden"/>
 
         <field name="podcast_subscribe_show" type="list" default="1" label="JBS_PDC_PODCAST_SHOW"
