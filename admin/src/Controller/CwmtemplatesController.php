@@ -65,12 +65,54 @@ class CwmtemplatesController extends AdminController
      * @throws \Exception
      * @since 8.0
      */
+    /**
+     * Whether the current user may write or read template code, by the section
+     * permission that gates the template-code editor.
+     *
+     * Template code is PHP Proclaim writes into the site and the front end runs.
+     * The direct editor requires `core.edit` on `com_proclaim.templatecode`
+     * (equivalent to Super User, per the template-code permission decision).
+     * Import and export must honour the same gate rather than the weaker
+     * `core.manage` that reaching this component requires. On refusal the caller
+     * is sent back to the list with the standard not-authorised message.
+     *
+     * @param   string  $action  `core.create` for import, `core.edit` for export.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function userCanWriteTemplateCode(string $action): bool
+    {
+        // $this->app is the controller's injected application, matching how
+        // core's own controllers (e.g. com_templates) authorise a task.
+        if ($this->app->getIdentity()->authorise($action, 'com_proclaim.templatecode')) {
+            return true;
+        }
+
+        $this->setRedirect(
+            'index.php?option=com_proclaim&view=cwmtemplates',
+            Text::_('JERROR_ALERTNOAUTHOR'),
+            'error'
+        );
+
+        return false;
+    }
+
     public function templateImport(): CwmtemplatesController|int
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
             $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', Text::_('JINVALID_TOKEN'), 'error');
 
+            return 0;
+        }
+
+        // Importing writes template code -- PHP the front end executes -- so it
+        // must require the same section permission as editing it directly, not
+        // merely backend access to the component. Without this, a user who
+        // cannot create template code in the editor could still do so by import.
+        if (!$this->userCanWriteTemplateCode('core.create')) {
             return 0;
         }
 
@@ -359,6 +401,12 @@ class CwmtemplatesController extends AdminController
         // Check for request forgeries.
         if (!Session::checkToken()) {
             throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
+
+        // Exporting discloses template code, so it needs the section's edit
+        // permission -- backend access to the component is not enough.
+        if (!$this->userCanWriteTemplateCode('core.edit')) {
+            return false;
         }
 
         $input          = $this->input;
