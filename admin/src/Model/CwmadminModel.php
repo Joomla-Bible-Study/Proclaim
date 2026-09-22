@@ -24,6 +24,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -158,10 +159,18 @@ class CwmadminModel extends AdminModel
         'gdpr_mode',
     ];
 
+    /**
+     * The single `#__bsms_admin` row the component's settings live in.
+     *
+     * @var  int
+     * @since  __DEPLOY_VERSION__
+     */
+    private const SETTINGS_ROW_ID = 1;
+
     public function save($data): bool
     {
         $params = new Registry();
-        $params->loadArray($data['params']);
+        $params->loadArray($this->paramsToStore($data));
 
         // Intercept scripture settings and redirect them to the plugin params
         $this->saveScriptureParams($params);
@@ -190,6 +199,121 @@ class CwmadminModel extends AdminModel
         $data['params'] = $params->toArray();
 
         return parent::save($data);
+    }
+
+    /**
+     * The params to persist: everything submitted, plus the stored keys the
+     * form does not define.
+     *
+     * A save re-serialises the whole `#__bsms_admin.params` column, so a key
+     * the form never renders is lost unless it is carried across. `health_quiet`
+     * -- the map of dismissed System Health findings that HealthQuietStore
+     * writes -- is one of those, and a dismissal has to outlive a settings save.
+     *
+     * The form is the authority on what a submission can express. A key it
+     * defines comes from the submission alone, so emptying a `multiple` field,
+     * which posts no key at all, still clears it.
+     *
+     * @param   array  $data  The form data.
+     *
+     * @return  array  The params array to store.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function paramsToStore(array $data): array
+    {
+        $submitted = (array) ($data['params'] ?? []);
+
+        // A fresh Table instance -- getTable() calls _createTable() every time --
+        // so reading here cannot disturb the one parent::save() binds and stores.
+        $table = $this->getTable();
+
+        if (!$table->load(self::settingsRowId($data))) {
+            return $submitted;
+        }
+
+        // The form the controller already validated this submission against,
+        // not a new one: loadForm() caches by a signature that deliberately
+        // excludes load_data, and FormController::save() calls getForm() before
+        // it calls save(). That matters -- a plugin that adds or removes a
+        // field in onContentPrepareForm changed what the submission could
+        // express, and this has to judge it by the same form.
+        $form = $this->getForm([], false);
+
+        // Without the form there is no way to tell a key nobody edited from one
+        // the user cleared, and carrying everything across would make the
+        // clearable fields unclearable. Prefer the old behaviour to that.
+        if (!$form instanceof Form) {
+            return $submitted;
+        }
+
+        return self::mergeStoredParams(
+            (new Registry($table->params))->toArray(),
+            $submitted,
+            self::formParamNames($form)
+        );
+    }
+
+    /**
+     * The row the settings live in.
+     *
+     * ⚠️ The edit form posts an empty `id`, so the submitted value cannot be
+     * relied on. `#__bsms_admin` holds one row and the rest of the component
+     * addresses it by number -- `Cwmparams::getAdmin()`, `HealthQuietStore`
+     * and the dashboard's notice toggle all read and write `id = 1`.
+     *
+     * @param   array  $data  The form data.
+     *
+     * @return  int
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function settingsRowId(array $data): int
+    {
+        return (int) ($data['id'] ?? 0) ?: self::SETTINGS_ROW_ID;
+    }
+
+    /**
+     * The bare param names the settings form defines.
+     *
+     * ⚠️ `Form::getGroup()` keys its return by the field *id* (`jform_params_x`),
+     * not by name, so the keys are not usable here -- read `fieldname` off each
+     * field instead.
+     *
+     * @param   Form  $form  The settings form.
+     *
+     * @return  string[]  Bare field names, e.g. `simple_mode`.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function formParamNames(Form $form): array
+    {
+        $names = [];
+
+        foreach ($form->getGroup('params') as $field) {
+            $names[] = $field->fieldname;
+        }
+
+        return $names;
+    }
+
+    /**
+     * Submitted params laid over the stored ones, minus every stored key the
+     * form defines.
+     *
+     * @param   array     $stored     Params currently in the column.
+     * @param   array     $submitted  Params from the form.
+     * @param   string[]  $formNames  Bare names the form defines.
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function mergeStoredParams(array $stored, array $submitted, array $formNames): array
+    {
+        // array_replace, not array_merge: merge renumbers numeric-string keys
+        // instead of overwriting them.
+        return array_replace(array_diff_key($stored, array_flip($formNames)), $submitted);
     }
 
     /**
