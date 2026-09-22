@@ -867,7 +867,6 @@ class Cwmmedia
      * @param   bool      $direct  If coming from Direct
      *
      * @return string
-     * @deprecated 10.0.0 - jwplayer_image, jwplayer_mute, jwplayer_logo, jwplayer_logolink
      *
      * @since 9.1.2
      */
@@ -902,12 +901,15 @@ class Cwmmedia
             return $addon->renderFancyboxLink($path, $params, $media->id, $image, $headerText, $footerText);
         }
 
-        // Player attributes - jwplayer_* params are deprecated, kept for backward compatibility
-        // These are now handled by the Fancybox player (see media/js/fancybox.js)
-        $posterImage = $params->get('jwplayer_image', $params->get('player_image', ''));
-        $muteOnStart = $params->get('jwplayer_mute', $params->get('player_mute', 'false'));
-        $logoImage   = $params->get('jwplayer_logo', $params->get('player_logo', ''));
-        $logoLink    = $params->get('jwplayer_logolink', $params->get('player_logolink', Uri::base()));
+        // Player attributes read by the Fancybox player (see media/js/fancybox.js).
+        // These were the player_* fallbacks behind the retired jwplayer_* params;
+        // the install migration carries any customised jwplayer value across to
+        // the matching player_* key, so reading player_* directly here loses
+        // nothing while dropping the JW Player names.
+        $posterImage = $params->get('player_image', '');
+        $muteOnStart = $params->get('player_mute', 'false');
+        $logoImage   = $params->get('player_logo', '');
+        $logoLink    = $params->get('player_logolink', Uri::base());
 
         // href is the media itself, not a javascript: placeholder: Fancybox reads
         // data-src and intercepts the click, and without JS the file is still
