@@ -41,6 +41,9 @@ $this->getDocument()->addScriptOptions('csrf.token', \Joomla\CMS\Session\Session
 
 // Add layout editor assets
 $wa->useScript('bootstrap.modal')
+    // Element cards collapse their controls into a dropdown when the card is
+    // too narrow to show them inline.
+    ->useScript('bootstrap.dropdown')
     ->useScript('com_proclaim.sortable')
     ->useScript('com_proclaim.layout-editor')
     ->useStyle('com_proclaim.layout-editor');
@@ -297,7 +300,6 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <div class="row">
             <div class="col-lg-9">
                 <?php echo $this->form->renderField('title'); ?>
-                <?php echo $this->form->renderField('text'); ?>
                 <hr />
                 <h4><?php echo Text::_('JBS_TPL_CONTENT_SCOPE'); ?></h4>
                 <?php foreach ($this->form->getFieldset('CONTENT_SCOPE') as $field) :

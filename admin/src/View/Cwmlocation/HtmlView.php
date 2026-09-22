@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
@@ -139,28 +140,43 @@ class HtmlView extends BaseHtmlView
             'home home'
         );
 
+        $toolbar = $this->getDocument()->getToolbar();
+
         if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
-            ToolbarHelper::apply('cwmlocation.apply');
-            ToolbarHelper::save('cwmlocation.save');
-            ToolbarHelper::save2new('cwmlocation.save2new');
-            ToolbarHelper::cancel('cwmlocation.cancel');
-        } else {
-            if ($this->canDo->get('core.edit', 'com_proclaim')) {
-                ToolbarHelper::apply('cwmlocation.apply');
-                ToolbarHelper::save('cwmlocation.save');
+            $toolbar->apply('cwmlocation.apply');
 
-                // We can save this record, but check the create permission to see if we can return to make a new one.
-                if ($this->canDo->get('core.create', 'com_proclaim')) {
-                    ToolbarHelper::save2new('cwmlocation.save2new');
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) {
+                    $childBar->save('cwmlocation.save');
+                    $childBar->save2new('cwmlocation.save2new');
                 }
+            );
+
+            $toolbar->cancel('cwmlocation.cancel');
+        } else {
+            $canDo = $this->canDo;
+
+            if ($canDo->get('core.edit', 'com_proclaim')) {
+                $toolbar->apply('cwmlocation.apply');
             }
 
-            // If checked out, we can still save
-            if ($this->canDo->get('core.create', 'com_proclaim')) {
-                ToolbarHelper::save2copy('cwmlocation.save2copy');
-            }
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) use ($canDo) {
+                    if ($canDo->get('core.edit', 'com_proclaim')) {
+                        $childBar->save('cwmlocation.save');
 
-            ToolbarHelper::cancel('cwmlocation.cancel', 'JTOOLBAR_CLOSE');
+                        if ($canDo->get('core.create', 'com_proclaim')) {
+                            $childBar->save2new('cwmlocation.save2new');
+                        }
+                    }
+
+                    if ($canDo->get('core.create', 'com_proclaim')) {
+                        $childBar->save2copy('cwmlocation.save2copy');
+                    }
+                }
+            );
+
+            $toolbar->cancel('cwmlocation.cancel', 'JTOOLBAR_CLOSE');
         }
 
         ToolbarHelper::divider();

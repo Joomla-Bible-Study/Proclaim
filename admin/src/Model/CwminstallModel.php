@@ -50,7 +50,7 @@ class CwminstallModel extends ListModel
      *
      * Kept identical to the `<server>` in build/pkg_proclaim.xml.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     private const PACKAGE_UPDATE_STREAM = 'https://www.christianwebministries.org/index.php'
         . '?option=com_ars&view=update&task=stream&format=xml&id=1&dummy=extension.xml';
@@ -1028,7 +1028,14 @@ class CwminstallModel extends ListModel
                 $conditions = CwmmigrationHelper::rmoldurl();
                 $query      = $this->getDatabase()->createQuery();
                 $query->delete($this->getDatabase()->quoteName('#__update_sites'));
-                $query->where('(' . implode(' OR ', $conditions) . ')');
+                // The first arm seeds the WHERE that orWhere() extends —
+                // extendWhere() rewrites an existing clause and fatals on none.
+                // rmoldurl() returns a fixed non-empty list.
+                $query->where(array_shift($conditions));
+
+                if ($conditions !== []) {
+                    $query->orWhere($conditions, 'OR');
+                }
                 $this->getDatabase()->setQuery($query);
                 $this->getDatabase()->execute();
                 $this->running = 'Remove Old Update URL\'s';
@@ -1093,7 +1100,7 @@ class CwminstallModel extends ListModel
      *
      * @return  string  Progress label for the installer UI
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.10
      */
     private function setComponentUpdateSite(): string
     {
@@ -1178,7 +1185,7 @@ class CwminstallModel extends ListModel
      *
      * @return  int[]  Update site ids
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.10
      */
     private function updateSitesFor(int $extensionId): array
     {

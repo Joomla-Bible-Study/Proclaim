@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 use Joomla\Registry\Registry;
@@ -133,6 +134,7 @@ class CwmmediafilesModel extends ListModel
         $id .= ':' . serialize($this->getState('filter.access'));
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.mediaYears');
+        $id .= ':' . $this->getState('filter.restricted');
         $id .= ':' . serialize($this->getState('filter.study_id'));
         $id .= ':' . $this->getState('filter.language');
 
@@ -265,11 +267,26 @@ class CwmmediafilesModel extends ListModel
             $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('mediafile.language')
         );
 
-        // Join over the studies
+        // Join over the studies. The access level comes along because a media
+        // file inherits its visibility from its message, so the row cannot
+        // explain why a visitor is refused without it — the media's own level
+        // often reads Public while the message is what restricts.
         $query->select($db->quoteName('study.studytitle', 'studytitle'));
+        $query->select($db->quoteName('study.access', 'study_access'));
         $query->join(
             'LEFT',
             $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('mediafile.study_id')
+        );
+
+        // Join over the series, through the study. Only the restricted filter
+        // reads it, but a media file inherits its visibility from the series as
+        // well as the study, so a predicate that omits it would miss files
+        // restricted only at that level.
+        $query->select($db->quoteName('series.access', 'series_access'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_series', 'series') . ' ON '
+            . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id')
         );
 
         // Join over servers
@@ -293,6 +310,30 @@ class CwmmediafilesModel extends ListModel
                 'LEFT',
                 $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('mediafile.checked_out')
             );
+
+        // Show only media a guest cannot already see.
+        //
+        // ⚠️ The set the protected-storage and restricted-media findings are
+        // about. Their exact reachability test needs each file's resolved URL
+        // and cannot be written in SQL, but the restriction half can — and when
+        // the protected folder is being served, every restricted file is
+        // reachable, so this is the list worth acting on. Without it a finding
+        // that names a handful of files sends the administrator into thousands.
+        if ((int) $this->getState('filter.restricted') === 1) {
+            $guest  = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
+            $levels = array_map('intval', $guest->getAuthorisedViewLevels() ?: [0]);
+            $list   = implode(',', $levels) ?: '0';
+
+            // One bracketed group: where() glues with AND and adds no brackets,
+            // so a top-level OR would bind looser than every condition already
+            // added. Written inline because WhereClauseContractTest reads the
+            // argument at the call site.
+            $query->where(
+                '(' . $db->quoteName('mediafile.access') . ' NOT IN (' . $list . ')'
+                . ' OR ' . $db->quoteName('study.access') . ' NOT IN (' . $list . ')'
+                . ' OR ' . $db->quoteName('series.access') . ' NOT IN (' . $list . '))'
+            );
+        }
 
         // Filter by published state
         $published = $this->getState('filter.published');
@@ -365,9 +406,14 @@ class CwmmediafilesModel extends ListModel
                 ->bind(':language', $language);
         }
 
-        // Add the list ordering clause
+        // Add the list ordering clause. list.ordering is whitelisted against
+        // filter_fields in populateState(), so $orderCol is a known column;
+        // the remaps below turn a few of them into the composite sort the grid
+        // needs, built only from constants. Only an explicit DESC stays
+        // descending — an empty direction sorts ascending, as the previous
+        // unquoted clause did implicitly.
         $orderCol  = $this->state->get('list.ordering', 'mediafile.createdate');
-        $orderDirn = $this->state->get('list.direction', 'DESC');
+        $orderDirn = strtoupper((string) $this->state->get('list.direction', 'DESC')) === 'DESC' ? 'DESC' : 'ASC';
 
         // Sqlsrv change
         if ($orderCol === 'study_id') {
@@ -390,7 +436,7 @@ class CwmmediafilesModel extends ListModel
             $orderCol = 'mediafile.study_id ' . $orderDirn . ', mediafile.ordering';
         }
 
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        $query->order($orderCol . ' ' . $orderDirn);
 
         return $query;
     }

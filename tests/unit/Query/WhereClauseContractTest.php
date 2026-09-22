@@ -232,4 +232,100 @@ class WhereClauseContractTest extends TestCase
             . implode("\n", $offenders)
         );
     }
+
+    /**
+     * Conditions handed to where() as a variable, with the reason each is safe.
+     *
+     * ⚠️ Keep this list short. An entry means the OR check above cannot see
+     * that call at all, so its correctness rests on this note rather than on a
+     * test.
+     *
+     * @var array<string, string>
+     * @since __DEPLOY_VERSION__
+     */
+    private const UNVERIFIABLE_WHERE = [
+        'CwmarchiveModel.php:105' => 'One-element array holding a single date comparison; no OR to bracket.',
+        'CwmarchiveModel.php:120' => 'One-element array holding a single date comparison; no OR to bracket.',
+    ];
+
+    /**
+     * ⚠️ The OR check reconstructs SQL from the literal argument at the call
+     * site, so `->where($conditions)` reconstructs to nothing and is skipped —
+     * silently, and reported as clean.
+     *
+     * Found in #1985: with the predicate assembled into a variable first,
+     * removing its brackets still passed. Moved inline, the identical edit
+     * failed at that file and line.
+     *
+     * Flagging the shape rather than teaching the detector to follow variables:
+     * there are two of these, both wanting no OR anyway, so the cost of
+     * refusing the shape is nearly nothing and the rule is easy to state.
+     *
+     * @return  void
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox('no where() is handed conditions the OR check cannot read')]
+    public function testNoWhereIsGivenAnUnreadableArgument(): void
+    {
+        $offenders = [];
+        $seen      = 0;
+
+        foreach (self::sourceFiles() as $path) {
+            foreach (explode("\n", (string) file_get_contents($path)) as $n => $line) {
+                if (!preg_match('/->(where|having)\s*\(\s*\$[a-zA-Z_][a-zA-Z0-9_]*\s*\)/', $line)) {
+                    continue;
+                }
+
+                $seen++;
+                $key = basename($path) . ':' . ($n + 1);
+
+                if (isset(self::UNVERIFIABLE_WHERE[$key])) {
+                    continue;
+                }
+
+                $offenders[] = \sprintf('%s  %s', $key, trim($line));
+            }
+        }
+
+        $this->assertGreaterThan(
+            0,
+            $seen,
+            'No where($variable) calls were found at all — the scan is not reading the source.'
+        );
+
+        $this->assertSame(
+            [],
+            $offenders,
+            "where(\$variable) hides the condition from the unbracketed-OR check above, which reads the\n"
+            . "literal argument at the call site. Write the condition inline, or use andWhere()/orWhere()\n"
+            . "so the builder does the bracketing, or add the line to self::UNVERIFIABLE_WHERE with the\n"
+            . 'reason it holds no OR.' . "\n\n" . implode("\n", $offenders)
+        );
+    }
+
+    #[TestDox('the unreadable-argument list only names lines that still look that way')]
+    public function testUnverifiableEntriesAreStillAccurate(): void
+    {
+        foreach (self::UNVERIFIABLE_WHERE as $key => $why) {
+            [$file, $line] = explode(':', $key);
+
+            $match = null;
+
+            foreach (self::sourceFiles() as $path) {
+                if (basename($path) === $file) {
+                    $match = explode("\n", (string) file_get_contents($path))[(int) $line - 1] ?? null;
+
+                    break;
+                }
+            }
+
+            $this->assertNotNull($match, $key . ' is exempted but the file or line is gone.');
+
+            $this->assertMatchesRegularExpression(
+                '/->(where|having)\s*\(\s*\$[a-zA-Z_][a-zA-Z0-9_]*\s*\)/',
+                (string) $match,
+                $key . ' no longer passes a variable to where(), so the exemption is stale. Remove it: ' . $why
+            );
+        }
+    }
 }

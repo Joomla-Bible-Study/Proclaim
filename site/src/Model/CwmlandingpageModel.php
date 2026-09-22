@@ -17,12 +17,8 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Database\DatabaseQuery;
-use Joomla\Database\ParameterType;
-use Joomla\Registry\Registry;
 
 /**
  * Model class for LandingPage
@@ -74,9 +70,6 @@ class CwmlandingpageModel extends ListModel
      */
     protected function populateState($ordering = null, $direction = null): void
     {
-        $order = $this->getUserStateFromRequest($this->context . '.filter.order', 'filter_orders');
-        $this->setState('filter.order', $order);
-
         // Load the parameters.
         $template = Cwmparams::getTemplateparams();
         $admin    = Cwmparams::getAdmin();
@@ -104,105 +97,5 @@ class CwmlandingpageModel extends ListModel
         $this->setState('filter.show_archived', $showArchived);
 
         parent::populateState('s.studydate', 'DESC');
-    }
-
-    /**
-     * Method to get a JDatabaseQuery object for retrieving the data set from a database.
-     *
-     * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
-     *
-     * @throws \Exception
-     * @since   11.1
-     */
-    protected function getListQuery(): DatabaseQuery
-    {
-        $db              = $this->getDatabase();
-        $query           = $db->createQuery();
-        $template_params = Cwmparams::getTemplateparams();
-        $t_params        = $template_params->params;
-
-        // Load the parameters. Merge Global and Menu Item params into new object
-        $app = Factory::getApplication();
-        /** @var Registry $params */
-        $params = $app->getParams();
-        $this->setState('params', $params);
-        $menuparams = new Registry();
-        $menu       = $app->getMenu()->getActive();
-
-        if ($menu) {
-            $menuparams->loadString($menu->params);
-        }
-
-        $query->select($db->quoteName('s.id'));
-        $query->from($db->quoteName('#__bsms_studies', 's'));
-        $query->select(
-            $db->quoteName(['t.id', 't.teachername', 't.title', 't.language'], ['tid', 'teachertitle', null, null])
-        );
-        $query->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
-            . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
-            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0');
-        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
-            . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'));
-        $query->select(
-            $db->quoteName(
-                ['se.id', 'se.series_text', 'se.description', 'se.series_thumbnail'],
-                ['sid', null, 'sdescription', null]
-            )
-        );
-        $query->join('LEFT', $db->quoteName('#__bsms_series', 'se') . ' ON ' . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id'));
-        $query->select($db->quoteName(['m.id', 'm.message_type'], ['mid', null]));
-        $query->join('LEFT', $db->quoteName('#__bsms_message_type', 'm') . ' ON ' . $db->quoteName('s.messagetype') . ' = ' . $db->quoteName('m.id'));
-        $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('st.topic_id') . ')');
-        $query->join('LEFT', $db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id'));
-        $query->select(
-            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.id') . '), ' .
-            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.topic_text') . ') as topics_text, ' .
-            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.params') . ')'
-        );
-        $query->join('LEFT', $db->quoteName('#__bsms_topics', 'tp') . ' ON ' . $db->quoteName('tp.id') . ' = ' . $db->quoteName('st.topic_id'));
-        $query->select($db->quoteName(['l.id', 'l.location_text'], ['lid', null]));
-        $query->join('LEFT', $db->quoteName('#__bsms_locations', 'l') . ' ON ' . $db->quoteName('s.location_id') . ' = ' . $db->quoteName('l.id'));
-
-        $rightnow = (new Date())->toSql();
-
-        // Filter by published state based on show_archived parameter
-        $showArchived = $this->getState('filter.show_archived', '0');
-        switch ($showArchived) {
-            case '1': // Archived only
-                $archived = 2;
-                $query->where($db->quoteName('s.published') . ' = :published')
-                    ->bind(':published', $archived, ParameterType::INTEGER);
-                break;
-            case '2': // Both published and archived
-                $query->whereIn($db->quoteName('s.published'), [1, 2]);
-                break;
-            default: // Published only (backward compatible)
-                $published = 1;
-                $query->where($db->quoteName('s.published') . ' = :published')
-                    ->bind(':published', $published, ParameterType::INTEGER);
-                break;
-        }
-
-        $query->where($db->quoteName('s.studydate') . ' <= :rightnow')
-            ->bind(':rightnow', $rightnow, ParameterType::STRING);
-
-        // Order by order filter
-        $orderparam = $params->get('default_order');
-
-        if (empty($orderparam)) {
-            $orderparam = $t_params->get('default_order', '1');
-        }
-
-        $order = ($orderparam == 2) ? 'ASC' : 'DESC';
-
-        $orderstate = $this->getState('filter.order');
-
-        if (!empty($orderstate)) {
-            $order = $orderstate;
-        }
-
-        $query->order($db->quoteName('studydate') . ' ' . $db->escape($order));
-
-        return $query;
     }
 }

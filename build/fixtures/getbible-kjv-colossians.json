@@ -1,0 +1,306 @@
+{
+  "_comment": "Real GetBible v2 responses, captured once so tests never call the API. Refresh with: php build/seed-scripture-fixture.php --refresh",
+  "_source": "https://query.getbible.net/v2/kjv/<reference>",
+  "_captured": "2026-09-15",
+  "translation": "kjv",
+  "book": 51,
+  "book_name": "Colossians",
+  "responses": {
+    "Colossians 3:1-25": {
+      "kjv_51_3": {
+        "translation": "King James Version",
+        "abbreviation": "kjv",
+        "lang": "en",
+        "language": "English",
+        "direction": "LTR",
+        "encoding": "UTF-8",
+        "book_nr": 51,
+        "book_name": "Colossians",
+        "chapter": 3,
+        "name": "Colossians 3",
+        "ref": [
+          "Colossians 3:1-25"
+        ],
+        "verses": [
+          {
+            "chapter": 3,
+            "verse": 1,
+            "name": "Colossians 3:1",
+            "text": "If ye then be risen with Christ, seek those things which are above, where Christ sitteth on the right hand of God."
+          },
+          {
+            "chapter": 3,
+            "verse": 2,
+            "name": "Colossians 3:2",
+            "text": "Set your affection on things above, not on things on the earth."
+          },
+          {
+            "chapter": 3,
+            "verse": 3,
+            "name": "Colossians 3:3",
+            "text": "For ye are dead, and your life is hid with Christ in God."
+          },
+          {
+            "chapter": 3,
+            "verse": 4,
+            "name": "Colossians 3:4",
+            "text": "When Christ, who is our life, shall appear, then shall ye also appear with him in glory."
+          },
+          {
+            "chapter": 3,
+            "verse": 5,
+            "name": "Colossians 3:5",
+            "text": "Mortify therefore your members which are upon the earth; fornication, uncleanness, inordinate affection, evil concupiscence, and covetousness, which is idolatry:"
+          },
+          {
+            "chapter": 3,
+            "verse": 6,
+            "name": "Colossians 3:6",
+            "text": "For which things’ sake the wrath of God cometh on the children of disobedience:"
+          },
+          {
+            "chapter": 3,
+            "verse": 7,
+            "name": "Colossians 3:7",
+            "text": "In the which ye also walked some time, when ye lived in them."
+          },
+          {
+            "chapter": 3,
+            "verse": 8,
+            "name": "Colossians 3:8",
+            "text": "But now ye also put off all these; anger, wrath, malice, blasphemy, filthy communication out of your mouth."
+          },
+          {
+            "chapter": 3,
+            "verse": 9,
+            "name": "Colossians 3:9",
+            "text": "Lie not one to another, seeing that ye have put off the old man with his deeds;"
+          },
+          {
+            "chapter": 3,
+            "verse": 10,
+            "name": "Colossians 3:10",
+            "text": "And have put on the new man, which is renewed in knowledge after the image of him that created him:"
+          },
+          {
+            "chapter": 3,
+            "verse": 11,
+            "name": "Colossians 3:11",
+            "text": "Where there is neither Greek nor Jew, circumcision nor uncircumcision, Barbarian, Scythian, bond nor free: but Christ is all, and in all."
+          },
+          {
+            "chapter": 3,
+            "verse": 12,
+            "name": "Colossians 3:12",
+            "text": "Put on therefore, as the elect of God, holy and beloved, bowels of mercies, kindness, humbleness of mind, meekness, longsuffering;"
+          },
+          {
+            "chapter": 3,
+            "verse": 13,
+            "name": "Colossians 3:13",
+            "text": "Forbearing one another, and forgiving one another, if any man have a quarrel against any: even as Christ forgave you, so also do ye."
+          },
+          {
+            "chapter": 3,
+            "verse": 14,
+            "name": "Colossians 3:14",
+            "text": "And above all these things put on charity, which is the bond of perfectness."
+          },
+          {
+            "chapter": 3,
+            "verse": 15,
+            "name": "Colossians 3:15",
+            "text": "And let the peace of God rule in your hearts, to the which also ye are called in one body; and be ye thankful."
+          },
+          {
+            "chapter": 3,
+            "verse": 16,
+            "name": "Colossians 3:16",
+            "text": "Let the word of Christ dwell in you richly in all wisdom; teaching and admonishing one another in psalms and hymns and spiritual songs, singing with grace in your hearts to the Lord."
+          },
+          {
+            "chapter": 3,
+            "verse": 17,
+            "name": "Colossians 3:17",
+            "text": "And whatsoever ye do in word or deed, do all in the name of the Lord Jesus, giving thanks to God and the Father by him."
+          },
+          {
+            "chapter": 3,
+            "verse": 18,
+            "name": "Colossians 3:18",
+            "text": "Wives, submit yourselves unto your own husbands, as it is fit in the Lord."
+          },
+          {
+            "chapter": 3,
+            "verse": 19,
+            "name": "Colossians 3:19",
+            "text": "Husbands, love your wives, and be not bitter against them."
+          },
+          {
+            "chapter": 3,
+            "verse": 20,
+            "name": "Colossians 3:20",
+            "text": "Children, obey your parents in all things: for this is well pleasing unto the Lord."
+          },
+          {
+            "chapter": 3,
+            "verse": 21,
+            "name": "Colossians 3:21",
+            "text": "Fathers, provoke not your children to anger, lest they be discouraged."
+          },
+          {
+            "chapter": 3,
+            "verse": 22,
+            "name": "Colossians 3:22",
+            "text": "Servants, obey in all things your masters according to the flesh; not with eyeservice, as menpleasers; but in singleness of heart, fearing God:"
+          },
+          {
+            "chapter": 3,
+            "verse": 23,
+            "name": "Colossians 3:23",
+            "text": "And whatsoever ye do, do it heartily, as to the Lord, and not unto men;"
+          },
+          {
+            "chapter": 3,
+            "verse": 24,
+            "name": "Colossians 3:24",
+            "text": "Knowing that of the Lord ye shall receive the reward of the inheritance: for ye serve the Lord Christ."
+          },
+          {
+            "chapter": 3,
+            "verse": 25,
+            "name": "Colossians 3:25",
+            "text": "But he that doeth wrong shall receive for the wrong which he hath done: and there is no respect of persons. "
+          }
+        ]
+      }
+    },
+    "Colossians 4:1-18": {
+      "kjv_51_4": {
+        "translation": "King James Version",
+        "abbreviation": "kjv",
+        "lang": "en",
+        "language": "English",
+        "direction": "LTR",
+        "encoding": "UTF-8",
+        "book_nr": 51,
+        "book_name": "Colossians",
+        "chapter": 4,
+        "name": "Colossians 4",
+        "ref": [
+          "Colossians 4:1-18"
+        ],
+        "verses": [
+          {
+            "chapter": 4,
+            "verse": 1,
+            "name": "Colossians 4:1",
+            "text": "Masters, give unto your servants that which is just and equal; knowing that ye also have a Master in heaven."
+          },
+          {
+            "chapter": 4,
+            "verse": 2,
+            "name": "Colossians 4:2",
+            "text": "Continue in prayer, and watch in the same with thanksgiving;"
+          },
+          {
+            "chapter": 4,
+            "verse": 3,
+            "name": "Colossians 4:3",
+            "text": "Withal praying also for us, that God would open unto us a door of utterance, to speak the mystery of Christ, for which I am also in bonds:"
+          },
+          {
+            "chapter": 4,
+            "verse": 4,
+            "name": "Colossians 4:4",
+            "text": "That I may make it manifest, as I ought to speak."
+          },
+          {
+            "chapter": 4,
+            "verse": 5,
+            "name": "Colossians 4:5",
+            "text": "Walk in wisdom toward them that are without, redeeming the time."
+          },
+          {
+            "chapter": 4,
+            "verse": 6,
+            "name": "Colossians 4:6",
+            "text": "Let your speech be alway with grace, seasoned with salt, that ye may know how ye ought to answer every man."
+          },
+          {
+            "chapter": 4,
+            "verse": 7,
+            "name": "Colossians 4:7",
+            "text": "All my state shall Tychicus declare unto you, who is a beloved brother, and a faithful minister and fellowservant in the Lord:"
+          },
+          {
+            "chapter": 4,
+            "verse": 8,
+            "name": "Colossians 4:8",
+            "text": "Whom I have sent unto you for the same purpose, that he might know your estate, and comfort your hearts;"
+          },
+          {
+            "chapter": 4,
+            "verse": 9,
+            "name": "Colossians 4:9",
+            "text": "With Onesimus, a faithful and beloved brother, who is one of you. They shall make known unto you all things which are done here."
+          },
+          {
+            "chapter": 4,
+            "verse": 10,
+            "name": "Colossians 4:10",
+            "text": "Aristarchus my fellowprisoner saluteth you, and Marcus, sister’s son to Barnabas, (touching whom ye received commandments: if he come unto you, receive him;)"
+          },
+          {
+            "chapter": 4,
+            "verse": 11,
+            "name": "Colossians 4:11",
+            "text": "And Jesus, which is called Justus, who are of the circumcision. These only are my fellowworkers unto the kingdom of God, which have been a comfort unto me."
+          },
+          {
+            "chapter": 4,
+            "verse": 12,
+            "name": "Colossians 4:12",
+            "text": "Epaphras, who is one of you, a servant of Christ, saluteth you, always labouring fervently for you in prayers, that ye may stand perfect and complete in all the will of God."
+          },
+          {
+            "chapter": 4,
+            "verse": 13,
+            "name": "Colossians 4:13",
+            "text": "For I bear him record, that he hath a great zeal for you, and them that are in Laodicea, and them in Hierapolis."
+          },
+          {
+            "chapter": 4,
+            "verse": 14,
+            "name": "Colossians 4:14",
+            "text": "Luke, the beloved physician, and Demas, greet you."
+          },
+          {
+            "chapter": 4,
+            "verse": 15,
+            "name": "Colossians 4:15",
+            "text": "Salute the brethren which are in Laodicea, and Nymphas, and the church which is in his house."
+          },
+          {
+            "chapter": 4,
+            "verse": 16,
+            "name": "Colossians 4:16",
+            "text": "And when this epistle is read among you, cause that it be read also in the church of the Laodiceans; and that ye likewise read the epistle from Laodicea."
+          },
+          {
+            "chapter": 4,
+            "verse": 17,
+            "name": "Colossians 4:17",
+            "text": "And say to Archippus, Take heed to the ministry which thou hast received in the Lord, that thou fulfil it."
+          },
+          {
+            "chapter": 4,
+            "verse": 18,
+            "name": "Colossians 4:18",
+            "text": "The salutation by the hand of me Paul. Remember my bonds. Grace be with you. Amen.  Written from Rome to the Colossians by Tychicus and Onesimus. "
+          }
+        ]
+      }
+    }
+  }
+}

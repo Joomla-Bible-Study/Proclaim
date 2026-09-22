@@ -15,11 +15,13 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
 
@@ -125,14 +127,27 @@ class CwmImageMigration
      *
      * @param   string  $type  Record type: 'studies', 'teachers', or 'series'
      *
+     * @param   string  $type            Record type: 'studies', 'teachers' or 'series'
+     * @param   bool    $excludeTrashed  Skip records in the trash
+     *
      * @return  array  Records with images not in the new folder structure
      *
      * @since 10.1.0
      */
-    public static function getRecordsNeedingMigration(string $type): array
+    public static function getRecordsNeedingMigration(string $type, bool $excludeTrashed = false): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();
+
+        // ⚠️ Defaults to including trashed records, and the migration tools rely
+        // on that. A trashed record can be restored, and if its legacy image
+        // path was never migrated it comes back pointing at a file that has
+        // moved. Only the reporting side passes true: a record in the trash is
+        // not work anyone needs to be told about.
+        //
+        // The condition is repeated inline in each branch rather than built
+        // into a variable, because WhereClauseContractTest reads the literal
+        // argument at the call site and cannot verify a variable holds no OR.
 
         // SQL exclusion for core component images
         $coreExclude = ' NOT LIKE ' . $db->q('media/com_proclaim/images/%');
@@ -150,6 +165,12 @@ class CwmImageMigration
                     ->where('LENGTH(' . $col . ') > 1')
                     ->where($col . ' NOT LIKE ' . $db->q('images/biblestudy/studies/%-%/%'))
                     ->where($col . $coreExclude);
+
+                if ($excludeTrashed) {
+                    $query->where(
+                        $db->quoteName('published') . ' <> ' . ProclaimComponent::CONDITION_TRASHED
+                    );
+                }
                 break;
 
             case 'teachers':
@@ -166,6 +187,12 @@ class CwmImageMigration
                     ->where('LENGTH(' . $col . ') > 1')
                     ->where($col . ' NOT LIKE ' . $db->q('images/biblestudy/teachers/%-%/%'))
                     ->where($col . $coreExclude);
+
+                if ($excludeTrashed) {
+                    $query->where(
+                        $db->quoteName('published') . ' <> ' . ProclaimComponent::CONDITION_TRASHED
+                    );
+                }
                 break;
 
             case 'series':
@@ -180,6 +207,12 @@ class CwmImageMigration
                     ->where('LENGTH(' . $col . ') > 1')
                     ->where($col . ' NOT LIKE ' . $db->q('images/biblestudy/series/%-%/%'))
                     ->where($col . $coreExclude);
+
+                if ($excludeTrashed) {
+                    $query->where(
+                        $db->quoteName('published') . ' <> ' . ProclaimComponent::CONDITION_TRASHED
+                    );
+                }
                 break;
 
             default:
@@ -203,12 +236,12 @@ class CwmImageMigration
      *
      * @since 10.1.0
      */
-    public static function getMigrationCounts(): array
+    public static function getMigrationCounts(bool $excludeTrashed = false): array
     {
         $counts = [
-            'studies'  => \count(self::getRecordsNeedingMigration('studies')),
-            'teachers' => \count(self::getRecordsNeedingMigration('teachers')),
-            'series'   => \count(self::getRecordsNeedingMigration('series')),
+            'studies'  => \count(self::getRecordsNeedingMigration('studies', $excludeTrashed)),
+            'teachers' => \count(self::getRecordsNeedingMigration('teachers', $excludeTrashed)),
+            'series'   => \count(self::getRecordsNeedingMigration('series', $excludeTrashed)),
         ];
 
         $counts['total'] = $counts['studies'] + $counts['teachers'] + $counts['series'];
@@ -761,12 +794,12 @@ class CwmImageMigration
      *
      * @since 10.1.0
      */
-    public static function getUnresolvableRecords(): array
+    public static function getUnresolvableRecords(bool $excludeTrashed = false): array
     {
         $unresolvable = [];
 
         foreach (['studies', 'teachers', 'series'] as $type) {
-            $records = self::getRecordsNeedingMigration($type);
+            $records = self::getRecordsNeedingMigration($type, $excludeTrashed);
 
             foreach ($records as $row) {
                 $imagePath = trim($row->image_path ?? '');
@@ -2035,18 +2068,24 @@ class CwmImageMigration
     ): void {
         $coreLike = $db->quote(self::CORE_IMAGE_DIR . '/%');
 
-        $query->extendWhere(
-            'AND',
-            [
-                '(' . $db->quoteName($imageCol) . ' IS NOT NULL AND '
-                    . $db->quoteName($imageCol) . ' != ' . $db->quote('')
-                    . ' AND ' . $db->quoteName($imageCol) . ' NOT LIKE ' . $coreLike . ')',
-                '(' . $db->quoteName($thumbCol) . ' IS NOT NULL AND '
-                    . $db->quoteName($thumbCol) . ' != ' . $db->quote('')
-                    . ' AND ' . $db->quoteName($thumbCol) . ' NOT LIKE ' . $coreLike . ')',
-            ],
-            'OR'
-        );
+        $hasUserFile = static fn (string $column): string => '(' . $db->quoteName($column) . ' IS NOT NULL AND '
+            . $db->quoteName($column) . ' != ' . $db->quote('')
+            . ' AND ' . $db->quoteName($column) . ' NOT LIKE ' . $coreLike . ')';
+
+        // ⚠️ `where()`, not `extendWhere()`. extendWhere() rewrites an existing
+        // WHERE as a child of a new one -- it opens with
+        // `$this->where->setName()`, so on a query that has no WHERE yet it is
+        // a fatal on null. Every caller here builds select/from and nothing
+        // else, so all three fataled; the only one reachable from the UI sits
+        // behind a `catch (\Throwable)` that answers `total: 0`, which is why
+        // thumbnail regeneration has been reporting "nothing to do" instead of
+        // reporting an error.
+        //
+        // Bracketed into one condition rather than passed as an array with an
+        // OR glue: `where()` applies its glue to everything added afterwards,
+        // so an array-with-OR here would silently OR any later condition into
+        // this group instead of ANDing it.
+        $query->where('(' . $hasUserFile($imageCol) . ' OR ' . $hasUserFile($thumbCol) . ')');
     }
 
     /**
@@ -2166,13 +2205,16 @@ class CwmImageMigration
                 // Update DB columns
                 $update = $db->createQuery()
                     ->update($db->quoteName($cfg['table']))
-                    ->set($db->quoteName($imageCol) . ' = ' . $db->quote($imageRelPath))
-                    ->set($db->quoteName($thumbCol) . ' = ' . $db->quote($thumbRelPath))
-                    ->where($db->quoteName('id') . ' = ' . (int) $record->id);
+                    ->set($db->quoteName($imageCol) . ' = :imageRel')
+                    ->set($db->quoteName($thumbCol) . ' = :thumbRel')
+                    ->where($db->quoteName('id') . ' = ' . (int) $record->id)
+                    ->bind(':imageRel', $imageRelPath, ParameterType::STRING)
+                    ->bind(':thumbRel', $thumbRelPath, ParameterType::STRING);
 
                 // Teachers also store original path in teacher_image
                 if (!empty($cfg['extraImageCol'])) {
-                    $update->set($db->quoteName($cfg['extraImageCol']) . ' = ' . $db->quote($imageRelPath));
+                    $update->set($db->quoteName($cfg['extraImageCol']) . ' = :imageRelExtra')
+                        ->bind(':imageRelExtra', $imageRelPath, ParameterType::STRING);
                 }
 
                 $db->setQuery($update)->execute();

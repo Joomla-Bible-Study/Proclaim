@@ -143,7 +143,7 @@ class CwmtemplatesController extends AdminController
                         $db->setQuery($query, 0, 1);
                         $data  = $db->loadObject();
                         $query = $db->createQuery();
-                        $query->update($db->quoteName('#__bsms_styles'))
+                        $query->update($db->quoteName('#__bsms_templatecode'))
                             ->set($db->quoteName('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
                             ->where($db->quoteName('id') . ' = ' . (int)$data->id);
                         $this->performDB($query);
@@ -287,6 +287,66 @@ class CwmtemplatesController extends AdminController
     }
 
     /**
+     * The filename offered to the browser for an exported template.
+     *
+     * ⚠️ Separate from the path on disk. This value reaches a
+     * `Content-Disposition` header, where the rules are not the filesystem's:
+     * a bare `"` ends the quoted filename and lets further parameters be
+     * appended. `File::makeSafe()` leaves only `A-Za-z0-9._-` and spaces, so
+     * no quote, separator, control character or percent survives it.
+     *
+     * @param   int          $id     The template's id, for a title that sanitises away
+     * @param   string|null  $title  The template's title, as entered
+     *
+     * @return  string
+     *
+     * @since   10.7.1
+     */
+    public static function exportDownloadName(int $id, ?string $title): string
+    {
+        $safe = File::makeSafe((string) $title);
+
+        return ($safe === '' ? 'template-' . $id : $safe) . '.sql';
+    }
+
+    /**
+     * Where an export is staged on disk before it is streamed.
+     *
+     * ⚠️ Takes no arguments, and that is the point. The path used to be
+     * `/tmp/<template title>.sql`, and a title is free text -- `File::write()`
+     * creates the intermediate directory, so the separators in
+     * `x/../../evil` resolved and the file landed outside `/tmp`. A builder
+     * with nothing to pass it cannot be handed a title by a later caller.
+     *
+     * The name is also random rather than merely fixed, so a file left behind
+     * by a failed stream is not sitting at a name its requester chose: Joomla's
+     * default temp directory is reachable under many server configurations and
+     * ships with an `index.html` rather than a deny rule.
+     *
+     * ⚠️ Staged under the **configured** `tmp_path`, as CwmbackupController
+     * already does for its own SQL exports -- not a hard-coded `JPATH_ROOT/tmp`.
+     * An administrator who has moved the temp directory outside the web root
+     * has done the thing that makes a leftover unreachable, and hard-coding
+     * would have ignored it.
+     *
+     * @return  string
+     *
+     * @throws  \Random\RandomException
+     *
+     * @since   10.7.1
+     */
+    public static function exportTempPath(): string
+    {
+        $tmp = (string) Factory::getApplication()->get('tmp_path');
+
+        if ($tmp === '') {
+            $tmp = JPATH_ROOT . '/tmp';
+        }
+
+        return rtrim($tmp, '/\\') . '/proclaim-template-export-' . bin2hex(random_bytes(8)) . '.sql';
+    }
+
+    /**
      * Export the Template
      *
      * @return CwmtemplatesController|false
@@ -307,32 +367,54 @@ class CwmtemplatesController extends AdminController
 
         if (!$exporttemplate) {
             $message = Text::_('JBS_TPL_NO_FILE_SELECTED');
-            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
+
+            return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();
-        $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title', 't.text']));
+        $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title']));
         $query->from($db->quoteName('#__bsms_templates', 't'));
         $query->where($db->quoteName('t.id') . ' = ' . (int) $exporttemplate);
         $db->setQuery($query);
-        $result       = $db->loadObject();
+        $result = $db->loadObject();
+
+        // A deleted or non-existent id yields no row, which the export cannot describe.
+        if (!$result) {
+            $message = Text::_('JBS_TPL_NO_FILE_SELECTED');
+
+            return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
+        }
+
         $objects[]    = $this->getExportSetting($result);
         $filecontents = implode(' ', $objects);
-        $filename     = $result->title . '.sql';
-        $filepath     = JPATH_ROOT . '/tmp/' . $filename;
+
+        // The name offered to the browser and the name written to disk are two
+        // different problems, and are no longer the same string.
+        $downloadName = self::exportDownloadName((int) $result->id, $result->title);
+        $filepath     = self::exportTempPath();
 
         if (!File::write($filepath, $filecontents)) {
             return false;
         }
 
-        $xport = new Cwmbackup();
-        $xport->outputFile($filepath, $filename, 'text/x-sql');
-        File::delete($filepath);
+        try {
+            $xport = new Cwmbackup();
+            $xport->outputFile($filepath, $downloadName, 'text/x-sql');
+        } finally {
+            // ⚠️ In a finally. outputFile() throws when the file cannot be read
+            // or its type cannot be resolved, and an export left in /tmp is
+            // content the site did not mean to keep.
+            if (is_file($filepath)) {
+                File::delete($filepath);
+            }
+        }
+
         $message = Text::_('JBS_TPL_EXPORT_SUCCESS');
 
         return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
     }
+
 
     /**
      * Get Exported Template Settings
@@ -345,29 +427,12 @@ class CwmtemplatesController extends AdminController
      */
     private function getExportSetting($result): string
     {
-        // Export must be in this order: css, template files, template.
+        // Export must be in this order: template files, then the template.
         $registry = new Registry();
         $registry->loadString($result->params);
         $params  = $registry;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $objects = '';
-        $css     = $params->get('css');
-        $css     = substr($css, 0, -4);
-
-        if ($css) {
-            $objects = "--\n-- CSS Style Code\n--\n";
-            $query2  = $db->createQuery();
-            $query2->select($db->quoteName('style') . '.*');
-            $query2->from($db->quoteName('#__bsms_styles', 'style'));
-            $query2->where($db->quoteName('style.filename') . ' = ' . $db->q($css));
-            $db->setQuery($query2);
-            $db->execute();
-            $cssresult = $db->loadObject();
-            $objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q(
-                $cssresult->filename
-            )
-                . ",\n`stylecode` = " . $db->q($cssresult->stylecode) . ";\n";
-        }
 
         // Get the individual template files
         $sermons = $params->get('sermonstemplate');
@@ -417,8 +482,7 @@ class CwmtemplatesController extends AdminController
         // Create the main template insert
         $objects .= "\nINSERT INTO #__bsms_templates SET `type` = " . $db->q($result->type) . ",";
         $objects .= "\n`params` = " . $db->q($result->params) . ",";
-        $objects .= "\n`title` = " . $db->q($result->title) . ",";
-        $objects .= "\n`text` = " . $db->q($result->text) . ";";
+        $objects .= "\n`title` = " . $db->q($result->title) . ";";
 
         $objects .= "\n-- --------------------------------------------------------\n\n";
 

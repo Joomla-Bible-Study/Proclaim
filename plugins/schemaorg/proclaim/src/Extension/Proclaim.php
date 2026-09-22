@@ -468,6 +468,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $entry = self::sanitizeForScriptEmbedding($entry);
         }
 
+        unset($entry);
+
         $schema->set('@graph', $graph);
     }
 

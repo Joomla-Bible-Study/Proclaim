@@ -134,6 +134,54 @@ class CwmserverController extends FormController
      * @throws \Exception
      * @since   9.0.0
      */
+    /**
+     * Render the tab-set region for a chosen server type, for the in-place swap.
+     *
+     * The other half of the picker: types.php calls submitbutton with the
+     * chosen key, and instead of submitting the whole form — losing whatever
+     * was typed, turning every failure into a navigation — the edit screen
+     * fetches this fragment and swaps it in. The type lands in user state
+     * exactly as setType() put it, so the model renders the same form either
+     * way and a subsequent save reads the same state it always has.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.7.0
+     */
+    public function typeFields(): void
+    {
+        $app = Factory::getApplication();
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $app->setHeader('status', '403 Forbidden');
+            $app->sendHeaders();
+            echo Text::_('JINVALID_TOKEN');
+            $app->close();
+        }
+
+        // Same rule as setType(): a plain key, or nothing happens.
+        $typeKey = strtolower(trim($this->input->getString('type', '')));
+
+        if ($typeKey === '' || !preg_match('/^[a-z0-9_-]+$/', $typeKey)) {
+            $app->setHeader('status', '400 Bad Request');
+            $app->sendHeaders();
+            echo Text::_('JBS_SVR_TYPE_NOT_RECOGNISED');
+            $app->close();
+        }
+
+        $app->setUserState('com_proclaim.edit.cwmserver.type', $typeKey);
+
+        $model = $this->getModel('Cwmserver', 'Administrator', []);
+        $view  = $this->getView('Cwmserver', 'html');
+        $view->setModel($model, true);
+        $view->setLayout('tabs');
+        $view->document = $app->getDocument();
+
+        $view->display();
+        $app->close();
+    }
+
     public function setType(): void
     {
         $app   = Factory::getApplication();
@@ -141,12 +189,33 @@ class CwmserverController extends FormController
 
         $data  = $input->get('jform', [], 'post');
         $sname = $data['server_name'] ?? '';
-        $type  = json_decode(base64_decode($data['type'] ?? ''), true, 512, JSON_THROW_ON_ERROR);
 
-        $recordId = $type['id'] ?? 0;
+        // ⚠️ A plain server-type key, e.g. "youtube". It used to be decoded as
+        // base64 JSON, which never worked: the type field is a
+        // ModalSelectField, and its readonly title input and hidden value input
+        // share the name jform[type]. The picker's assignment to
+        // elements['jform[type]'] hit a RadioNodeList and did nothing, so what
+        // arrived here was the hidden input's key, not the payload — which
+        // base64_decode then turned into rubbish and json_decode threw on,
+        // taking the whole screen down with it.
+        //
+        // Read as request data, so a stale form or a hand-made POST is a
+        // message rather than an error page.
+        $typeKey  = strtolower(trim((string) ($data['type'] ?? '')));
+        $recordId = (int) ($data['id'] ?? 0);
+
+        if ($typeKey === '' || !preg_match('/^[a-z0-9_-]+$/', $typeKey)) {
+            $app->enqueueMessage(Text::_('JBS_SVR_TYPE_NOT_RECOGNISED'), 'warning');
+
+            $this->setRedirect(
+                Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false)
+            );
+
+            return;
+        }
 
         // Save the endpoint in the session
-        $app->setUserState('com_proclaim.edit.cwmserver.type', $type['name'] ?? '');
+        $app->setUserState('com_proclaim.edit.cwmserver.type', $typeKey);
         $app->setUserState('com_proclaim.edit.cwmserver.server_name', $sname);
 
         $this->setRedirect(

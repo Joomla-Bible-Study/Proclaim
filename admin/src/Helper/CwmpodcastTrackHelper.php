@@ -141,33 +141,87 @@ class CwmpodcastTrackHelper
     }
 
     /**
-     * Look up a published media file's params for the tracking endpoint, joined
-     * with its server's params (needed to resolve the live media URL).
+     * Look up a media file the given view levels reach, for the podcast
+     * endpoints, joined with its server's params (needed to resolve the live
+     * media URL).
      *
      * Kept here rather than inline in CwmpodcastController so the controller
      * stays limited to HTTP concerns — request parsing, headers, streaming —
      * with data access alongside the rest of this feature's DB logic.
      *
-     * @param   DatabaseInterface  $db       Database driver.
-     * @param   int            $mediaId  Media file ID.
+     * ⚠️ `$levels` is deliberately required rather than defaulted. These
+     * endpoints hand back the media itself, and `CwmmediaStreamer::serve()`
+     * authorises nothing by design — the caller does, before a byte is
+     * written. A default would let a future caller acquire the row and stream
+     * it without ever deciding who is asking; requiring the argument makes
+     * that a fatal instead of a silent one.
      *
-     * @return  ?object  Row with ->params and ->sparams, or null if not found/unpublished.
+     * The chain is the media file, the message it belongs to, and that
+     * message's series — the same rule `Cwmpodcast::getEpisodes()` applies when
+     * deciding which episodes a feed may list, and `Cwmdownload::isAccessible()`
+     * applies on the download route. Reachability has to mean the same thing in
+     * all three places, or the strictest one is merely the slowest route in.
+     *
+     * Every level is required independently rather than reduced to whichever is
+     * "most restrictive": Joomla view levels are arbitrary sets of user groups
+     * with no ordering, so there is no strictest of Registered, Special and
+     * Guest to pick.
+     *
+     * @param   DatabaseInterface  $db       Database driver.
+     * @param   int                $mediaId  Media file ID.
+     * @param   array<int>         $levels   View levels held by the identity making the request.
+     *
+     * @return  ?object  Row with ->params and ->sparams, or null if there is no such
+     *                   media file, it or its message is unpublished, or these levels
+     *                   do not reach it.
      *
      * @since   10.5.4
      */
-    public static function findPublishedMedia(DatabaseInterface $db, int $mediaId): ?object
+    public static function findPublishedMedia(DatabaseInterface $db, int $mediaId, array $levels): ?object
     {
+        // Cast before interpolation: the series clause below cannot be bound,
+        // and an empty set must still produce valid SQL rather than "IN ()".
+        $levels = array_values(array_unique(array_map('intval', $levels))) ?: [0];
+
         $query = $db->createQuery()
             ->select($db->quoteName('mf.params'))
             ->select($db->quoteName('sr.params', 'sparams'))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_studies', 's')
+                . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id')
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'se')
+                . ' ON ' . $db->quoteName('se.id') . ' = ' . $db->quoteName('s.series_id')
+            )
             ->leftJoin(
                 $db->quoteName('#__bsms_servers', 'sr')
                 . ' ON ' . $db->quoteName('sr.id') . ' = ' . $db->quoteName('mf.server_id')
             )
             ->where($db->quoteName('mf.id') . ' = :mid')
             ->where($db->quoteName('mf.published') . ' = 1')
+            ->where($db->quoteName('s.published') . ' = 1')
             ->bind(':mid', $mediaId, ParameterType::INTEGER);
+
+        // ⚠️ Bracketed deliberately. A top-level OR escapes every preceding
+        // condition, the published ones included — see
+        // tests/unit/Query/WhereClauseContractTest.php. Both clauses allow a
+        // message that is in no series at all, which is not the same as being
+        // in one that is unpublished or out of reach.
+        $query->where(
+            '(' . $db->quoteName('se.published') . ' = 1 OR '
+            . $db->quoteName('s.series_id') . ' IS NULL OR '
+            . $db->quoteName('s.series_id') . ' <= 0)'
+        );
+
+        $query->whereIn($db->quoteName('mf.access'), $levels)
+            ->whereIn($db->quoteName('s.access'), $levels)
+            ->where(
+                '(' . $db->quoteName('se.access') . ' IN (' . implode(',', $levels) . ') OR '
+                . $db->quoteName('s.series_id') . ' IS NULL OR '
+                . $db->quoteName('s.series_id') . ' <= 0)'
+            );
 
         return $db->setQuery($query)->loadObject();
     }

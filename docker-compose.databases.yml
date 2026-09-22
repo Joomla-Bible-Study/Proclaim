@@ -1,0 +1,70 @@
+# Disposable MySQL and MariaDB for extension development.
+#
+# Databases only. Apache and PHP stay wherever you already have them (MAMP,
+# Herd, Valet, a system install) — this exists so schema work has a database
+# that is *known empty*, not to move your web stack.
+#
+# Why empty matters: a leftover table from the previous attempt turns a real
+# failure into a pass. That is the same defect this toolchain keeps finding
+# elsewhere — a check that reports success while testing something other than
+# what it claims.
+#
+#   docker compose -f docker-compose.databases.yml up -d       # start
+#   docker compose -f docker-compose.databases.yml down -v     # stop and wipe
+#
+# ⚠️ The reset is `down -v`, not `down`. Both images declare a VOLUME for their
+# data directory, so a plain `down` leaves an anonymous volume behind and the
+# next `up` inherits it — a leftover table from the previous attempt, which is
+# the exact failure this file exists to prevent.
+#
+# A tmpfs data directory would make that impossible, and was the first thing
+# tried here. It does not work: MySQL 8 defaults `innodb_flush_method` to
+# `O_DIRECT`, which tmpfs does not support, so the server fails to start.
+# Checked against MySQL 8.0.44 rather than assumed. `down -v` is the reset.
+#
+# Do not point anything you care about at these.
+#
+# Ports are deliberately not 3306: a developer's existing local MySQL keeps
+# running. Set them in .env if these clash.
+#
+#   CWM_MYSQL_PORT=3307   CWM_MARIADB_PORT=3308
+#
+# Point the test suite at one with:
+#
+#   CWM_TEST_MYSQL_DSN='mysql:host=127.0.0.1;port=3307;dbname=cwm_test' \
+#     CWM_TEST_MYSQL_USER=root CWM_TEST_MYSQL_PASSWORD=root composer test
+#
+# MariaDB is here because it is a real second engine our users run, not for
+# completeness. PostgreSQL is deliberately absent — this toolchain declares
+# MySQL/MariaDB only, and shipping a container for an engine we do not support
+# would imply otherwise.
+
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cwm_test
+    ports:
+      - "${CWM_MYSQL_PORT:-3307}:3306"
+    healthcheck:
+      # Same probe this project's CI uses for the same image.
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mariadb:
+    image: mariadb:11.4
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: cwm_test
+    ports:
+      - "${CWM_MARIADB_PORT:-3308}:3306"
+    healthcheck:
+      # MariaDB ships its own probe; mysqladmin ping reports healthy before
+      # InnoDB has finished coming up.
+      test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10

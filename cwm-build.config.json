@@ -60,7 +60,7 @@
         "excludeMatchMode": "strict",
         "excludes": [
             "build.xml", "build.properties", "build.dist.properties",
-            "phpunit.xml", "phpunit.xml.bak",
+            "phpunit.xml",
             ".php-cs-fixer.dist.php",
             "CLAUDE.md", "GEMINI.md", "SECURITY.md", "_config.yml",
             ".git", ".vscode", ".idea", ".DS_Store",
@@ -90,6 +90,8 @@
             { "source": "build/media_source/js",  "output": "media/js" },
             { "source": "build/media_source/css", "output": "media/css" }
         ],
+        "_verifyMediaFreshness_comment": "The other half of verifyMediaSources: that check catches a built file whose source is GONE, this one catches a built file whose source MOVED ON — edited, never rebuilt, so the zip ships the previous build's behaviour under a new version number with nothing to notice it by. Reuses the pairs above. Compares mtimes in the working tree, because zip entry mtimes are normalised on write and cannot be read back. Safe here because media/js and media/css are generated and gitignored; it would misfire on a tree that COMMITS its built output. Needs cwm/build-tools >= 1.34; older versions ignore the key and the check silently does not run. Background: cwm-build-tools#159.",
+        "verifyMediaFreshness": true,
         "versionPrompt": {
             "enabled": true,
             "timeout": 10
@@ -192,6 +194,21 @@
             ]
         }
     },
+    "_schemaReplay_comment": "`root` is the extension root the manifest's relative paths resolve against, as Joomla's extension_root does \u2014 proclaim.xml sits at the repo root while the sql/ it names is under admin/, so without it every path resolves one level too high. The baseline is a SITE's schema, not this extension's install SQL alone \u2014 four migrations write to core tables no Proclaim manifest creates. Order matters: core first. `from` is the highest migration file SHIPPED at that tag, not the release number: v10.0.0 contains exactly one, 10.0.0-20220921.sql, and a fresh install stamps #__schemas at whatever the highest file is without running any of them. Raising the supported floor means replacing com_proclaim-10.0.0.sql and moving `from` to the highest file that release shipped, not editing it.",
+    "schemaReplay": {
+        "targets": [
+            {
+                "name": "com_proclaim",
+                "manifest": "proclaim.xml",
+                "root": "admin",
+                "baseline": [
+                    "build/sql-baselines/joomla-core.sql",
+                    "build/sql-baselines/com_proclaim-10.0.0.sql"
+                ],
+                "from": "10.0.0-20220921"
+            }
+        ]
+    },
     "ars": {
         "endpoint": "https://www.christianwebministries.org",
         "categoryId": 1,
@@ -203,6 +220,11 @@
         "itemDescription": "pkg_proclaim download"
     },
     "versionTracking": {
+        "_activeDevelopment_comment": "devSuffix is deliberately empty. A cycle runs on the plain next version (10.5.11 while 10.5.11 is in development), which is what @since __DEPLOY_VERSION__ should resolve to anyway -- `@since 10.5.11` is already correct during that cycle. A -dev suffix would add a rename step before every release and buys nothing: build/test-upgrade.sh gates on the manifest matching active_development and differing from current, which the plain version satisfies. It is also unsafe on the publish path -- cwm_maturity_for_version() only recognises -alpha/-beta/-rc and classifies anything else as stable, so a published -dev build would be offered to every site (cwm-build-tools#155). Use -alpha1 for an edge release.",
+        "activeDevelopment": {
+            "advanceOnRelease": true,
+            "devSuffix": ""
+        },
         "substituteTokens": {
             "paths": [
                 "admin/",

@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmessages;
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Multilanguage;
@@ -27,7 +26,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\Button\DropdownButton;
@@ -85,14 +83,6 @@ class HtmlView extends BaseHtmlView
     public ?object $canDo = null;
 
     /**
-     * All transition, which can be executed of one if the items
-     *
-     * @var  array
-     * @since 4.0.0
-     */
-    protected array $transitions = [];
-
-    /**
      * Is this view an Empty State
      *
      * @var   bool
@@ -125,14 +115,8 @@ class HtmlView extends BaseHtmlView
         $this->filterForm    = $model->getFilterForm();
         $this->activeFilters = $model->getActiveFilters();
 
-        if (ComponentHelper::getParams('com_proclaim')->get('workflow_enabled')) {
-            PluginHelper::importPlugin('workflow');
-
-            $this->transitions = $model->getTransitions();
-        }
-
         // Check for errors.
-        if ($this->transitions === false || \count($errors = $model->getErrors())) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -183,7 +167,7 @@ class HtmlView extends BaseHtmlView
                 ->icon('icon-wand');
         }
 
-        if (!$this->isEmptyState && ($canDo->get('core.edit.state') || \count($this->transitions))) {
+        if (!$this->isEmptyState && $canDo->get('core.edit.state')) {
             /** @var  DropdownButton $dropdown */
             $dropdown = $toolbar->dropdownButton('status-group', 'JTOOLBAR_CHANGE_STATUS')
                 ->toggleSplit(false)
@@ -193,46 +177,23 @@ class HtmlView extends BaseHtmlView
 
             $childBar = $dropdown->getChildToolbar();
 
-            if (\count($this->transitions)) {
-                $childBar->separatorButton('transition-headline')
-                    ->text('COM_PROCLAIM_RUN_TRANSITIONS')
-                    ->buttonClass('text-center py-2 h3');
+            $childBar->publish('cwmmessages.publish')->listCheck(true);
 
-                $cmd      = "Joomla.submitbutton('cwmmessages.runTransition');";
-                $messages = "{error: [Joomla.Text._('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST')]}";
-                $alert    = 'Joomla.renderMessages(' . $messages . ')';
-                $cmd      = 'if (document.adminForm.boxchecked.value == 0) { ' . $alert . ' } else { ' . $cmd . ' }';
+            $childBar->unpublish('cwmmessages.unpublish')->listCheck(true);
 
-                foreach ($this->transitions as $transition) {
-                    $childBar->standardButton('transition')
-                        ->text($transition['text'])
-                        ->buttonClass('transition-' . (int)$transition['value'])
-                        ->icon('icon-project-diagram')
-                        ->onclick('document.adminForm.transition_id.value=' . (int)$transition['value'] . ';' . $cmd);
-                }
+            $childBar->archive('cwmmessages.archive')->listCheck(true);
 
-                $childBar->separatorButton('transition-separator');
-            }
+            $childBar->checkin('cwmmessages.checkin')->listCheck(true);
 
-            if ($canDo->get('core.edit.state')) {
-                $childBar->publish('cwmmessages.publish')->listCheck(true);
-
-                $childBar->unpublish('cwmmessages.unpublish')->listCheck(true);
-
-                $childBar->archive('cwmmessages.archive')->listCheck(true);
-
-                $childBar->checkin('cwmmessages.checkin')->listCheck(true);
-
-                if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
-                    $childBar->trash('cwmmessages.trash')->listCheck(true);
-                }
+            if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
+                $childBar->trash('cwmmessages.trash')->listCheck(true);
             }
 
             // Add a batch button
             if (
                 $user->authorise('core.create', 'com_proclaim.message')
                 && $user->authorise('core.edit', 'com_proclaim.message')
-                && $user->authorise('core.execute.transition', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim.message')
             ) {
                 $childBar->popupButton('batch')
                     ->text('JTOOLBAR_BATCH')

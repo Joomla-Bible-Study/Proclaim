@@ -22,6 +22,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\User\User;
 use Joomla\Database\ParameterType;
@@ -178,8 +179,12 @@ class CwmsermonModel extends FormModel
                     $nullDate = $db->quote($db->getNullDate());
                     $nowDate  = $db->quote((new Date())->toSql());
 
-                    $query->where('(' . $db->quoteName('s.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('s.publish_up') . ' <= ' . $nowDate . ')')
-                        ->where('(' . $db->quoteName('s.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('s.publish_down') . ' >= ' . $nowDate . ')');
+                    // First condition on this query: the up-window seeds the
+                    // WHERE via where()->orWhere(), and the down-window then
+                    // extends it as an AND-ed OR group.
+                    $query->where($db->quoteName('s.publish_up') . ' = ' . $nullDate)
+                        ->orWhere($db->quoteName('s.publish_up') . ' <= ' . $nowDate)
+                        ->andWhere([$db->quoteName('s.publish_down') . ' = ' . $nullDate, $db->quoteName('s.publish_down') . ' >= ' . $nowDate]);
 
                     // Cascading series date window: hide message if its series is outside publish window.
                     $query->where(
@@ -203,7 +208,7 @@ class CwmsermonModel extends FormModel
                 $archived  = $this->getState('filter.archived');
 
                 if (is_numeric($published)) {
-                    $query->where('(' . $db->quoteName('s.published') . ' = ' . (int) $published . ' OR ' . $db->quoteName('s.published') . ' = ' . (int) $archived . ')');
+                    $query->whereIn($db->quoteName('s.published'), [(int) $published, (int) $archived]);
                 }
 
                 $query->group($db->quoteName('s.id'));

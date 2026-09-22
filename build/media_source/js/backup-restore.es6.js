@@ -24,7 +24,6 @@
             this.liveRegion = null;
             this.triggerElement = null;
             this.isCancelled = false;
-            this.token = Joomla.getOptions('csrf.token') || document.querySelector(`input[name^="${Joomla.getOptions('csrf.token', '')}"]`)?.name || '';
         }
 
         /**
@@ -234,6 +233,71 @@
                 const announcement = detail ? `${status}: ${detail}` : status;
                 this.announceToScreenReader(announcement);
             }
+        }
+
+        /**
+         * What the restore did, and what it could not do for you.
+         *
+         * The finalize endpoint has always returned these counts and none of
+         * them reached the user, who saw one line saying it worked. For a
+         * restore that is genuinely finished that is right; for one that is
+         * not, it reads as done while work remains.
+         *
+         * Plain text with newlines, because showComplete() assigns to
+         * textContent.
+         *
+         * @param {object} data The finalize payload.
+         * @returns {string} The summary to display.
+         */
+        buildRestoreSummary(data) {
+            const lines = [Joomla.Text._('JBS_IBM_IMPORT_COMPLETE')];
+
+            const restored = [
+                ['JBS_IBM_SUMMARY_TABLES', data.tables_restored],
+                ['JBS_IBM_SUMMARY_TASKS', data.tasks_restored],
+                ['JBS_IBM_SUMMARY_TEMPLATECODES', data.templatecodes_created],
+                ['JBS_IBM_SUMMARY_AUTO_INCREMENT', data.auto_increment_fixes],
+            ]
+                .filter(([, count]) => Number(count) > 0)
+                .map(([key, count]) => `  • ${Joomla.Text._(key).replace('%d', count)}`);
+
+            if (data.config_restored) {
+                restored.push(`  • ${Joomla.Text._('JBS_IBM_SUMMARY_CONFIG')}`);
+            }
+
+            if (restored.length) {
+                lines.push('', Joomla.Text._('JBS_IBM_SUMMARY_RESTORED'), ...restored);
+            }
+
+            // A 9.x backup arrives with every server typed `legacy`, and the
+            // restore has no business re-pointing thousands of media rows
+            // uninvited — but it should not report itself finished in silence.
+            const attention = [];
+            const pending = data.pending_migration;
+
+            if (pending?.servers > 0) {
+                attention.push(`  • ${Joomla.Text._('JBS_IBM_SERVERS_PENDING')
+                    .replace('%d', pending.servers)
+                    .replace('%d', pending.media)}`);
+            }
+
+            // Only when there are rows to be missing files for. An empty media
+            // folder on a site with no media records is a site with no media.
+            const media = data.media_status;
+
+            if (media?.rows > 0 && !media.dir_exists) {
+                attention.push(`  • ${Joomla.Text._('JBS_IBM_MEDIA_DIR_MISSING').replace('%d', media.rows)}`);
+            } else if (media?.rows > 0 && media.dir_empty) {
+                attention.push(`  • ${Joomla.Text._('JBS_IBM_MEDIA_DIR_EMPTY').replace('%d', media.rows)}`);
+            }
+
+            if (attention.length) {
+                lines.push('', Joomla.Text._('JBS_IBM_SUMMARY_ATTENTION'), ...attention);
+            } else {
+                lines.push('', Joomla.Text._('JBS_IBM_SUMMARY_NOTHING_OUTSTANDING'));
+            }
+
+            return lines.join('\n');
         }
 
         /**
@@ -474,14 +538,25 @@
                 // Step 2: Get import info
                 this.updateProgress(15, Joomla.Text._('JBS_IBM_ANALYZING_FILE'), '');
 
+                // Splitting the dump into statements is the one step whose cost
+                // scales with the whole file rather than with a batch, and the
+                // default minute is not enough for a large one — a 15 MB dump
+                // spent longer than that here and the browser gave up on a
+                // request the server was still working on.
                 const infoUrl = `index.php?option=com_proclaim&task=cwmbackup.getImportInfoXHR&format=json&sessionId=${sessionId}&${Joomla.getOptions('csrf.token')}=1`;
-                const infoResult = await this.fetchJson(infoUrl);
+                const infoResult = await this.fetchJson(infoUrl, {}, 600000);
 
                 if (!infoResult.success) {
                     throw new Error(infoResult.message || 'Failed to analyze import file');
                 }
 
                 const { totalBatches } = infoResult.data;
+
+                // Statements the server could not run. Batch 0 has already
+                // dropped every Proclaim table by the time these accumulate, so
+                // they are collected and shown rather than left in the log.
+                const importErrors = [];
+                let skippedCount = 0;
 
                 // Step 3: Import in batches (20-83%)
                 for (let batch = 0; batch < totalBatches; batch++) {
@@ -503,6 +578,12 @@
                     if (!batchResult.success) {
                         throw new Error(batchResult.message || `Failed to import batch ${batch + 1}`);
                     }
+
+                    if (batchResult.data?.errors?.length) {
+                        importErrors.push(...batchResult.data.errors);
+                    }
+
+                    skippedCount += batchResult.data?.skipped || 0;
                 }
 
                 // Step 4: Post-restore data fixes — run each step individually (83-93%)
@@ -548,7 +629,39 @@
                 }
 
                 this.updateProgress(100, '', '');
-                this.showComplete(true, Joomla.Text._('JBS_IBM_IMPORT_COMPLETE'));
+
+                if (importErrors.length) {
+                    // The tables were dropped before any of this ran, so a
+                    // restore that lost statements has left the site with less
+                    // than it started with. Say so instead of showing a tick.
+                    const detail = importErrors
+                        .slice(0, 10)
+                        .map((e) => `${e.error}\n    ${e.statement}`)
+                        .join('\n\n');
+                    const more = importErrors.length > 10
+                        ? `\n\n… and ${importErrors.length - 10} more. See the Proclaim log for the full list.`
+                        : '';
+
+                    // Joomla.Text has no sprintf — the placeholder is filled in
+                    // here, as everywhere else in this codebase.
+                    const summary = Joomla.Text._('JBS_IBM_STATEMENTS_FAILED')
+                        .replace('%d', importErrors.length);
+
+                    this.showComplete(
+                        false,
+                        `${Joomla.Text._('JBS_IBM_IMPORT_HAD_ERRORS')}\n\n${summary}\n\n${detail}${more}`,
+                    );
+
+                    return;
+                }
+
+                if (skippedCount) {
+                    console.info(
+                        Joomla.Text._('JBS_IBM_STATEMENTS_SKIPPED').replace('%d', skippedCount),
+                    );
+                }
+
+                this.showComplete(true, this.buildRestoreSummary(finalizeResult.data ?? {}));
             } catch (error) {
                 console.error('Import error:', error);
                 this.showComplete(false, error.message);

@@ -6,7 +6,7 @@
         <media_resource>filename</media_resource>
     </config>
     <fields name="params">
-        <fieldset name="dailymotion_sync" label="JBS_ADDON_DAILYMOTION_SYNC_SETTINGS">
+        <fieldset name="dailymotion_sync" simplemode="hide" label="JBS_ADDON_DAILYMOTION_SYNC_SETTINGS">
             <field name="description_format" type="DescriptionFormat" rows="6"
                    default="{title} — {series}&#10;{teachers}&#10;{date}&#10;{scriptures}&#10;&#10;{studyintro}&#10;&#10;Topics: {topics}&#10;&#10;{url}"
                    label="JBS_ADDON_DESC_FORMAT"
@@ -30,7 +30,7 @@
                 <option value="3">JBS_CMN_SQUEEZEBOX</option>
             </field>
         </fieldset>
-        <fieldset name="media_type" label="JBS_ADDON_DAILYMOTION_MEDIA_TYPE_DEF">
+        <fieldset name="media_type" simplemode="hide" label="JBS_ADDON_DAILYMOTION_MEDIA_TYPE_DEF">
             <field name="media_image" type="media" directory="biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox"/>

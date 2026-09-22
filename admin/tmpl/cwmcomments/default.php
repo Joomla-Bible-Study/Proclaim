@@ -115,7 +115,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JGRID_HEADING_ACCESS',
-                                    'comment.access',
+                                    'study.access',
                                     $listDirn,
                                     $listOrder
                                 ); ?>

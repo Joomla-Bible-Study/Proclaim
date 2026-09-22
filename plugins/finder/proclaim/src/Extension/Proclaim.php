@@ -286,14 +286,15 @@ final class Proclaim extends Adapter implements SubscriberInterface
      */
     protected function checkSeriesAccess(Table $row): void
     {
-        $query = $this->db->createQuery()
-            ->select($this->db->quoteName('access'))
-            ->from($this->db->quoteName('#__bsms_series'))
-            ->where($this->db->quoteName('id') . ' = ' . (int) $row->id);
-        $this->db->setQuery($query);
+        $db    = $this->getDatabase();
+        $query = $db->createQuery()
+            ->select($db->quoteName('access'))
+            ->from($db->quoteName('#__bsms_series'))
+            ->where($db->quoteName('id') . ' = ' . (int) $row->id);
+        $db->setQuery($query);
 
         // Store the access level to determine if it changes
-        $this->old_seriesAccess = (int) $this->db->loadResult();
+        $this->old_seriesAccess = (int) $db->loadResult();
     }
 
     /**
@@ -308,12 +309,13 @@ final class Proclaim extends Adapter implements SubscriberInterface
      */
     protected function seriesAccessChange(Table $row): void
     {
+        $db    = $this->getDatabase();
         $query = clone $this->getStateQuery();
-        $query->where($this->db->quoteName('s.id') . ' = ' . (int) $row->id);
+        $query->where($db->quoteName('s.id') . ' = ' . (int) $row->id);
 
         // Get the access level.
-        $this->db->setQuery($query);
-        $items = $this->db->loadObjectList();
+        $db->setQuery($query);
+        $items = $db->loadObjectList();
 
         // Adjust the access level for each item within the Series.
         foreach ($items as $item) {
@@ -338,6 +340,8 @@ final class Proclaim extends Adapter implements SubscriberInterface
      */
     protected function seriesStateChange(array $pks, int $value): void
     {
+        $db = $this->getDatabase();
+
         /*
          * The item's published state is tied to the category
          * published state so we need to look up all published states
@@ -345,11 +349,11 @@ final class Proclaim extends Adapter implements SubscriberInterface
          */
         foreach ($pks as $pk) {
             $query = clone $this->getStateQuery();
-            $query->where($this->db->quoteName('s.id') . ' = ' . (int) $pk);
+            $query->where($db->quoteName('s.id') . ' = ' . (int) $pk);
 
             // Get the published states.
-            $this->db->setQuery($query);
-            $items = $this->db->loadObjectList();
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
 
             // Adjust the state for each item within the category.
             foreach ($items as $item) {
@@ -372,9 +376,8 @@ final class Proclaim extends Adapter implements SubscriberInterface
      */
     protected function getStateQuery(): QueryInterface
     {
-        $query = $this->db->createQuery();
-
-        $db = $this->db;
+        $db    = $this->getDatabase();
+        $query = $db->createQuery();
 
         // Item ID
         $query->select($db->quoteName('a.id'));

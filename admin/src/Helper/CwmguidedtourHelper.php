@@ -20,6 +20,7 @@ use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Helper class for creating and managing guided tours and announcements.
@@ -591,8 +592,9 @@ class CwmguidedtourHelper
         $query = $this->db->createQuery()
             ->select($this->db->quoteName('id'))
             ->from($this->db->quoteName('#__guidedtours'))
-            ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid))
-            ->order($this->db->quoteName('id') . ' ASC');
+            ->where($this->db->quoteName('uid') . ' = :uid')
+            ->order($this->db->quoteName('id') . ' ASC')
+            ->bind(':uid', $uid, ParameterType::STRING);
         $this->db->setQuery($query);
 
         return array_map('intval', $this->db->loadColumn() ?: []);
@@ -680,7 +682,8 @@ class CwmguidedtourHelper
         $query = $this->db->createQuery()
             ->select('COUNT(*)')
             ->from($this->db->quoteName('#__guidedtours'))
-            ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid));
+            ->where($this->db->quoteName('uid') . ' = :uid')
+            ->bind(':uid', $uid, ParameterType::STRING);
         $this->db->setQuery($query);
 
         return (int) $this->db->loadResult() > 0;
@@ -702,7 +705,8 @@ class CwmguidedtourHelper
         $query = $this->db->createQuery()
             ->select('COUNT(*)')
             ->from($this->db->quoteName('#__postinstall_messages'))
-            ->where($this->db->quoteName('title_key') . ' = ' . $this->db->quote($titleKey));
+            ->where($this->db->quoteName('title_key') . ' = :titleKey')
+            ->bind(':titleKey', $titleKey, ParameterType::STRING);
         $this->db->setQuery($query);
 
         return (int) $this->db->loadResult() > 0;

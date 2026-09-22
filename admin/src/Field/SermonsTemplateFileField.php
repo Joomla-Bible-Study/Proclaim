@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmtemplatecodeTable;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -79,7 +80,9 @@ class SermonsTemplateFileField extends ListField
         self::$cachedOptions   = [];
         self::$cachedOptions[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_USE_DEFAULT'));
 
-        $path = JPATH_SITE . '/components/com_proclaim/tmpl/cwmsermons';
+        // The directory a type 1 record writes into, so the list and the
+        // writer cannot disagree about where sermon list layouts live.
+        $path = JPATH_SITE . '/' . CwmtemplatecodeTable::LAYOUT_DIRECTORIES[1];
 
         if (!is_dir($path)) {
             return array_merge(parent::getOptions(), self::$cachedOptions);

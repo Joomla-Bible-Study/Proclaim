@@ -361,13 +361,59 @@ class CWMAddonResi extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app      = Factory::getApplication();
-        $input    = $app->getInput();
-        $serverId = $input->getInt('server_id', 0);
+        // ⚠️ Read from the POST body, not the merged request. Accepting these
+        // from the query string is what put the client secret in the access
+        // log, and a cached copy of the old field script would put it back.
+        $post = Factory::getApplication()->getInput()->post;
 
-        // Allow testing unsaved credentials passed directly from the form
-        $clientId     = $input->getString('client_id', '');
-        $clientSecret = $input->getString('client_secret', '');
+        return $this->testCredentials(
+            $post->getInt('server_id', 0),
+            // Allow testing unsaved credentials passed directly from the form
+            $post->getString('client_id', ''),
+            $post->getString('client_secret', '')
+        );
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since  10.6.0
+     */
+    #[\Override]
+    public function supportsConnectionTest(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since  10.6.0
+     */
+    #[\Override]
+    public function testConnection(int $serverId): array
+    {
+        // No credentials passed, so they come from the saved server -- which
+        // is the only source a health check has.
+        return $this->testCredentials($serverId, '', '');
+    }
+
+    /**
+     * Exchange Resi.io credentials for a token and report whether it worked.
+     *
+     * @param   int     $serverId      The server record ID, 0 when unsaved.
+     * @param   string  $clientId      Client id to try, empty to read the server's.
+     * @param   string  $clientSecret  Client secret to try, empty to read the server's.
+     *
+     * @return  array{success: bool, message?: string, error?: string}
+     *
+     * @since   10.6.0
+     */
+    private function testCredentials(int $serverId, string $clientId, string $clientSecret): array
+    {
+        // See CWMAddonVimeo::testConnection() -- the health view reaches this
+        // without the addon's strings already loaded.
+        $this->loadLanguage();
 
         // If credentials not passed in request, load from DB
         if ((empty($clientId) || empty($clientSecret)) && $serverId) {

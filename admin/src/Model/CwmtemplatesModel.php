@@ -16,10 +16,12 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 
 /**
  * Templates model class
@@ -146,11 +148,11 @@ class CwmtemplatesModel extends ListModel
     /**
      * Build and SQL query to load the list data
      *
-     * @return  \Joomla\Database\QueryInterface
+     * @return  QueryInterface|string
      *
      * @since   7.0
      */
-    protected function getListQuery(): mixed
+    protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();
@@ -174,7 +176,7 @@ class CwmtemplatesModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('template.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('template.published') . ' = 0 OR ' . $db->quoteName('template.published') . ' = 1)');
+            $query->whereIn($db->quoteName('template.published'), [0, 1]);
         }
 
         // Filter by search in filename or study title
@@ -222,9 +224,13 @@ class CwmtemplatesModel extends ListModel
         }
 
         // Add the list ordering clause
-        $orderCol  = $this->state->get('list.ordering', 'template.id');
-        $orderDirn = $this->state->get('list.direction', 'ASC');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted(
+            $query,
+            $this->filter_fields,
+            $this->state->get('list.ordering'),
+            $this->state->get('list.direction', 'ASC'),
+            'template.id'
+        );
 
         return $query;
     }

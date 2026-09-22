@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Filesystem\Path;
 use Joomla\Http\HttpFactory;
 use Joomla\Http\Response;
@@ -544,6 +545,30 @@ abstract class CWMAddon
     }
 
     /**
+     * Whether this *server* can push a description right now.
+     *
+     * `supportsDescriptionSync()` answers "could the platform"; this answers
+     * "is this particular server set up to". They are different questions: a
+     * capable platform still cannot be written to until its credentials are
+     * configured, so offering the action on the strength of the capability
+     * alone produces a button that always fails.
+     *
+     * Base implementation denies it, so an addon that has not thought about
+     * its own prerequisites never claims readiness. Override alongside
+     * `syncDescription()` and check exactly what that method needs.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   10.6.0
+     */
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        return false;
+    }
+
+    /**
      * Push a description to a video on the platform.
      * Override in child class to implement platform-specific API calls.
      *
@@ -615,6 +640,71 @@ abstract class CWMAddon
         }
 
         return implode("\n", $lines);
+    }
+
+    /**
+     * Whether this addon can test its connection to the platform.
+     *
+     * Answers "could the platform be reached at all", the same way
+     * `supportsDescriptionSync()` answers for descriptions. Addons with
+     * nothing to reach -- Local, Direct, Embed, Article and the rest -- leave
+     * this false and never appear as a testable connection.
+     *
+     * @return  bool
+     *
+     * @since   10.6.0
+     */
+    public function supportsConnectionTest(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Reach the platform and report whether the server's credentials work.
+     *
+     * ⚠️ This makes a real outbound request and, on metered platforms, spends
+     * quota. It is never called from a page render or a scheduled task -- only
+     * from an explicit "test now", which is why `HealthCheckInterface` marks
+     * the check that calls it as not passive.
+     *
+     * Takes the server id rather than reading the request, so the same method
+     * serves the AJAX handler and the health view.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  array{success: bool, message?: string, error?: string}
+     *
+     * @since   10.6.0
+     */
+    public function testConnection(int $serverId): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_HEALTH_CONNECTION_NOT_SUPPORTED')];
+    }
+
+    /**
+     * Every published server whose addon can test its own connection.
+     *
+     * @return  array<int, array{id: int, server_name: string, type: string}>
+     *
+     * @since   10.6.0
+     */
+    public static function getConnectionTestableServers(): array
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()
+            ->select([$db->quoteName('id'), $db->quoteName('server_name'), $db->quoteName('type')])
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('server_name') . ' ASC');
+        $servers = $db->setQuery($query)->loadAssocList() ?? [];
+
+        return array_values(array_filter($servers, static function ($srv) {
+            try {
+                return static::getInstance($srv['type'])->supportsConnectionTest();
+            } catch (\RuntimeException) {
+                return false;
+            }
+        }));
     }
 
     /**
@@ -1192,6 +1282,10 @@ abstract class CWMAddon
         $db  = Factory::getContainer()->get(DatabaseInterface::class);
         $now = Factory::getDate()->toSql();
 
+        // Assembled as a raw string, not the builder: this is an
+        // INSERT ... ON DUPLICATE KEY UPDATE with a column set that varies per
+        // call, which the query builder cannot express — so setQuery() gets a
+        // string and there is no query object to bind these values on.
         $columns = ['media_id', 'server_id', 'platform', 'platform_id', 'synced_at'];
         $values  = [
             (int) $mediaId,
@@ -1247,8 +1341,9 @@ abstract class CWMAddon
         $now   = Factory::getDate()->toSql();
         $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
-            ->set($db->quoteName('stats_synced_at') . ' = ' . $db->quote($now))
-            ->where($db->quoteName('id') . ' = ' . $serverId);
+            ->set($db->quoteName('stats_synced_at') . ' = :now')
+            ->where($db->quoteName('id') . ' = ' . $serverId)
+            ->bind(':now', $now, ParameterType::STRING);
         $db->setQuery($query)->execute();
     }
 
@@ -1293,8 +1388,9 @@ abstract class CWMAddon
             $query->leftJoin(
                 $db->quoteName('#__bsms_platform_stats', 'ps')
                 . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
-                . ' AND ' . $db->quoteName('ps.platform') . ' = ' . $db->quote($platform)
-            );
+                . ' AND ' . $db->quoteName('ps.platform') . ' = :platform'
+            )
+                ->bind(':platform', $platform, ParameterType::STRING);
 
             // Never-synced first (NULL synced_at), then oldest-synced
             $query->order($db->quoteName('ps.synced_at') . ' IS NULL DESC')

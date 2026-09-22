@@ -383,6 +383,12 @@
    Element Card in Canvas (Placed Elements)
    ========================================================================== */
 .row-elements .element-card {
+    /* The card is the query container for its own controls. data-colspan is a
+       proportion, not a width — the same colspan is roomy on a wide screen and
+       clipped on a narrow one, and an attribute selector cannot tell them
+       apart. Measured: the controls need ~233px, so a card of 274px fits and
+       one of 180px overflows by 53px. */
+    container-type: inline-size;
     background: var(--layout-element-bg);
     border-color: var(--layout-element-bg);
     color: var(--layout-element-text);
@@ -510,11 +516,14 @@
     font-weight: 600;
 }
 
+/* ⚠️ 24px, not the 22px this used to set. WCAG 2.2 SC 2.5.8 (Target Size,
+   Minimum, AA) asks for 24x24 CSS px, and with .25rem gaps the spacing
+   exception does not apply. */
 .row-elements .element-card[data-colspan="1"] .btn-settings,
 .row-elements .element-card[data-colspan="1"] .btn-remove {
     padding: .125rem;
-    min-width: 22px;
-    min-height: 22px;
+    min-width: 24px;
+    min-height: 24px;
 }
 
 /* ==========================================================================
@@ -1201,5 +1210,151 @@
 @media print {
     .layout-editor {
         display: none;
+    }
+}
+
+
+/* ==========================================================================
+   Element card actions
+   ==========================================================================
+   Seven controls need about 233px. A card gets a percentage of its row, so it
+   can be far narrower than that and the controls then run past its edge — the
+   remove button ends up half outside and partly unclickable.
+
+   The controls are rendered once, inside a dropdown menu. A wide card shows
+   that menu as a plain inline row and hides its toggle; a narrow card hides the
+   row and shows the toggle, so nothing is lost, it just stops competing for
+   horizontal space.
+
+   ⚠️ Hiding the move buttons instead was not an option: they are the
+   single-pointer, keyboard-operable alternative WCAG 2.2 SC 2.5.7 requires for
+   every dragging operation, and dropping them below a breakpoint would remove
+   that alternative at exactly the widths where dragging is hardest.
+   ========================================================================== */
+
+.element-actions .btn-actions-toggle {
+    display: none;
+}
+
+/* ⚠️ Both states live in a container query, neither is the bare default. The
+   wide rules set `transform: none` to undo Bootstrap's positioning, and an
+   unscoped version of that fought Popper in the narrow state — the menu opened
+   in the wrong place. Scoping both keeps them from leaking into each other. */
+@container (min-width: 241px) {
+    .element-actions {
+        display: contents;
+    }
+
+    /* Wide enough: the menu is not a menu. */
+    .element-actions .element-actions-menu {
+        position: static;
+        display: flex;
+        float: none;
+        align-items: center;
+        gap: .25rem;
+        inset: auto;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        box-shadow: none;
+        transform: none;
+    }
+}
+
+@container (max-width: 240px) {
+    .element-actions {
+        display: block;
+        margin-inline-start: auto;
+    }
+
+    /* Styled like the buttons it replaces, so it reads as a control rather
+       than as three stray dots. A vertical ellipsis, not a horizontal one:
+       this is the conventional overflow affordance and it is the narrower of
+       the two, on a card that is short of width by definition. */
+    .element-actions .btn-actions-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        /* SC 2.5.8: this is now the only control on the card. */
+        min-width: 28px;
+        min-height: 28px;
+        padding: .25rem .375rem;
+        border: none;
+        border-radius: .25rem;
+        background: rgba(255, 255, 255, 0.15);
+        color: var(--layout-element-icon);
+        line-height: 1;
+        cursor: pointer;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .element-actions .btn-actions-toggle:hover,
+    .element-actions .btn-actions-toggle[aria-expanded="true"] {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Back to being a menu. Position and transform are left to Popper. */
+    .element-actions .element-actions-menu {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        min-width: 10rem;
+        padding: .25rem 0;
+        border: 1px solid var(--layout-border, rgba(0, 0, 0, .15));
+        border-radius: .375rem;
+        background: var(--layout-bg-secondary, #2b2b2b);
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .3);
+    }
+
+    .element-actions .element-actions-menu.show {
+        display: flex;
+    }
+
+    /* Full-width rows clear SC 2.5.8 with room to spare. */
+    .element-actions .element-actions-menu .btn-move,
+    .element-actions .element-actions-menu .btn-settings,
+    .element-actions .element-actions-menu .btn-remove {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 32px;
+        padding: .25rem .75rem;
+        border: 0;
+        background: none;
+        color: inherit;
+        text-align: start;
+    }
+
+    .element-actions .element-actions-menu .element-move {
+        display: contents;
+    }
+}
+
+/* ⚠️ The layering. Cards are `position: relative` with no z-index, so a card
+   later in the row paints over an earlier one and swallowed the open menu. A
+   z-index on the menu alone cannot escape that: it only orders it within its
+   own card. The card itself has to rise while its menu is open. */
+.row-elements .element-card:has(.element-actions-menu.show) {
+    z-index: 1030;
+}
+
+.element-actions .element-actions-menu {
+    z-index: 1030;
+}
+
+/* The label beside each icon. Only the menu has room for it — inline, the
+   icon and its title attribute are all there is space for. */
+.element-action-label {
+    display: none;
+}
+
+@container (max-width: 240px) {
+    .element-actions .element-actions-menu .element-action-label {
+        display: inline;
+        margin-inline-start: .5rem;
+        white-space: nowrap;
     }
 }

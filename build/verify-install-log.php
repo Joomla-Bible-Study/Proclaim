@@ -103,6 +103,45 @@ function countRegisteredSteps(string $scriptFile): int
 }
 
 /**
+ * The version each legacy migration is gated at, keyed by its step name.
+ *
+ * ⚠️ A step gated at a version *newer* than the one being upgraded from is
+ * supposed to run — that is the release adding a migration, not a gate
+ * failing. Without this the check reported the first release to add one as a
+ * regression, which is what it did for 10.6.0's "Stray layouts".
+ *
+ * Read from the script for the same reason the count is: a constant here
+ * would go stale the moment someone adds a step.
+ *
+ * @param   string  $scriptFile  Path to proclaim.script.php
+ *
+ * @return  array<string, string>  Step name => version it is gated at
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function registeredStepVersions(string $scriptFile): array
+{
+    if (!is_file($scriptFile)) {
+        return [];
+    }
+
+    preg_match_all(
+        "/\\\$this->step\\(\\s*'([^']+)'\\s*,\\s*'([^']+)'/",
+        (string) file_get_contents($scriptFile),
+        $matches,
+        PREG_SET_ORDER
+    );
+
+    $versions = [];
+
+    foreach ($matches as $match) {
+        $versions[$match[1]] = $match[2];
+    }
+
+    return $versions;
+}
+
+/**
  * Where a Joomla install writes its logs.
  *
  * Read from the site's own configuration rather than assumed, because a site
@@ -301,18 +340,39 @@ foreach ($installs as $install) {
         echo "  OK   all {$registered} registered migration step(s) reached the log\n";
     }
 
-    if ($ran !== []) {
-        fwrite(STDERR, "  FAIL " . \count($ran) . " legacy migration(s) ran upgrading from {$expectedFrom}:\n");
+    // A step gated at a version newer than the one being upgraded from is this
+    // release adding a migration, and running is exactly what it should do.
+    $stepVersions = registeredStepVersions($root . '/proclaim.script.php');
+    $expected     = [];
+    $legacy       = [];
 
-        foreach ($ran as $line) {
+    foreach ($ran as $line) {
+        $name  = trim(preg_replace('/\s{2,}[0-9.]+s$/', '', $line));
+        $since = $stepVersions[$name] ?? null;
+
+        if ($since !== null && version_compare($since, $expectedFrom, '>')) {
+            $expected[] = "{$line}  (new in {$since})";
+
+            continue;
+        }
+
+        $legacy[] = $line;
+    }
+
+    foreach ($expected as $line) {
+        echo "  OK   migration ran because this release adds it: {$line}\n";
+    }
+
+    if ($legacy !== []) {
+        fwrite(STDERR, "  FAIL " . \count($legacy) . " legacy migration(s) ran upgrading from {$expectedFrom}:\n");
+
+        foreach ($legacy as $line) {
             fwrite(STDERR, "         {$line}\n");
         }
 
         fwrite(STDERR, "       Every migration shipped in a release at or before {$expectedFrom},\n");
         fwrite(STDERR, "       so all of them should have been gated out. This is what the gate\n");
         fwrite(STDERR, "       exists to prevent.\n");
-        fwrite(STDERR, "       If this release genuinely adds a migration newer than {$expectedFrom},\n");
-        fwrite(STDERR, "       that one is expected to run — teach this check about it.\n");
         $failures++;
     } elseif ($skipped > 0) {
         echo "  OK   all {$skipped} legacy migration(s) gated out, none ran\n";

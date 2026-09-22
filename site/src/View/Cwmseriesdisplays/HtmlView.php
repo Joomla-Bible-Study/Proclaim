@@ -194,7 +194,6 @@ class HtmlView extends BaseHtmlView
 
         $uri_tostring = $uri->toString();
 
-        // $this->lists = $lists;
         $this->request_url = $uri_tostring;
 
         // Pre-create helpers for template use

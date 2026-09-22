@@ -28,6 +28,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -584,11 +585,13 @@ class CwmmessageTable extends Table
 
                 $params->remove('pending_review');
 
+                $paramsJson = $params->toString();
                 $db->setQuery(
                     $db->createQuery()
                         ->update($db->quoteName('#__bsms_studies'))
-                        ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+                        ->set($db->quoteName('params') . ' = :params')
                         ->where($db->quoteName('id') . ' = ' . (int) $row->id)
+                        ->bind(':params', $paramsJson, ParameterType::STRING)
                 )->execute();
             }
         } catch (\RuntimeException $e) {

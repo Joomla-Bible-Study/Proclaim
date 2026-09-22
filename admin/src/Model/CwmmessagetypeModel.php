@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -79,7 +80,7 @@ class CwmmessagetypeModel extends AdminModel
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.messagetype.data', []);
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmmessagetype.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

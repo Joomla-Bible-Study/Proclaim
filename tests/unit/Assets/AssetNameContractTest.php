@@ -408,4 +408,95 @@ class AssetNameContractTest extends TestCase
             );
         }
     }
+
+    /**
+     * Declared sections that deliberately have no table behind them.
+     *
+     * `component` is the component-level section: it governs Proclaim as a
+     * whole and owns no records, so it has no row in getAssetObjects().
+     *
+     * Anything else added here is a section whose permissions are shown in the
+     * UI while nothing enforces them per record, so it needs a reason.
+     *
+     * @var array<string, string>
+     * @since __DEPLOY_VERSION__
+     */
+    private const SECTIONS_WITHOUT_RECORDS = [
+        'component' => 'Component-level permissions; owns no records.',
+    ];
+
+    /**
+     * The `assetname` of every entry in Cwmassets::getAssetObjects().
+     *
+     * Read from source rather than called, so the test needs no Joomla runtime.
+     *
+     * @return  list<string>
+     * @since __DEPLOY_VERSION__
+     */
+    private static function assetObjectSections(): array
+    {
+        $source = (string) file_get_contents(self::root() . '/admin/src/Lib/Cwmassets.php');
+        $start  = strpos($source, 'public static function getAssetObjects()');
+
+        self::assertNotFalse($start, 'getAssetObjects() could not be found.');
+
+        $end  = strpos($source, "\n    }\n", $start);
+        $body = substr($source, $start, $end - $start);
+
+        preg_match_all("#'assetname'\s*=>\s*'([^']+)'#", $body, $matches);
+
+        return $matches[1];
+    }
+
+    /**
+     * ⚠️ getAssetObjects() is not just the Assets screen's row list. It also
+     * drives the asset_id null-out in pruneEmptyAssetRows(), the orphan sweep
+     * in cleanOrphanedAssets(), the drift probe in hasAnyDrift(), and the
+     * relink map Cwmbackup writes into a restore. A section missing from it is
+     * therefore not merely unlisted -- its rows are deleted by a prune that
+     * never clears the source record's asset_id, its orphans are never swept,
+     * and a restore cannot reattach its per-record permissions.
+     *
+     * `playlist` was missing from all of them (#1975). It is the only section
+     * whose table is plural, `#__bsms_playlists`, which is the likeliest reason.
+     *
+     * @return  void
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox('every declared section with records behind it is in getAssetObjects()')]
+    public function testDeclaredSectionsAreAllInAssetObjects(): void
+    {
+        $expected = array_values(
+            array_diff(self::declaredSections(), array_keys(self::SECTIONS_WITHOUT_RECORDS))
+        );
+        $actual = self::assetObjectSections();
+
+        sort($expected);
+        sort($actual);
+
+        $this->assertSame(
+            $expected,
+            $actual,
+            "admin/access.xml and Cwmassets::getAssetObjects() disagree about which sections have\n"
+            . "records behind them. A section declared but absent from getAssetObjects() has its\n"
+            . "asset rows deleted without its records being unlinked from them; one present but not\n"
+            . 'declared is governed by permissions nobody can set. Add it to both, or to '
+            . 'SECTIONS_WITHOUT_RECORDS with a reason.'
+        );
+    }
+
+    #[TestDox('the sections-without-records list only names declared sections')]
+    public function testSectionsWithoutRecordsAreDeclared(): void
+    {
+        $declared = self::declaredSections();
+
+        foreach (self::SECTIONS_WITHOUT_RECORDS as $section => $why) {
+            $this->assertContains(
+                $section,
+                $declared,
+                "'{$section}' is exempted from needing a table, but access.xml no longer declares "
+                . 'it, so the exemption is stale. Remove it: ' . $why
+            );
+        }
+    }
 }

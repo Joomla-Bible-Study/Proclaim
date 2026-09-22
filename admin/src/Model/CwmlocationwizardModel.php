@@ -22,6 +22,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Location Setup Wizard model
@@ -272,11 +273,13 @@ class CwmlocationwizardModel extends BaseDatabaseModel
         $params->set('enable_location_filtering', 1);
         $params->set('location_system_dismissed', 0);
 
-        $query = $db->createQuery()
+        $paramsJson = $params->toString();
+        $query      = $db->createQuery()
             ->update($db->quoteName('#__extensions'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->set($db->quoteName('params') . ' = :params')
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
-            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+            ->bind(':params', $paramsJson, ParameterType::STRING);
 
         $db->setQuery($query);
         $db->execute();
@@ -300,6 +303,8 @@ class CwmlocationwizardModel extends BaseDatabaseModel
      *
      * @return  void
      *
+     * @throws  \RuntimeException  When the rules will not encode, rather than
+     *                             storing an empty rules column.
      * @since   10.1.0
      */
     private function applyPermissions(array $permissions): void
@@ -356,11 +361,27 @@ class CwmlocationwizardModel extends BaseDatabaseModel
             }
         }
 
+        // ⚠️ Refuse rather than write what will not encode. json_encode()
+        // returns false, quote(false) is an empty string, and an empty rules
+        // column is not a harmless value here — it drops every permission on
+        // the component asset, which presents later as a 404 nobody links back
+        // to this wizard.
+        try {
+            $encoded = json_encode($rules, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            throw new \RuntimeException(
+                'Refusing to write permissions that could not be encoded: ' . $e->getMessage(),
+                0,
+                $e
+            );
+        }
+
         // Save updated rules
         $query = $db->createQuery()
             ->update($db->quoteName('#__assets'))
-            ->set($db->quoteName('rules') . ' = ' . $db->quote(json_encode($rules)))
-            ->where($db->quoteName('id') . ' = ' . (int) $asset->id);
+            ->set($db->quoteName('rules') . ' = :rules')
+            ->where($db->quoteName('id') . ' = ' . (int) $asset->id)
+            ->bind(':rules', $encoded, ParameterType::STRING);
 
         $db->setQuery($query);
         $db->execute();
@@ -384,11 +405,13 @@ class CwmlocationwizardModel extends BaseDatabaseModel
 
         $params->set('location_system_dismissed', 1);
 
-        $query = $db->createQuery()
+        $paramsJson = $params->toString();
+        $query      = $db->createQuery()
             ->update($db->quoteName('#__extensions'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->set($db->quoteName('params') . ' = :params')
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
-            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+            ->bind(':params', $paramsJson, ParameterType::STRING);
 
         $db->setQuery($query);
         $db->execute();

@@ -2026,17 +2026,53 @@
                 <span class="element-name">${element.label}${deprecatedBadge}</span>
                 ${!isPalette ? `
                     <span class="element-info">Col 1</span>
-                    ${this.moveButtonsHtml(element.label)}
-                    <button type="button" class="btn-settings" title="${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings'}">
-                        <span class="icon-options" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" class="btn-remove" title="${this.trans('JBS_TPL_REMOVE_ELEMENT') || 'Remove'}">
-                        <span class="icon-cancel" aria-hidden="true"></span>
-                    </button>
+                    ${this.elementActionsHtml(element.label)}
                 ` : ''}
             `;
 
             return card;
+        }
+
+        /**
+         * Every control on an element card, in one menu.
+         *
+         * ⚠️ Rendered once, not twice. A wide card shows the menu as an inline
+         * row and hides the toggle; a narrow one hides the row and shows the
+         * toggle. Rendering a second, hidden copy would give every control two
+         * accessible names, which is worse for a screen reader than the
+         * clipping this fixes.
+         *
+         * The classes are unchanged, so the delegated handlers in bindEvents()
+         * keep working wherever the buttons end up.
+         *
+         * @param {string} label - The element's display label, for the
+         *                         accessible names
+         * @returns {string}
+         */
+        elementActionsHtml(label) {
+            const more     = this.trans('JBS_TPL_MORE_ACTIONS') || 'More actions';
+            const settings = this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings';
+            const remove   = this.trans('JBS_TPL_REMOVE_ELEMENT') || 'Remove';
+
+            return `
+                <div class="element-actions dropdown">
+                    <button type="button" class="btn-actions-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false" aria-label="${more}: ${label}" title="${more}">
+                        <span class="icon-ellipsis-v" aria-hidden="true"></span>
+                    </button>
+                    <div class="dropdown-menu element-actions-menu">
+                        ${this.moveButtonsHtml(label)}
+                        <button type="button" class="btn-settings" title="${settings}" aria-label="${settings}: ${label}">
+                            <span class="icon-options" aria-hidden="true"></span>
+                            <span class="element-action-label">${settings}</span>
+                        </button>
+                        <button type="button" class="btn-remove" title="${remove}" aria-label="${remove}: ${label}">
+                            <span class="icon-cancel" aria-hidden="true"></span>
+                            <span class="element-action-label">${remove}</span>
+                        </button>
+                    </div>
+                </div>
+            `;
         }
 
         /**
@@ -2061,6 +2097,7 @@
                 <button type="button" class="btn-move" data-move="${dir}"
                         aria-label="${text}: ${label}" title="${text}">
                     <span class="${icon}" aria-hidden="true"></span>
+                    <span class="element-action-label">${text}</span>
                 </button>
             `).join('');
 
@@ -2472,13 +2509,7 @@
                         <span class="element-handle"><span class="icon-menu" aria-hidden="true"></span></span>
                         <span class="element-name">${element.label}${depBadge}</span>
                         <span class="element-info">Col ${col}</span>
-                        ${this.moveButtonsHtml(element.label)}
-                        <button type="button" class="btn-settings" title="${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings'}">
-                            <span class="icon-options" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn-remove" title="${this.trans('JBS_TPL_REMOVE_ELEMENT') || 'Remove'}">
-                            <span class="icon-cancel" aria-hidden="true"></span>
-                        </button>
+                        ${this.elementActionsHtml(element.label)}
                     `;
                 }
 

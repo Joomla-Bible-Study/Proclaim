@@ -27,7 +27,23 @@ module.exports = defineConfig({
     outputDir: 'test-results/',
     fullyParallel: false,
     workers: 1,
-    retries: 0,
+    // ⚠️ Retries in CI only, and two rather than one.
+    //
+    // The servertype specs share a pickType() helper that waits for the type
+    // picker's joomla-dialog to close after a click inside its iframe. On the
+    // Joomla 6 leg that intermittently does not happen within the 5s window —
+    // observed failing on three of four CI runs, and passing in 899ms on
+    // another, with the log showing the dialog simply never closed. Joomla 5
+    // has not been seen to do it.
+    //
+    // Retrying is not hiding it: Playwright reports a test that passed on a
+    // retry as **flaky** in its own line of the summary, so the count stays
+    // visible on every run while a red build stops meaning "look at this" for
+    // something that is noise. Locally retries stay off, because a flake in
+    // front of the person who just wrote the code is information.
+    //
+    // Tracked in its own issue — the fix is in the spec's wait, not here.
+    retries: process.env.CI ? 2 : 0,
     timeout: 30000,
     globalSetup: require.resolve('./tests/e2e/global-setup.js'),
 
@@ -40,6 +56,14 @@ module.exports = defineConfig({
         ignoreHTTPSErrors: true,
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
+
+        // ⚠️ on-first-retry, which is the only setting that catches a flake.
+        // A test that fails and then passes leaves the run green, so anything
+        // conditioned on failure keeps nothing — which is why the servertype
+        // dialog flake has been diagnosed from a five-line error excerpt and
+        // nothing else. A retry only happens in CI, so this costs local runs
+        // nothing and costs CI a trace only on a run that already misbehaved.
+        trace: 'on-first-retry',
 
         // Run new headless — real Chromium with no window — rather than
         // Playwright's default, which for `headless: true` is

@@ -504,9 +504,9 @@ class Cwmassets
             ->values(
                 (int) $rootId . ', 0, 0, 1, ' .
                 $db->quote('com_proclaim') . ', ' .
-                $db->quote('com_proclaim') . ', ' .
-                $db->quote($defaultRules)
-            );
+                $db->quote('com_proclaim') . ', :rules'
+            )
+            ->bind(':rules', $defaultRules, ParameterType::STRING);
 
         try {
             $db->setQuery($query);
@@ -752,6 +752,60 @@ class Cwmassets
     }
 
     /**
+     * Map every declared section to the parent an item of it should carry,
+     * without creating anything.
+     *
+     * ⚠️ Read-only on purpose. sectionParentId() resolves through sectionId(),
+     * which *creates* a missing section row — fine on a repair path, wrong for
+     * a status report, and expensive: called once per table it turned a bounded
+     * report into 113 queries and had it writing rows as a side effect. One
+     * query here serves all 14 tables, and a section that does not exist falls
+     * back to com_proclaim, which is where such an item does belong.
+     *
+     * @param   DatabaseInterface  $db        Database driver
+     * @param   int                $parentId  com_proclaim asset id, the fallback
+     *
+     * @return  array<string, int>  Section name => expected parent asset id
+     *
+     * @since   10.6.2
+     */
+    private static function sectionParentMap(DatabaseInterface $db, int $parentId): array
+    {
+        $sections = self::declaredSections();
+        $map      = array_fill_keys($sections, $parentId);
+
+        if ($sections === []) {
+            return $map;
+        }
+
+        $names = array_map(
+            static fn ($section) => $db->quote('com_proclaim.' . $section),
+            $sections
+        );
+
+        try {
+            $db->setQuery(
+                $db->createQuery()
+                    ->select([$db->quoteName('id'), $db->quoteName('name')])
+                    ->from($db->quoteName('#__assets'))
+                    ->where($db->quoteName('name') . ' IN (' . implode(',', $names) . ')')
+            );
+
+            foreach ($db->loadAssocList() as $row) {
+                $section = substr((string) $row['name'], \strlen('com_proclaim.'));
+
+                if (isset($map[$section])) {
+                    $map[$section] = (int) $row['id'];
+                }
+            }
+        } catch (\Exception $e) {
+            Log::add('sectionParentMap lookup failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        return $map;
+    }
+
+    /**
      * Get the com_proclaim parent asset ID, creating it if missing.
      *
      * CRITICAL: This method MUST never return 0.  All 14 Table classes call
@@ -919,25 +973,58 @@ class Cwmassets
      */
     public static function hasAnyDrift(DatabaseInterface $db, int $parentId): bool
     {
+        // Left interpolated on purpose: EMPTY_RULE_VARIANTS is a fixed
+        // constant, not input, so quoting it carries no escaping responsibility
+        // to move to a bind — and it feeds raw CASE/IN expressions below where a
+        // placeholder cannot go.
         $emptyQuoted = implode(
             ',',
             array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
         );
 
+        // ⚠️ Item-scoped, and per-section. Empty rules are normal on a section
+        // row — it simply has no override — so only an *item* row with empty
+        // rules is cleanup material.
+        //
+        // The parent test has to name the section, not merely accept any of
+        // them. An item sitting on com_proclaim while its own section row
+        // exists is exactly the state a flatten leaves behind, and treating
+        // com_proclaim as universally acceptable would report that site as
+        // clean and never repair it. sectionParentId() returns com_proclaim
+        // only when the section is genuinely absent, which is where an item
+        // does belong.
         try {
             $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__assets'))
-                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
-                ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
-                ->where(
-                    '(' . $db->quoteName('rules') . ' IN (' . $emptyQuoted . ')'
-                    . ' OR ' . $db->quoteName('parent_id') . ' <> ' . (int) $parentId . ')'
-                );
+                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%.%'))
+                ->where($db->quoteName('rules') . ' IN (' . $emptyQuoted . ')');
             $db->setQuery($query);
 
             if ((int) $db->loadResult() > 0) {
                 return true;
+            }
+
+            $parentMap = self::sectionParentMap($db, $parentId);
+
+            foreach (self::getAssetObjects() as $info) {
+                $section  = $info['assetname'];
+                $expected = $parentMap[$section] ?? $parentId;
+
+                if ($expected < 1) {
+                    continue;
+                }
+
+                $query = $db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName('#__assets'))
+                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.' . $section . '.%'))
+                    ->where($db->quoteName('parent_id') . ' <> ' . (int) $expected);
+                $db->setQuery($query);
+
+                if ((int) $db->loadResult() > 0) {
+                    return true;
+                }
             }
         } catch (\Exception $e) {
             // If the drift probe fails, fall through to the full fix path
@@ -948,32 +1035,20 @@ class Cwmassets
         }
 
         // Orphan probe — one COUNT per content table, bail at first hit.
-        $orphanMap = [
-            'com_proclaim.message.'      => '#__bsms_studies',
-            'com_proclaim.mediafile.'    => '#__bsms_mediafiles',
-            'com_proclaim.serie.'        => '#__bsms_series',
-            'com_proclaim.teacher.'      => '#__bsms_teachers',
-            'com_proclaim.server.'       => '#__bsms_servers',
-            'com_proclaim.comment.'      => '#__bsms_comments',
-            'com_proclaim.location.'     => '#__bsms_locations',
-            'com_proclaim.messagetype.'  => '#__bsms_message_type',
-            'com_proclaim.podcast.'      => '#__bsms_podcast',
-            'com_proclaim.template.'     => '#__bsms_templates',
-            'com_proclaim.templatecode.' => '#__bsms_templatecode',
-            'com_proclaim.topic.'        => '#__bsms_topics',
-            'com_proclaim.admin.'        => '#__bsms_admin',
-        ];
+        $orphanMap = self::orphanSourceMap();
 
         foreach ($orphanMap as $prefix => $sourceTable) {
             try {
-                $query = $db->createQuery()
+                $namePattern = $prefix . '%';
+                $query       = $db->createQuery()
                     ->select('COUNT(*)')
                     ->from($db->quoteName('#__assets'))
-                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote($prefix . '%'))
+                    ->where($db->quoteName('name') . ' LIKE :namePattern')
                     ->where(
                         'CAST(SUBSTRING(' . $db->quoteName('name') . ', ' . (\strlen($prefix) + 1) . ') AS UNSIGNED)'
                         . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName($sourceTable) . ')'
-                    );
+                    )
+                    ->bind(':namePattern', $namePattern, ParameterType::STRING);
                 $db->setQuery($query);
 
                 if ((int) $db->loadResult() > 0) {
@@ -1007,6 +1082,10 @@ class Cwmassets
     public static function pruneEmptyAssetRows(DatabaseInterface $db): int
     {
         $deleted     = 0;
+        // Left interpolated on purpose: EMPTY_RULE_VARIANTS is a fixed
+        // constant, not input, so quoting it carries no escaping responsibility
+        // to move to a bind — and it feeds raw CASE/IN expressions below where a
+        // placeholder cannot go.
         $emptyQuoted = implode(
             ',',
             array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
@@ -1043,10 +1122,13 @@ class Cwmassets
 
         // Now delete the asset rows themselves.
         try {
+            // ⚠️ Item rows only. A section asset (com_proclaim.<section>) has
+            // empty rules whenever no override is set — the ordinary state —
+            // and it is load-bearing, because every item asset is parented to
+            // it. Items carry a third segment, which is what separates them.
             $query = $db->createQuery()
                 ->delete($db->quoteName('#__assets'))
-                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
-                ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%.%'))
                 ->where($db->quoteName('rules') . ' IN (' . $emptyQuoted . ')');
             $db->setQuery($query);
             $db->execute();
@@ -1088,17 +1170,49 @@ class Cwmassets
             return 0;
         }
 
+        // ⚠️ One statement per section, because each item belongs under the
+        // parent its own Table::_getAssetParentId() would give it. A single
+        // blanket update onto com_proclaim would move correctly parented items
+        // out of the section whose rules are meant to reach them.
+        $moved = 0;
+
         try {
+            foreach (self::getAssetObjects() as $info) {
+                $section       = $info['assetname'];
+                $sectionParent = self::sectionParentId($section);
+
+                if ($sectionParent < 1) {
+                    continue;
+                }
+
+                $query = $db->createQuery()
+                    ->update($db->quoteName('#__assets'))
+                    ->set($db->quoteName('parent_id') . ' = ' . (int) $sectionParent)
+                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.' . $section . '.%'))
+                    ->where($db->quoteName('parent_id') . ' <> ' . (int) $sectionParent);
+                $db->setQuery($query);
+                $db->execute();
+                $moved += (int) $db->getAffectedRows();
+            }
+
+            // Section rows belong directly under com_proclaim.
             $query = $db->createQuery()
                 ->update($db->quoteName('#__assets'))
                 ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
                 ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
-                ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('name') . ' NOT LIKE ' . $db->quote('com_proclaim.%.%'))
                 ->where($db->quoteName('parent_id') . ' <> ' . (int) $parentId);
             $db->setQuery($query);
             $db->execute();
+            $moved += (int) $db->getAffectedRows();
 
-            return (int) $db->getAffectedRows();
+            // ⚠️ These are raw parent_id writes, which leave lft/rgt pointing at
+            // the old position. That is only safe because fixAllAssets() calls
+            // Asset::rebuild() whenever this returns non-zero — the count below
+            // is what triggers it. Anything calling this directly must rebuild
+            // too, or Access::getAssetRules()'s lft/rgt walk will not see the
+            // new ancestry.
+            return $moved;
         } catch (\Exception $e) {
             Log::add(
                 'Reparent surviving assets error: ' . $e->getMessage(),
@@ -1234,7 +1348,8 @@ class Cwmassets
             $query = $db->createQuery()
                 ->select($db->quoteName(['id', 'rules']))
                 ->from($db->quoteName('#__assets'))
-                ->where($db->quoteName('name') . ' = ' . $db->quote($assetFullName));
+                ->where($db->quoteName('name') . ' = :assetName')
+                ->bind(':assetName', $assetFullName, ParameterType::STRING);
             $db->setQuery($query);
             $existing = $db->loadObject();
 
@@ -1279,12 +1394,21 @@ class Cwmassets
         // as an ancestor -- an asset row that exists but is silently
         // broken, without a full Asset::rebuild() to catch it.
         // moveByReference() performs a proper nested-set node move.
-        if ((int) ($item->parent_id ?? 0) !== (int) $parentId) {
+        // ⚠️ The target is the record's own section, not com_proclaim — the
+        // same call Table::_getAssetParentId() makes, so the two cannot
+        // disagree. It falls back to com_proclaim when the section is absent.
+        $targetParent = self::sectionParentId($assetName);
+
+        if ($targetParent < 1) {
+            $targetParent = $parentId;
+        }
+
+        if ((int) ($item->parent_id ?? 0) !== (int) $targetParent) {
             $assetTable = new \Joomla\CMS\Table\Asset($db);
 
-            if (!$assetTable->moveByReference($parentId, 'last-child', (int) $item->asset_id)) {
+            if (!$assetTable->moveByReference($targetParent, 'last-child', (int) $item->asset_id)) {
                 Log::add(
-                    'fixSingleRecord: failed to move asset ' . $item->asset_id . ' under parent ' . $parentId,
+                    'fixSingleRecord: failed to move asset ' . $item->asset_id . ' under parent ' . $targetParent,
                     Log::WARNING,
                     'com_proclaim'
                 );
@@ -1294,8 +1418,9 @@ class Cwmassets
 
             $query = $db->createQuery()
                 ->update($db->quoteName('#__assets'))
-                ->set($db->quoteName('name') . ' = ' . $db->quote($assetFullName))
-                ->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
+                ->set($db->quoteName('name') . ' = :assetName')
+                ->where($db->quoteName('id') . ' = ' . (int) $item->asset_id)
+                ->bind(':assetName', $assetFullName, ParameterType::STRING);
             $db->setQuery($query);
             $db->execute();
 
@@ -1321,29 +1446,17 @@ class Cwmassets
      */
     public static function cleanOrphanedAssets(DatabaseInterface $db): int
     {
-        $assetMap = [
-            'com_proclaim.message.'      => '#__bsms_studies',
-            'com_proclaim.mediafile.'    => '#__bsms_mediafiles',
-            'com_proclaim.serie.'        => '#__bsms_series',
-            'com_proclaim.teacher.'      => '#__bsms_teachers',
-            'com_proclaim.server.'       => '#__bsms_servers',
-            'com_proclaim.comment.'      => '#__bsms_comments',
-            'com_proclaim.location.'     => '#__bsms_locations',
-            'com_proclaim.messagetype.'  => '#__bsms_message_type',
-            'com_proclaim.podcast.'      => '#__bsms_podcast',
-            'com_proclaim.template.'     => '#__bsms_templates',
-            'com_proclaim.templatecode.' => '#__bsms_templatecode',
-            'com_proclaim.topic.'        => '#__bsms_topics',
-            'com_proclaim.admin.'        => '#__bsms_admin',
-        ];
+        $assetMap = self::orphanSourceMap();
 
         $totalRemoved = 0;
 
         foreach ($assetMap as $prefix => $sourceTable) {
             try {
-                $query = $db->createQuery()
+                $namePattern = $prefix . '%';
+                $query       = $db->createQuery()
                     ->delete($db->quoteName('#__assets'))
-                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote($prefix . '%'))
+                    ->where($db->quoteName('name') . ' LIKE :namePattern')
+                    ->bind(':namePattern', $namePattern, ParameterType::STRING)
                     ->where(
                         'CAST(SUBSTRING(' . $db->quoteName('name') . ', ' . (\strlen($prefix) + 1) . ') AS UNSIGNED)'
                         . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName($sourceTable) . ')'
@@ -1468,10 +1581,15 @@ class Cwmassets
      */
     public static function getAssetStatus(): array
     {
-        $db       = Factory::getContainer()->get(DatabaseInterface::class);
-        $parentId = self::parentId();
-        $status   = [];
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
+        $parentId  = self::parentId();
+        $parentMap = self::sectionParentMap($db, $parentId);
+        $status    = [];
 
+        // Left interpolated on purpose: EMPTY_RULE_VARIANTS is a fixed
+        // constant, not input, so quoting it carries no escaping responsibility
+        // to move to a bind — and it feeds raw CASE/IN expressions below where a
+        // placeholder cannot go.
         $emptyQuoted = implode(
             ',',
             array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
@@ -1480,6 +1598,11 @@ class Cwmassets
         foreach (self::getAssetObjects() as $info) {
             $sourceTbl = $info['name'];
             $assetName = $info['assetname'];
+
+            // ⚠️ Drift is measured against the parent this table's records are
+            // actually given — its section — not against com_proclaim. A
+            // correctly stored record is parented to its section.
+            $expectedParent = $parentMap[$assetName] ?? $parentId;
 
             // numrows/inherited/custom_rules/needs_cleanup/drifted collapsed
             // into one conditional-aggregation query per table (was 5).
@@ -1497,7 +1620,7 @@ class Cwmassets
                             . ', SUM(CASE WHEN ' . $db->quoteName('a.id') . ' IS NOT NULL AND '
                                 . $db->quoteName('a.rules') . ' IN (' . $emptyQuoted . ') THEN 1 ELSE 0 END) AS needs_cleanup'
                             . ', SUM(CASE WHEN ' . $db->quoteName('a.id') . ' IS NOT NULL AND '
-                                . $db->quoteName('a.parent_id') . ' <> ' . (int) $parentId . ' THEN 1 ELSE 0 END) AS drifted'
+                                . $db->quoteName('a.parent_id') . ' <> ' . (int) $expectedParent . ' THEN 1 ELSE 0 END) AS drifted'
                         )
                         ->from($db->quoteName($sourceTbl, 's'))
                         ->leftJoin(
@@ -1521,6 +1644,10 @@ class Cwmassets
             $prefixLen = \strlen($prefix) + 1;
 
             try {
+                // Raw string query (setQuery has no query object to bind on);
+                // the prefix stays quoted rather than bound. Moving it to a
+                // placeholder would mean rebuilding this LEFT JOIN + CAST as a
+                // builder query — out of scope for a value-binding pass.
                 $db->setQuery(
                     'SELECT COUNT(*) FROM ' . $db->quoteName('#__assets', 'a')
                     . ' LEFT JOIN ' . $db->quoteName($sourceTbl, 's')
@@ -1548,12 +1675,111 @@ class Cwmassets
             ];
         }
 
+        $sections = self::sectionAssetStatus($db, $parentId, $emptyQuoted);
+
+        if ($sections !== null) {
+            $status[] = $sections;
+        }
+
         return $status;
+    }
+
+    /**
+     * The section permission rows, which belong to no content table.
+     *
+     * ⚠️ Counted separately because the per-table figures above cannot see
+     * them. Those join a content table to `#__assets`, and a section row like
+     * `com_proclaim.message` is referenced by no record and matches no
+     * `com_proclaim.message.%` pattern — so it is invisible there by
+     * construction, while pruneEmptyAssetRows() deletes it. Without this the
+     * screen offered a Clean Up whose scope it could not show.
+     *
+     * Deleting an empty one costs nothing: sectionActions() falls back to the
+     * component's permissions, and the row is recreated when a section is next
+     * given rules of its own. A section that *has* rules is not empty, so it
+     * never matches the prune.
+     *
+     * @param   DatabaseInterface  $db           Database driver
+     * @param   int                $parentId     com_proclaim parent asset id
+     * @param   string             $emptyQuoted  Quoted empty-rule variants for an IN clause
+     *
+     * @return  ?array  A status row, or null when the count cannot be taken
+     *
+     * @since   10.6.0
+     */
+    private static function sectionAssetStatus(DatabaseInterface $db, int $parentId, string $emptyQuoted): ?array
+    {
+        try {
+            $db->setQuery(
+                'SELECT COUNT(*) AS numrows,'
+                . ' SUM(CASE WHEN ' . $db->quoteName('rules') . ' IN (' . $emptyQuoted . ')'
+                . ' THEN 1 ELSE 0 END) AS needs_cleanup,'
+                . ' SUM(CASE WHEN ' . $db->quoteName('parent_id') . ' <> ' . (int) $parentId
+                . ' THEN 1 ELSE 0 END) AS drifted'
+                . ' FROM ' . $db->quoteName('#__assets')
+                . ' WHERE ' . $db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%')
+                . ' AND ' . $db->quoteName('name') . ' NOT LIKE ' . $db->quote('com_proclaim.%.%')
+            );
+            $counts = $db->loadAssoc();
+        } catch (\Exception $e) {
+            Log::add('getAssetStatus section query failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+
+            return null;
+        }
+
+        $numrows = (int) ($counts['numrows'] ?? 0);
+
+        if ($numrows === 0) {
+            return null;
+        }
+
+        // ⚠️ A section row with empty rules is not cleanup material: it means
+        // no override is set, which is the ordinary state, and the row is
+        // load-bearing because every item asset is parented to it. Reported as
+        // inheriting, which is what it does.
+        $noOverride = (int) ($counts['needs_cleanup'] ?? 0);
+
+        return [
+            'realname'      => 'JBS_ADM_ASSETS_SECTION_ROWS',
+            'tablename'     => '#__assets',
+            'assetname'     => 'section',
+            'numrows'       => $numrows,
+            'inherited'     => $noOverride,
+            'custom_rules'  => $numrows - $noOverride,
+            'needs_cleanup' => 0,
+            'drifted'       => (int) ($counts['drifted'] ?? 0),
+            'orphans'       => 0,
+            'parent_id'     => $parentId,
+        ];
     }
 
     // =========================================================================
     // Asset Table Definitions
     // =========================================================================
+
+    /**
+     * Every per-record asset name prefix, mapped to the table its ids live in.
+     *
+     * ⚠️ Derived from getAssetObjects() rather than written out, because it was
+     * written out twice and both copies drifted from it. The trailing dot is
+     * load-bearing: `message` and `messagetype` are string-prefixes of one
+     * another, as are `template` and `templatecode`, and only the dot keeps
+     * `com_proclaim.message.%` from matching a messagetype row.
+     *
+     * @return  array<string, string>  `com_proclaim.<section>.` => table
+     *
+     * @since   10.6.0
+     */
+    private static function orphanSourceMap(): array
+    {
+        $map = [];
+
+        foreach (self::getAssetObjects() as $info) {
+            $map['com_proclaim.' . $info['assetname'] . '.'] = $info['name'];
+        }
+
+        return $map;
+    }
 
     /**
      * Table list Array.
@@ -1600,6 +1826,14 @@ class Cwmassets
                 'titlefield' => 'message_type',
                 'assetname'  => 'messagetype',
                 'realname'   => 'JBS_CMN_MESSAGETYPES',
+            ],
+            [
+                // ⚠️ The only table here whose name is plural, which is the
+                // likeliest reason this section was the one left out.
+                'name'       => '#__bsms_playlists',
+                'titlefield' => 'title',
+                'assetname'  => 'playlist',
+                'realname'   => 'JBS_CMN_PLAYLISTS',
             ],
             [
                 'name'       => '#__bsms_podcast',

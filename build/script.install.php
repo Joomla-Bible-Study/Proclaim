@@ -44,16 +44,21 @@ return new class () implements InstallerScriptInterface {
     /**
      * Minimum Joomla version required.
      *
+     * ⚠️ Must match `proclaim.script.php`. This gate runs first, so a lower
+     * number here lets a site past the package boundary only for the
+     * component to refuse a moment later, leaving a half-installed stack.
+     * Guarded by `JoomlaFloorTest`.
+     *
      * @var string
      * @since 10.3.0
      */
-    private string $minimumJoomla = '5.1.0';
+    private string $minimumJoomla = '5.4.0';
 
     /**
      * The ARS stream id Proclaim releases are announced on.
      *
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     private const CURRENT_STREAM = '1';
 
@@ -431,7 +436,7 @@ return new class () implements InstallerScriptInterface {
      *
      * @return  int[]  Those on the current stream
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.10
      */
     private function currentStreamSites(array $siteIds): array
     {

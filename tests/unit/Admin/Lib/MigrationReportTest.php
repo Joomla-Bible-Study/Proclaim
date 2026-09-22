@@ -205,7 +205,7 @@ class MigrationReportTest extends ProclaimTestCase
         );
 
         self::assertSame(
-            8,
+            9,
             preg_match_all('~\$this->step\(~', $source),
             'Every legacy migration should go through step(), so it is both gated and recorded.'
         );

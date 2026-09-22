@@ -1,0 +1,10 @@
+**Protected media storage** now works end to end — Proclaim serves files from your protected folder instead of linking to them, so a restricted study stays restricted
+**Move a file into protected storage from inside Proclaim**, instead of moving it on the server by hand
+Your **podcast feed no longer exposes protected files**, and System Health tells you if a feed is set up to try
+The restricted-media list now **explains why each file is on it** and what state it is in
+**Choosing a server type no longer reloads the page** — the fields swap in place and anything you have already typed survives
+Fixed: the **setup wizard could fail to create your podcast** on sites upgraded from older versions, without saying so
+Fixed: a visitor could see an error page instead of a message, and **titles with accented or non-Latin characters were being corrupted**
+Security: the podcast enclosure check now **verifies TLS**, so the details written into your feed cannot be tampered with in transit
+**Scripture passages that span chapters** (for example Genesis 1:26-2:3) now return verses correctly, and removing translations no longer hangs
+Play and download counts are now recorded **only when the visitor could actually access the media**, so your statistics reflect real listens

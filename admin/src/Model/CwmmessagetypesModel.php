@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 
 /**
  * MessageType model class
@@ -182,12 +184,12 @@ class CwmmessagetypesModel extends ListModel
     /**
      * Get List Query
      *
-     * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface|string   A JDatabaseQuery object to retrieve the data set.
      *
      * @throws \Exception
      * @since   7.0.0
      */
-    protected function getListQuery(): mixed
+    protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();
@@ -245,13 +247,17 @@ class CwmmessagetypesModel extends ListModel
         if (is_numeric($published)) {
             $query->where($db->quoteName('messagetype.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->quoteName('messagetype.published') . ' = 0 OR ' . $db->quoteName('messagetype.published') . ' = 1)');
+            $query->whereIn($db->quoteName('messagetype.published'), [0, 1]);
         }
 
         // Add the list ordering clause.
-        $orderCol  = $this->state->get('list.ordering', 'messagetype.message_type');
-        $orderDirn = $this->state->get('list.direction', 'ASC');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        CwmdbHelper::orderByWhitelisted(
+            $query,
+            $this->filter_fields,
+            $this->state->get('list.ordering'),
+            $this->state->get('list.direction', 'ASC'),
+            'messagetype.message_type'
+        );
 
         return $query;
     }

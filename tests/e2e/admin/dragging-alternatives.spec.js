@@ -96,15 +96,33 @@ test.describe('Non-drag movement alternatives @a11y-interaction', () => {
             'Element cards should carry non-drag movement controls',
         ).toBeAttached();
 
+        // ⚠️ A card too narrow to show its controls inline collapses them into
+        // a menu (#1930). The control still has to be reachable without a
+        // drag — that is the whole of SC 2.5.7 — so open the menu when there
+        // is one and assert against the same button either way. Reaching past
+        // a closed menu with a forced click would prove the opposite of what
+        // this test is for.
+        const reveal = async (card) => {
+            const toggle = card.locator('.btn-actions-toggle');
+
+            if (await toggle.isVisible().catch(() => false)) {
+                await toggle.click();
+                await expect(card.locator('.element-actions-menu')).toBeVisible();
+            }
+        };
+
         // Move the first element right: it becomes the second card, without
         // any drag — the assertion SC 2.5.7 actually asks for. (Not saved:
         // the template on the dev site is left untouched.)
+        await reveal(cards.first());
         await cards.first().locator('.btn-move[data-move="right"]').click();
 
         await expect(multiRow.locator('.element-card').nth(1)).toHaveAttribute('data-element', firstId);
 
         // And back, restoring the editor state.
-        await multiRow.locator('.element-card').nth(1).locator('.btn-move[data-move="left"]').click();
+        const moved = multiRow.locator('.element-card').nth(1);
+        await reveal(moved);
+        await moved.locator('.btn-move[data-move="left"]').click();
 
         await expect(multiRow.locator('.element-card').nth(0)).toHaveAttribute('data-element', firstId);
     });

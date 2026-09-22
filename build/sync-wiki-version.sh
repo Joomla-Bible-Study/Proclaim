@@ -17,6 +17,17 @@
 #                                active_development still equals the released
 #                                version (i.e. immediately post-release, before
 #                                the next `composer bump`).
+#   - Joomla + PHP requirements: $minimumJoomla / $minimumPhp in
+#                                proclaim.script.php — the numbers the package
+#                                preflight actually aborts on, and the ones
+#                                JoomlaFloorTest already guards.
+#
+# WHY the requirement columns are derived and not carried through: they used to
+# be copied verbatim from whatever was already in the table, so they had no
+# relationship to the floor the code enforces. They read "5.1+" for three
+# releases after #1963 raised it to 5.4.0 — telling anyone on 5.1, on the first
+# page of the wiki, that they were supported, when the installer would abort
+# (#2005). A column nothing derives is a column that is right by luck.
 #
 # Usage:
 #   composer release:wiki            # update + commit + push the wiki
@@ -67,6 +78,14 @@ fi
 RELEASE_VERSION="${RELEASE_TAG#v}"
 RELEASE_DATE_ISO="$(git -C "$REPO_ROOT" log -1 --format=%cs "$RELEASE_TAG")"
 
+# --- Requirement floors from the installer script ---
+# ⚠️ Read from the repo working copy, not from a tag: the wiki describes what is
+# current, and a floor raised on development is true of the development row the
+# moment it lands.
+SCRIPT_PHP="${REPO_ROOT}/proclaim.script.php"
+MIN_JOOMLA="$(sed -n "s/.*\$minimumJoomla *= *'\([0-9.]*\)'.*/\1/p" "$SCRIPT_PHP" | head -1)"
+MIN_PHP="$(sed -n "s/.*\$minimumPhp *= *'\([0-9.]*\)'.*/\1/p" "$SCRIPT_PHP" | head -1)"
+
 # --- Development version from versions.json on origin/development ---
 git -C "$REPO_ROOT" fetch --quiet origin "$DEV_BRANCH" 2>/dev/null || true
 VERSIONS_CONTENT="$(git -C "$REPO_ROOT" show "origin/${DEV_BRANCH}:build/versions.json" 2>/dev/null || cat "$VERSIONS_JSON")"
@@ -78,16 +97,32 @@ RESULT="$(
     RELEASE_VERSION="$RELEASE_VERSION" \
     RELEASE_DATE_ISO="$RELEASE_DATE_ISO" \
     VERSIONS_CONTENT="$VERSIONS_CONTENT" \
+    MIN_JOOMLA="$MIN_JOOMLA" \
+    MIN_PHP="$MIN_PHP" \
     HOME_MD="$HOME_MD" \
     DRY_RUN="$DRY_RUN" \
     python3 - <<'PY'
-import os, json, datetime
+import os, json, datetime, re
 
 release_version = os.environ["RELEASE_VERSION"]
 release_iso     = os.environ["RELEASE_DATE_ISO"]
 versions        = json.loads(os.environ["VERSIONS_CONTENT"])
 home_md         = os.environ["HOME_MD"]
 dry_run         = os.environ["DRY_RUN"] == "1"
+min_joomla      = os.environ.get("MIN_JOOMLA", "").strip()
+min_php         = os.environ.get("MIN_PHP", "").strip()
+
+# "5.4.0" -> "5.4+". The trailing "/ 6.0" the table used to carry is gone on
+# purpose: "5.4+" already includes 6.x, and a separately maintained list of
+# supported majors is a second thing to drift. When Joomla 5 is dropped (#1966)
+# this becomes "6.0+" on its own.
+joomla_cell = ""
+
+if min_joomla:
+    parts = min_joomla.split(".")
+    joomla_cell = ".".join(parts[:2]) + "+" if len(parts) >= 2 else min_joomla + "+"
+
+php_cell = min_php + "+" if min_php else ""
 
 # Released date -> "May 9, 2026" (abbrev month, no leading-zero day)
 d = datetime.date.fromisoformat(release_iso)
@@ -121,16 +156,39 @@ for i, line in enumerate(lines):
     if len(cells) < 5:
         continue
     label = cells[0]
+
+    # ⚠️ Fall back to the existing cell rather than writing a blank one. If the
+    # sed above stops matching because proclaim.script.php was reformatted,
+    # leaving the old value is wrong but visible; an empty requirements column
+    # reads as "no requirement", which is worse and nobody would query it.
+    joomla = joomla_cell or cells[3]
+    php    = php_cell or cells[4]
+
     if label == "Main":
-        rebuilt = f"| Main | {release_version} | {release_date} | {cells[3]} | {cells[4]} |\n"
+        rebuilt = f"| Main | {release_version} | {release_date} | {joomla} | {php} |\n"
     elif label == "Development":
-        rebuilt = f"| Development | {dev_version} | - | {cells[3]} | {cells[4]} |\n"
+        rebuilt = f"| Development | {dev_version} | - | {joomla} | {php} |\n"
     else:
         continue
     new_rows[label] = rebuilt.strip()
     if rebuilt != line:
         changed = True
         lines[i] = rebuilt
+
+# The opening sentence carries the same claim as the table and drifted with it.
+# Narrow on purpose: if the wording changes, this matches nothing and the line
+# is left alone rather than mangled.
+if joomla_cell:
+    for i, line in enumerate(lines):
+        rewritten = re.sub(
+            r"is a Joomla \d+\.\d+\+ component",
+            f"is a Joomla {joomla_cell} component",
+            line,
+        )
+
+        if rewritten != line:
+            lines[i] = rewritten
+            changed = True
 
 print("ROW_MAIN=" + new_rows.get("Main", "(Main row not found)"))
 print("ROW_DEV="  + new_rows.get("Development", "(Development row not found)"))

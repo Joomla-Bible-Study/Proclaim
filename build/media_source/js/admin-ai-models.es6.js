@@ -181,12 +181,23 @@
                 || 'Fetching models...';
         }
 
-        const url = `${baseUrl}&task=cwmadmin.fetchAiModelsXHR`
-            + `&provider=${encodeURIComponent(provider)}`
-            + `&api_key=${encodeURIComponent(apiKey)}`;
+        // ⚠️ POST, with the key in the body. As a query parameter it was
+        // written verbatim into the web server's access log on every call —
+        // and an access log is read by more people, kept longer, and shipped
+        // further than the component parameter the key is stored in. It also
+        // reached browser history and any intermediate proxy. Nothing about
+        // the request needs to be in the URL, so none of it is.
+        const url    = `${baseUrl}&task=cwmadmin.fetchAiModelsXHR`;
+        const params = new URLSearchParams();
+        params.append('provider', provider);
+        params.append('api_key', apiKey);
 
         try {
-            const data = await window.ProclaimFetch.fetchJson(url, { method: 'GET' }, { retries: 1 });
+            const data = await window.ProclaimFetch.fetchJson(
+                url,
+                { method: 'POST', body: params },
+                { retries: 1 },
+            );
 
             if (data.success && data.models) {
                 setCachedModels(provider, data.models);

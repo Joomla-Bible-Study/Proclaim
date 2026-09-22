@@ -159,17 +159,21 @@ class ResiTestApiField extends FormField
         testBtn.disabled = true;
         resultEl.innerHTML = '';
 
-        const serverId = getServerId();
-        const url = baseUrl
-            + '&server_id=' + encodeURIComponent(serverId)
-            + '&client_id=' + encodeURIComponent(clientId)
-            + '&client_secret=' + encodeURIComponent(clientSecret);
+        // ⚠️ POST, with the credentials in the body. As query parameters the
+        // client secret was written verbatim into the web server's access log
+        // on every click — a file read by more people, kept longer and shipped
+        // further than the server record the secret is stored in.
+        const body = new URLSearchParams();
+        body.append('server_id', getServerId());
+        body.append('client_id', clientId);
+        body.append('client_secret', clientSecret);
 
-        fetch(url, {
-            method: 'GET',
+        fetch(baseUrl, {
+            method: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
-            }
+            },
+            body: body
         })
         .then(response => response.json())
         .then(data => {

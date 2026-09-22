@@ -26,6 +26,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -158,11 +159,13 @@ class Cwmstats
             CwmlocationHelper::applySecurityFilter($query, 's');
 
             if (!empty($start)) {
-                $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
+                $query->where($db->quoteName('s.studydate') . ' > :start')
+                    ->bind(':start', $start, ParameterType::STRING);
             }
 
             if (!empty($end)) {
-                $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
+                $query->where($db->quoteName('s.studydate') . ' < :end')
+                    ->bind(':end', $end, ParameterType::STRING);
             }
 
             $db->setQuery($query);
@@ -212,11 +215,13 @@ class Cwmstats
             CwmlocationHelper::applySecurityFilter($query, 's');
 
             if (!empty($start)) {
-                $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
+                $query->where($db->quoteName('s.studydate') . ' > :start')
+                    ->bind(':start', $start, ParameterType::STRING);
             }
 
             if (!empty($end)) {
-                $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
+                $query->where($db->quoteName('s.studydate') . ' < :end')
+                    ->bind(':end', $end, ParameterType::STRING);
             }
 
             $db->setQuery($query);
@@ -333,7 +338,8 @@ class Cwmstats
                 ->from($db->quoteName('#__bsms_studies', 's'))
                 ->whereIn($db->quoteName('s.published'), [1, 2])
                 ->where($db->quoteName('s.hits') . ' > 0')
-                ->where($db->quoteName('s.studydate') . ' > ' . $db->quote($last_month));
+                ->where($db->quoteName('s.studydate') . ' > :lastMonth')
+                ->bind(':lastMonth', $last_month, ParameterType::STRING);
 
             // Apply hybrid security filter: location-based + Joomla view-level access
             CwmlocationHelper::applySecurityFilter($query, 's');
@@ -473,7 +479,8 @@ class Cwmstats
                 ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
                 ->whereIn($db->quoteName('mf.published'), [1, 2])
                 ->where($db->quoteName('mf.downloads') . ' > 0')
-                ->where($db->quoteName('mf.createdate') . ' > ' . $db->quote($lastmonth));
+                ->where($db->quoteName('mf.createdate') . ' > :lastMonth')
+                ->bind(':lastMonth', $lastmonth, ParameterType::STRING);
 
             // Apply hybrid security filter: location-based + Joomla view-level access
             CwmlocationHelper::applySecurityFilter($query, 's');

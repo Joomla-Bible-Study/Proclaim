@@ -10,7 +10,7 @@ A Joomla 5+ component for managing and displaying Bible studies and sermons, dev
 
 | Latest Release                                                                                                                                                    | License                                                                                                                          | Joomla                                                                                    |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
-| [![Latest Release](https://img.shields.io/github/v/release/Joomla-Bible-Study/Proclaim)](https://github.com/Joomla-Bible-Study/Proclaim/releases/latest) | [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue)](LICENSE.txt) | [![Joomla](https://img.shields.io/badge/Joomla-5.1.0+-blue)](https://www.joomla.org/) |
+| [![Latest Release](https://img.shields.io/github/v/release/Joomla-Bible-Study/Proclaim)](https://github.com/Joomla-Bible-Study/Proclaim/releases/latest) | [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue)](LICENSE.txt) | [![Joomla](https://img.shields.io/badge/Joomla-5.4.0+-blue)](https://www.joomla.org/) |
 
 | Branch      | Description                                           |
 |-------------|-------------------------------------------------------|
@@ -53,7 +53,7 @@ Full documentation is maintained in the [Proclaim Wiki](https://github.com/Jooml
 - PHP 8.3.0+
 - Composer
 - Node.js 20.0.0+ and npm 10.1.0+
-- Joomla 5.1.0+ installation
+- Joomla 5.4.0+ installation
 - Git
 
 ### Installation for Development

@@ -69,6 +69,10 @@ php build/verify-scripture-install.php || FAILURES+=("scripture library (verify-
 
 echo "-- [8/10] seed the site menu items the front end is reached through (#1701)"
 php build/seed-testsite-menus.php || FAILURES+=("menu seeding (seed-testsite-menus)")
+# A fresh install has no verses until the Download Core Translations task runs,
+# and the seeded study cites a book. Without this the front-end check below only
+# ever exercises the unresolvable path.
+php build/seed-scripture-fixture.php || FAILURES+=("scripture fixture (seed-scripture-fixture)")
 
 echo "-- [9/10] verify the front end renders (#1701 guards)"
 php build/verify-frontend.php || FAILURES+=("front end (verify-frontend)")

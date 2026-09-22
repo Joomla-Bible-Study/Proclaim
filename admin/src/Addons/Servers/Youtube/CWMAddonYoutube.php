@@ -47,6 +47,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -796,11 +797,42 @@ class CWMAddonYoutube extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app       = Factory::getApplication();
-        $apiKey    = $app->getInput()->getString('api_key', '');
-        $channelId = $app->getInput()->getString('channel_id', '');
+        // ⚠️ Read from the POST body, not the merged request. Accepting these
+        // from the query string is what put the key in the access log, and a
+        // cached copy of the old field script would put it back.
+        $post      = Factory::getApplication()->getInput()->post;
+        $apiKey    = $post->getString('api_key', '');
+        $channelId = $post->getString('channel_id', '');
 
         return $this->testApiConnection($apiKey, $channelId);
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since  10.6.0
+     */
+    #[\Override]
+    public function supportsConnectionTest(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * ⚠️ Costs one unit of the server's daily quota, which is why the check
+     * that calls this reports itself as not passive. `testApiConnection()`
+     * records the spend against the server it resolves from the key.
+     *
+     * @since  10.6.0
+     */
+    #[\Override]
+    public function testConnection(int $serverId): array
+    {
+        $config = $this->getServerConfig($serverId);
+
+        return $this->testApiConnection($config['api_key'] ?? '', $config['channel_id'] ?? '');
     }
 
     /**
@@ -1931,8 +1963,9 @@ class CWMAddonYoutube extends CWMAddon
             $insert->insert($db->quoteName('#__bsms_topics'))
                 ->columns($db->quoteName(['topic_text', 'published', 'language']))
                 ->values(
-                    $db->quote($tag) . ', 1, ' . $db->quote('*')
-                );
+                    ':tag, 1, ' . $db->quote('*')
+                )
+                ->bind(':tag', $tag, ParameterType::STRING);
             $db->setQuery($insert);
 
             try {
@@ -2164,10 +2197,12 @@ class CWMAddonYoutube extends CWMAddon
         $params->set('live_stream_key', $details['stream_key']);
         $params->set('live_rtmp_url', $details['rtmp_url']);
 
-        $update = $db->createQuery()
+        $paramsJson = $params->toString();
+        $update     = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId)
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($update);
         $db->execute();
 
@@ -2209,10 +2244,12 @@ class CWMAddonYoutube extends CWMAddon
         // Set a simple flag for the status field to detect connection
         $params->set('access_token', $tokenData['access_token'] ?? '1');
 
-        $update = $db->createQuery()
+        $paramsJson = $params->toString();
+        $update     = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId)
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($update);
         $db->execute();
 
@@ -2243,10 +2280,12 @@ class CWMAddonYoutube extends CWMAddon
         $params->remove('oauth_refresh_token');
         $params->remove('access_token');
 
-        $update = $db->createQuery()
+        $paramsJson = $params->toString();
+        $update     = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+            ->set($db->quoteName('params') . ' = :params')
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId)
+            ->bind(':params', $paramsJson, ParameterType::STRING);
         $db->setQuery($update);
         $db->execute();
 
@@ -2329,6 +2368,48 @@ class CWMAddonYoutube extends CWMAddon
     public function supportsCaptions(): bool
     {
         return true;
+    }
+
+    /**
+     * YouTube needs an OAuth connection and remaining quota before it can
+     * update a video.
+     *
+     * ⚠️ Deliberately inspects the stored credentials rather than calling
+     * `createOAuthClient()`, which is not a read: it refreshes an expired
+     * token over the network and writes the new one back to the server
+     * record. This runs once per server while rendering an analytics page, so
+     * it must not perform a token refresh, spend an API round trip, or write
+     * anything.
+     *
+     * An expired-but-refreshable token still counts as ready. The refresh
+     * belongs at the point of use, in `syncDescription()`, which does it
+     * anyway — the question here is only whether this server has what a push
+     * would need.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   10.6.0
+     */
+    #[\Override]
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        $config = $this->getServerConfig($serverId);
+
+        // The same three things createOAuthClient() needs before it can
+        // produce a usable client, checked without building one.
+        if (empty($config['client_id']) || empty($config['client_secret'])) {
+            return false;
+        }
+
+        if (empty($config['oauth_token'])) {
+            return false;
+        }
+
+        $cost = CwmyoutubeQuota::COST_VIDEOS + CwmyoutubeQuota::COST_VIDEO_UPDATE;
+
+        return CwmyoutubeQuota::hasQuota($serverId, $cost);
     }
 
     /**
@@ -3052,8 +3133,10 @@ class CWMAddonYoutube extends CWMAddon
             // Save VTT file
             $subtitleDir = JPATH_ROOT . '/media/biblestudy/subtitles';
 
-            if (!is_dir($subtitleDir)) {
-                mkdir($subtitleDir, 0755, true);
+            // Re-check after mkdir: a concurrent request may have created it
+            // between the test and the call, which is not a failure.
+            if (!is_dir($subtitleDir) && !mkdir($subtitleDir, 0755, true) && !is_dir($subtitleDir)) {
+                return ['success' => false, 'error' => 'Could not create the subtitle directory'];
             }
 
             $safeLang = preg_replace('/[^a-zA-Z0-9_-]/', '', $srclang);

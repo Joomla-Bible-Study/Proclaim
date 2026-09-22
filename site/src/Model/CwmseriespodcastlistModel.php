@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\TagsHelper;
@@ -23,6 +24,7 @@ use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
 use Joomla\Database\ParameterType;
+use Joomla\Database\QueryInterface;
 
 /**
  * Model class for MessageList
@@ -191,12 +193,12 @@ class CwmseriespodcastlistModel extends ListModel
     /**
      * Build an SQL query to load the list data
      *
-     * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface|string  A DatabaseQuery object to retrieve the data set.
      *
      * @throws \Exception
      * @since   7.0
      */
-    protected function getListQuery(): DatabaseQuery
+    protected function getListQuery(): QueryInterface|string
     {
         // Get the current user for authorization checks
         $user = $this->getCurrentUser();
@@ -256,9 +258,12 @@ class CwmseriespodcastlistModel extends ListModel
         }
 
         // Add the list ordering clause.
-        $query->order(
-            $db->escape($this->getState('list.ordering', 'a.id')) . ' ' .
-            $db->escape($this->getState('list.direction', 'ASC'))
+        CwmdbHelper::orderByWhitelisted(
+            $query,
+            $this->filter_fields,
+            $this->getState('list.ordering'),
+            $this->getState('list.direction', 'ASC'),
+            'a.id'
         );
 
         return $query;

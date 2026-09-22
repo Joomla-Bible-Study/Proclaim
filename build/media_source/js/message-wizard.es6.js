@@ -205,7 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
         html += '<dd class="col-sm-9">' + escHtml(teacherNames.join(', ') || '—') + '</dd>';
 
         // Series — get text from the modal field display
-        const seriesDisplay = document.getElementById('jform_series_id_name');
+        // ⚠️ Joomla 5's ModalSelectField puts the readable title in the input
+        // carrying the field's own id (class js-input-title) and the numeric value
+        // in `<id>_id`. The `<id>_name` read here before is the Joomla 3/4
+        // modal_article convention and no longer exists.
+        const seriesDisplay = (document.querySelector('#jform_series_id.js-input-title')
+                || document.getElementById('jform_series_id'));
         const seriesText = seriesDisplay ? seriesDisplay.value.trim() : '';
         html += '<dt class="col-sm-3">' + (t('JBS_CMN_SERIES', 'Series')) + '</dt>';
         html += '<dd class="col-sm-9">' + escHtml(seriesText || '—') + '</dd>';

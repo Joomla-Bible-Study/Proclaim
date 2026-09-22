@@ -21,6 +21,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Schema.org JSON-LD structured data helper.
@@ -501,7 +502,8 @@ class CwmschemaorgHelper
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__schemaorg'))
                 ->where($db->quoteName('itemId') . ' = ' . $itemId)
-                ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+                ->where($db->quoteName('context') . ' = :context')
+                ->bind(':context', $context, ParameterType::STRING);
             $db->setQuery($query);
 
             return (int) $db->loadResult() > 0;
@@ -733,7 +735,8 @@ class CwmschemaorgHelper
             ->select($db->quoteName(['id', 'schema']))
             ->from($db->quoteName('#__schemaorg'))
             ->where($db->quoteName('itemId') . ' = ' . $sermonId)
-            ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+            ->where($db->quoteName('context') . ' = :context')
+            ->bind(':context', $context, ParameterType::STRING);
         $row = $db->setQuery($query)->loadObject();
 
         if (!$row) {
@@ -991,8 +994,9 @@ class CwmschemaorgHelper
         $query = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('itemId'), $db->quoteName('schema')])
             ->from($db->quoteName('#__schemaorg'))
-            ->where($db->quoteName('context') . ' = ' . $db->quote($context))
-            ->whereIn($db->quoteName('itemId'), $itemIds);
+            ->where($db->quoteName('context') . ' = :context')
+            ->whereIn($db->quoteName('itemId'), $itemIds)
+            ->bind(':context', $context, ParameterType::STRING);
 
         $rows = [];
 
@@ -1252,7 +1256,8 @@ class CwmschemaorgHelper
             ->select($db->quoteName('schema'))
             ->from($db->quoteName('#__schemaorg'))
             ->where($db->quoteName('itemId') . ' = ' . $itemId)
-            ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+            ->where($db->quoteName('context') . ' = :context')
+            ->bind(':context', $context, ParameterType::STRING);
         return self::isSchemaManuallyEdited($db->setQuery($query)->loadResult());
     }
 
@@ -1658,7 +1663,8 @@ class CwmschemaorgHelper
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__schemaorg'))
                 ->where($db->quoteName('itemId') . ' = ' . $itemId)
-                ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+                ->where($db->quoteName('context') . ' = :context')
+                ->bind(':context', $context, ParameterType::STRING);
             $existingId = (int) $db->setQuery($query)->loadResult();
         }
 
@@ -1671,10 +1677,13 @@ class CwmschemaorgHelper
             $query = $db->createQuery()
                 ->update($db->quoteName('#__schemaorg'))
                 ->set($db->quoteName('itemId') . ' = ' . $itemId)
-                ->set($db->quoteName('context') . ' = ' . $db->quote($context))
-                ->set($db->quoteName('schemaType') . ' = ' . $db->quote($schemaType))
-                ->set($db->quoteName('schema') . ' = ' . $db->quote($json))
-                ->where($db->quoteName('id') . ' = ' . $existingId);
+                ->set($db->quoteName('context') . ' = :context')
+                ->set($db->quoteName('schemaType') . ' = :schemaType')
+                ->set($db->quoteName('schema') . ' = :schema')
+                ->where($db->quoteName('id') . ' = ' . $existingId)
+                ->bind(':context', $context, ParameterType::STRING)
+                ->bind(':schemaType', $schemaType, ParameterType::STRING)
+                ->bind(':schema', $json, ParameterType::STRING);
         } else {
             $query = $db->createQuery()
                 ->insert($db->quoteName('#__schemaorg'))
@@ -1689,9 +1698,12 @@ class CwmschemaorgHelper
                 ->values(
                     implode(
                         ',',
-                        [$itemId, $db->quote($context), $db->quote($schemaType), $db->quote($json)]
+                        [(int) $itemId, ':context', ':schemaType', ':schema']
                     )
-                );
+                )
+                ->bind(':context', $context, ParameterType::STRING)
+                ->bind(':schemaType', $schemaType, ParameterType::STRING)
+                ->bind(':schema', $json, ParameterType::STRING);
         }
 
         $db->setQuery($query)->execute();

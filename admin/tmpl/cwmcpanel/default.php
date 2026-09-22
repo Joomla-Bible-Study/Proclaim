@@ -27,6 +27,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Factory;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmcpanel\HtmlView $this */
@@ -120,22 +121,64 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
         <?php
             if ($simple->mode === 1 && $simple->display === 1) {
                 ?>
-            <div class="alert alert-info">
-                <h3>
-                    <?php
-                        echo Text::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?>
-                </h3>
+            <?php
+            // The list is only useful to someone hunting a field that is not
+            // there, so it stays collapsed. Bootstrap's collapse rather than
+            // <details>, which Atum renders as a full-width bordered box.
+            $simpleHidden = [
+                'JBS_STY_STUDY_TEXT',
+                'JBS_CMN_SECONDARY_REFERENCES',
+                'JBS_CMN_TOPICS',
+                'JBS_CMN_LOCATIONS',
+                'JBS_CMN_COMMENTS',
+                'JBS_CMN_MESSAGETYPES',
+                'JBS_CMN_TEMPLATES',
+                'JBS_CMN_TEMPLATECODE',
+            ];
+            ?>
+            <div class="alert alert-info py-2">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <span class="icon-info-circle" aria-hidden="true"></span>
+                    <span class="me-auto">
+                        <strong><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?></strong>
+                        <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
+                        <?php // ⚠️ Two classes, and each earns its place.
+                            // text-info-emphasis is what actually changes the colour: .alert-link
+                            // and .btn are both single-class selectors, so .btn wins on order and
+                            // adding .alert-link alone left the contrast exactly where it was
+                            // (measured 4.29 either way, against 4.5 required at this size).
+                            // The utility carries !important, so it wins, and it resolves through
+                            // the template's own --info-text-emphasis — which flips in dark mode,
+                            // where a literal would not.
+                            // .alert-link is kept for its underline: without it this control is
+                            // distinguished from the sentence around it by colour alone. ?>
+                        <button type="button"
+                                class="btn btn-link btn-sm p-0 align-baseline alert-link text-info-emphasis"
+                                data-bs-toggle="collapse" data-bs-target="#simpleModeHidden"
+                                aria-expanded="false" aria-controls="simpleModeHidden">
+                            <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_WHAT'); ?>
+                        </button>
+                    </span>
 
-                <p>
-                    <?php
-                        echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
-                </p>
-                <a href="<?php
-                    echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
-                   class="btn btn-primary btn-large" style="color: #FFFFFF">
-                    <?php
-                        echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
-                </a>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
+                       class="btn btn-sm btn-primary">
+                        <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
+                    </a>
+
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmcpanel.hideSimpleNotice&' . Session::getFormToken() . '=1'); ?>"
+                       class="btn btn-sm btn-outline-secondary"
+                       title="<?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_HIDE_DESC'); ?>">
+                        <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_HIDE'); ?>
+                    </a>
+                </div>
+
+                <div class="collapse mt-2" id="simpleModeHidden">
+                    <p class="small mb-1">
+                        <strong><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_HIDDEN'); ?></strong>
+                        <?php echo implode(', ', array_map(static fn($k) => Text::_($k), $simpleHidden)); ?>
+                    </p>
+                    <p class="small mb-0"><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_KEPT'); ?></p>
+                </div>
             </div>
             <?php
             }
@@ -266,6 +309,57 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&filter[published]=0'); ?>"
                        class="btn btn-primary btn-sm flex-shrink-0">
                         <?php echo Text::_('JBS_CPL_PENDING_REVIEW_BUTTON'); ?>
+                    </a>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php
+            // Servers still awaiting migration.
+            //
+            // A restored 9.x backup arrives with every server typed `legacy`,
+            // and until they are migrated most media will not resolve. Nothing
+            // used to say so: the restore reported success and left the site
+            // looking finished.
+            //
+            // Clearing it is safe now that System Health lists the same
+            // finding permanently -- the banner is the nag, that view is the
+            // record. It stays clear only while the counts stay the same.
+            if ($this->pendingServerMigration['servers'] > 0 && !$this->serverMigrationQuiet) :
+        ?>
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    <span class="icon-warning-circle" aria-hidden="true"></span>
+                    <strong><?php echo Text::_('JBS_CPL_SERVER_MIGRATION_PENDING'); ?></strong>
+                    <p class="mb-1">
+                        <?php
+                        // The `_N` belongs to the key passed in: Text::plural()
+                        // appends only the suffix, so the keys it looks for are
+                        // ..._DESC_N_1 and ..._DESC_N_MORE.
+                        echo Text::plural(
+                            'JBS_CPL_SERVER_MIGRATION_PENDING_DESC_N',
+                            $this->pendingServerMigration['servers'],
+                            $this->pendingServerMigration['media']
+                        );
+                        ?>
+                    </p>
+                    <?php // btn-primary for the same contrast reason as the schema notice below. ?>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1#servermigration'); ?>"
+                       class="btn btn-primary btn-sm">
+                        <?php echo Text::_('JBS_CPL_SERVER_MIGRATION_BUTTON'); ?>
+                    </a>
+                    <a href="<?php echo Route::_(
+                        'index.php?option=com_proclaim&task=cwmhealth.quieten&check=content.legacy-servers&'
+                        . Session::getFormToken() . '=1'
+                    ); ?>"
+                       class="btn btn-secondary btn-sm"
+                       title="<?php echo Text::_('JBS_HEALTH_QUIETEN_DESC'); ?>">
+                        <?php echo Text::_('JBS_HEALTH_QUIETEN'); ?>
+                    </a>
+                    <?php // Clearing is only safe because the finding stays on
+                          // record. Say where. ?>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1'); ?>"
+                       class="btn btn-secondary btn-sm">
+                        <?php echo Text::_('JBS_HEALTH_SEE_DETAILS'); ?>
                     </a>
                 </div>
             </div>
@@ -407,7 +501,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if ($canSee('location')) : ?>
+                    <?php if ($advanced && $canSee('location')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmlocations'); ?>"
                            title="<?php echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="cpanel-btn">
@@ -424,7 +518,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_TOPICS'); ?></span>
                         </a>
                     </div>
-                    <?php if ($canSee('comment')) : ?>
+                    <?php if ($advanced && $canSee('comment')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmcomments'); ?>"
                            title="<?php echo Text::_('JBS_CMN_COMMENTS'); ?>" class="cpanel-btn">

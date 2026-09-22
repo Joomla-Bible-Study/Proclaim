@@ -37,6 +37,15 @@
                     class="js-select-submit-on-change"
             />
             <field
+                    name="restricted"
+                    type="list"
+                    label="JBS_MED_FILTER_RESTRICTED"
+                    class="js-select-submit-on-change"
+            >
+                <option value="">JBS_MED_FILTER_RESTRICTED_ALL</option>
+                <option value="1">JBS_MED_FILTER_RESTRICTED_ONLY</option>
+            </field>
+            <field
                     name="language"
                     type="contentlanguage"
                     label="JOPTION_FILTER_LANGUAGE"

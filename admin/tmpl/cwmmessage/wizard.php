@@ -87,12 +87,19 @@ $steps = [
         <div class="card card-body bg-body-tertiary">
             <?php echo $this->form->renderField('teachers'); ?>
             <?php echo $this->form->renderField('series_id'); ?>
-            <?php echo $this->form->renderField('location_id'); ?>
-            <?php echo $this->form->renderField('topics'); ?>
-            <?php echo $this->form->renderField('messagetype'); ?>
-            <?php echo $this->form->renderField('access'); ?>
-            <?php if (Multilanguage::isEnabled()) : ?>
-                <?php echo $this->form->renderField('language'); ?>
+            <?php
+            // Quick Create follows the same two modes as the edit form. It used
+            // to offer every one of these, so a Simple Mode site could set a
+            // location, topic, message type or access level here and then never
+            // see it again — the edit form hides all five.
+            if (!$this->simple->mode) : ?>
+                <?php echo $this->form->renderField('location_id'); ?>
+                <?php echo $this->form->renderField('topics'); ?>
+                <?php echo $this->form->renderField('messagetype'); ?>
+                <?php echo $this->form->renderField('access'); ?>
+                <?php if (Multilanguage::isEnabled()) : ?>
+                    <?php echo $this->form->renderField('language'); ?>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>

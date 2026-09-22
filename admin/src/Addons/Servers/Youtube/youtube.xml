@@ -16,12 +16,12 @@
                    description="JBS_ADDON_YOUTUBE_TEST_API_DESC"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
         </fieldset>
-        <fieldset name="youtube_quota" label="JBS_ADDON_YOUTUBE_QUOTA_SETTINGS">
+        <fieldset name="youtube_quota" simplemode="hide" label="JBS_ADDON_YOUTUBE_QUOTA_SETTINGS">
             <field name="youtube_daily_quota" type="number" default="10000" min="100" max="1000000"
                    label="JBS_ADDON_YOUTUBE_DAILY_QUOTA"
                    description="JBS_ADDON_YOUTUBE_DAILY_QUOTA_DESC" filter="int"/>
         </fieldset>
-        <fieldset name="youtube_oauth" label="JBS_ADDON_YOUTUBE_OAUTH_SETTINGS">
+        <fieldset name="youtube_oauth" simplemode="hide" label="JBS_ADDON_YOUTUBE_OAUTH_SETTINGS">
             <field name="oauth_note" type="note" label="JBS_ADDON_YOUTUBE_OAUTH_NOTE"
                    description="JBS_ADDON_YOUTUBE_OAUTH_NOTE_DESC" />
             <field name="client_id" type="text" label="JBS_ADDON_YOUTUBE_CLIENT_ID"
@@ -32,7 +32,7 @@
             <field name="oauth_status" type="YoutubeOAuthStatus" label="JBS_ADDON_YOUTUBE_OAUTH_STATUS"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
         </fieldset>
-        <fieldset name="youtube_live" label="JBS_ADDON_YOUTUBE_LIVE_SETTINGS">
+        <fieldset name="youtube_live" simplemode="hide" label="JBS_ADDON_YOUTUBE_LIVE_SETTINGS">
             <field name="stream_mode" type="YoutubeStreamMode" layout="joomla.form.field.radio.switcher"
                    label="JBS_ADDON_YOUTUBE_STREAM_MODE" description="JBS_ADDON_YOUTUBE_STREAM_MODE_DESC"
                    default="external"
@@ -58,7 +58,7 @@
                    showon="stream_mode:direct"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
         </fieldset>
-        <fieldset name="youtube_sync" label="JBS_ADDON_YOUTUBE_SYNC_SETTINGS">
+        <fieldset name="youtube_sync" simplemode="hide" label="JBS_ADDON_YOUTUBE_SYNC_SETTINGS">
             <field name="description_format" type="DescriptionFormat" rows="6"
                    default="{title} — {series}&#10;{teachers}&#10;{date}&#10;{scriptures}&#10;&#10;{studyintro}&#10;&#10;{chapters}&#10;&#10;Topics: {topics}&#10;&#10;{url}"
                    label="JBS_ADDON_DESC_FORMAT"
@@ -82,7 +82,7 @@
                 <option value="3">JBS_CMN_SQUEEZEBOX</option>
             </field>
         </fieldset>
-        <fieldset name="media_type" label="JBS_ADDON_YOUTUBE_MEDIA_TYPE_DEF">
+        <fieldset name="media_type" simplemode="hide" label="JBS_ADDON_YOUTUBE_MEDIA_TYPE_DEF">
             <field name="media_image" type="media" directory="biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox"/>

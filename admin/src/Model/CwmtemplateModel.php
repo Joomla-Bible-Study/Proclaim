@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -196,12 +197,24 @@ class CwmtemplateModel extends AdminModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData(): array
+    protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.template.data', []);
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmtemplate.data', []);
 
         if (empty($data)) {
-            $data = [$this->getItem()];
+            // ⚠️ The item itself, not `[$this->getItem()]`. Wrapped, Form::bind()
+            // sees a numeric key holding an object and binds it as a *group*, so
+            // every param lands somewhere no field reads and several arrive as
+            // arrays. A later bind() of the real item repairs any param the item
+            // actually has -- which is why this only broke a fresh install, where
+            // `landing_layout` is absent and the wreckage survived. Rendering it
+            // through a hidden field then reached htmlspecialchars(array) and
+            // took the whole Layout Editor tab down.
+            //
+            // The wrap was there to satisfy the `: array` return type this
+            // override declared; Joomla declares none, and nine of this
+            // component's models say `mixed`, which is what the value is.
+            $data = $this->getItem();
         }
 
         return $data;

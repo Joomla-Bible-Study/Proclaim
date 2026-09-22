@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmtemplateModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
@@ -291,8 +292,46 @@ class CwmtemplateController extends FormController
 
             // Output the HTML
             echo $html;
-        } catch (\Exception $e) {
-            echo '<div class="alert alert-danger">' . htmlspecialchars($e->getMessage()) . '</div>';
+        } catch (\Throwable $e) {
+            // ⚠️ \Throwable, not \Exception. This response is injected straight
+            // into the tab, and a TypeError is an \Error -- which \Exception does
+            // not catch. One escaping from here does not produce the alert below:
+            // it produces Joomla's whole error page, banner and main menu and
+            // all, nested inside the Layout Editor tab. That is what a fresh
+            // install has been showing.
+            // ⚠️ Name the array-valued params. Joomla's field layouts pass the
+            // value straight to htmlspecialchars(), so one array among a few
+            // hundred params fails the whole fieldset with a message that says
+            // only "array given" -- and the stack ends in Joomla's layout, not
+            // in anything of ours. Without this the next person starts where
+            // this one did: knowing a param is wrong and not which.
+            $arrayParams = [];
+
+            if (isset($form)) {
+                foreach ((array) $form->getData()->get('params', []) as $key => $value) {
+                    if (\is_array($value)) {
+                        $arrayParams[] = $key;
+                    }
+                }
+            }
+
+            Log::add(
+                \sprintf(
+                    'loadLayoutEditor failed for template %d: %s: %s at %s:%d. Array-valued params: %s',
+                    $id,
+                    $e::class,
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine(),
+                    $arrayParams ? implode(', ', $arrayParams) : 'none'
+                ),
+                Log::ERROR,
+                'com_proclaim'
+            );
+
+            echo '<div class="alert alert-danger">'
+                . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8')
+                . '</div>';
         }
 
         $app->close();

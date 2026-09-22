@@ -29,6 +29,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -2597,7 +2598,8 @@ class Cwmlisting
                 $db->quoteName('#__bsms_mediafiles.study_id'),
             ])
             ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('study_id') . ' = ' . $db->quote($id3));
+            ->where($db->quoteName('study_id') . ' = :studyId')
+            ->bind(':studyId', $id3, ParameterType::STRING);
 
         // Include archived media when showing archived messages
         $showArchived = $params->get('show_archived', '');

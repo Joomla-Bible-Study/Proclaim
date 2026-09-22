@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Filesystem\Folder;
 
 /**
@@ -311,7 +312,7 @@ class CwmdbHelper
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     public static function tableExists(string $table): bool
     {
@@ -343,7 +344,7 @@ class CwmdbHelper
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     public static function columnExists(string $table, string $column): bool
     {
@@ -381,7 +382,7 @@ class CwmdbHelper
      *
      * @return  string[]  Table names with the `#__` prefix.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     public static function getScriptureTables(): array
     {
@@ -406,7 +407,7 @@ class CwmdbHelper
      *
      * @return  array<int, array{name: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     public static function getOwnObjects(): array
     {
@@ -483,98 +484,6 @@ class CwmdbHelper
         return self::$install_state;
     }
 
-    /**
-     * Fix up css.
-     *
-     * @param   string    $filename  Name of css file
-     * @param   bool      $parent    if coming form the update script
-     * @param   string    $newcss    New css style
-     * @param   ?int      $id        this is the id of record to be fixed
-     *
-     * @return bool
-     *
-     * @throws  \Exception
-     * @since   7.1.0
-     */
-    public static function fixupcss(string $filename, bool $parent, string $newcss, ?int $id = null): bool
-    {
-        $app = Factory::getApplication();
-
-        // Start by getting existing Style
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery();
-        $query->select('*')->from($db->quoteName('#__bsms_styles'));
-
-        if ($filename) {
-            $query->where($db->quoteName('filename') . ' = ' . $db->q($filename));
-        } else {
-            $query->where($db->quoteName('id') . ' = ' . (int)$id);
-        }
-
-        $db->setQuery($query);
-        $result = $db->loadObject();
-        $oldcss = (string)$result->stylecode;
-
-        // Now the arrays of changes that need to be done.
-
-        $oldlines = [
-            ".bsm_teachertable_list",
-            "#bslisttable",
-            "#bslisttable",
-            "#landing_table",
-            "#landing_separator",
-            "#landing_item",
-            "#landing_title",
-            "#landinglist",
-        ];
-        $newlines = [
-            "#bsm_teachertable_list",
-            ".bslisttable",
-            ".bslisttable",
-            ".landing_table",
-            ".landing_separator",
-            ".landing_item",
-            ".landing_title",
-            ".landinglist",
-        ];
-        $oldcss   = (string)str_replace($oldlines, $newlines, $oldcss);
-
-        // Now see if we are adding new css to the db css
-
-        if ($parent || $newcss) {
-            $newcss = $db->escape($newcss) . ' ' . $oldcss;
-        } else {
-            $newcss = (string)$oldcss;
-        }
-
-        // No apply the new css back to the table
-
-        $query = $db->createQuery();
-        $query->update($db->quoteName('#__bsms_styles'))->set($db->quoteName('stylecode') . ' = ' . $db->q($newcss));
-
-        if ($filename) {
-            $query->where($db->quoteName('filename') . ' = ' . $db->q($filename));
-        } else {
-            $query->where($db->quoteName('id') . ' = ' . (int)$id);
-        }
-
-        $db->setQuery($query);
-
-        if (!$db->execute()) {
-            $app->enqueueMessage(Text::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ''), 'error');
-
-            return false;
-        }
-
-        // If we are not coming from the upgrade scripts we update the table and let them know what was updated.
-
-        if (!$parent) {
-            self::reloadtable($result, 'Style');
-            $app->enqueueMessage(Text::_('JBS_STYLE_CSS_FIX_COMPLETE') . ': ' . $result->filename, 'notice');
-        }
-
-        return true;
-    }
 
     /**
      * Set table store()
@@ -772,5 +681,61 @@ class CwmdbHelper
                 }
             }
         }
+    }
+
+    /**
+     * Apply a whitelisted ORDER BY to a list query.
+     *
+     * `ListModel::populateState()` already validates the incoming list ordering
+     * against the model's `filter_fields` and the direction against ASC/DESC,
+     * but the `$db->escape()` the call sites used to wrap these in did nothing:
+     * `escape()` is for a quoted string context, and an ORDER BY value is not
+     * quoted. This re-checks the column against the same whitelist at the point
+     * of use and quotes it as the identifier it is, so the guarantee is visible
+     * where the SQL is built.
+     *
+     * The column may arrive either as a plain name or, from `list.fullordering`,
+     * as a combined "column direction" pair — that form is split apart. An empty
+     * direction is preserved as ASC, which is exactly what the old unquoted
+     * `ORDER BY col ` left MySQL to apply implicitly; the caller keeps ownership
+     * of the *absent*-state default by passing it to `getState()` as it always
+     * has.
+     *
+     * @param   DatabaseQuery  $query          The query to add the ORDER BY to.
+     * @param   string[]       $filterFields   The model's whitelist of orderable columns.
+     * @param   ?string        $column         The requested order column (or a "column direction" pair).
+     * @param   ?string        $direction      The requested direction, or '' when $column carries it.
+     * @param   string         $defaultColumn  The column to fall back to when the request is not whitelisted.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
+    public static function orderByWhitelisted(
+        DatabaseQuery $query,
+        array $filterFields,
+        ?string $column,
+        ?string $direction,
+        string $defaultColumn
+    ): void {
+        $column    = trim((string) $column);
+        $direction = strtoupper(trim((string) $direction));
+
+        // A list.fullordering value arrives as "column direction" with no
+        // separate direction argument; pull the two apart before validating.
+        if ($direction === '' && preg_match('/^(.+?)\s+(ASC|DESC)$/i', $column, $matches)) {
+            $column    = trim($matches[1]);
+            $direction = strtoupper($matches[2]);
+        }
+
+        if (!\in_array($column, $filterFields, true)) {
+            $column = $defaultColumn;
+        }
+
+        // Anything that is not an explicit DESC becomes ASC — including the
+        // empty direction, which is what the previous unquoted clause did.
+        $direction = \in_array($direction, ['ASC', 'DESC'], true) ? $direction : 'ASC';
+
+        $query->order($query->quoteName($column) . ' ' . $direction);
     }
 }
