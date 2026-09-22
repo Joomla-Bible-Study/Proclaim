@@ -300,8 +300,17 @@ jobs:
         # assert against here.
         run: npx playwright test --project=api-test ${{ matrix.projects }}
 
-      - name: Upload Playwright report on failure
-        if: failure()
+      # ⚠️ always(), not failure(). A test that fails and then passes on a
+      # retry is reported as flaky and leaves the job green, so a
+      # failure-conditioned upload keeps nothing for exactly the runs worth
+      # investigating. The servertype dialog flake was diagnosed from a
+      # five-line error excerpt for months because of this.
+      #
+      # The cost is one small artifact per green run: the HTML report. Traces
+      # and videos are written only when something retried or failed, so a
+      # clean run uploads little more than the report shell.
+      - name: Upload the Playwright report
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: playwright-report-${{ matrix.props }}
@@ -309,6 +318,7 @@ jobs:
             build/reports/e2e
             test-results
           retention-days: 7
+          if-no-files-found: ignore
 
       - name: Upload PHP server log on failure
         if: failure()

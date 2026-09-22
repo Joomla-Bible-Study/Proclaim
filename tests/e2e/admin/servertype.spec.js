@@ -14,11 +14,35 @@ const NAME = 'zz e2e type-swap fixture';
 
 const FIELD = '.js-modal-content-select-field:has(#jform_type_id)';
 
+// The picker's iframe, once its own document has parsed.
+//
+// ⚠️ `expect(page.locator('joomla-dialog iframe')).toBeVisible()` proves the
+// iframe ELEMENT is visible in the parent. It says nothing about the document
+// inside, whose click handler is bound on DOMContentLoaded:
+//
+//     document.addEventListener('DOMContentLoaded', function () {
+//         document.addEventListener('click', ...);   // calls dialog.close()
+//     });
+//
+// A click landing before that has nothing listening, so the dialog never
+// closes and the wait for it to go has no cause to wait on. That is the shape
+// of the reported failure: the dialog stays open for the whole window rather
+// than closing slowly.
+async function dialogFrame(page) {
+    const handle = await page.locator('joomla-dialog iframe').elementHandle();
+    const frame  = await handle.contentFrame();
+
+    await frame.waitForLoadState('domcontentloaded');
+
+    return frame;
+}
+
 // Pick a type from the open dialog and wait for its addon fields to actually
 // land in the region — "region visible" alone is the empty shell before the
 // fetch resolves.
 async function pickType(page, key, addonField) {
-    const frame = page.frameLocator('joomla-dialog iframe');
+    const frame = await dialogFrame(page);
+
     await frame.locator(`[data-type-payload="${key}"]`).first().click();
     await expect(page.locator('joomla-dialog')).toHaveCount(0);
     await expect(page.locator(`#server-tabset-region [name="${addonField}"]`).first()).toBeAttached();
@@ -122,7 +146,8 @@ test('a failed swap rolls back and says nothing changed', async ({ page }) => {
     // Make the type fetch fail outright.
     await page.route('**/*cwmserver.typeFields*', (r) => r.fulfill({ status: 500, body: '' }));
 
-    const frame = page.frameLocator('joomla-dialog iframe');
+    const frame = await dialogFrame(page);
+
     await frame.locator('[data-type-payload="local"]').first().click();
     await expect(page.locator('joomla-dialog')).toHaveCount(0);
 
