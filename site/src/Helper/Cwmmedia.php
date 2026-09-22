@@ -284,6 +284,9 @@ class Cwmmedia
             || substr_count($filename, 'vimeo.com')
             || substr_count($filename, 'wistia.com') || substr_count($filename, 'wistia.net')
             || substr_count($filename, 'resi.io');
+        // player 7 (compact audio) is internal-only now — no longer selectable,
+        // but still produced by the playlist path and stored rows, so it stays
+        // alongside player 1 here.
         $isHtml5Inline = ((int) $player->player === 7 || (int) $player->player === 1)
             && (int) $player->type === 2;
 
@@ -537,6 +540,10 @@ class Cwmmedia
             // Player is set from the $params
             $player->player = $params->get('media_player', '0');
         } elseif ($params->get('pcplaylist')) {
+            // Internal-only: player 7 is the compact audio render mode. It is no
+            // longer a selectable player option, but the series-podcast page
+            // forces it here and stored 9.x rows still carry it, so the player 7
+            // branches below stay. Do not remove without repointing this.
             $player->player = 7;
         } elseif ($media->params->get('player', null) !== null) {
             $player->player = (int)$media->params->get('player');
@@ -674,6 +681,9 @@ class Cwmmedia
 
                 return $playercode;
 
+                // case 7 (compact audio) is internal-only now — de-listed from the
+                // UI but still forced by the playlist path and carried by stored
+                // rows, so it shares the internal player's rendering.
             case 7:
             case 1: // Internal
                 $playercode = '';
