@@ -48,6 +48,14 @@ class HtmlView extends BaseHtmlView
     protected mixed $types = null;
 
     /**
+     * Type key to friendly addon name, for the Type column.
+     *
+     * @var    array
+     * @since  __DEPLOY_VERSION__
+     */
+    protected array $typeNames = [];
+
+    /**
      * Pagination
      *
      * @var ?object
@@ -110,6 +118,10 @@ class HtmlView extends BaseHtmlView
         $this->state         = $model->getState();
         $this->canDo         = Cwmassets::sectionActions('server');
         $this->types         = $model->getServerOptions();
+        // type key -> friendly addon name, for the Type column. Built by
+        // getServerOptions() above; legacy is included (it is skipped only from
+        // the create picker), so a legacy server shows as such.
+        $this->typeNames     = $model->getTypeReverseLookup();
         $this->filterForm    = $model->getFilterForm();
         $this->activeFilters = $model->getActiveFilters();
 
