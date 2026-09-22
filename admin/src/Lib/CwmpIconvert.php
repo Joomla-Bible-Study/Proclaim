@@ -428,7 +428,6 @@ class CwmpIconvert
                 $podcast->episodetitle      = $pi->itunestitle;
                 $podcast->detailstemplateid = 1;
                 $podcast->published         = $pi->published;
-                $podcast->podcastsearch     = $pi->search;
 
                 if (!$db->insertObject('#__bsms_podcast', $podcast, 'id')) {
                     $this->pnoadd++;

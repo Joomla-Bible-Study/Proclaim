@@ -225,6 +225,23 @@ $EXPECTATIONS = [
         ],
         'schemaMin' => '10.5.8',
     ],
+    /*
+     * 11.0.0-20260922.sql retires four dead podcast columns (#2157) — the
+     * itunes:subtitle/keywords leftovers Apple deprecated in 2018, read
+     * nowhere. The legacy `image` column is deliberately NOT here: it stays,
+     * because a historical MODIFY on it makes a clean ChangeSet drop impossible.
+     */
+    '11.0.0' => [
+        'columnsAbsent' => [
+            '#__bsms_podcast' => [
+                'subtitle',
+                'podcastsearch',
+                'episodesubtitle',
+                'customsubtitle',
+            ],
+        ],
+        'schemaMin' => '11.0.0',
+    ],
 ];
 
 // ---------------------------------------------------------------------------
