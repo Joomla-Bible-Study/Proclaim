@@ -36,7 +36,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2;
 $trashed   = $this->state->get('filter.published') == -2;
 $locationEnabled = CwmlocationHelper::isEnabled();
-$columns         = $locationEnabled ? 5 : 4;
+$columns         = $locationEnabled ? 6 : 5;
 
 $sortFields = $this->getSortFields();
 ?>
@@ -86,6 +86,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                     $listDirn,
                                     $listOrder
                                 ); ?>
+                            </th>
+                            <th scope="col" class="w-10 d-none d-md-table-cell">
+                                <?php echo Text::_('JBS_CMN_SERVER_TYPE'); ?>
                             </th>
                             <?php if ($locationEnabled) : ?>
                             <th scope="col" class="w-10 d-none d-md-table-cell">
@@ -170,6 +173,23 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                         <?php
                                         endif; ?>
                                     </div>
+                                </td>
+                                <td class="small d-none d-md-table-cell">
+                                    <?php
+                                    // Friendly addon name for the raw type key. A legacy server is
+                                    // flagged, because it is the one to migrate before 11.0 removes it.
+                                    $typeKey  = strtolower((string) $item->type);
+                                    $typeName = $this->typeNames[$typeKey]
+                                        ?? ($item->type !== '' ? $item->type : Text::_('JBS_SVR_TYPE_UNKNOWN'));
+                                    ?>
+                                    <?php if ($typeKey === 'legacy') : ?>
+                                        <span class="badge bg-warning text-dark"
+                                              title="<?php echo $this->escape(Text::_('JBS_SVR_TYPE_LEGACY_DEPRECATED')); ?>">
+                                            <?php echo $this->escape($typeName); ?>
+                                        </span>
+                                    <?php else : ?>
+                                        <?php echo $this->escape($typeName); ?>
+                                    <?php endif; ?>
                                 </td>
                                 <?php if ($locationEnabled) : ?>
                                 <td class="small d-none d-md-table-cell">
