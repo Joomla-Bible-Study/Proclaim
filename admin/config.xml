@@ -73,14 +73,6 @@
         </field>
 
         <field
-                name="image_extensions"
-                type="text"
-                size="50"
-                default="mp3,mp4,m4v,mov,bmp,gif,jpg,png"
-                label="JBS_ADM_FIELD_LEGAL_IMAGE_EXTENSIONS_LABEL"
-                description="JBS_ADM_FIELD_LEGAL_IMAGE_EXTENSIONS_DESC"/>
-
-        <field
                 name="ignore_extensions"
                 type="text"
                 size="50"
