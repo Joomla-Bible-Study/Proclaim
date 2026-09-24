@@ -25,19 +25,19 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
- * Additive, tracked import of structured content (#2145, #2173).
+ * Additive, tracked import of structured content.
  *
  * Reads a JSON payload — never SQL — and inserts through the same
  * `AdminModel::save()` path the admin UI uses, so validation, junction
  * tables (teachers/scriptures) and `#__assets` all stay consistent without
  * hand-rolled insert logic. Every row and file created is recorded in the
- * import-set manifest (#2172, {@see Cwmimportmanifest}) as it is created, so
- * a later import can be found again and cleanly removed (#2174).
+ * import-set manifest ({@see Cwmimportmanifest}) as it is created, so
+ * a later import can be found again and cleanly removed.
  *
  * Deliberately narrow: only the sections in {@see ALLOWED_SECTIONS} are
  * recognised, and `#__bsms_templatecode` is not one of them. Template code
- * is PHP that Proclaim writes into the site and the front end executes
- * (#2099) — demo content has no reason to carry it, and refusing the
+ * is PHP that Proclaim writes into the site and the front end executes —
+ * demo content has no reason to carry it, and refusing the
  * section outright removes that surface rather than depending on
  * validation to catch a bad payload.
  *
@@ -52,8 +52,8 @@ use Joomla\Database\ParameterType;
  * mid-run) can still leave a partially-created set behind — but every row
  * created before the failure is guaranteed to be in the manifest under this
  * tag (see the try/catch in each `import*()` method), so the tag stays a
- * complete, accurate description of what exists and #2174's remover can
- * always clear it.
+ * complete, accurate description of what exists and a manifest-driven
+ * remover can always clear it.
  *
  * @package  Proclaim.Admin
  * @since    __DEPLOY_VERSION__
@@ -542,7 +542,7 @@ class Cwmcontentimporter
             'information' => (string) ($teacher['information'] ?? ''),
             // Path-validated file placement is handled separately by
             // importFile(); the model's own thumbnail pipeline is not
-            // exercised here (see the epic follow-up in #2145).
+            // exercised here.
             'image'        => '',
             'published'    => (int) ($teacher['published'] ?? 1),
             'access'       => (int) ($teacher['access'] ?? 1),
@@ -550,7 +550,7 @@ class Cwmcontentimporter
             'contact'      => 0,
             'social_links' => '',
             // NOT NULL with no default (verified against a live schema, not
-            // just install.mysql.utf8.sql — they've drifted). See PR #2180.
+            // just install.mysql.utf8.sql — they've drifted).
             'address' => '',
         ];
 
@@ -666,8 +666,8 @@ class Cwmcontentimporter
      * `\Throwable`. So a save can write the row and then still report
      * failure (a plugin threw and save() returns false) or let an `Error`
      * escape entirely — either way, the ordinary "record after a successful
-     * save" path below never runs, and the row would exist with no manifest
-     * entry: an untracked orphan #2174 could never find. Guarding against
+     * save" path below never runs, and the row would exist as an untracked
+     * orphan a manifest-driven remover could never find. Guarding against
      * that here, rather than wrapping the whole import in a transaction, is
      * a deliberate choice — see this class's own docblock for why a
      * transaction does not actually protect against this class of failure.
