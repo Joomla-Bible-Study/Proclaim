@@ -73,13 +73,17 @@ class Cwmimportmanifest
      */
     public static function recordRow(string $tag, string $tableName, int $rowId): void
     {
+        // 'created' is deliberately omitted — the column defaults to
+        // CURRENT_TIMESTAMP, and Factory::getDate() needs a fully-booted
+        // application's language to format safely (this class is written to
+        // need neither, so callers like this repository's own bare test
+        // harness can use it directly).
         $row = (object) [
             'import_tag'  => $tag,
             'entity_type' => 'row',
             'table_name'  => $tableName,
             'row_id'      => $rowId,
             'file_path'   => null,
-            'created'     => Factory::getDate()->toSql(),
         ];
 
         self::db()->insertObject('#__bsms_import_manifest', $row);
@@ -103,7 +107,6 @@ class Cwmimportmanifest
             'table_name'  => null,
             'row_id'      => null,
             'file_path'   => $filePath,
-            'created'     => Factory::getDate()->toSql(),
         ];
 
         self::db()->insertObject('#__bsms_import_manifest', $row);
