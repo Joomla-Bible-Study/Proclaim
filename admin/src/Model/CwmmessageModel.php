@@ -411,7 +411,12 @@ class CwmmessageModel extends AdminModel
 
         // The front end calls this model and uses a_id to avoid id clashes,
         // so resolve the real record id before validating its location.
-        if ($input->get('a_id')) {
+        // Site-only: FormController::save() already folds a_id into $data['id']
+        // before this is reached, so this only ever needs to run there — an
+        // admin-side request carrying its own a_id parameter must not be able
+        // to redirect the save to a different row than the one the controller
+        // already authorised.
+        if ($app->isClient('site') && $input->get('a_id')) {
             $data['id'] = $input->get('a_id');
         }
 

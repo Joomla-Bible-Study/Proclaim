@@ -147,4 +147,28 @@ class CwmmessageModelTest extends ProclaimTestCase
             'saveTopics() must pass id=>0 to force INSERT when creating a new topic — see #1444'
         );
     }
+
+    /**
+     * Regression test: save()'s a_id override let an authenticated admin-side
+     * request redirect the write to a different row than the one the
+     * controller's allowEdit() had just authorised (confirmed live against a
+     * real item-level permission deny). getForm() in this same class already
+     * gates the identical a_id read on isClient('site'); save() must too.
+     *
+     * A live end-to-end call isn't possible in this harness — the booted
+     * application here is the bare Joomla\Console\Application, which has no
+     * isClient() method at all (unlike a real site/administrator app) — so
+     * this follows the file's existing structural-assertion pattern instead.
+     */
+    public function testSaveGuardsTheAIdOverrideToTheSiteClient(): void
+    {
+        $body = self::methodBody('save');
+
+        $this->assertMatchesRegularExpression(
+            '/if\s*\(\s*\$app->isClient\(.site.\)\s*&&\s*\$input->get\(.a_id.\)\s*\)\s*\{\s*\$data\[.id.\]\s*=\s*\$input->get\(.a_id.\);/',
+            $body,
+            "save() must guard the a_id override on isClient('site') — an admin-side request must never have its "
+                . 'write target redirected by an a_id parameter the controller never authorised against'
+        );
+    }
 }
