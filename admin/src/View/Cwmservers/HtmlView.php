@@ -52,7 +52,7 @@ class HtmlView extends BaseHtmlView
      * Type key to friendly addon name, for the Type column.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.2
      */
     protected array $typeNames = [];
 

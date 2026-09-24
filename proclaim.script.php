@@ -1307,7 +1307,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     private function normaliseUploadMediaTypes(): void
     {
@@ -1359,7 +1359,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     private static function splitCsv(string $csv): array
     {
@@ -1380,7 +1380,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     private static function augmentImageExtensions(array $exts): array
     {
@@ -1414,7 +1414,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     private static function augmentImageMimes(array $mimes): array
     {

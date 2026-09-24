@@ -645,7 +645,7 @@ class Cwmthumbnail
      *
      * @return  string  The extension without a leading dot.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     public static function extensionForType(int $outputType): string
     {
