@@ -167,6 +167,62 @@ class Cwmimportmanifest
     }
 
     /**
+     * Remove one row's manifest entry — call once the row itself is
+     * actually gone, not before, so a failure partway through a
+     * removal still agrees with what the manifest says exists.
+     *
+     * @param   string  $tag        The import tag.
+     * @param   string  $tableName  Unprefixed table name, as recorded by {@see recordRow()}.
+     * @param   int     $rowId      The row's primary key.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function clearRow(string $tag, string $tableName, int $rowId): void
+    {
+        $db = self::db();
+
+        $db->setQuery(
+            $db->createQuery()
+                ->delete($db->quoteName('#__bsms_import_manifest'))
+                ->where($db->quoteName('import_tag') . ' = :tag')
+                ->where($db->quoteName('entity_type') . ' = ' . $db->quote('row'))
+                ->where($db->quoteName('table_name') . ' = :table')
+                ->where($db->quoteName('row_id') . ' = :id')
+                ->bind(':tag', $tag, ParameterType::STRING)
+                ->bind(':table', $tableName, ParameterType::STRING)
+                ->bind(':id', $rowId, ParameterType::INTEGER)
+        )->execute();
+    }
+
+    /**
+     * Remove one file's manifest entry — call once the file itself is
+     * actually gone, not before.
+     *
+     * @param   string  $tag       The import tag.
+     * @param   string  $filePath  As recorded by {@see recordFile()}.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function clearFile(string $tag, string $filePath): void
+    {
+        $db = self::db();
+
+        $db->setQuery(
+            $db->createQuery()
+                ->delete($db->quoteName('#__bsms_import_manifest'))
+                ->where($db->quoteName('import_tag') . ' = :tag')
+                ->where($db->quoteName('entity_type') . ' = ' . $db->quote('file'))
+                ->where($db->quoteName('file_path') . ' = :path')
+                ->bind(':tag', $tag, ParameterType::STRING)
+                ->bind(':path', $filePath, ParameterType::STRING)
+        )->execute();
+    }
+
+    /**
      * @return  DatabaseInterface
      *
      * @since  __DEPLOY_VERSION__
