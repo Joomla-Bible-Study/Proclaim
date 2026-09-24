@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmimportmanifest;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
@@ -31,6 +32,18 @@ use Joomla\Registry\Registry;
  */
 class CwmsetupwizardModel extends BaseDatabaseModel
 {
+    /**
+     * The manifest tag {@see createSampleContent()} records its rows under
+     * (#2172/#2175) — a fixed tag, not a per-run one, because the wizard's
+     * sample content is a single, one-time set rather than something
+     * created repeatedly under distinct tags the way an imported demo set
+     * (#2145) would be.
+     *
+     * @var string
+     * @since  __DEPLOY_VERSION__
+     */
+    private const string SAMPLE_CONTENT_TAG = 'wizard-sample';
+
     /**
      * Load the current admin params as a Registry.
      *
@@ -579,6 +592,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         ];
         $db->insertObject('#__bsms_series', $series);
         $ids['series_id'] = (int) $db->insertid();
+        Cwmimportmanifest::recordRow(self::SAMPLE_CONTENT_TAG, '#__bsms_series', $ids['series_id']);
 
         // Create sample message using the default teacher
         $locationId = $defaults['location_id'] ?? 0;
@@ -606,6 +620,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         ];
         $db->insertObject('#__bsms_studies', $message);
         $ids['message_id'] = (int) $db->insertid();
+        Cwmimportmanifest::recordRow(self::SAMPLE_CONTENT_TAG, '#__bsms_studies', $ids['message_id']);
 
         return $ids;
     }

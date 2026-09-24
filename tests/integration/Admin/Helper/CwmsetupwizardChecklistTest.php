@@ -12,8 +12,11 @@
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmimportmanifest;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseDriver;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
@@ -48,6 +51,55 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
         'location_group_mapping',
         'location_system_dismissed',
     ];
+
+    private ?DatabaseDriver $db = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (!\defined('PROCLAIM_TEST_DB_AVAILABLE') || !PROCLAIM_TEST_DB_AVAILABLE) {
+            return;
+        }
+
+        $this->db = Factory::getContainer()->get(DatabaseDriver::class);
+        $this->db->transactionStart(true);
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->db !== null) {
+            try {
+                $this->db->transactionRollback(true);
+            } catch (\Throwable) {
+                // Connection lost; nothing to roll back.
+            }
+        }
+
+        parent::tearDown();
+    }
+
+    /**
+     * @return  int  A freshly-inserted study's id.
+     */
+    private function seedStudy(bool $manifestTracked): int
+    {
+        $alias = 'cwm2175-' . bin2hex(random_bytes(4));
+        $study = (object) [
+            'studytitle' => $alias,
+            'alias'      => $alias,
+            'published'  => 1,
+            'language'   => '*',
+        ];
+        $this->db->insertObject('#__bsms_studies', $study, 'id');
+        $id = (int) $this->db->insertid();
+
+        if ($manifestTracked) {
+            Cwmimportmanifest::recordRow('cwm2175-test', '#__bsms_studies', $id);
+        }
+
+        return $id;
+    }
 
     /**
      * Every component-params key must be read from the component Registry, not
@@ -218,6 +270,74 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
             $hasPodcast,
             $podcast['done'],
             'The step\'s done state must reflect whether a published podcast exists'
+        );
+    }
+
+    // -------------------------------------------------------------------------
+    // #2175 -- exclude by manifest membership, not the 'welcome-to-proclaim' alias
+    // -------------------------------------------------------------------------
+
+    /**
+     * The alias only ever caught one specific source of sample content. A
+     * second source (an imported demo set, #2145) would never match it and
+     * would be counted as a real message the moment it existed.
+     */
+    #[TestDox('The first-message step no longer special-cases the welcome-to-proclaim alias')]
+    public function testFirstMessageStepDoesNotSpecialCaseTheOldAlias(): void
+    {
+        $ref   = new \ReflectionMethod(CwmsetupwizardHelper::class, 'getChecklistItems');
+        $lines = file($ref->getFileName());
+        $body  = implode('', \array_slice($lines, $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1));
+        $code  = preg_replace('#//[^\n]*#', '', $body);
+
+        $this->assertStringNotContainsString(
+            'welcome-to-proclaim',
+            (string) $code,
+            'The alias special-case should be replaced by manifest-based exclusion — see #2175'
+        );
+        $this->assertStringContainsString(
+            'Cwmimportmanifest::allRowIds',
+            $body,
+            'first_message must exclude manifest-tracked rows instead — see #2175'
+        );
+    }
+
+    /**
+     * Rather than asserting a hard-coded true/false — this runs against a real
+     * dev database that may already carry real content, so neither outcome is
+     * guaranteed — this proves the checklist's live answer agrees with an
+     * independent, from-scratch computation of the same manifest exclusion,
+     * after adding one more manifest-tracked row it must not be swayed by.
+     */
+    #[TestDox('The first-message step excludes manifest-tracked studies, however many exist')]
+    public function testFirstMessageStepExcludesManifestTrackedStudies(): void
+    {
+        if ($this->db === null) {
+            $this->markTestSkipped('Database not available for integration tests');
+        }
+
+        $this->seedStudy(manifestTracked: true);
+
+        $items = CwmsetupwizardHelper::getChecklistItems();
+        $first = $items[array_search('first_message', array_column($items, 'key'), true)];
+
+        $manifestIds = Cwmimportmanifest::allRowIds('#__bsms_studies');
+
+        $query = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from($this->db->quoteName('#__bsms_studies'))
+            ->where($this->db->quoteName('published') . ' >= 0');
+
+        if ($manifestIds !== []) {
+            $query->whereNotIn($this->db->quoteName('id'), $manifestIds);
+        }
+
+        $expected = (int) $this->db->setQuery($query)->loadResult() > 0;
+
+        $this->assertSame(
+            $expected,
+            $first['done'],
+            'The checklist must agree with an independent manifest-exclusion count'
         );
     }
 }
