@@ -168,7 +168,7 @@ class Cwmimportmanifest
 
     /**
      * Remove one row's manifest entry — call once the row itself is
-     * actually gone (#2174), not before, so a failure partway through a
+     * actually gone, not before, so a failure partway through a
      * removal still agrees with what the manifest says exists.
      *
      * @param   string  $tag        The import tag.
@@ -198,7 +198,7 @@ class Cwmimportmanifest
 
     /**
      * Remove one file's manifest entry — call once the file itself is
-     * actually gone (#2174), not before.
+     * actually gone, not before.
      *
      * @param   string  $tag       The import tag.
      * @param   string  $filePath  As recorded by {@see recordFile()}.
