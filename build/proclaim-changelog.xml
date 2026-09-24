@@ -19,6 +19,25 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.7.2                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.7.2</version>
+        <date>2026-09-24</date>
+        <note>
+            <item>Accept jpeg and webp uploads on sites carrying an old policy (#2146) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2148</item>
+            <item>Gate template import/export on the template-code section permission (#2149) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2150</item>
+            <item>Show each server&#x27;s type in the Servers list, and flag the legacy ones (#2152) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2153</item>
+            <item>Legacy-server deprecation runway: migrate button, edit-screen banner, health deadline (#2152) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2154</item>
+            <item>Media write API: fix PATCH 500, unreachable delete, write-only podcast_id, createdate drift (#2135) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2166</item>
+            <item>Fix the servertype dialog flake at its actual root cause (#2122) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2168</item>
+            <item>Scope CwmmessageModel::save()&#x27;s a_id override to the site client by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2185</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.7.1                                                   -->
     <!-- ============================================================ -->
     <changelog>
