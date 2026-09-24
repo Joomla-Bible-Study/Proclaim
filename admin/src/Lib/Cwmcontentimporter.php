@@ -347,6 +347,12 @@ class Cwmcontentimporter
             'language'     => '*',
             'contact'      => 0,
             'social_links' => '',
+            // NOT NULL with no default (verified against a live schema, not
+            // just install.mysql.utf8.sql — they've drifted). The admin form
+            // always submits this, even empty, which is what normally masks
+            // it; a programmatically-built $data array has to supply it
+            // explicitly or Table::store() fails under strict SQL mode.
+            'address' => '',
         ];
 
         if (!$model->save($data)) {
