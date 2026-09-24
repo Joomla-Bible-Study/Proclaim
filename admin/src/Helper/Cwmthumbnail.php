@@ -148,7 +148,7 @@ class Cwmthumbnail
      *
      * @since 10.5.6
      */
-    private static function resolveWithinAllowedPaths(string $path): string|false
+    public static function resolveWithinAllowedPaths(string $path): string|false
     {
         $candidate = Path::clean(
             str_starts_with($path, JPATH_ROOT) ? $path : JPATH_ROOT . '/' . ltrim($path, '/')
