@@ -99,4 +99,44 @@ class CwmsetupwizardSampleContentManifestTest extends IntegrationTestCase
             'createSampleContent() does not create the teacher, so it must not tag it'
         );
     }
+
+    /**
+     * A freshly created row must not already look "edited since import" —
+     * otherwise #2174's removal would keep it forever. This mirrors the
+     * insert-vs-update branch every entity's own prepareTable() uses.
+     */
+    #[TestDox('createSampleContent() does not set modified_by, so #2174 can still remove its rows')]
+    public function testCreateSampleContentLeavesModifiedByUnset(): void
+    {
+        $model = (new \ReflectionClass(CwmsetupwizardModel::class))->newInstanceWithoutConstructor();
+        $ref   = new \ReflectionMethod(CwmsetupwizardModel::class, 'createSampleContent');
+
+        $teacher = (object) [
+            'teachername' => 'cwm2175-' . bin2hex(random_bytes(4)),
+            'alias'       => 'cwm2175-' . bin2hex(random_bytes(4)),
+            'published'   => 1,
+            'language'    => '*',
+            'address'     => '',
+        ];
+        $this->db->insertObject('#__bsms_teachers', $teacher, 'id');
+
+        $ids = $ref->invoke($model, [], ['teacher_id' => (int) $this->db->insertid()]);
+
+        $seriesModifiedBy = $this->db->setQuery(
+            $this->db->createQuery()
+                ->select($this->db->quoteName('modified_by'))
+                ->from($this->db->quoteName('#__bsms_series'))
+                ->where($this->db->quoteName('id') . ' = ' . (int) $ids['series_id'])
+        )->loadResult();
+
+        $studyModifiedBy = $this->db->setQuery(
+            $this->db->createQuery()
+                ->select($this->db->quoteName('modified_by'))
+                ->from($this->db->quoteName('#__bsms_studies'))
+                ->where($this->db->quoteName('id') . ' = ' . (int) $ids['message_id'])
+        )->loadResult();
+
+        $this->assertSame(0, (int) $seriesModifiedBy);
+        $this->assertSame(0, (int) $studyModifiedBy);
+    }
 }

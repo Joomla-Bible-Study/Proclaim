@@ -573,6 +573,14 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $ids['teacher_id'] = $teacherId;
 
         // Create sample series
+        //
+        // 'modified'/'modified_by' are deliberately absent — every entity's
+        // own prepareTable() only sets them on an UPDATE, leaving a freshly
+        // created row at the column defaults (see the identical branch in
+        // CwmteacherModel/CwmserieModel/CwmmessageModel). #2174's removal
+        // reads modified_by != 0 as "edited by a person since creation";
+        // setting it here on insert would make this row look permanently
+        // edited and therefore permanently unremovable.
         $series = (object) [
             'series_text'  => 'Sample Series',
             'alias'        => 'sample-series',
@@ -584,8 +592,6 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             'pc_show'      => 1,
             'created'      => $now,
             'created_by'   => $userId,
-            'modified'     => $now,
-            'modified_by'  => $userId,
             'checked_out'  => 0,
             'publish_up'   => $now,
             'publish_down' => '0000-00-00 00:00:00',
@@ -594,18 +600,29 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $ids['series_id'] = (int) $db->insertid();
         Cwmimportmanifest::recordRow(self::SAMPLE_CONTENT_TAG, '#__bsms_series', $ids['series_id']);
 
-        // Create sample message using the default teacher
+        // Create sample message using the default teacher.
+        //
+        // Neither 'teacher_id' nor 'booknumber' is a column on
+        // #__bsms_studies — the teacher credit lives in the
+        // #__bsms_study_teachers junction table instead, which this method
+        // does not populate, so the sample message currently shows no
+        // teacher. insertObject() silently drops properties that don't match
+        // a real column (verified: this does not fatal), which is what let
+        // both sit here unnoticed. Left as dead, not wired up — properly
+        // crediting the teacher means writing the junction row, which is a
+        // separate, deliberate change, not a side effect of #2175.
+        //
+        // 'modified'/'modified_by' are omitted for the same reason as the
+        // series above — see that comment.
         $locationId = $defaults['location_id'] ?? 0;
         $message    = (object) [
             'studytitle'  => 'Welcome to Proclaim',
             'alias'       => 'welcome-to-proclaim',
             'studydate'   => $now,
             'studyintro'  => '<p>This is a sample message created by the setup wizard to help you see how content appears on your site.</p>',
-            'teacher_id'  => $teacherId,
             'series_id'   => $ids['series_id'],
             'location_id' => $locationId,
             'messagetype' => 1,
-            'booknumber'  => 101,
             'published'   => 1,
             'access'      => 1,
             'language'    => '*',
@@ -615,8 +632,6 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             'asset_id'    => 0,
             'created'     => $now,
             'created_by'  => $userId,
-            'modified'    => $now,
-            'modified_by' => $userId,
         ];
         $db->insertObject('#__bsms_studies', $message);
         $ids['message_id'] = (int) $db->insertid();
