@@ -1,0 +1,43 @@
+{
+    "teachers": [
+        {
+            "id": 1,
+            "teachername": "CWM2173 Demo Teacher",
+            "alias": "cwm2173-demo-teacher",
+            "information": "A fixture teacher for CwmcontentimporterTest.",
+            "published": 1
+        }
+    ],
+    "series": [
+        {
+            "id": 1,
+            "series_text": "CWM2173 Demo Series",
+            "alias": "cwm2173-demo-series",
+            "teacher_id": 1,
+            "description": "A fixture series for CwmcontentimporterTest.",
+            "published": 1
+        }
+    ],
+    "messages": [
+        {
+            "id": 1,
+            "studytitle": "CWM2173 Demo Message",
+            "alias": "cwm2173-demo-message",
+            "studydate": "2026-01-01 00:00:00",
+            "studyintro": "A fixture message for CwmcontentimporterTest.",
+            "series_id": 1,
+            "teacher_ids": [1],
+            "scriptures": [
+                {"reference_text": "John 3:16-17", "bible_version": "kjv"}
+            ],
+            "topics": ["cwm2173-demo-topic-tag"],
+            "published": 1
+        }
+    ],
+    "files": [
+        {
+            "source": "teacher-1.png",
+            "dest": "images/biblestudy/teachers/cwm2173-demo-teacher.png"
+        }
+    ]
+}
