@@ -350,6 +350,30 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    public function testRejectsANameCollisionBeforeCreatingAnything(): void
+    {
+        $this->seedFixtureTopic();
+
+        $existing = (object) [
+            'teachername' => 'CWM2173 Demo Teacher',
+            'alias'       => 'cwm2173-collision',
+            'language'    => '*',
+            'address'     => '',
+        ];
+        $this->db->insertObject('#__bsms_teachers', $existing, 'id');
+
+        $tag = 'cwm2173-test-' . bin2hex(random_bytes(4));
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $this->fixture()['payload'], $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/already exists on this site/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
     /**
      * @param   string  $table       `#__`-prefixed table name.
      * @param   string  $column      Column to select.

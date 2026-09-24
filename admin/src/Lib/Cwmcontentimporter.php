@@ -173,6 +173,16 @@ class Cwmcontentimporter
         $teacherIds = $this->validateSourceIds($payload['teachers'] ?? [], 'teachers', 'teachername');
         $serieIds   = $this->validateSourceIds($payload['series'] ?? [], 'series', 'series_text');
 
+        // Checked here, not left for Table::store()'s unique-key failure to
+        // catch, because that failure would arrive after earlier entries in
+        // the same import already exist — exactly the partial-import problem
+        // this whole pre-flight pass exists to prevent (a re-run under a
+        // fresh tag, or a re-import of a set #2174 partly kept, would
+        // otherwise leave a collided teacher behind alongside a failed
+        // series).
+        $this->validateNoNameCollisions($payload['teachers'] ?? [], '#__bsms_teachers', 'teachername', 'teachers');
+        $this->validateNoNameCollisions($payload['series'] ?? [], '#__bsms_series', 'series_text', 'series');
+
         foreach ($payload['series'] ?? [] as $i => $serie) {
             if (isset($serie['teacher_id']) && !isset($teacherIds[(int) $serie['teacher_id']])) {
                 throw new \RuntimeException(\sprintf(
@@ -560,6 +570,46 @@ class Cwmcontentimporter
         )->loadResult();
 
         return $id !== null ? (int) $id : null;
+    }
+
+    /**
+     * Refuse a name this table already has, rather than letting the eventual
+     * `Table::store()` unique-key failure surface it after earlier entries
+     * in the same import have already been created.
+     *
+     * @param   array   $entries  `teachers[]` or `series[]`.
+     * @param   string  $table    `#__`-prefixed table to check.
+     * @param   string  $column   The title column (`teachername` / `series_text`).
+     * @param   string  $section  Section name, for error messages.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function validateNoNameCollisions(array $entries, string $table, string $column, string $section): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        foreach ($entries as $i => $entry) {
+            $name = trim((string) $entry[$column]);
+
+            $exists = (int) $db->setQuery(
+                $db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName($table))
+                    ->where($db->quoteName($column) . ' = :name')
+                    ->bind(':name', $name, ParameterType::STRING)
+            )->loadResult() > 0;
+
+            if ($exists) {
+                throw new \RuntimeException(\sprintf(
+                    '%s[%d] "%s" already exists on this site.',
+                    $section,
+                    $i,
+                    $name
+                ));
+            }
+        }
     }
 
     /**
