@@ -21,9 +21,9 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
- * Reads and writes the import-set manifest (`#__bsms_import_manifest`, #2172).
+ * Reads and writes the import-set manifest (`#__bsms_import_manifest`).
  *
- * A tagged import (e.g. the opt-in demo content set, #2145) records every row
+ * A tagged import (e.g. an opt-in demo content set) records every row
  * and file it creates here as it creates it, so the set can be found again
  * and cleanly removed later without touching content the site owner created
  * themselves.
