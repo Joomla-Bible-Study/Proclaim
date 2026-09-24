@@ -1517,15 +1517,16 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Record any pre-existing wizard-sample content in the import manifest.
      *
-     * CwmsetupwizardModel::createSampleContent() only started recording what
-     * it creates in the manifest from #2175 onward. A site that used the
+     * CwmsetupwizardModel::createSampleContent() only recently started
+     * recording what it creates in the manifest. A site that used the
      * setup wizard's opt-in "create sample content" step on an earlier
      * release has a 'welcome-to-proclaim' study and a 'sample-series' series
-     * with no manifest row — and #2175 replaced the checklist's old alias
-     * string match with manifest-based exclusion, so without this backfill
-     * those rows would silently start counting as real content the moment
-     * this update runs, flipping "first message" from correctly incomplete
-     * to incorrectly done for an admin who never added anything real.
+     * with no manifest row — and the checklist's exclusion logic moved from
+     * an alias string match to manifest-based exclusion, so without this
+     * backfill those rows would silently start counting as real content the
+     * moment this update runs, flipping "first message" from correctly
+     * incomplete to incorrectly done for an admin who never added anything
+     * real.
      *
      * Idempotent (checked via Cwmimportmanifest::allRowIds() rather than
      * attempting the insert and catching a duplicate-key error) and a no-op

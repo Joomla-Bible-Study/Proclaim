@@ -116,7 +116,7 @@ class Cwmimportmanifest
      * Every row id recorded for a table, across every tag.
      *
      * For callers that only need "is this row tracked content?" — the setup
-     * checklist (#2175), for one — and don't care which import created it.
+     * checklist, for one — and don't care which import created it.
      *
      * @param   string  $tableName  Unprefixed table name (e.g. `#__bsms_studies`).
      *

@@ -276,12 +276,12 @@ class CwmsetupwizardHelper
 
             // Check if a real message exists (not tracked demo/sample content).
             //
-            // Excludes by manifest membership (#2172/#2175) rather than
-            // matching the 'welcome-to-proclaim' alias — that string was the
-            // only sample content there was, but createSampleContent() and
-            // any future imported demo set (#2145) both record what they
-            // create in the manifest now, so this generalises to either
-            // source without needing to know their specific aliases.
+            // Excludes by manifest membership rather than matching the
+            // 'welcome-to-proclaim' alias — that string was the only sample
+            // content there was, but createSampleContent() and any future
+            // imported demo set both record what they create in the
+            // manifest now, so this generalises to either source without
+            // needing to know their specific aliases.
             $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_studies'))

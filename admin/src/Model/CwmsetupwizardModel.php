@@ -33,11 +33,10 @@ use Joomla\Registry\Registry;
 class CwmsetupwizardModel extends BaseDatabaseModel
 {
     /**
-     * The manifest tag {@see createSampleContent()} records its rows under
-     * (#2172/#2175) — a fixed tag, not a per-run one, because the wizard's
-     * sample content is a single, one-time set rather than something
-     * created repeatedly under distinct tags the way an imported demo set
-     * (#2145) would be.
+     * The manifest tag {@see createSampleContent()} records its rows under —
+     * a fixed tag, not a per-run one, because the wizard's sample content is
+     * a single, one-time set rather than something created repeatedly under
+     * distinct tags the way an imported demo set would be.
      *
      * @var string
      * @since  __DEPLOY_VERSION__
@@ -577,10 +576,10 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         // 'modified'/'modified_by' are deliberately absent — every entity's
         // own prepareTable() only sets them on an UPDATE, leaving a freshly
         // created row at the column defaults (see the identical branch in
-        // CwmteacherModel/CwmserieModel/CwmmessageModel). #2174's removal
-        // reads modified_by != 0 as "edited by a person since creation";
-        // setting it here on insert would make this row look permanently
-        // edited and therefore permanently unremovable.
+        // CwmteacherModel/CwmserieModel/CwmmessageModel). Manifest-driven
+        // removal reads modified_by != 0 as "edited by a person since
+        // creation"; setting it here on insert would make this row look
+        // permanently edited and therefore permanently unremovable.
         $series = (object) [
             'series_text'  => 'Sample Series',
             'alias'        => 'sample-series',
@@ -610,7 +609,8 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         // a real column (verified: this does not fatal), which is what let
         // both sit here unnoticed. Left as dead, not wired up — properly
         // crediting the teacher means writing the junction row, which is a
-        // separate, deliberate change, not a side effect of #2175.
+        // separate, deliberate change, not a side effect of this method's
+        // other cleanup.
         //
         // 'modified'/'modified_by' are omitted for the same reason as the
         // series above — see that comment.
