@@ -40,3 +40,4 @@ DROP TABLE IF EXISTS `#__bsms_analytics_monthly`;
 DROP TABLE IF EXISTS `#__bsms_study_teachers`;
 DROP TABLE IF EXISTS `#__bsms_study_scriptures`;
 DROP TABLE IF EXISTS `#__bsms_podcast_download_log`;
+DROP TABLE IF EXISTS `#__bsms_import_manifest`;

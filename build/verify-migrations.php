@@ -232,6 +232,15 @@ $EXPECTATIONS = [
      * because a historical MODIFY on it makes a clean ChangeSet drop impossible.
      */
     '11.0.0' => [
+        'tables' => [
+            // The import-set manifest (#2172): tracks every row/file a
+            // tagged import creates, so it can be found again and cleanly
+            // removed (#2174).
+            '#__bsms_import_manifest',
+        ],
+        'indexes' => [
+            '#__bsms_import_manifest' => ['idx_tag_row', 'idx_import_tag'],
+        ],
         'columnsAbsent' => [
             '#__bsms_podcast' => [
                 // The itunes:subtitle/keywords leftovers (#2157).
