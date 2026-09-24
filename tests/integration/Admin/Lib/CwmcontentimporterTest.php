@@ -13,6 +13,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmimportmanifest;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseDriver;
@@ -372,6 +373,140 @@ class CwmcontentimporterTest extends IntegrationTestCase
         }
 
         $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAnInvalidTag(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Cwmcontentimporter($this->factory))->import('Not A Valid Tag!', [], sys_get_temp_dir());
+    }
+
+    public function testRejectsAnInvalidAliasBeforeCreatingAnything(): void
+    {
+        $payload = $this->fixture()['payload'];
+        unset($payload['series'], $payload['messages'], $payload['files']);
+        $payload['teachers'][0]['alias'] = 'Not A Valid Alias!';
+
+        $tag = 'cwm2173-test-' . bin2hex(random_bytes(4));
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/must match/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsTwoFilesClaimingTheSameDestination(): void
+    {
+        $fixture = $this->fixture();
+        $payload = $fixture['payload'];
+        unset($payload['messages'], $payload['series']);
+        $payload['files'] = [
+            ['source' => 'teacher-1.png', 'dest' => 'images/biblestudy/teachers/cwm2173-dupe.png'],
+            ['source' => 'teacher-1.png', 'dest' => 'images/biblestudy/teachers/cwm2173-dupe.png'],
+        ];
+
+        $tag = 'cwm2173-test-' . bin2hex(random_bytes(4));
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $fixture['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/claimed by more than one entry/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+        $this->assertFileDoesNotExist(JPATH_ROOT . '/images/biblestudy/teachers/cwm2173-dupe.png');
+    }
+
+    public function testRejectsAMismatchedFileExtension(): void
+    {
+        $fixture = $this->fixture();
+        $payload = $fixture['payload'];
+        unset($payload['messages'], $payload['series']);
+        // teacher-1.png is a real PNG; claiming it as a .gif destination must
+        // be refused even though .gif is itself an allowed extension.
+        $payload['files'] = [
+            ['source' => 'teacher-1.png', 'dest' => 'images/biblestudy/teachers/cwm2173-mismatch.gif'],
+        ];
+
+        $tag = 'cwm2173-test-' . bin2hex(random_bytes(4));
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $fixture['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/does not match source extension/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    /**
+     * The regression test for the manifest gap live-testing found: a row
+     * created by Table::store() but never recorded because AdminModel::save()
+     * subsequently reported failure (or threw) — exactly what happens when a
+     * content plugin fails after the row itself is already written. Needs no
+     * plugin dispatch and no full app boot: a stub model's save() does the
+     * insert directly and throws, standing in for that shape of failure.
+     */
+    public function testAnOrphanedRowIsStillRecordedInTheManifestWhenSaveFails(): void
+    {
+        $tag = 'cwm2173-test-' . bin2hex(random_bytes(4));
+
+        $model = $this->createStub(AdminModel::class);
+        $model->method('save')->willReturnCallback(function () {
+            $teacher = (object) [
+                'teachername' => 'CWM2173 Orphan Teacher',
+                'alias'       => 'cwm2173-orphan-teacher',
+                'language'    => '*',
+                'address'     => '',
+            ];
+            $this->db->insertObject('#__bsms_teachers', $teacher, 'id');
+
+            throw new \RuntimeException('simulated after-save plugin failure');
+        });
+
+        $factory = $this->createStub(MVCFactoryInterface::class);
+        $factory->method('createModel')->willReturn($model);
+
+        $payload = [
+            'teachers' => [[
+                'id'          => 1,
+                'teachername' => 'CWM2173 Orphan Teacher',
+                'alias'       => 'cwm2173-orphan-teacher',
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected the simulated save failure to propagate.');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('simulated after-save plugin failure', $e->getMessage());
+        }
+
+        $alias     = 'cwm2173-orphan-teacher';
+        $teacherId = $this->db->setQuery(
+            $this->db->createQuery()
+                ->select($this->db->quoteName('id'))
+                ->from($this->db->quoteName('#__bsms_teachers'))
+                ->where($this->db->quoteName('alias') . ' = :alias')
+                ->bind(':alias', $alias, ParameterType::STRING)
+        )->loadResult();
+
+        $this->assertNotNull($teacherId, 'The stub save() must have inserted the row.');
+
+        $rows = Cwmimportmanifest::rowsForTag($tag);
+
+        $this->assertContains(
+            (int) $teacherId,
+            $rows['#__bsms_teachers'] ?? [],
+            'The row Table::store() wrote must still be recorded even though save() reported failure.'
+        );
     }
 
     /**

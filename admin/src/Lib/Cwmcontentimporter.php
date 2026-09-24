@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudytopicHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
@@ -31,7 +32,7 @@ use Joomla\Database\ParameterType;
  * tables (teachers/scriptures) and `#__assets` all stay consistent without
  * hand-rolled insert logic. Every row and file created is recorded in the
  * import-set manifest (#2172, {@see Cwmimportmanifest}) as it is created, so
- * a later import can be found again and cleanly removed.
+ * a later import can be found again and cleanly removed (#2174).
  *
  * Deliberately narrow: only the sections in {@see ALLOWED_SECTIONS} are
  * recognised, and `#__bsms_templatecode` is not one of them. Template code
@@ -40,11 +41,19 @@ use Joomla\Database\ParameterType;
  * section outright removes that surface rather than depending on
  * validation to catch a bad payload.
  *
- * Everything is validated in one pre-flight pass before anything is
- * created. Discovering a bad file path only after the teacher, series and
- * message rows already exist would leave a rejected import's content
- * sitting in the database — an untrusted archive gets exactly one clean
- * refusal, not a partially-applied one.
+ * What "clean refusal" actually means here, precisely: every predictable
+ * problem with the payload itself (bad shape, an unresolved reference, a
+ * name collision, a bad file path) is checked in one pre-flight pass before
+ * anything is created, so a bad *payload* is refused as a whole. What it
+ * does not mean is a transaction — content plugins fire on every save
+ * (Smart Search reindexing, schemaorg, the action log), and this project has
+ * learned the hard way that a wrapping DB transaction does not reliably
+ * survive that. So an *unpredictable* failure (a plugin throwing, a DB error
+ * mid-run) can still leave a partially-created set behind — but every row
+ * created before the failure is guaranteed to be in the manifest under this
+ * tag (see the try/catch in each `import*()` method), so the tag stays a
+ * complete, accurate description of what exists and #2174's remover can
+ * always clear it.
  *
  * @package  Proclaim.Admin
  * @since    __DEPLOY_VERSION__
@@ -69,6 +78,26 @@ class Cwmcontentimporter
      * @since  __DEPLOY_VERSION__
      */
     private const array IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+    /**
+     * Every alias this importer creates must already look like one —
+     * lowercase, hyphen-separated segments. Required (not derived via
+     * `ApplicationHelper::stringURLSafe()`) for two reasons: it gives the
+     * orphan-row lookup in {@see recordIfOrphaned()} a stable, unambiguous
+     * key, and `stringURLSafe()` transliterates through
+     * `Factory::getLanguage()`, which needs a fully-booted application this
+     * class is written to run without.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private const string ALIAS_PATTERN = '/^[a-z0-9]+(?:-[a-z0-9]+)*$/';
+
+    /**
+     * Matches the `import_tag` column's `VARCHAR(64)`.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private const string TAG_PATTERN = '/^[a-z0-9][a-z0-9._-]{0,63}$/';
 
     /**
      * Overrides `bootComponent('com_proclaim')->getMVCFactory()`. Exists so
@@ -105,8 +134,12 @@ class Cwmcontentimporter
      */
     public function import(string $tag, array $payload, string $sourceDir): array
     {
-        if (trim($tag) === '') {
-            throw new \InvalidArgumentException('An import tag is required.');
+        if (preg_match(self::TAG_PATTERN, $tag) !== 1) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Import tag "%s" must match %s.',
+                $tag,
+                self::TAG_PATTERN
+            ));
         }
 
         if (Cwmimportmanifest::exists($tag)) {
@@ -116,7 +149,7 @@ class Cwmcontentimporter
             ));
         }
 
-        $this->validate($payload, $sourceDir);
+        $plan = $this->validate($payload, $sourceDir);
 
         $summary = ['teachers' => 0, 'series' => 0, 'messages' => 0, 'files' => 0];
 
@@ -133,17 +166,17 @@ class Cwmcontentimporter
         }
 
         foreach ($payload['series'] ?? [] as $serie) {
-            $teacherId = isset($serie['teacher_id']) ? $teacherIds[(int) $serie['teacher_id']] : 0;
+            $teacherId = !empty($serie['teacher_id']) ? $teacherIds[(int) $serie['teacher_id']] : 0;
 
             $serieIds[(int) $serie['id']] = $this->importSerie($tag, $serie, $teacherId, $summary);
         }
 
         foreach ($payload['messages'] ?? [] as $message) {
-            $this->importMessage($tag, $message, $teacherIds, $serieIds, $summary);
+            $this->importMessage($tag, $message, $teacherIds, $serieIds, $plan['topics'], $summary);
         }
 
-        if (!empty($payload['files'])) {
-            $this->importFiles($tag, $payload['files'], $sourceDir, $summary);
+        foreach ($plan['files'] as $file) {
+            $this->importFile($tag, $file, $summary);
         }
 
         return $summary;
@@ -155,11 +188,12 @@ class Cwmcontentimporter
      * @param   array   $payload    See {@see import()}.
      * @param   string  $sourceDir  See {@see import()}.
      *
-     * @return  void
+     * @return  array{topics: array<string, int>, files: list<array{source: string, dest: string}>}
+     *          Work already done during validation, reused instead of repeated during import.
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function validate(array $payload, string $sourceDir): void
+    private function validate(array $payload, string $sourceDir): array
     {
         $unknown = array_diff(array_keys($payload), self::ALLOWED_SECTIONS);
 
@@ -170,21 +204,13 @@ class Cwmcontentimporter
             );
         }
 
-        $teacherIds = $this->validateSourceIds($payload['teachers'] ?? [], 'teachers', 'teachername');
-        $serieIds   = $this->validateSourceIds($payload['series'] ?? [], 'series', 'series_text');
+        $this->validateShape($payload);
 
-        // Checked here, not left for Table::store()'s unique-key failure to
-        // catch, because that failure would arrive after earlier entries in
-        // the same import already exist — exactly the partial-import problem
-        // this whole pre-flight pass exists to prevent (a re-run under a
-        // fresh tag, or a re-import of a set #2174 partly kept, would
-        // otherwise leave a collided teacher behind alongside a failed
-        // series).
-        $this->validateNoNameCollisions($payload['teachers'] ?? [], '#__bsms_teachers', 'teachername', 'teachers');
-        $this->validateNoNameCollisions($payload['series'] ?? [], '#__bsms_series', 'series_text', 'series');
+        $teacherIds = $this->validateEntries($payload['teachers'] ?? [], '#__bsms_teachers', 'teachername', 'teachers');
+        $serieIds   = $this->validateEntries($payload['series'] ?? [], '#__bsms_series', 'series_text', 'series');
 
         foreach ($payload['series'] ?? [] as $i => $serie) {
-            if (isset($serie['teacher_id']) && !isset($teacherIds[(int) $serie['teacher_id']])) {
+            if (!empty($serie['teacher_id']) && !isset($teacherIds[(int) $serie['teacher_id']])) {
                 throw new \RuntimeException(\sprintf(
                     'series[%d].teacher_id %s does not match any teachers[].id.',
                     $i,
@@ -193,11 +219,11 @@ class Cwmcontentimporter
             }
         }
 
-        foreach ($payload['messages'] ?? [] as $i => $message) {
-            if (trim((string) ($message['studytitle'] ?? '')) === '') {
-                throw new \RuntimeException(\sprintf('messages[%d] is missing studytitle.', $i));
-            }
+        $this->validateEntries($payload['messages'] ?? [], '#__bsms_studies', 'studytitle', 'messages');
 
+        $topicMap = [];
+
+        foreach ($payload['messages'] ?? [] as $i => $message) {
             $seriesId = (int) ($message['series_id'] ?? 0);
 
             if ($seriesId > 0 && !isset($serieIds[$seriesId])) {
@@ -219,40 +245,115 @@ class Cwmcontentimporter
             }
 
             // Demo content references topics already in use, it does not
-            // mint new ones — resolving here, up front, means a fixture
-            // naming a topic this site doesn't have is a validation error,
-            // not a silently-created, unmanifested topic row (see the
-            // topics handling note on importMessage()).
+            // mint new ones. Built once here and reused by importMessage()
+            // rather than re-queried, so a topic resolved during validation
+            // cannot vanish by the time it's needed (see recordIfOrphaned()
+            // for how the rest of this class treats that kind of gap).
             foreach ((array) ($message['topics'] ?? []) as $topicText) {
-                if ($this->resolveTopicId((string) $topicText) === null) {
-                    throw new \RuntimeException(\sprintf(
-                        'messages[%d] references topic "%s", which does not exist on this site.',
-                        $i,
-                        $topicText
-                    ));
+                $topicText = (string) $topicText;
+
+                if (!isset($topicMap[$topicText])) {
+                    $topicId = CwmstudytopicHelper::findTopicIdByText($topicText);
+
+                    if ($topicId === 0) {
+                        throw new \RuntimeException(\sprintf(
+                            'messages[%d] references topic "%s", which does not exist on this site.',
+                            $i,
+                            $topicText
+                        ));
+                    }
+
+                    $topicMap[$topicText] = $topicId;
                 }
             }
         }
 
-        if (!empty($payload['files'])) {
-            $this->validateFiles($payload['files'], $sourceDir);
+        $files = $this->validateFiles($payload['files'] ?? [], $sourceDir);
+
+        return ['topics' => $topicMap, 'files' => $files];
+    }
+
+    /**
+     * Structural checks that have nothing to do with what the ids reference —
+     * every section is a list of arrays, and every field this importer
+     * iterates over is the type it's about to be used as. Catching this here
+     * turns a malformed payload into one clean refusal instead of a
+     * TypeError escaping from inside the create loop after earlier entries
+     * already exist.
+     *
+     * @param   array  $payload  See {@see import()}.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function validateShape(array $payload): void
+    {
+        foreach (self::ALLOWED_SECTIONS as $section) {
+            if (!isset($payload[$section])) {
+                continue;
+            }
+
+            if (!array_is_list($payload[$section])) {
+                throw new \RuntimeException(\sprintf('"%s" must be a list.', $section));
+            }
+
+            foreach ($payload[$section] as $i => $entry) {
+                if (!\is_array($entry)) {
+                    throw new \RuntimeException(\sprintf('%s[%d] must be an object.', $section, $i));
+                }
+            }
+        }
+
+        foreach ($payload['series'] ?? [] as $i => $serie) {
+            if (isset($serie['teacher_id']) && !\is_int($serie['teacher_id'])) {
+                throw new \RuntimeException(\sprintf('series[%d].teacher_id must be an integer.', $i));
+            }
+        }
+
+        foreach ($payload['messages'] ?? [] as $i => $message) {
+            if (isset($message['series_id']) && !\is_int($message['series_id'])) {
+                throw new \RuntimeException(\sprintf('messages[%d].series_id must be an integer.', $i));
+            }
+
+            foreach (['teacher_ids', 'topics', 'scriptures'] as $listField) {
+                if (isset($message[$listField]) && !array_is_list($message[$listField])) {
+                    throw new \RuntimeException(\sprintf('messages[%d].%s must be a list.', $i, $listField));
+                }
+            }
         }
     }
 
     /**
-     * Every entry has a positive, unique `id`, and its title field is non-empty.
+     * Every entry has a positive, unique `id`; a required, non-empty title
+     * field that does not collide with an existing row's; and a valid,
+     * unique alias that does not collide with an existing row's.
      *
-     * @param   array   $entries    `teachers[]` or `series[]`.
-     * @param   string  $section    Section name, for error messages.
-     * @param   string  $titleKey   The required non-empty field.
+     * Both the title and the alias are checked, not just one — they are
+     * two different constraints. `alias` is a real `UNIQUE` column on
+     * `#__bsms_teachers` (not on series/studies, but checked uniformly
+     * here anyway, since a collision there is still a collision); the
+     * title-field check exists because the model's own validation refuses
+     * a duplicate *name* independently of the alias (live-tested: an
+     * import failed on "A teacher named ... already exists" with a
+     * colliding name and a distinct alias).
+     *
+     * @param   array   $entries  `teachers[]`, `series[]`, or `messages[]`.
+     * @param   string  $table    `#__`-prefixed table the entries will be created in.
+     * @param   string  $titleKey The required non-empty field (`teachername` / `series_text` / `studytitle`).
+     * @param   string  $section  Section name, for error messages.
      *
      * @return  array<int, true>  The valid source ids seen, as lookup keys.
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function validateSourceIds(array $entries, string $section, string $titleKey): array
+    private function validateEntries(array $entries, string $table, string $titleKey, string $section): array
     {
-        $seen = [];
+        $db = $this->db();
+
+        $seenIds     = [];
+        $seenTitles  = [];
+        $seenAliases = [];
 
         foreach ($entries as $i => $entry) {
             $id = $entry['id'] ?? null;
@@ -261,37 +362,97 @@ class Cwmcontentimporter
                 throw new \RuntimeException(\sprintf('%s[%d] is missing a positive integer id.', $section, $i));
             }
 
-            if (isset($seen[$id])) {
+            if (isset($seenIds[$id])) {
                 throw new \RuntimeException(\sprintf('%s[%d] reuses source id %d.', $section, $i, $id));
             }
 
-            if (trim((string) ($entry[$titleKey] ?? '')) === '') {
+            $seenIds[$id] = true;
+
+            $title = trim((string) ($entry[$titleKey] ?? ''));
+
+            if ($title === '') {
                 throw new \RuntimeException(\sprintf('%s[%d] is missing %s.', $section, $i, $titleKey));
             }
 
-            $seen[$id] = true;
+            if (isset($seenTitles[$title])) {
+                throw new \RuntimeException(\sprintf('%s[%d] reuses %s "%s".', $section, $i, $titleKey, $title));
+            }
+
+            $seenTitles[$title] = true;
+
+            $alias = (string) ($entry['alias'] ?? '');
+
+            if (preg_match(self::ALIAS_PATTERN, $alias) !== 1) {
+                throw new \RuntimeException(\sprintf(
+                    '%s[%d].alias "%s" must match %s.',
+                    $section,
+                    $i,
+                    $alias,
+                    self::ALIAS_PATTERN
+                ));
+            }
+
+            if (isset($seenAliases[$alias])) {
+                throw new \RuntimeException(\sprintf('%s[%d] reuses alias "%s".', $section, $i, $alias));
+            }
+
+            $seenAliases[$alias] = true;
+
+            $titleCollision = (int) $db->setQuery(
+                $db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName($table))
+                    ->where($db->quoteName($titleKey) . ' = :title')
+                    ->bind(':title', $title, ParameterType::STRING)
+            )->loadResult() > 0;
+
+            if ($titleCollision) {
+                throw new \RuntimeException(\sprintf('%s[%d] "%s" already exists on this site.', $section, $i, $title));
+            }
+
+            $aliasCollision = (int) $db->setQuery(
+                $db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName($table))
+                    ->where($db->quoteName('alias') . ' = :alias')
+                    ->bind(':alias', $alias, ParameterType::STRING)
+            )->loadResult() > 0;
+
+            if ($aliasCollision) {
+                throw new \RuntimeException(\sprintf('%s[%d] alias "%s" already exists on this site.', $section, $i, $alias));
+            }
         }
 
-        return $seen;
+        return $seenIds;
     }
 
     /**
-     * Validate every `files[]` entry without writing anything.
+     * Validate every `files[]` entry and resolve its paths, without writing
+     * anything — the resolved pairs are reused by {@see importFile()} rather
+     * than re-derived, so there is exactly one place either path is computed.
      *
      * @param   array   $files      The payload's `files` section.
      * @param   string  $sourceDir  Directory `source` paths are relative to.
      *
-     * @return  void
+     * @return  list<array{source: string, dest: string}>  `source` is the real, resolved source path;
+     *          `dest` is the real, resolved (but not-yet-existing) destination path.
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function validateFiles(array $files, string $sourceDir): void
+    private function validateFiles(array $files, string $sourceDir): array
     {
+        if ($files === []) {
+            return [];
+        }
+
         $realSourceDir = realpath($sourceDir);
 
         if ($realSourceDir === false) {
             throw new \RuntimeException(\sprintf('Import source directory "%s" does not exist.', $sourceDir));
         }
+
+        $resolved      = [];
+        $seenDestPaths = [];
 
         foreach ($files as $i => $file) {
             $source = (string) ($file['source'] ?? '');
@@ -301,9 +462,9 @@ class Cwmcontentimporter
                 throw new \RuntimeException(\sprintf('files[%d] is missing source or dest.', $i));
             }
 
-            $extension = strtolower(pathinfo($dest, \PATHINFO_EXTENSION));
+            $destExtension = strtolower(pathinfo($dest, \PATHINFO_EXTENSION));
 
-            if (!\in_array($extension, self::IMAGE_EXTENSIONS, true)) {
+            if (!\in_array($destExtension, self::IMAGE_EXTENSIONS, true)) {
                 throw new \RuntimeException(\sprintf('File "%s" has a disallowed extension.', $dest));
             }
 
@@ -316,17 +477,48 @@ class Cwmcontentimporter
                 ));
             }
 
-            if (Cwmthumbnail::resolveWithinAllowedPaths($dest) === false) {
+            $sourceExtension = strtolower(pathinfo($source, \PATHINFO_EXTENSION));
+
+            if ($destExtension !== $sourceExtension) {
+                throw new \RuntimeException(\sprintf(
+                    'files[%d] destination extension ".%s" does not match source extension ".%s".',
+                    $i,
+                    $destExtension,
+                    $sourceExtension
+                ));
+            }
+
+            // Pure finfo/getimagesize — no application/language dependency,
+            // so this is safe to run in a bare (test) harness too.
+            $validation = Cwmthumbnail::validate($realSource);
+
+            if (!$validation['valid']) {
+                throw new \RuntimeException(\sprintf('files[%d] "%s": %s', $i, $source, $validation['error']));
+            }
+
+            $resolvedDest = Cwmthumbnail::resolveWithinAllowedPaths($dest);
+
+            if ($resolvedDest === false) {
                 throw new \RuntimeException(\sprintf(
                     'File destination "%s" is outside the allowed image paths.',
                     $dest
                 ));
             }
 
-            if (is_file(Cwmthumbnail::resolveWithinAllowedPaths($dest))) {
+            if (isset($seenDestPaths[$resolvedDest])) {
+                throw new \RuntimeException(\sprintf('files[%d] dest "%s" is claimed by more than one entry.', $i, $dest));
+            }
+
+            $seenDestPaths[$resolvedDest] = true;
+
+            if (is_file($resolvedDest)) {
                 throw new \RuntimeException(\sprintf('"%s" already exists; refusing to overwrite it.', $dest));
             }
+
+            $resolved[] = ['source' => $realSource, 'dest' => $resolvedDest, 'manifestPath' => $dest];
         }
+
+        return $resolved;
     }
 
     /**
@@ -340,16 +532,16 @@ class Cwmcontentimporter
      */
     private function importTeacher(string $tag, array $teacher, array &$summary): int
     {
-        $model = $this->model('Cwmteacher');
+        $alias = (string) $teacher['alias'];
 
         $data = [
             'id'          => 0,
             'teachername' => trim((string) $teacher['teachername']),
-            'alias'       => (string) ($teacher['alias'] ?? ''),
+            'alias'       => $alias,
             'title'       => (string) ($teacher['title'] ?? ''),
             'information' => (string) ($teacher['information'] ?? ''),
             // Path-validated file placement is handled separately by
-            // importFiles(); the model's own thumbnail pipeline is not
+            // importFile(); the model's own thumbnail pipeline is not
             // exercised here (see the epic follow-up in #2145).
             'image'        => '',
             'published'    => (int) ($teacher['published'] ?? 1),
@@ -358,24 +550,12 @@ class Cwmcontentimporter
             'contact'      => 0,
             'social_links' => '',
             // NOT NULL with no default (verified against a live schema, not
-            // just install.mysql.utf8.sql — they've drifted). The admin form
-            // always submits this, even empty, which is what normally masks
-            // it; a programmatically-built $data array has to supply it
-            // explicitly or Table::store() fails under strict SQL mode.
+            // just install.mysql.utf8.sql — they've drifted). See PR #2180.
             'address' => '',
         ];
 
-        if (!$model->save($data)) {
-            throw new \RuntimeException(\sprintf(
-                'Failed to import teacher "%s": %s',
-                $data['teachername'],
-                $model->getError() ?: 'unknown error'
-            ));
-        }
+        $newId = $this->saveAndRecover('Cwmteacher', $data, $tag, '#__bsms_teachers', $alias, 'teacher');
 
-        $newId = (int) $model->getState($model->getName() . '.id');
-
-        Cwmimportmanifest::recordRow($tag, '#__bsms_teachers', $newId);
         $summary['teachers']++;
 
         return $newId;
@@ -393,12 +573,12 @@ class Cwmcontentimporter
      */
     private function importSerie(string $tag, array $serie, int $teacherId, array &$summary): int
     {
-        $model = $this->model('Cwmserie');
+        $alias = (string) $serie['alias'];
 
         $data = [
             'id'          => 0,
             'series_text' => trim((string) $serie['series_text']),
-            'alias'       => (string) ($serie['alias'] ?? ''),
+            'alias'       => $alias,
             'teacher'     => $teacherId,
             'description' => (string) ($serie['description'] ?? ''),
             'image'       => '',
@@ -407,37 +587,28 @@ class Cwmcontentimporter
             'language'    => '*',
         ];
 
-        if (!$model->save($data)) {
-            throw new \RuntimeException(\sprintf(
-                'Failed to import series "%s": %s',
-                $data['series_text'],
-                $model->getError() ?: 'unknown error'
-            ));
-        }
+        $newId = $this->saveAndRecover('Cwmserie', $data, $tag, '#__bsms_series', $alias, 'series');
 
-        $newId = (int) $model->getState($model->getName() . '.id');
-
-        Cwmimportmanifest::recordRow($tag, '#__bsms_series', $newId);
         $summary['series']++;
 
         return $newId;
     }
 
     /**
-     * @param   string   $tag         The import tag.
-     * @param   array    $message     One `messages[]` entry.
-     * @param   int[]    $teacherIds  Source teacher id => new teacher id.
-     * @param   int[]    $serieIds    Source series id => new series id.
-     * @param   array    $summary     Running summary, updated in place.
+     * @param   string             $tag         The import tag.
+     * @param   array              $message     One `messages[]` entry.
+     * @param   int[]              $teacherIds  Source teacher id => new teacher id.
+     * @param   int[]              $serieIds    Source series id => new series id.
+     * @param   array<string, int> $topicMap    Topic text => id, built once by {@see validate()}.
+     * @param   array              $summary     Running summary, updated in place.
      *
      * @return  void
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function importMessage(string $tag, array $message, array $teacherIds, array $serieIds, array &$summary): void
+    private function importMessage(string $tag, array $message, array $teacherIds, array $serieIds, array $topicMap, array &$summary): void
     {
-        $model = $this->model('Cwmmessage');
-
+        $alias    = (string) $message['alias'];
         $teachers = [];
 
         foreach ((array) ($message['teacher_ids'] ?? []) as $sourceTeacherId) {
@@ -450,7 +621,7 @@ class Cwmcontentimporter
         $data = [
             'id'          => 0,
             'studytitle'  => trim((string) $message['studytitle']),
-            'alias'       => (string) ($message['alias'] ?? ''),
+            'alias'       => $alias,
             'studydate'   => (string) ($message['studydate'] ?? Factory::getDate()->toSql()),
             'studyintro'  => (string) ($message['studyintro'] ?? ''),
             'studytext'   => (string) ($message['studytext'] ?? ''),
@@ -475,141 +646,131 @@ class Cwmcontentimporter
         }
 
         if (!empty($message['topics'])) {
-            // Resolved to numeric ids, not the raw text tags — validate()
-            // already confirmed every one matches an existing topic.
-            // CwmmessageModel::saveTopics() treats a numeric tag as an
-            // existing id and a text tag it can't match as instructions to
-            // create a new topic (via a model the importer otherwise never
-            // touches); passing ids keeps that path closed and keeps every
-            // topic this study ends up with already accounted for outside
-            // the manifest, exactly as a demo set should be.
             $data['topics'] = array_map(
-                fn (string $text): int => $this->resolveTopicId($text),
+                static fn (string $text): int => $topicMap[$text],
                 $message['topics']
             );
         }
 
-        if (!$model->save($data)) {
-            throw new \RuntimeException(\sprintf(
-                'Failed to import message "%s": %s',
-                $data['studytitle'],
-                $model->getError() ?: 'unknown error'
-            ));
-        }
+        $this->saveAndRecover('Cwmmessage', $data, $tag, '#__bsms_studies', $alias, 'message');
 
-        $newId = (int) $model->getState($model->getName() . '.id');
-
-        Cwmimportmanifest::recordRow($tag, '#__bsms_studies', $newId);
         $summary['messages']++;
     }
 
     /**
-     * Copy and record every `files[]` entry. Already validated by
-     * {@see validateFiles()} — this only re-derives the same paths to act on them.
+     * Save through a model, recording the new row in the manifest — even on
+     * failure, if the row exists anyway.
      *
-     * @param   string    $tag        The import tag.
-     * @param   array     $files      The payload's `files` section.
-     * @param   string    $sourceDir  Directory `source` paths are relative to.
-     * @param   array     $summary    Running summary, updated in place.
+     * `AdminModel::save()` runs `Table::store()` *before* dispatching
+     * `onContentAfterSave`, and only catches `\Exception`, not every
+     * `\Throwable`. So a save can write the row and then still report
+     * failure (a plugin threw and save() returns false) or let an `Error`
+     * escape entirely — either way, the ordinary "record after a successful
+     * save" path below never runs, and the row would exist with no manifest
+     * entry: an untracked orphan #2174 could never find. Guarding against
+     * that here, rather than wrapping the whole import in a transaction, is
+     * a deliberate choice — see this class's own docblock for why a
+     * transaction does not actually protect against this class of failure.
+     *
+     * The lookup-by-alias this relies on is unambiguous because
+     * {@see validateEntries()} already confirmed the alias collides with
+     * nothing on this table before any creation began.
+     *
+     * @param   string  $modelName    Model name, e.g. `Cwmteacher`.
+     * @param   array   $data         The data to save, with `id => 0` for a new row.
+     * @param   string  $tag          The import tag.
+     * @param   string  $table        `#__`-prefixed table the row belongs to.
+     * @param   string  $alias        The row's alias, already validated unique.
+     * @param   string  $entityLabel  Singular noun for the failure message (e.g. `teacher`).
+     *
+     * @return  int  The new row's id.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function saveAndRecover(
+        string $modelName,
+        array $data,
+        string $tag,
+        string $table,
+        string $alias,
+        string $entityLabel
+    ): int {
+        $model = $this->model($modelName);
+
+        try {
+            $ok = $model->save($data);
+        } catch (\Throwable $e) {
+            $this->recordIfOrphaned($tag, $table, $alias);
+
+            throw $e;
+        }
+
+        if (!$ok) {
+            $error = $model->getError() ?: 'unknown error';
+
+            $this->recordIfOrphaned($tag, $table, $alias);
+
+            throw new \RuntimeException(\sprintf('Failed to import %s "%s": %s', $entityLabel, $alias, $error));
+        }
+
+        $newId = (int) $model->getState($model->getName() . '.id');
+
+        Cwmimportmanifest::recordRow($tag, $table, $newId);
+
+        return $newId;
+    }
+
+    /**
+     * @param   string  $tag    The import tag.
+     * @param   string  $table  `#__`-prefixed table to check.
+     * @param   string  $alias  The alias to look up.
      *
      * @return  void
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function importFiles(string $tag, array $files, string $sourceDir, array &$summary): void
+    private function recordIfOrphaned(string $tag, string $table, string $alias): void
     {
-        $realSourceDir = (string) realpath($sourceDir);
-
-        foreach ($files as $file) {
-            $source = (string) $file['source'];
-            $dest   = (string) $file['dest'];
-
-            $realSource   = (string) realpath($realSourceDir . '/' . $source);
-            $resolvedDest = Cwmthumbnail::resolveWithinAllowedPaths($dest);
-
-            if ($resolvedDest === false) {
-                // validateFiles() already rejected this shape; unreachable
-                // unless the payload changed between the two calls.
-                throw new \RuntimeException(\sprintf('File destination "%s" is outside the allowed image paths.', $dest));
-            }
-
-            $destDir = \dirname($resolvedDest);
-
-            if (!is_dir($destDir) && !mkdir($destDir, 0755, true) && !is_dir($destDir)) {
-                throw new \RuntimeException(\sprintf('Could not create directory for "%s".', $dest));
-            }
-
-            if (!copy($realSource, $resolvedDest)) {
-                throw new \RuntimeException(\sprintf('Could not copy file to "%s".', $dest));
-            }
-
-            Cwmimportmanifest::recordFile($tag, $dest);
-            $summary['files']++;
-        }
-    }
-
-    /**
-     * Resolve topic text to an existing topic's id.
-     *
-     * @param   string  $text  The topic text to match, verbatim.
-     *
-     * @return  ?int
-     *
-     * @since  __DEPLOY_VERSION__
-     */
-    private function resolveTopicId(string $text): ?int
-    {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->db();
 
         $id = $db->setQuery(
             $db->createQuery()
                 ->select($db->quoteName('id'))
-                ->from($db->quoteName('#__bsms_topics'))
-                ->where($db->quoteName('topic_text') . ' = :text')
-                ->bind(':text', $text, ParameterType::STRING)
+                ->from($db->quoteName($table))
+                ->where($db->quoteName('alias') . ' = :alias')
+                ->bind(':alias', $alias, ParameterType::STRING)
         )->loadResult();
 
-        return $id !== null ? (int) $id : null;
+        if ($id !== null) {
+            Cwmimportmanifest::recordRow($tag, $table, (int) $id);
+        }
     }
 
     /**
-     * Refuse a name this table already has, rather than letting the eventual
-     * `Table::store()` unique-key failure surface it after earlier entries
-     * in the same import have already been created.
+     * Copy and record one already-validated, already-resolved `files[]` entry.
      *
-     * @param   array   $entries  `teachers[]` or `series[]`.
-     * @param   string  $table    `#__`-prefixed table to check.
-     * @param   string  $column   The title column (`teachername` / `series_text`).
-     * @param   string  $section  Section name, for error messages.
+     * @param   string  $tag      The import tag.
+     * @param   array   $file     One entry from {@see validateFiles()}'s return value.
+     * @param   array   $summary  Running summary, updated in place.
      *
      * @return  void
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function validateNoNameCollisions(array $entries, string $table, string $column, string $section): void
+    private function importFile(string $tag, array $file, array &$summary): void
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $destDir = \dirname($file['dest']);
 
-        foreach ($entries as $i => $entry) {
-            $name = trim((string) $entry[$column]);
-
-            $exists = (int) $db->setQuery(
-                $db->createQuery()
-                    ->select('COUNT(*)')
-                    ->from($db->quoteName($table))
-                    ->where($db->quoteName($column) . ' = :name')
-                    ->bind(':name', $name, ParameterType::STRING)
-            )->loadResult() > 0;
-
-            if ($exists) {
-                throw new \RuntimeException(\sprintf(
-                    '%s[%d] "%s" already exists on this site.',
-                    $section,
-                    $i,
-                    $name
-                ));
-            }
+        if (!is_dir($destDir) && !mkdir($destDir, 0755, true) && !is_dir($destDir)) {
+            throw new \RuntimeException(\sprintf('Could not create directory for "%s".', $file['manifestPath']));
         }
+
+        if (!copy($file['source'], $file['dest'])) {
+            throw new \RuntimeException(\sprintf('Could not copy file to "%s".', $file['manifestPath']));
+        }
+
+        Cwmimportmanifest::recordFile($tag, $file['manifestPath']);
+        $summary['files']++;
     }
 
     /**
@@ -633,5 +794,15 @@ class Cwmcontentimporter
         }
 
         return $model;
+    }
+
+    /**
+     * @return  DatabaseInterface
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function db(): DatabaseInterface
+    {
+        return Factory::getContainer()->get(DatabaseInterface::class);
     }
 }
