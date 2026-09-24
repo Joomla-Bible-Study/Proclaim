@@ -113,6 +113,32 @@ class Cwmimportmanifest
     }
 
     /**
+     * Every row id recorded for a table, across every tag.
+     *
+     * For callers that only need "is this row tracked content?" — the setup
+     * checklist, for one — and don't care which import created it.
+     *
+     * @param   string  $tableName  Unprefixed table name (e.g. `#__bsms_studies`).
+     *
+     * @return  int[]
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function allRowIds(string $tableName): array
+    {
+        $db = self::db();
+
+        return array_map('intval', $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName('row_id'))
+                ->from($db->quoteName('#__bsms_import_manifest'))
+                ->where($db->quoteName('entity_type') . ' = ' . $db->quote('row'))
+                ->where($db->quoteName('table_name') . ' = :table')
+                ->bind(':table', $tableName, ParameterType::STRING)
+        )->loadColumn());
+    }
+
+    /**
      * Every row recorded under a tag, grouped by table.
      *
      * @param   string  $tag  The import tag.

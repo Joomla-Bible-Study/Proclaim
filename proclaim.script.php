@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmimportmanifest;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Event\Cache\AfterPurgeEvent;
 use Joomla\CMS\Event\Model\AfterCleanCacheEvent;
@@ -1514,6 +1515,68 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Record any pre-existing wizard-sample content in the import manifest.
+     *
+     * CwmsetupwizardModel::createSampleContent() only recently started
+     * recording what it creates in the manifest. A site that used the
+     * setup wizard's opt-in "create sample content" step on an earlier
+     * release has a 'welcome-to-proclaim' study and a 'sample-series' series
+     * with no manifest row — and the checklist's exclusion logic moved from
+     * an alias string match to manifest-based exclusion, so without this
+     * backfill those rows would silently start counting as real content the
+     * moment this update runs, flipping "first message" from correctly
+     * incomplete to incorrectly done for an admin who never added anything
+     * real.
+     *
+     * Idempotent (checked via Cwmimportmanifest::allRowIds() rather than
+     * attempting the insert and catching a duplicate-key error) and a no-op
+     * on a fresh install, where neither alias exists yet.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function backfillWizardSampleManifest(): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // loadColumn(), not loadResult(): the alias carries no unique
+        // constraint on either table, and createSampleContent() has no
+        // guard against being run more than once, so a site could have
+        // more than one row wearing this alias. Backfilling only the first
+        // would leave any other silently excluded from the fix.
+        $studyIds = $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_studies'))
+                ->where($db->quoteName('alias') . ' = ' . $db->quote('welcome-to-proclaim'))
+        )->loadColumn();
+
+        $manifestStudyIds = Cwmimportmanifest::allRowIds('#__bsms_studies');
+
+        foreach ($studyIds as $studyId) {
+            if (!\in_array((int) $studyId, $manifestStudyIds, true)) {
+                Cwmimportmanifest::recordRow('wizard-sample', '#__bsms_studies', (int) $studyId);
+            }
+        }
+
+        $seriesIds = $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_series'))
+                ->where($db->quoteName('alias') . ' = ' . $db->quote('sample-series'))
+        )->loadColumn();
+
+        $manifestSerieIds = Cwmimportmanifest::allRowIds('#__bsms_series');
+
+        foreach ($seriesIds as $seriesId) {
+            if (!\in_array((int) $seriesId, $manifestSerieIds, true)) {
+                Cwmimportmanifest::recordRow('wizard-sample', '#__bsms_series', (int) $seriesId);
+            }
+        }
+    }
+
+    /**
      * Copy the read jwplayer_* values onto their player_* equivalents, then
      * remove every jwplayer_* key.
      *
@@ -2547,6 +2610,7 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->task('Analytics index', fn () => $this->reconcileAnalyticsAggregateIndex());
         $this->task('Upload media types', fn () => $this->normaliseUploadMediaTypes());
         $this->task('JW Player cleanup', fn () => $this->migrateJwplayerParams());
+        $this->task('Wizard-sample manifest backfill', fn () => $this->backfillWizardSampleManifest());
 
         // Seeded on update as well as install: access.xml can gain a section in
         // any release, and a section with no asset is a permission the UI can

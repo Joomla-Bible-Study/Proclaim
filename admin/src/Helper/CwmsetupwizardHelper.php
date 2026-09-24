@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Lib\Cwmimportmanifest;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
@@ -273,12 +274,25 @@ class CwmsetupwizardHelper
                 'link'  => $teacherId ? 'index.php?option=com_proclaim&task=cwmteacher.edit&id=' . $teacherId : 'index.php?option=com_proclaim&task=cwmteacher.add',
             ];
 
-            // Check if a real message exists (not sample)
+            // Check if a real message exists (not tracked demo/sample content).
+            //
+            // Excludes by manifest membership rather than matching the
+            // 'welcome-to-proclaim' alias — that string was the only sample
+            // content there was, but createSampleContent() and any future
+            // imported demo set both record what they create in the
+            // manifest now, so this generalises to either source without
+            // needing to know their specific aliases.
             $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_studies'))
-                ->where($db->quoteName('published') . ' >= 0')
-                ->where($db->quoteName('alias') . ' != ' . $db->quote('welcome-to-proclaim'));
+                ->where($db->quoteName('published') . ' >= 0');
+
+            $manifestStudyIds = Cwmimportmanifest::allRowIds('#__bsms_studies');
+
+            if ($manifestStudyIds !== []) {
+                $query->whereNotIn($db->quoteName('id'), $manifestStudyIds);
+            }
+
             $db->setQuery($query);
             $hasRealMessage = (int) $db->loadResult() > 0;
 
