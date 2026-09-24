@@ -1139,6 +1139,23 @@ CREATE TABLE IF NOT EXISTS `#__bsms_scripture_cache` (
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
 
+--
+-- Table structure for table `#__bsms_import_manifest`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_import_manifest` (
+    `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `import_tag` VARCHAR(64)  NOT NULL COMMENT 'Identifies one import run, e.g. demo-v1',
+    `entity_type` ENUM('row','file') NOT NULL,
+    `table_name` VARCHAR(64)  NULL DEFAULT NULL COMMENT 'Unprefixed table name, set when entity_type=row',
+    `row_id`     INT UNSIGNED NULL DEFAULT NULL COMMENT 'Set when entity_type=row',
+    `file_path`  VARCHAR(512) NULL DEFAULT NULL COMMENT 'Site-root-relative path, set when entity_type=file',
+    `created`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_tag_row` (`import_tag`, `table_name`, `row_id`),
+    KEY `idx_import_tag` (`import_tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Seed common translations (installed=0 means available for download, not yet local)
 INSERT IGNORE INTO `#__bsms_bible_translations` (`abbreviation`, `name`, `language`, `source`, `installed`, `bundled`, `estimated_size`)
 VALUES
