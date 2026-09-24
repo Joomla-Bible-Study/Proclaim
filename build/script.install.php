@@ -49,10 +49,13 @@ return new class () implements InstallerScriptInterface {
      * component to refuse a moment later, leaving a half-installed stack.
      * Guarded by `JoomlaFloorTest`.
      *
+     * Raised from 5.4.0 to 6.0.0 at 11.0.0 (#1966) — Joomla 5 support ends
+     * with this major.
+     *
      * @var string
      * @since 10.3.0
      */
-    private string $minimumJoomla = '5.4.0';
+    private string $minimumJoomla = '6.0.0';
 
     /**
      * The ARS stream id Proclaim releases are announced on.

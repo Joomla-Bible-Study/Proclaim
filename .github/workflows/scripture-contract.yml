@@ -58,14 +58,14 @@ jobs:
       # suite-specific bootstrap would save the clone; that is shared
       # infrastructure and a separate change.
       - name: Clone joomla-cms for the test framework
-        run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
+        run: git clone --depth 1 --branch 6.0.112 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
 
       - name: Cache joomla-cms composer dependencies
         id: joomla-cms-cache
         uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/../joomla-cms/libraries/vendor
-          key: joomla-cms-vendor-5.4.3-${{ runner.os }}
+          key: joomla-cms-vendor-6.0.112-${{ runner.os }}
 
       - name: Install joomla-cms composer dependencies
         if: steps.joomla-cms-cache.outputs.cache-hit != 'true'

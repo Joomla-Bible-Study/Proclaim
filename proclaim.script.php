@@ -200,15 +200,15 @@ class com_proclaimInstallerScript extends InstallerScript
      * the package refuses at one boundary and the component at another, and a
      * site lands half-installed. Guarded by `JoomlaFloorTest`.
      *
-     * 5.4 is the only supported 5.x: it is the last minor of the series, and
-     * everything below it stopped receiving fixes. It is also the version CI
-     * builds against, so it is a floor something actually runs at rather than
-     * a claim nothing exercises.
+     * Raised from 5.4.0 to 6.0.0 at 11.0.0 (#1966) — Joomla 5 support ends
+     * with this major. 6.0.0 is also the version CI builds against, so it is
+     * a floor something actually runs at rather than a claim nothing
+     * exercises.
      *
      * @var    string
      * @since  3.6
      */
-    protected $minimumJoomla = '5.4.0';
+    protected $minimumJoomla = '6.0.0';
 
     /**
      * @var   string The component's name

@@ -60,14 +60,14 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Clone joomla-cms for test framework
-        run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
+        run: git clone --depth 1 --branch 6.0.112 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
 
       - name: Cache joomla-cms composer dependencies
         id: joomla-cms-cache
         uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/../joomla-cms/libraries/vendor
-          key: joomla-cms-vendor-5.4.3-${{ runner.os }}
+          key: joomla-cms-vendor-6.0.112-${{ runner.os }}
 
       - name: Install joomla-cms composer dependencies
         if: steps.joomla-cms-cache.outputs.cache-hit != 'true'
@@ -298,14 +298,14 @@ jobs:
           restore-keys: ${{ runner.os }}-php85-composer-
 
       - name: Clone joomla-cms for test framework
-        run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
+        run: git clone --depth 1 --branch 6.0.112 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
 
       - name: Cache joomla-cms composer dependencies
         id: joomla-cms-cache
         uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/../joomla-cms/libraries/vendor
-          key: joomla-cms-vendor-5.4.3-${{ runner.os }}-php85
+          key: joomla-cms-vendor-6.0.112-${{ runner.os }}-php85
 
       - name: Install joomla-cms composer dependencies
         if: steps.joomla-cms-cache.outputs.cache-hit != 'true'
