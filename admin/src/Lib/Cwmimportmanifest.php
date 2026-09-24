@@ -21,9 +21,9 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
- * Reads and writes the import-set manifest (`#__bsms_import_manifest`, #2172).
+ * Reads and writes the import-set manifest (`#__bsms_import_manifest`).
  *
- * A tagged import (e.g. the opt-in demo content set, #2145) records every row
+ * A tagged import (e.g. an opt-in demo content set) records every row
  * and file it creates here as it creates it, so the set can be found again
  * and cleanly removed later without touching content the site owner created
  * themselves.
@@ -194,7 +194,7 @@ class Cwmimportmanifest
 
     /**
      * Remove one row's manifest entry — call once the row itself is
-     * actually gone (#2174), not before, so a failure partway through a
+     * actually gone, not before, so a failure partway through a
      * removal still agrees with what the manifest says exists.
      *
      * @param   string  $tag        The import tag.
@@ -224,7 +224,7 @@ class Cwmimportmanifest
 
     /**
      * Remove one file's manifest entry — call once the file itself is
-     * actually gone (#2174), not before.
+     * actually gone, not before.
      *
      * @param   string  $tag       The import tag.
      * @param   string  $filePath  As recorded by {@see recordFile()}.

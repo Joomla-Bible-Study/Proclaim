@@ -24,7 +24,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
- * Removes a tagged import (#2145, #2174) by walking the #2172 manifest.
+ * Removes a tagged import by walking the import-set manifest.
  *
  * Split into a read-only {@see plan()} and a mutating {@see execute()} on
  * purpose. `plan()` decides, for every manifest row, whether it is safe to
@@ -116,7 +116,7 @@ class Cwmimportremover
         // table's "still referenced?" check can tell a reference from a row
         // that is itself about to go from one that is being kept — a kept
         // row's references must count, or removal would strand what it
-        // depends on. See #2174's design note on this exact trap.
+        // depends on.
         $deletableStudyIds = [];
 
         foreach ($rows['#__bsms_studies'] ?? [] as $id) {
@@ -259,8 +259,8 @@ class Cwmimportremover
      */
     private function deleteFile(string $relativePath): bool
     {
-        // The manifest is DB data, and per #2172 restores from ordinary
-        // backups — re-validate the path is still confined to Proclaim's
+        // The manifest is DB data, restored from ordinary backups like any
+        // other table — re-validate the path is still confined to Proclaim's
         // image roots before touching the filesystem, rather than trusting
         // a row that could in principle have been tampered with directly.
         $resolved = Cwmthumbnail::resolveWithinAllowedPaths($relativePath);
