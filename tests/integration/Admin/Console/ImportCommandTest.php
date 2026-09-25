@@ -67,7 +67,21 @@ class ImportCommandTest extends IntegrationTestCase
             }
         }
 
+        // The rollback undoes the row, not what testResolvesADefaultUserWhenNoneIsGiven's
+        // own group-cache workaround already put in memory: without this,
+        // UserGroupsHelper's singleton keeps pointing at a group id the
+        // database no longer has, for every test that runs after this one
+        // in the same process.
+        self::resetGroupCaches();
+
         parent::tearDown();
+    }
+
+    private static function resetGroupCaches(): void
+    {
+        $property = new \ReflectionProperty(\Joomla\CMS\Helper\UserGroupsHelper::class, 'instance');
+        $property->setValue(null, null);
+        Access::clearStatics();
     }
 
     /**
@@ -181,7 +195,7 @@ class ImportCommandTest extends IntegrationTestCase
         $importer->expects($this->once())
             ->method('import')
             ->with('my-tag', $this->isArray(), \dirname($this->fixturePayloadPath()))
-            ->willReturn(['teachers' => 1, 'series' => 0, 'messages' => 0, 'files' => 0]);
+            ->willReturn(['teachers' => 1, 'series' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0]);
 
         $command = $this->newCommand($importer);
         $output  = new BufferedOutput();
@@ -200,7 +214,7 @@ class ImportCommandTest extends IntegrationTestCase
         $userId = $this->createUser('cwm2188userid' . bin2hex(random_bytes(3)));
 
         $importer = $this->createStub(Cwmcontentimporter::class);
-        $importer->method('import')->willReturn(['teachers' => 0, 'series' => 0, 'messages' => 0, 'files' => 0]);
+        $importer->method('import')->willReturn(['teachers' => 0, 'series' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0]);
 
         $command = $this->newCommand($importer);
         $output  = new BufferedOutput();
@@ -238,7 +252,7 @@ class ImportCommandTest extends IntegrationTestCase
         $userId = $this->createUser('cwm2188summary' . bin2hex(random_bytes(3)));
 
         $importer = $this->createStub(Cwmcontentimporter::class);
-        $importer->method('import')->willReturn(['teachers' => 2, 'series' => 1, 'messages' => 3, 'files' => 4]);
+        $importer->method('import')->willReturn(['teachers' => 2, 'series' => 1, 'messages' => 3, 'mediafiles' => 5, 'files' => 4]);
 
         $command = $this->newCommand($importer);
         $output  = new BufferedOutput();
@@ -253,6 +267,7 @@ class ImportCommandTest extends IntegrationTestCase
         $this->assertStringContainsString('2 teacher(s)', $text);
         $this->assertStringContainsString('1 serie(s)', $text);
         $this->assertStringContainsString('3 message(s)', $text);
+        $this->assertStringContainsString('5 media file(s)', $text);
         $this->assertStringContainsString('4 file(s)', $text);
     }
 
@@ -274,7 +289,7 @@ class ImportCommandTest extends IntegrationTestCase
         $this->ensureASuperAdminGroupExists();
 
         $importer = $this->createStub(Cwmcontentimporter::class);
-        $importer->method('import')->willReturn(['teachers' => 0, 'series' => 0, 'messages' => 0, 'files' => 0]);
+        $importer->method('import')->willReturn(['teachers' => 0, 'series' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0]);
 
         $command = $this->newCommand($importer);
         $output  = new BufferedOutput();
@@ -356,10 +371,7 @@ class ImportCommandTest extends IntegrationTestCase
         // count, so its self-correcting "does the count still match"
         // refresh in getAll() never fires for a group inserted afterward.
         // UserGroupsHelper has no public reset, so force a fresh instance.
-        $property = new \ReflectionProperty(\Joomla\CMS\Helper\UserGroupsHelper::class, 'instance');
-        $property->setValue(null, null);
-
-        Access::clearStatics();
+        self::resetGroupCaches();
 
         // Fail here, loudly, with the exact numbers, rather than downstream
         // in the command where "no active user matches" gives no way to

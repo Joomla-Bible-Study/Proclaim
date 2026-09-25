@@ -193,7 +193,7 @@ class CwmcontentimporterTest extends IntegrationTestCase
 
         $summary = (new Cwmcontentimporter($this->factory))->import($tag, $fixture['payload'], $fixture['dir']);
 
-        $this->assertSame(['teachers' => 1, 'series' => 1, 'messages' => 1, 'files' => 1], $summary);
+        $this->assertSame(['teachers' => 1, 'series' => 1, 'messages' => 1, 'mediafiles' => 0, 'files' => 1], $summary);
 
         $rows = Cwmimportmanifest::rowsForTag($tag);
 
@@ -505,6 +505,360 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertContains(
             (int) $teacherId,
             $rows['#__bsms_teachers'] ?? [],
+            'The row Table::store() wrote must still be recorded even though save() reported failure.'
+        );
+    }
+
+    /**
+     * @return  string  The name of a freshly seeded, uniquely-named server row.
+     */
+    private function seedFixtureServer(): string
+    {
+        $name = 'cwm2187-test-server-' . bin2hex(random_bytes(4));
+
+        $server = (object) [
+            'server_name' => $name,
+            'type'        => 'legacy',
+            'params'      => '{}',
+            'media'       => '{}',
+            'published'   => 1,
+            'access'      => 1,
+        ];
+        $this->db->insertObject('#__bsms_servers', $server, 'id');
+
+        return $name;
+    }
+
+    /**
+     * @return  array  A `messages[]` entry with a fresh, collision-free alias/title,
+     *                  and its source id (always `1`).
+     */
+    private function fixtureMessageOnly(): array
+    {
+        $suffix = bin2hex(random_bytes(4));
+
+        return [[
+            'id'         => 1,
+            'studytitle' => 'CWM2187 Media Fixture Message ' . $suffix,
+            'alias'      => 'cwm2187-media-fixture-' . $suffix,
+            // Explicit, so importMessage() never falls back to Factory::getDate() —
+            // that touches the language system, which this bare harness cannot
+            // fully resolve (see the class docblock).
+            'studydate' => '2026-01-01 00:00:00',
+        ]];
+    }
+
+    public function testRejectsAMediaFileWithAnUnknownStudyId(): void
+    {
+        $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 999,
+                'server_name' => $this->seedFixtureServer(),
+                'params'      => ['filename' => 'test.mp3', 'size' => 5000, 'mime_type' => 'audio/mpeg', 'media_minutes' => 5],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/does not match any messages\[].id/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAMediaFileWhenTheServerNameMatchesNoServer(): void
+    {
+        $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 1,
+                'server_name' => 'cwm2187-no-such-server',
+                'params'      => ['filename' => 'test.mp3', 'size' => 5000, 'mime_type' => 'audio/mpeg', 'media_minutes' => 5],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/must match exactly one existing server/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAMediaFileWhenTheServerNameMatchesMoreThanOneServer(): void
+    {
+        $duplicateName = 'cwm2187-dupe-server-' . bin2hex(random_bytes(4));
+
+        for ($i = 0; $i < 2; $i++) {
+            $server = (object) [
+                'server_name' => $duplicateName,
+                'type'        => 'legacy',
+                'params'      => '{}',
+                'media'       => '{}',
+                'published'   => 1,
+                'access'      => 1,
+            ];
+            $this->db->insertObject('#__bsms_servers', $server, 'id');
+        }
+
+        $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 1,
+                'server_name' => $duplicateName,
+                'params'      => ['filename' => 'test.mp3', 'size' => 5000, 'mime_type' => 'audio/mpeg', 'media_minutes' => 5],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/must match exactly one existing server/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAMediaFileOnAServerTypeOtherThanLegacy(): void
+    {
+        $name   = 'cwm2187-local-server-' . bin2hex(random_bytes(4));
+        $server = (object) [
+            'server_name' => $name,
+            'type'        => 'local',
+            'params'      => '{}',
+            'media'       => '{}',
+            'published'   => 1,
+            'access'      => 1,
+        ];
+        $this->db->insertObject('#__bsms_servers', $server, 'id');
+
+        $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 1,
+                'server_name' => $name,
+                'params'      => ['filename' => 'test.mp3', 'size' => 5000, 'mime_type' => 'audio/mpeg', 'media_minutes' => 5],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/only legacy servers are importable/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAMediaFileParamsWithAnUnrecognisedKey(): void
+    {
+        $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 1,
+                'server_name' => $this->seedFixtureServer(),
+                'params'      => [
+                    'filename'      => 'test.mp3',
+                    'size'          => 5000,
+                    'mime_type'     => 'audio/mpeg',
+                    'media_minutes' => 5,
+                    'docMan_id'     => '999',
+                ],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/unrecognised key\(s\): docMan_id/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAMediaFileReferencingAnUnknownPodcast(): void
+    {
+        $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 1,
+                'server_name' => $this->seedFixtureServer(),
+                'podcast_id'  => [999999],
+                'params'      => ['filename' => 'test.mp3', 'size' => 5000, 'mime_type' => 'audio/mpeg', 'media_minutes' => 5],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/references podcast #999999, which does not exist/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAMediaFileParamsWithACreateLiveBroadcastKey(): void
+    {
+        $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 1,
+                'server_name' => $this->seedFixtureServer(),
+                'params'      => [
+                    'filename'              => 'test.mp3',
+                    'size'                  => 5000,
+                    'mime_type'             => 'audio/mpeg',
+                    'media_minutes'         => 5,
+                    'create_live_broadcast' => 1,
+                ],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/must not include "create_live_broadcast"/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAMediaFileParamsWithALivePrefixedKey(): void
+    {
+        $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 1,
+                'server_name' => $this->seedFixtureServer(),
+                'params'      => [
+                    'filename'      => 'test.mp3',
+                    'size'          => 5000,
+                    'mime_type'     => 'audio/mpeg',
+                    'media_minutes' => 5,
+                    'live_privacy'  => 'unlisted',
+                ],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/must not include "live_privacy"/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAMediaFileParamsThatWouldTriggerRemoteMetadataDetection(): void
+    {
+        $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 1,
+                'server_name' => $this->seedFixtureServer(),
+                // size is well under the 1000 floor CWMAddon::needsDetection()
+                // requires to consider it "already known".
+                'params' => ['filename' => 'test.mp3', 'size' => 10, 'mime_type' => 'audio/mpeg', 'media_minutes' => 5],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/params\.size must be an integer of at least 1000/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    /**
+     * The mediafiles equivalent of
+     * {@see testAnOrphanedRowIsStillRecordedInTheManifestWhenSaveFails()} —
+     * `#__bsms_mediafiles` has no `alias` column, so recovery here is
+     * exercised via {@see Cwmcontentimporter::recordOrphanedMediaFiles()}'s
+     * study_id lookup instead. Two different stub models are needed (one per
+     * `createModel()` call) because, unlike the teacher-only fixture above,
+     * a real study source-id => target-id mapping is required for
+     * `mediafiles[].study_id` to resolve at all.
+     */
+    public function testAnOrphanedMediaFileRowIsStillRecordedInTheManifestWhenSaveFails(): void
+    {
+        $tag        = 'cwm2187-test-' . bin2hex(random_bytes(4));
+        $serverName = $this->seedFixtureServer();
+
+        $messageModel = $this->createStub(AdminModel::class);
+        $messageModel->method('save')->willReturn(true);
+        $messageModel->method('getName')->willReturn('cwmmessage');
+        $messageModel->method('getState')->willReturn(9001);
+
+        $mediaModel = $this->createStub(AdminModel::class);
+        $mediaModel->method('save')->willReturnCallback(function () {
+            $mediafile = (object) [
+                'study_id' => 9001,
+                'metadata' => '{}',
+                'language' => '*',
+            ];
+            $this->db->insertObject('#__bsms_mediafiles', $mediafile, 'id');
+
+            throw new \RuntimeException('simulated after-save plugin failure');
+        });
+
+        $factory = $this->createStub(MVCFactoryInterface::class);
+        $factory->method('createModel')->willReturnCallback(
+            fn (string $name) => $name === 'Cwmmediafile' ? $mediaModel : $messageModel
+        );
+
+        $payload = [
+            'messages'   => $this->fixtureMessageOnly(),
+            'mediafiles' => [[
+                'study_id'    => 1,
+                'server_name' => $serverName,
+                'params'      => ['filename' => 'test.mp3', 'size' => 5000, 'mime_type' => 'audio/mpeg', 'media_minutes' => 5],
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected the simulated save failure to propagate.');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('simulated after-save plugin failure', $e->getMessage());
+        }
+
+        $mediaId = $this->db->setQuery(
+            $this->db->createQuery()
+                ->select($this->db->quoteName('id'))
+                ->from($this->db->quoteName('#__bsms_mediafiles'))
+                ->where($this->db->quoteName('study_id') . ' = 9001')
+        )->loadResult();
+
+        $this->assertNotNull($mediaId, 'The stub save() must have inserted the row.');
+
+        $rows = Cwmimportmanifest::rowsForTag($tag);
+
+        $this->assertContains(
+            (int) $mediaId,
+            $rows['#__bsms_mediafiles'] ?? [],
             'The row Table::store() wrote must still be recorded even though save() reported failure.'
         );
     }

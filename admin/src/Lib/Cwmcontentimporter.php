@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudytopicHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use Joomla\CMS\Factory;
@@ -67,7 +68,46 @@ class Cwmcontentimporter
      * @var string[]
      * @since  __DEPLOY_VERSION__
      */
-    private const array ALLOWED_SECTIONS = ['teachers', 'series', 'messages', 'files'];
+    private const array ALLOWED_SECTIONS = ['teachers', 'series', 'messages', 'mediafiles', 'files'];
+
+    /**
+     * The only `#__bsms_servers.type` a `mediafiles[].server_name` may
+     * resolve to.
+     *
+     * `CwmmediafileTable::delete()` always calls the resolved server's addon
+     * `deleteFile()` — base `CWMAddon::deleteFile()` is a no-op, but
+     * `CWMAddonLocal` overrides it to actually `unlink()` a real file when
+     * the server's own `delete_files` param is on. Restricting this importer
+     * to `legacy` — confirmed both `detectMetadata()`-safe (see
+     * `MEDIA_PARAM_ALLOWLIST`) and `deleteFile()`-inert, and the type all
+     * three seeded servers already use — means neither an import nor its
+     * removal can ever reach that `unlink()`, regardless of what any given
+     * site has configured on its own servers.
+     *
+     * @var string[]
+     * @since  __DEPLOY_VERSION__
+     */
+    private const array ALLOWED_SERVER_TYPES = ['legacy'];
+
+    /**
+     * `mediafiles[].params` keys this importer will forward to
+     * `CwmmediafileModel::save()`. Positive allowlist, not a denylist — a key
+     * this list omits is refused outright by {@see validateMediaParams()},
+     * not merely dropped, so a payload cannot reach anything the
+     * list-writer did not explicitly consider. In particular
+     * `create_live_broadcast` and every `live_*` key are absent on purpose:
+     * {@see CwmmediafileModel::save()} treats those as a live command to call
+     * a real platform API and create a real broadcast, which demo/import
+     * content must never trigger.
+     *
+     * @var string[]
+     * @since  __DEPLOY_VERSION__
+     */
+    private const array MEDIA_PARAM_ALLOWLIST = [
+        'filename', 'size', 'mime_type', 'media_hours', 'media_minutes', 'media_seconds',
+        'link_type', 'player', 'popup', 'media_image', 'mediacode', 'playerwidth', 'playerheight',
+        'autostart', 'special',
+    ];
 
     /**
      * Extensions a `files` entry's destination may use. No `.php`, no
@@ -125,10 +165,12 @@ class Cwmcontentimporter
      * Import a tagged content set.
      *
      * @param   string  $tag        Identifies this import, e.g. `demo-v1`. Refused if already used.
-     * @param   array   $payload    Decoded JSON: `teachers`, `series`, `messages`, `files` — see ALLOWED_SECTIONS.
+     * @param   array   $payload    Decoded JSON: `teachers`, `series`, `messages`, `mediafiles`, `files` —
+     *                              see ALLOWED_SECTIONS.
      * @param   string  $sourceDir  Directory the payload's `files[].source` paths are relative to.
      *
-     * @return  array{teachers: int, series: int, messages: int, files: int}  Counts of what was created.
+     * @return  array{teachers: int, series: int, messages: int, mediafiles: int, files: int}
+     *          Counts of what was created.
      *
      * @since  __DEPLOY_VERSION__
      */
@@ -151,7 +193,7 @@ class Cwmcontentimporter
 
         $plan = $this->validate($payload, $sourceDir);
 
-        $summary = ['teachers' => 0, 'series' => 0, 'messages' => 0, 'files' => 0];
+        $summary = ['teachers' => 0, 'series' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0];
 
         // Source-id => newly assigned target id. Every foreign key below is
         // resolved through this map, never trusted as a target-site id
@@ -160,6 +202,7 @@ class Cwmcontentimporter
         // lookup miss here would be this importer's own bug, not bad input.
         $teacherIds = [];
         $serieIds   = [];
+        $messageIds = [];
 
         foreach ($payload['teachers'] ?? [] as $teacher) {
             $teacherIds[(int) $teacher['id']] = $this->importTeacher($tag, $teacher, $summary);
@@ -172,7 +215,25 @@ class Cwmcontentimporter
         }
 
         foreach ($payload['messages'] ?? [] as $message) {
-            $this->importMessage($tag, $message, $teacherIds, $serieIds, $plan['topics'], $summary);
+            $messageIds[(int) $message['id']] = $this->importMessage(
+                $tag,
+                $message,
+                $teacherIds,
+                $serieIds,
+                $plan['topics'],
+                $summary
+            );
+        }
+
+        // Ids this run has itself recorded in the manifest so far — passed by
+        // reference into importMediaFile() so a failed save's orphan-recovery
+        // query (see recordOrphanedMediaFiles()) can tell "the row this call
+        // just orphaned" from "a sibling media file on the same study an
+        // earlier, successful call in this loop already recorded".
+        $recordedMediaFileIds = [];
+
+        foreach ($payload['mediafiles'] ?? [] as $mediafile) {
+            $this->importMediaFile($tag, $mediafile, $messageIds, $plan['mediaServers'], $recordedMediaFileIds, $summary);
         }
 
         foreach ($plan['files'] as $file) {
@@ -188,7 +249,8 @@ class Cwmcontentimporter
      * @param   array   $payload    See {@see import()}.
      * @param   string  $sourceDir  See {@see import()}.
      *
-     * @return  array{topics: array<string, int>, files: list<array{source: string, dest: string}>}
+     * @return  array{topics: array<string, int>, mediaServers: array<string, int>,
+     *          files: list<array{source: string, dest: string}>}
      *          Work already done during validation, reused instead of repeated during import.
      *
      * @since  __DEPLOY_VERSION__
@@ -219,7 +281,7 @@ class Cwmcontentimporter
             }
         }
 
-        $this->validateEntries($payload['messages'] ?? [], '#__bsms_studies', 'studytitle', 'messages');
+        $messageIds = $this->validateEntries($payload['messages'] ?? [], '#__bsms_studies', 'studytitle', 'messages');
 
         $topicMap = [];
 
@@ -268,9 +330,11 @@ class Cwmcontentimporter
             }
         }
 
+        $mediaServers = $this->validateMediaFiles($payload['mediafiles'] ?? [], $messageIds);
+
         $files = $this->validateFiles($payload['files'] ?? [], $sourceDir);
 
-        return ['topics' => $topicMap, 'files' => $files];
+        return ['topics' => $topicMap, 'mediaServers' => $mediaServers, 'files' => $files];
     }
 
     /**
@@ -319,6 +383,34 @@ class Cwmcontentimporter
             foreach (['teacher_ids', 'topics', 'scriptures'] as $listField) {
                 if (isset($message[$listField]) && !array_is_list($message[$listField])) {
                     throw new \RuntimeException(\sprintf('messages[%d].%s must be a list.', $i, $listField));
+                }
+            }
+        }
+
+        foreach ($payload['mediafiles'] ?? [] as $i => $mediafile) {
+            if (!isset($mediafile['study_id']) || !\is_int($mediafile['study_id'])) {
+                throw new \RuntimeException(\sprintf('mediafiles[%d].study_id must be an integer.', $i));
+            }
+
+            if (!isset($mediafile['server_name']) || !\is_string($mediafile['server_name'])
+                || trim($mediafile['server_name']) === ''
+            ) {
+                throw new \RuntimeException(\sprintf('mediafiles[%d].server_name is required.', $i));
+            }
+
+            if (!isset($mediafile['params']) || !\is_array($mediafile['params'])) {
+                throw new \RuntimeException(\sprintf('mediafiles[%d].params must be an object.', $i));
+            }
+
+            if (isset($mediafile['podcast_id'])) {
+                if (!array_is_list($mediafile['podcast_id'])) {
+                    throw new \RuntimeException(\sprintf('mediafiles[%d].podcast_id must be a list.', $i));
+                }
+
+                foreach ($mediafile['podcast_id'] as $podcastId) {
+                    if (!\is_int($podcastId)) {
+                        throw new \RuntimeException(\sprintf('mediafiles[%d].podcast_id entries must be integers.', $i));
+                    }
                 }
             }
         }
@@ -424,6 +516,192 @@ class Cwmcontentimporter
         }
 
         return $seenIds;
+    }
+
+    /**
+     * Validate every `mediafiles[]` entry and resolve each one's `server_name`
+     * to a real, existing `#__bsms_servers` row.
+     *
+     * `#__bsms_mediafiles` has no `alias` column, so this cannot reuse
+     * {@see validateEntries()} — there is nothing to check for a title/alias
+     * collision against, and the reference shape is different besides:
+     * `study_id` is a payload-internal reference (resolved through
+     * `$messageIds`, exactly like `series_id` on a message), but
+     * `server_name` and `podcast_id` name rows that must already exist on
+     * *this* site, because servers and the seeded podcast are configuration
+     * this importer does not create — they stay in `install.mysql.utf8.sql`
+     * as reference data a fresh install needs to function, unlike the demo
+     * content this importer replaces.
+     *
+     * @param   array              $mediafiles  The payload's `mediafiles` section.
+     * @param   array<int, true>   $messageIds  Valid source message ids, from {@see validateEntries()}.
+     *
+     * @return  array<string, int>  Every `server_name` referenced, resolved to its real server id —
+     *          reused by {@see importMediaFile()} so import does not re-run the same lookup.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function validateMediaFiles(array $mediafiles, array $messageIds): array
+    {
+        $db = $this->db();
+
+        $serverIds = [];
+
+        foreach ($mediafiles as $i => $mediafile) {
+            $studyId = (int) $mediafile['study_id'];
+
+            if (!isset($messageIds[$studyId])) {
+                throw new \RuntimeException(\sprintf(
+                    'mediafiles[%d].study_id %d does not match any messages[].id.',
+                    $i,
+                    $studyId
+                ));
+            }
+
+            $serverName = trim((string) $mediafile['server_name']);
+
+            if (!isset($serverIds[$serverName])) {
+                $matches = $db->setQuery(
+                    $db->createQuery()
+                        ->select($db->quoteName(['id', 'type']))
+                        ->from($db->quoteName('#__bsms_servers'))
+                        ->where($db->quoteName('server_name') . ' = :serverName')
+                        ->bind(':serverName', $serverName, ParameterType::STRING)
+                )->loadObjectList();
+
+                if (\count($matches) !== 1) {
+                    throw new \RuntimeException(\sprintf(
+                        'mediafiles[%d].server_name "%s" must match exactly one existing server on this site'
+                        . ' (found %d).',
+                        $i,
+                        $serverName,
+                        \count($matches)
+                    ));
+                }
+
+                if (!\in_array($matches[0]->type, self::ALLOWED_SERVER_TYPES, true)) {
+                    throw new \RuntimeException(\sprintf(
+                        'mediafiles[%d].server_name "%s" is a "%s" server — only %s servers are importable.',
+                        $i,
+                        $serverName,
+                        $matches[0]->type,
+                        implode(', ', self::ALLOWED_SERVER_TYPES)
+                    ));
+                }
+
+                $serverIds[$serverName] = (int) $matches[0]->id;
+            }
+
+            foreach ((array) ($mediafile['podcast_id'] ?? []) as $podcastId) {
+                $podcastId = (int) $podcastId;
+
+                $exists = (int) $db->setQuery(
+                    $db->createQuery()
+                        ->select('COUNT(*)')
+                        ->from($db->quoteName('#__bsms_podcast'))
+                        ->where($db->quoteName('id') . ' = :podcastId')
+                        ->bind(':podcastId', $podcastId, ParameterType::INTEGER)
+                )->loadResult() > 0;
+
+                if (!$exists) {
+                    throw new \RuntimeException(\sprintf(
+                        'mediafiles[%d].podcast_id references podcast #%d, which does not exist on this site.',
+                        $i,
+                        $podcastId
+                    ));
+                }
+            }
+
+            $this->validateMediaParams((array) $mediafile['params'], $i);
+        }
+
+        return $serverIds;
+    }
+
+    /**
+     * Every `mediafiles[].params` this importer will accept must already
+     * satisfy {@see CWMAddon::needsDetection()}'s all-false condition — a
+     * non-empty `filename`, `size` of at least 1000, a non-empty `mime_type`,
+     * and at least one non-zero duration component. Confirmed live (see the
+     * PR) that pre-populating these short-circuits `detectRemoteMetadata()`
+     * before any network call, which matters because `CwmmediafileModel`
+     * unconditionally runs detection for a new record — an import must never
+     * make an outbound HTTP call for content nobody asked it to fetch.
+     *
+     * Also refuses `create_live_broadcast` and any `live_*` key outright,
+     * rather than relying on the model's own gates (opted-in, empty id,
+     * addon support, direct stream mode) to keep it inert — a payload should
+     * not be able to get close to that trigger at all.
+     *
+     * @param   array  $params  One `mediafiles[].params` entry.
+     * @param   int    $index   Its index in `mediafiles[]`, for the error message.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function validateMediaParams(array $params, int $index): void
+    {
+        if (\array_key_exists('create_live_broadcast', $params)) {
+            throw new \RuntimeException(\sprintf(
+                'mediafiles[%d].params must not include "create_live_broadcast" —'
+                . ' import never creates a live broadcast.',
+                $index
+            ));
+        }
+
+        foreach (array_keys($params) as $key) {
+            if (\is_string($key) && str_starts_with($key, 'live_')) {
+                throw new \RuntimeException(\sprintf(
+                    'mediafiles[%d].params must not include "%s" — live-broadcast params are refused.',
+                    $index,
+                    $key
+                ));
+            }
+        }
+
+        // Refused, not merely dropped — an allowlisted key silently missing
+        // is a payload bug that should surface as loudly as an unrecognised
+        // section does (see this class's own docblock).
+        $unknown = array_diff(array_keys($params), self::MEDIA_PARAM_ALLOWLIST);
+
+        if ($unknown !== []) {
+            throw new \RuntimeException(\sprintf(
+                'mediafiles[%d].params has unrecognised key(s): %s.',
+                $index,
+                implode(', ', $unknown)
+            ));
+        }
+
+        if (trim((string) ($params['filename'] ?? '')) === '') {
+            throw new \RuntimeException(\sprintf('mediafiles[%d].params.filename is required.', $index));
+        }
+
+        $size = $params['size'] ?? null;
+
+        if (!\is_int($size) || $size < 1000) {
+            throw new \RuntimeException(\sprintf(
+                'mediafiles[%d].params.size must be an integer of at least 1000 — required so the save'
+                . ' never triggers remote metadata detection (see CWMAddon::needsDetection()).',
+                $index
+            ));
+        }
+
+        if (trim((string) ($params['mime_type'] ?? '')) === '') {
+            throw new \RuntimeException(\sprintf('mediafiles[%d].params.mime_type is required.', $index));
+        }
+
+        $hours   = (int) ($params['media_hours'] ?? 0);
+        $minutes = (int) ($params['media_minutes'] ?? 0);
+        $seconds = (int) ($params['media_seconds'] ?? 0);
+
+        if ($hours === 0 && $minutes === 0 && $seconds === 0) {
+            throw new \RuntimeException(\sprintf(
+                'mediafiles[%d].params must set a non-zero media_hours, media_minutes or media_seconds —'
+                . ' required for the same network-free reason as size/mime_type.',
+                $index
+            ));
+        }
     }
 
     /**
@@ -602,11 +880,13 @@ class Cwmcontentimporter
      * @param   array<string, int> $topicMap    Topic text => id, built once by {@see validate()}.
      * @param   array              $summary     Running summary, updated in place.
      *
-     * @return  void
+     * @return  int  The new message's id — collected by {@see import()} into `$messageIds` so
+     *          {@see importMediaFile()} can resolve `mediafiles[].study_id` the same way every
+     *          other cross-section reference in this class is resolved.
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function importMessage(string $tag, array $message, array $teacherIds, array $serieIds, array $topicMap, array &$summary): void
+    private function importMessage(string $tag, array $message, array $teacherIds, array $serieIds, array $topicMap, array &$summary): int
     {
         $alias    = (string) $message['alias'];
         $teachers = [];
@@ -652,9 +932,11 @@ class Cwmcontentimporter
             );
         }
 
-        $this->saveAndRecover('Cwmmessage', $data, $tag, '#__bsms_studies', $alias, 'message');
+        $newId = $this->saveAndRecover('Cwmmessage', $data, $tag, '#__bsms_studies', $alias, 'message');
 
         $summary['messages']++;
+
+        return $newId;
     }
 
     /**
@@ -743,6 +1025,119 @@ class Cwmcontentimporter
 
         if ($id !== null) {
             Cwmimportmanifest::recordRow($tag, $table, (int) $id);
+        }
+    }
+
+    /**
+     * Save one `mediafiles[]` entry through `CwmmediafileModel`, recording it
+     * in the manifest.
+     *
+     * Cannot reuse {@see saveAndRecover()}/{@see recordIfOrphaned()} — both
+     * assume an `alias` column, and `#__bsms_mediafiles` has none. Orphan
+     * recovery here instead looks at everything currently on the study and
+     * subtracts what `$recordedMediaFileIds` already accounts for — see
+     * {@see recordOrphanedMediaFiles()}.
+     *
+     * @param   string             $tag                    The import tag.
+     * @param   array              $mediafile              One `mediafiles[]` entry.
+     * @param   int[]              $messageIds             Source message id => new study id.
+     * @param   array<string, int> $serverIds              `server_name` => real server id, from {@see validate()}.
+     * @param   array<int, true>   $recordedMediaFileIds   Ids this import has already recorded, by reference —
+     *                                                      updated here so a later failure's orphan recovery
+     *                                                      does not re-record this call's own success.
+     * @param   array              $summary                Running summary, updated in place.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function importMediaFile(
+        string $tag,
+        array $mediafile,
+        array $messageIds,
+        array $serverIds,
+        array &$recordedMediaFileIds,
+        array &$summary
+    ): void {
+        $studyId  = $messageIds[(int) $mediafile['study_id']];
+        $serverId = $serverIds[trim((string) $mediafile['server_name'])];
+
+        $data = [
+            'id'         => 0,
+            'study_id'   => $studyId,
+            'server_id'  => $serverId,
+            'podcast_id' => array_map('intval', (array) ($mediafile['podcast_id'] ?? [])),
+            'published'  => (int) ($mediafile['published'] ?? 1),
+            'access'     => (int) ($mediafile['access'] ?? 1),
+            'language'   => '*',
+            'params'     => array_intersect_key((array) $mediafile['params'], array_flip(self::MEDIA_PARAM_ALLOWLIST)),
+        ];
+
+        $model = $this->model('Cwmmediafile');
+
+        try {
+            $ok = $model->save($data);
+        } catch (\Throwable $e) {
+            $this->recordOrphanedMediaFiles($tag, $studyId, $recordedMediaFileIds);
+
+            throw $e;
+        }
+
+        if (!$ok) {
+            $error = $model->getError() ?: 'unknown error';
+
+            $this->recordOrphanedMediaFiles($tag, $studyId, $recordedMediaFileIds);
+
+            throw new \RuntimeException(\sprintf('Failed to import media file for study #%d: %s', $studyId, $error));
+        }
+
+        $newId = (int) $model->getState($model->getName() . '.id');
+
+        Cwmimportmanifest::recordRow($tag, '#__bsms_mediafiles', $newId);
+        $recordedMediaFileIds[$newId] = true;
+
+        $summary['mediafiles']++;
+    }
+
+    /**
+     * Record every media file on a study that this import has not already
+     * recorded — the no-alias equivalent of {@see recordIfOrphaned()}.
+     *
+     * A study can carry more than one media file, so "everything on the
+     * study" is not by itself the orphan: a sibling an earlier, successful
+     * call in the same import already recorded must not be re-recorded
+     * (harmless, since `Cwmimportmanifest::recordRow()` is idempotent per
+     * row, but re-querying it every failure would be wasted work). Excluding
+     * `$recordedMediaFileIds` leaves exactly the row this failed call itself
+     * created before failing, if any.
+     *
+     * @param   string           $tag                   The import tag.
+     * @param   int              $studyId                The study id to check.
+     * @param   array<int, true> $recordedMediaFileIds   Ids already recorded, by reference — updated here.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function recordOrphanedMediaFiles(string $tag, int $studyId, array &$recordedMediaFileIds): void
+    {
+        $db = $this->db();
+
+        $ids = $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->where($db->quoteName('study_id') . ' = :studyId')
+                ->bind(':studyId', $studyId, ParameterType::INTEGER)
+        )->loadColumn();
+
+        foreach ($ids as $id) {
+            $id = (int) $id;
+
+            if (!isset($recordedMediaFileIds[$id])) {
+                Cwmimportmanifest::recordRow($tag, '#__bsms_mediafiles', $id);
+                $recordedMediaFileIds[$id] = true;
+            }
         }
     }
 

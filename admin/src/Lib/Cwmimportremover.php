@@ -39,8 +39,9 @@ use Joomla\Database\ParameterType;
  *   ever set by an UPDATE — see the Model `prepareTable()` methods this
  *   mirrors), or
  * - something outside this import still depends on it (a message crediting
- *   a demo teacher, a series holding a demo teacher, a comment or media
- *   file on a demo message).
+ *   a demo teacher, a series holding a demo teacher, a comment on a demo
+ *   message, or a media file on a demo message that this same import did
+ *   not itself create).
  *
  * Deleting a kept row anyway would destroy content the site owner has since
  * made their own, or — for a study with attached media — content
@@ -58,21 +59,23 @@ class Cwmimportremover
      * @since  __DEPLOY_VERSION__
      */
     private const array TABLE_MODELS = [
-        '#__bsms_studies'  => 'Cwmmessage',
-        '#__bsms_series'   => 'Cwmserie',
-        '#__bsms_teachers' => 'Cwmteacher',
+        '#__bsms_mediafiles' => 'Cwmmediafile',
+        '#__bsms_studies'    => 'Cwmmessage',
+        '#__bsms_series'     => 'Cwmserie',
+        '#__bsms_teachers'   => 'Cwmteacher',
     ];
 
     /**
      * Models whose `canDelete()` requires the record to already be trashed
      * (`published == -2`) — {@see CwmteacherModel::canDelete()},
-     * {@see CwmserieModel::canDelete()}. `CwmmessageModel` has no override
-     * and uses core's ACL-only default, so it needs no trash step.
+     * {@see CwmserieModel::canDelete()}, {@see CwmmediafileModel::canDelete()}.
+     * `CwmmessageModel` has no override and uses core's ACL-only default, so
+     * it needs no trash step.
      *
      * @var string[]
      * @since  __DEPLOY_VERSION__
      */
-    private const array REQUIRES_TRASH_FIRST = ['#__bsms_series', '#__bsms_teachers'];
+    private const array REQUIRES_TRASH_FIRST = ['#__bsms_mediafiles', '#__bsms_series', '#__bsms_teachers'];
 
     /**
      * Overrides `bootComponent('com_proclaim')->getMVCFactory()` — see the
@@ -117,10 +120,29 @@ class Cwmimportremover
         // that is itself about to go from one that is being kept — a kept
         // row's references must count, or removal would strand what it
         // depends on.
+        //
+        // Media files are planned first, and on that basis alone — the same
+        // question every other table asks ("was this row itself edited since
+        // import?"), nothing else references a media file — so
+        // studyHasExternalContent() can tell "this study's own imported media"
+        // from "media this import did not create", instead of treating any
+        // attached media file as proof the study is used outside this import.
+        $deletableMediaFileIds = [];
+
+        foreach ($rows['#__bsms_mediafiles'] ?? [] as $id) {
+            $reason = $this->wasModified('#__bsms_mediafiles', $id);
+            $plan[] = $this->decision('#__bsms_mediafiles', $id, $reason);
+
+            if ($reason === null) {
+                $deletableMediaFileIds[] = $id;
+            }
+        }
+
         $deletableStudyIds = [];
 
         foreach ($rows['#__bsms_studies'] ?? [] as $id) {
-            $reason = $this->wasModified('#__bsms_studies', $id) ?? $this->studyHasExternalContent($id);
+            $reason = $this->wasModified('#__bsms_studies', $id)
+                ?? $this->studyHasExternalContent($id, $deletableMediaFileIds);
             $plan[] = $this->decision('#__bsms_studies', $id, $reason);
 
             if ($reason === null) {
@@ -166,7 +188,13 @@ class Cwmimportremover
      */
     public function execute(string $tag, array $plan): array
     {
-        $removed = ['#__bsms_studies' => 0, '#__bsms_series' => 0, '#__bsms_teachers' => 0, 'files' => 0];
+        $removed = [
+            '#__bsms_mediafiles' => 0,
+            '#__bsms_studies'    => 0,
+            '#__bsms_series'     => 0,
+            '#__bsms_teachers'   => 0,
+            'files'              => 0,
+        ];
         $kept    = [];
 
         foreach ($plan as $entry) {
@@ -327,29 +355,38 @@ class Cwmimportremover
     }
 
     /**
-     * A study is not a leaf node — comments and media files point at it,
-     * and neither is ever created by this importer, so either one existing
-     * means real content depends on this study. `CwmmessageTable::delete()`
-     * cascade-deletes attached media files, so missing this check would not
-     * just leave a dangling reference, it would destroy the file.
+     * A study is not a leaf node — comments are never created by this
+     * importer, so any comment existing at all means a real visitor depends
+     * on this study. This importer can create media files too, though, so a
+     * media file only means "keep" when it is *not* one this same import is
+     * itself about to delete — otherwise every import that included a media
+     * file would permanently pin its own study.
+     * `CwmmessageTable::delete()` cascade-deletes attached media files, so
+     * missing either check would not just leave a dangling reference, it
+     * would destroy the file.
      *
-     * @param   int  $studyId  The study's id.
+     * @param   int    $studyId                The study's id.
+     * @param   int[]  $deletableMediaFileIds  Media file ids this same run has already
+     *                                         decided to delete — see {@see plan()}.
      *
      * @return  ?string  A reason to keep the study, or null.
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function studyHasExternalContent(int $studyId): ?string
+    private function studyHasExternalContent(int $studyId, array $deletableMediaFileIds): ?string
     {
         if ($this->countWhere('#__bsms_comments', 'study_id', $studyId) > 0) {
             return 'has comments';
         }
 
-        if ($this->countWhere('#__bsms_mediafiles', 'study_id', $studyId) > 0) {
-            return 'has media files';
-        }
-
-        return null;
+        return $this->hasExternalReference(
+            '#__bsms_mediafiles',
+            'study_id',
+            $studyId,
+            'id',
+            $deletableMediaFileIds,
+            'has media files'
+        );
     }
 
     /**

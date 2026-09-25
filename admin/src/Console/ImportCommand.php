@@ -19,7 +19,8 @@ namespace CWM\Component\Proclaim\Administrator\Console;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmcontentimporter;
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Application\ConsoleApplication;
-use Joomla\CMS\User\User;
+use Joomla\CMS\Factory;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Console\Command\AbstractCommand;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
@@ -150,9 +151,14 @@ final class ImportCommand extends AbstractCommand
         }
 
         if ($app instanceof ConsoleApplication) {
-            $user           = new User();
-            $user->id       = $userId;
-            $app->loadIdentity($user);
+            // A hand-built User() with only ->id set leaves guest=1 and no
+            // loaded group memberships, so any authorise() call against it
+            // sees a guest regardless of the id assigned — "import as user
+            // #X" must actually load that user's real ACL state, via
+            // loadUserById(), not merely stamp its id onto a blank identity.
+            $app->loadIdentity(
+                Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById($userId)
+            );
         }
 
         $output->writeln(\sprintf('Importing "%s" as user #%d...', $tag, $userId));
@@ -166,10 +172,11 @@ final class ImportCommand extends AbstractCommand
         }
 
         $output->writeln(\sprintf(
-            '<info>Imported</info> %d teacher(s), %d serie(s), %d message(s), %d file(s).',
+            '<info>Imported</info> %d teacher(s), %d serie(s), %d message(s), %d media file(s), %d file(s).',
             $summary['teachers'],
             $summary['series'],
             $summary['messages'],
+            $summary['mediafiles'],
             $summary['files']
         ));
 

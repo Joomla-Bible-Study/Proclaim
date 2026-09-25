@@ -119,10 +119,17 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->db->insertObject('#__bsms_study_teachers', $row);
     }
 
-    private function seedMediafile(int $studyId): void
+    private function seedMediafile(int $studyId, bool $modified = false): int
     {
-        $row = (object) ['study_id' => $studyId, 'metadata' => '{}', 'language' => '*'];
+        $row = (object) [
+            'study_id'    => $studyId,
+            'metadata'    => '{}',
+            'language'    => '*',
+            'modified_by' => $modified ? 99 : 0,
+        ];
         $this->db->insertObject('#__bsms_mediafiles', $row, 'id');
+
+        return (int) $this->db->insertid();
     }
 
     /**
@@ -252,6 +259,63 @@ class CwmimportremoverTest extends IntegrationTestCase
         // it credits — deleting either out from under it would strand it.
         $this->assertSame('keep', $this->actionFor($plan, '#__bsms_series', $seriesId));
         $this->assertSame('keep', $this->actionFor($plan, '#__bsms_teachers', $teacherId));
+    }
+
+    /**
+     * The regression case #2187 introduced: before {@see Cwmimportremover}
+     * could tell its own imported media files apart from ones outside the
+     * import, ANY media file on a study — including one this same import
+     * created — permanently pinned that study. This is the "clean set"
+     * case: the media file is manifest-recorded and untouched, so both it
+     * and its study must be deletable.
+     */
+    public function testPlanDeletesAMediaFileAndItsStudyWhenBothWereImportedTogether(): void
+    {
+        $teacherId = $this->seedTeacher();
+        $seriesId  = $this->seedSeries($teacherId);
+        $studyId   = $this->seedStudy($seriesId);
+        $tag       = $this->seedCleanSet($teacherId, $seriesId, $studyId);
+
+        $mediaId = $this->seedMediafile($studyId);
+        Cwmimportmanifest::recordRow($tag, '#__bsms_mediafiles', $mediaId);
+
+        $plan = (new Cwmimportremover())->plan($tag);
+
+        $this->assertSame('delete', $this->actionFor($plan, '#__bsms_mediafiles', $mediaId));
+        $this->assertSame('delete', $this->actionFor($plan, '#__bsms_studies', $studyId));
+    }
+
+    /**
+     * Mirrors {@see testPlanKeepsATeacherPinnedByAKeptSeries()} one level
+     * down the hierarchy: a media file edited since import is real content
+     * now, so the study it references must not be deleted out from under it
+     * — even though both were created by the same import.
+     */
+    public function testPlanKeepsAStudyPinnedByAModifiedMediaFileOfItsOwn(): void
+    {
+        $teacherId = $this->seedTeacher();
+        $seriesId  = $this->seedSeries($teacherId);
+        $studyId   = $this->seedStudy($seriesId);
+        $tag       = $this->seedCleanSet($teacherId, $seriesId, $studyId);
+
+        $mediaId = $this->seedMediafile($studyId, modified: true);
+        Cwmimportmanifest::recordRow($tag, '#__bsms_mediafiles', $mediaId);
+
+        $plan = (new Cwmimportremover())->plan($tag);
+
+        $mediaEntry = null;
+
+        foreach ($plan as $entry) {
+            if ($entry['table'] === '#__bsms_mediafiles' && $entry['id'] === $mediaId) {
+                $mediaEntry = $entry;
+            }
+        }
+
+        $this->assertNotNull($mediaEntry);
+        $this->assertSame('keep', $mediaEntry['action']);
+        $this->assertSame('edited since import', $mediaEntry['reason']);
+
+        $this->assertSame('keep', $this->actionFor($plan, '#__bsms_studies', $studyId));
     }
 
     public function testPlanKeepsAStudyWithAComment(): void
