@@ -14,7 +14,11 @@ namespace CWM\Plugin\System\Proclaim\Extension;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Console\ImportCommand;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmcontentimporter;
+use Joomla\Application\ApplicationEvents;
+use Joomla\CMS\Application\ConsoleApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -176,12 +180,36 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'onAfterInitialise'   => 'onAfterInitialise',
-            'onAfterRoute'        => 'onAfterRoute',
-            'onBeforeRender'      => 'onBeforeRender',
-            'onAfterRender'       => 'onAfterRender',
-            'onContentCleanCache' => 'onContentCleanCache',
+            'onAfterInitialise'               => 'onAfterInitialise',
+            'onAfterRoute'                    => 'onAfterRoute',
+            'onBeforeRender'                  => 'onBeforeRender',
+            'onAfterRender'                   => 'onAfterRender',
+            'onContentCleanCache'             => 'onContentCleanCache',
+            ApplicationEvents::BEFORE_EXECUTE => 'registerCommands',
         ];
+    }
+
+    /**
+     * Register `proclaim:import`. System plugins run under every
+     * application, so this only ever does anything under the console — the
+     * command itself, and addCommand(), do not exist on the web applications.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function registerCommands(): void
+    {
+        $app = $this->getApplication();
+
+        if (!$app instanceof ConsoleApplication) {
+            return;
+        }
+
+        $app->addCommand(new ImportCommand(
+            new Cwmcontentimporter(null),
+            Factory::getContainer()->get(DatabaseInterface::class)
+        ));
     }
 
     /**

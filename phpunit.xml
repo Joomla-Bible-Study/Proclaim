@@ -108,6 +108,9 @@
 		<testsuite name="Integration Admin Addon Tests">
 			<directory>tests/integration/Admin/Addons</directory>
 		</testsuite>
+		<testsuite name="Integration Admin Console Tests">
+			<directory>tests/integration/Admin/Console</directory>
+		</testsuite>
 		<testsuite name="Integration Site Model Tests">
 			<directory>tests/integration/Site/Model</directory>
 		</testsuite>
