@@ -347,10 +347,19 @@ class ImportCommandTest extends IntegrationTestCase
         $map    = (object) ['user_id' => $userId, 'group_id' => $groupId];
         $this->db->insertObject('#__user_usergroup_map', $map);
 
-        // The rules just written are read straight back on the next
-        // Access::checkGroup() call — nothing here needs the request-long
-        // cache Access keeps, and leaving it warm would let this leak into
-        // whatever test runs next in the same process.
+        // Access::clearStatics() does not reach this: checkGroup() resolves
+        // a group's path through UserGroupsHelper's OWN singleton, whose
+        // total() caches the #__usergroups row count forever on first call
+        // and never rechecks it. Once anything earlier in this same PHPUnit
+        // process has touched user groups at all — extremely likely across
+        // a suite this size — that singleton is already holding a stale
+        // count, so its self-correcting "does the count still match"
+        // refresh in getAll() never fires for a group inserted afterward.
+        // UserGroupsHelper has no public reset, so force a fresh instance.
+        $property = new \ReflectionProperty(\Joomla\CMS\Helper\UserGroupsHelper::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null, null);
+
         Access::clearStatics();
 
         // Fail here, loudly, with the exact numbers, rather than downstream
