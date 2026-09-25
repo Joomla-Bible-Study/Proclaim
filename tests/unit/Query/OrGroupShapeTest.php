@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  */
 
-namespace CWM\Component\Proclaim\Tests\Unit\Query;
+namespace CWM\Component\Proclaim\Tests\Query;
 
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use Joomla\CMS\Factory;
