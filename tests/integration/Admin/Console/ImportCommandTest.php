@@ -357,7 +357,6 @@ class ImportCommandTest extends IntegrationTestCase
         // refresh in getAll() never fires for a group inserted afterward.
         // UserGroupsHelper has no public reset, so force a fresh instance.
         $property = new \ReflectionProperty(\Joomla\CMS\Helper\UserGroupsHelper::class, 'instance');
-        $property->setAccessible(true);
         $property->setValue(null, null);
 
         Access::clearStatics();
