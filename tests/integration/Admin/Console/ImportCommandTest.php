@@ -328,7 +328,10 @@ class ImportCommandTest extends IntegrationTestCase
             )->loadResult(),
             true
         ) ?: [];
-        $rules['core.admin'][(string) $groupId] = true;
+        // Joomla's Rules parser expects 1/0/-1, matching every other value
+        // already in this JSON — a PHP `true` encodes as the JSON literal
+        // `true`, which Rules::mergeStatement() doesn't recognise as allow.
+        $rules['core.admin'][(string) $groupId] = 1;
         $json                                   = json_encode($rules);
 
         $this->db->setQuery(
