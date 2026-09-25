@@ -18,7 +18,7 @@
  * @since __DEPLOY_VERSION__
  */
 
-namespace CWM\Component\Proclaim\Tests\Unit\Language;
+namespace CWM\Component\Proclaim\Tests\Language;
 
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
