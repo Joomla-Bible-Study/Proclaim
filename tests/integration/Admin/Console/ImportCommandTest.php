@@ -11,8 +11,10 @@ namespace CWM\Component\Proclaim\Tests\Integration\Admin\Console;
 use CWM\Component\Proclaim\Administrator\Console\ImportCommand;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmcontentimporter;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
+use Joomla\CMS\Access\Access;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Database\ParameterType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -42,9 +44,6 @@ use Symfony\Component\Console\Output\BufferedOutput;
 class ImportCommandTest extends IntegrationTestCase
 {
     private ?DatabaseDriver $db = null;
-
-    /** @var int[] */
-    private array $testUserIds = [];
 
     protected function setUp(): void
     {
@@ -159,8 +158,8 @@ class ImportCommandTest extends IntegrationTestCase
 
     public function testFailsCleanlyWhenNamedUserIsBlocked(): void
     {
-        $username            = 'cwm2188blocked' . bin2hex(random_bytes(3));
-        $this->testUserIds[] = $this->createUser($username, blocked: true);
+        $username = 'cwm2188blocked' . bin2hex(random_bytes(3));
+        $this->createUser($username, blocked: true);
 
         $command = $this->newCommand($this->createStub(Cwmcontentimporter::class));
         $output  = new BufferedOutput();
@@ -260,13 +259,20 @@ class ImportCommandTest extends IntegrationTestCase
     /**
      * With no --user, resolution must find *some* active user carrying
      * core.admin — not asserted by id, since a shared dev database may
-     * already have real Super Users with lower ids than any created here,
-     * and resolveDefaultSuperUser() deliberately picks the lowest id. The
-     * point of this test is that the query runs and finds a candidate at
-     * all, not which one.
+     * already have real Super Users with lower ids than the one created
+     * here, and resolveDefaultSuperUser() deliberately picks the lowest id.
+     * The point of this test is that the query runs and finds a candidate
+     * at all, not which one.
+     *
+     * Cannot rely on the environment already having one: a CI disposable
+     * database has none at all (caught live — this test originally assumed
+     * ambient state and failed only in CI), so a group carrying core.admin
+     * and a user in it are created here, self-contained.
      */
     public function testResolvesADefaultUserWhenNoneIsGiven(): void
     {
+        $this->ensureASuperAdminGroupExists();
+
         $importer = $this->createStub(Cwmcontentimporter::class);
         $importer->method('import')->willReturn(['teachers' => 0, 'series' => 0, 'messages' => 0, 'files' => 0]);
 
@@ -280,5 +286,48 @@ class ImportCommandTest extends IntegrationTestCase
 
         $this->assertSame(Command::SUCCESS, $exit);
         $this->assertMatchesRegularExpression('/user #\d+/', $output->fetch());
+    }
+
+    /**
+     * Grants core.admin, on the root asset, to a freshly created group, then
+     * puts a freshly created active user in it — everything inside this
+     * test's own rolled-back transaction, so it never touches real ACL
+     * state and needs nothing pre-existing in the database.
+     */
+    private function ensureASuperAdminGroupExists(): void
+    {
+        $group = (object) ['title' => 'cwm2188-test-supergroup', 'parent_id' => 1, 'lft' => 0, 'rgt' => 0];
+        $this->db->insertObject('#__usergroups', $group, 'id');
+        $groupId = (int) $group->id;
+
+        $rules = json_decode(
+            (string) $this->db->setQuery(
+                $this->db->createQuery()
+                    ->select($this->db->quoteName('rules'))
+                    ->from($this->db->quoteName('#__assets'))
+                    ->where($this->db->quoteName('id') . ' = 1')
+            )->loadResult(),
+            true
+        ) ?: [];
+        $rules['core.admin'][(string) $groupId] = true;
+        $json                                   = json_encode($rules);
+
+        $this->db->setQuery(
+            $this->db->createQuery()
+                ->update($this->db->quoteName('#__assets'))
+                ->set($this->db->quoteName('rules') . ' = :rules')
+                ->where($this->db->quoteName('id') . ' = 1')
+                ->bind(':rules', $json, ParameterType::STRING)
+        )->execute();
+
+        $userId = $this->createUser('cwm2188super' . bin2hex(random_bytes(3)));
+        $map    = (object) ['user_id' => $userId, 'group_id' => $groupId];
+        $this->db->insertObject('#__user_usergroup_map', $map);
+
+        // The rules just written are read straight back on the next
+        // Access::checkGroup() call — nothing here needs the request-long
+        // cache Access keeps, and leaving it warm would let this leak into
+        // whatever test runs next in the same process.
+        Access::clearStatics();
     }
 }
