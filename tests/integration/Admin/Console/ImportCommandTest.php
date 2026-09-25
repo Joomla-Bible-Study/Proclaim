@@ -296,7 +296,25 @@ class ImportCommandTest extends IntegrationTestCase
      */
     private function ensureASuperAdminGroupExists(): void
     {
-        $group = (object) ['title' => 'cwm2188-test-supergroup', 'parent_id' => 1, 'lft' => 0, 'rgt' => 0];
+        // Neither the root asset nor the root usergroup is safe to assume
+        // id=1 for — this test originally did, and it broke CI's disposable
+        // database even after the ambient-state fix, because parent_id = 0
+        // is the only thing the nested set actually guarantees.
+        $rootAssetId = (int) $this->db->setQuery(
+            $this->db->createQuery()
+                ->select($this->db->quoteName('id'))
+                ->from($this->db->quoteName('#__assets'))
+                ->where($this->db->quoteName('parent_id') . ' = 0')
+        )->loadResult();
+
+        $rootGroupId = (int) ($this->db->setQuery(
+            $this->db->createQuery()
+                ->select($this->db->quoteName('id'))
+                ->from($this->db->quoteName('#__usergroups'))
+                ->where($this->db->quoteName('parent_id') . ' = 0')
+        )->loadResult() ?? 0);
+
+        $group = (object) ['title' => 'cwm2188-test-supergroup', 'parent_id' => $rootGroupId, 'lft' => 0, 'rgt' => 0];
         $this->db->insertObject('#__usergroups', $group, 'id');
         $groupId = (int) $group->id;
 
@@ -305,7 +323,8 @@ class ImportCommandTest extends IntegrationTestCase
                 $this->db->createQuery()
                     ->select($this->db->quoteName('rules'))
                     ->from($this->db->quoteName('#__assets'))
-                    ->where($this->db->quoteName('id') . ' = 1')
+                    ->where($this->db->quoteName('id') . ' = :id')
+                    ->bind(':id', $rootAssetId, ParameterType::INTEGER)
             )->loadResult(),
             true
         ) ?: [];
@@ -316,8 +335,9 @@ class ImportCommandTest extends IntegrationTestCase
             $this->db->createQuery()
                 ->update($this->db->quoteName('#__assets'))
                 ->set($this->db->quoteName('rules') . ' = :rules')
-                ->where($this->db->quoteName('id') . ' = 1')
+                ->where($this->db->quoteName('id') . ' = :id')
                 ->bind(':rules', $json, ParameterType::STRING)
+                ->bind(':id', $rootAssetId, ParameterType::INTEGER)
         )->execute();
 
         $userId = $this->createUser('cwm2188super' . bin2hex(random_bytes(3)));
@@ -329,5 +349,20 @@ class ImportCommandTest extends IntegrationTestCase
         // cache Access keeps, and leaving it warm would let this leak into
         // whatever test runs next in the same process.
         Access::clearStatics();
+
+        // Fail here, loudly, with the exact numbers, rather than downstream
+        // in the command where "no active user matches" gives no way to
+        // tell a setup bug in this helper from a real regression in
+        // resolveDefaultSuperUser() itself.
+        self::assertGreaterThan(0, $rootAssetId, 'Could not find a root asset (parent_id = 0).');
+        self::assertTrue(
+            Access::checkGroup($groupId, 'core.admin'),
+            \sprintf(
+                'Setup failed: group #%d does not carry core.admin on asset #%d after writing %s',
+                $groupId,
+                $rootAssetId,
+                $json
+            )
+        );
     }
 }
