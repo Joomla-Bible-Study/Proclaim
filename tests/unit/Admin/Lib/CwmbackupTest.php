@@ -59,10 +59,12 @@ class CwmbackupTest extends ProclaimTestCase
         // A real table must not be silently rejected -- assert the call actually
         // reaches the DB (a rejected table always returns exactly 0 via the guard;
         // this only proves non-rejection when the count comes back > 0, so use a
-        // table this dev DB is known to have rows in).
-        $rowCount = (new Cwmbackup())->getTableRowCount('#__bsms_studies');
+        // table that is always seeded and never demo content — #__bsms_studies
+        // is opt-in now, so it can no longer be relied on to have rows on a
+        // fresh install.
+        $rowCount = (new Cwmbackup())->getTableRowCount('#__bsms_topics');
 
-        $this->assertGreaterThan(0, $rowCount, 'expected #__bsms_studies to have rows on j5-dev');
+        $this->assertGreaterThan(0, $rowCount, 'expected #__bsms_topics to have rows — it ships 96 seeded rows');
     }
 
     /**

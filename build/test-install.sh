@@ -30,10 +30,10 @@ echo "========================================================================"
 echo " CLEAN-INSTALL TEST — pkg_proclaim ${VERSION}"
 echo "========================================================================"
 
-echo "-- [1/10] reset test site(s) to a clean slate"
+echo "-- [1/11] reset test site(s) to a clean slate"
 "$BIN/cwm-reset-testsite"
 
-echo "-- [2/10] build full package ${VERSION}"
+echo "-- [2/11] build full package ${VERSION}"
 bash build/build-package.sh "$VERSION"
 
 if [ ! -f "$ZIP" ]; then
@@ -41,8 +41,17 @@ if [ ! -f "$ZIP" ]; then
     exit 1
 fi
 
-echo "-- [3/10] install ${ZIP} (fresh)"
+echo "-- [3/11] install ${ZIP} (fresh)"
 "$BIN/cwm-install-zip" --zip "$ZIP"
+
+# Demo content is opt-in now (#2145/#2176) — install.mysql.utf8.sql no longer
+# seeds a sample study, so several checks below have nothing to look at unless
+# something imports it first. This aborts the run like reset/build/install
+# above, rather than joining the soft-fail block below: a missing study makes
+# seed-testsite-menus.php throw anyway, and letting the checks after it run
+# against an empty site would report the wrong failure, or none at all.
+echo "-- [4/11] seed demo content through proclaim:import (#2176)"
+php build/seed-demo-content.php
 
 # Verification steps record their result and carry on; the reset/build/install
 # steps above still abort, because there is nothing to verify if the package
@@ -55,29 +64,29 @@ echo "-- [3/10] install ${ZIP} (fresh)"
 # Joomla-Bible-Study/cwm-build-tools#142 is what surfaced the difference.
 FAILURES=()
 
-echo "-- [4/10] verify extension registration"
+echo "-- [5/11] verify extension registration"
 "$BIN/cwm-verify" --target test || FAILURES+=("extension registration (cwm-verify)")
 
-echo "-- [5/10] verify migrations landed"
+echo "-- [6/11] verify migrations landed"
 php build/verify-migrations.php "$VERSION" || FAILURES+=("migrations (verify-migrations)")
 
-echo "-- [6/10] verify the REST API landed (#1309/#1310/#1331 guards)"
+echo "-- [7/11] verify the REST API landed (#1309/#1310/#1331 guards)"
 php build/verify-api-install.php || FAILURES+=("REST API (verify-api-install)")
 
-echo "-- [7/10] verify the scripture library landed (tables, seed, plugin enabled)"
+echo "-- [8/11] verify the scripture library landed (tables, seed, plugin enabled)"
 php build/verify-scripture-install.php || FAILURES+=("scripture library (verify-scripture-install)")
 
-echo "-- [8/10] seed the site menu items the front end is reached through (#1701)"
+echo "-- [9/11] seed the site menu items the front end is reached through (#1701)"
 php build/seed-testsite-menus.php || FAILURES+=("menu seeding (seed-testsite-menus)")
 # A fresh install has no verses until the Download Core Translations task runs,
 # and the seeded study cites a book. Without this the front-end check below only
 # ever exercises the unresolvable path.
 php build/seed-scripture-fixture.php || FAILURES+=("scripture fixture (seed-scripture-fixture)")
 
-echo "-- [9/10] verify the front end renders (#1701 guards)"
+echo "-- [10/11] verify the front end renders (#1701 guards)"
 php build/verify-frontend.php || FAILURES+=("front end (verify-frontend)")
 
-echo "-- [10/10] verify Joomla's own schema check is clean"
+echo "-- [11/11] verify Joomla's own schema check is clean"
 php build/verify-schema-check.php || FAILURES+=("Joomla schema check (verify-schema-check)")
 
 echo

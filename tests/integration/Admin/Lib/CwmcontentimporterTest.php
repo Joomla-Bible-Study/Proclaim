@@ -225,6 +225,14 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $topicCount = $this->countRows('#__bsms_studytopics', 'study_id', $studyId);
         $this->assertSame(1, $topicCount);
 
+        // Regression: CwmsermonModel::getItem() does
+        // `(new Registry())->loadString($data->params)` unconditionally on the
+        // site side, and Registry::loadString() requires a string — a NULL
+        // params column (Table::bind() leaves it there when omitted) 500'd an
+        // imported study's own detail page. Caught only by rendering that page
+        // live; this assertion is the cheapest thing that would have caught it.
+        $this->assertNotNull($this->scalar('#__bsms_studies', 'params', 'id', $studyId));
+
         $files = Cwmimportmanifest::filesForTag($tag);
         $this->assertSame(['images/biblestudy/teachers/cwm2173-demo-teacher.png'], $files);
         $this->assertFileExists(JPATH_ROOT . '/images/biblestudy/teachers/cwm2173-demo-teacher.png');
