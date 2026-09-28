@@ -290,9 +290,10 @@ jobs:
         #
         # The admin/site projects are the ten browser specs that until now ran
         # on one developer's laptop and nowhere else. They have real content to
-        # work with: the install seeds a published study, a media file and a
-        # template, and test:install seeds the site menus and a scripture
-        # fixture on top.
+        # work with: the install seeds a template, test:install imports a demo
+        # study, teacher, series and three media files through proclaim:import
+        # (demo content is opt-in, not raw-seeded — #2145/#2176), then seeds
+        # the site menus and a scripture fixture on top.
         #
         # site-helium is deliberately absent. It needs a Gantry + Helium
         # install that exists on one local site only, and it pins a template

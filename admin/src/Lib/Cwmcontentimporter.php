@@ -818,6 +818,10 @@ class Cwmcontentimporter
             'alias'       => $alias,
             'title'       => (string) ($teacher['title'] ?? ''),
             'information' => (string) ($teacher['information'] ?? ''),
+            'phone'       => (string) ($teacher['phone'] ?? ''),
+            'email'       => (string) ($teacher['email'] ?? ''),
+            'website'     => (string) ($teacher['website'] ?? ''),
+            'short'       => (string) ($teacher['short'] ?? ''),
             // Path-validated file placement is handled separately by
             // importFile(); the model's own thumbnail pipeline is not
             // exercised here.
@@ -911,6 +915,12 @@ class Cwmcontentimporter
             'access'      => (int) ($message['access'] ?? 1),
             'language'    => '*',
             'image'       => '',
+            // The column allows NULL and Table::bind() leaves it there when
+            // omitted, but CwmsermonModel::getItem() unconditionally does
+            // `(new Registry())->loadString($data->params)` on the site side,
+            // which throws on null (a strict `string` parameter) — found by
+            // rendering an imported study's detail page, which 500'd.
+            'params' => '',
         ];
 
         // Each of these is only sent when the fixture actually provided it —
