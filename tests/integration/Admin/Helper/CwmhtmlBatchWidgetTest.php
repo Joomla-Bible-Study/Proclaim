@@ -14,6 +14,8 @@ namespace CWM\Component\Proclaim\Tests\Integration\Admin\Helper;
 use CWM\Component\Proclaim\Administrator\Field\MediaFileImagesField;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhtml;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseDriver;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -40,6 +42,57 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(Cwmhtml::class)]
 class CwmhtmlBatchWidgetTest extends IntegrationTestCase
 {
+    private ?DatabaseDriver $db = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (!\defined('PROCLAIM_TEST_DB_AVAILABLE') || !PROCLAIM_TEST_DB_AVAILABLE) {
+            $this->markTestSkipped('Database not available for integration tests');
+        }
+
+        $this->db = Factory::getContainer()->get(DatabaseDriver::class);
+        $this->db->transactionStart(true);
+
+        // buildDisplayOptions() derives its choices from whatever media files
+        // exist on the site — install.mysql.utf8.sql no longer seeds any (demo
+        // content is opt-in), so the display-configuration tests below need
+        // one of their own rather than relying on ambient install data.
+        $this->seedMediaFileWithDisplayConfig();
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->db !== null) {
+            try {
+                $this->db->transactionRollback(true);
+            } catch (\Throwable) {
+                // Connection lost; nothing to roll back.
+            }
+        }
+
+        parent::tearDown();
+    }
+
+    /**
+     * A minimal media file whose params put it in buildDisplayOptions()'s
+     * plain "image" branch (media_use_button_icon unset) — the simplest
+     * configuration that still produces a real, non-sentinel option.
+     *
+     * @return  void
+     */
+    private function seedMediaFileWithDisplayConfig(): void
+    {
+        $row = (object) [
+            'study_id' => 0,
+            'metadata' => '{}',
+            'language' => '*',
+            'params'   => json_encode(['media_image' => 'images/biblestudy/speaker24.png']),
+        ];
+        $this->db->insertObject('#__bsms_mediafiles', $row, 'id');
+    }
+
     /**
      * @return array<string, array{0: string}>
      */
