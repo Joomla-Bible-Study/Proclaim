@@ -68,7 +68,7 @@ class Cwmcontentimporter
      * @var string[]
      * @since  __DEPLOY_VERSION__
      */
-    private const array ALLOWED_SECTIONS = ['teachers', 'series', 'messages', 'mediafiles', 'files'];
+    private const array ALLOWED_SECTIONS = ['teachers', 'series', 'locations', 'messages', 'mediafiles', 'files'];
 
     /**
      * The only `#__bsms_servers.type` a `mediafiles[].server_name` may
@@ -165,11 +165,11 @@ class Cwmcontentimporter
      * Import a tagged content set.
      *
      * @param   string  $tag        Identifies this import, e.g. `demo-v1`. Refused if already used.
-     * @param   array   $payload    Decoded JSON: `teachers`, `series`, `messages`, `mediafiles`, `files` —
-     *                              see ALLOWED_SECTIONS.
+     * @param   array   $payload    Decoded JSON: `teachers`, `series`, `locations`, `messages`, `mediafiles`,
+     *                              `files` — see ALLOWED_SECTIONS.
      * @param   string  $sourceDir  Directory the payload's `files[].source` paths are relative to.
      *
-     * @return  array{teachers: int, series: int, messages: int, mediafiles: int, files: int}
+     * @return  array{teachers: int, series: int, locations: int, messages: int, mediafiles: int, files: int}
      *          Counts of what was created.
      *
      * @since  __DEPLOY_VERSION__
@@ -193,16 +193,17 @@ class Cwmcontentimporter
 
         $plan = $this->validate($payload, $sourceDir);
 
-        $summary = ['teachers' => 0, 'series' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0];
+        $summary = ['teachers' => 0, 'series' => 0, 'locations' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0];
 
         // Source-id => newly assigned target id. Every foreign key below is
         // resolved through this map, never trusted as a target-site id
         // directly — a fixture's ids are only meaningful within itself.
         // validate() already confirmed every reference resolves, so a
         // lookup miss here would be this importer's own bug, not bad input.
-        $teacherIds = [];
-        $serieIds   = [];
-        $messageIds = [];
+        $teacherIds  = [];
+        $serieIds    = [];
+        $locationIds = [];
+        $messageIds  = [];
 
         foreach ($payload['teachers'] ?? [] as $teacher) {
             $teacherIds[(int) $teacher['id']] = $this->importTeacher($tag, $teacher, $summary);
@@ -214,12 +215,17 @@ class Cwmcontentimporter
             $serieIds[(int) $serie['id']] = $this->importSerie($tag, $serie, $teacherId, $summary);
         }
 
+        foreach ($payload['locations'] ?? [] as $location) {
+            $locationIds[(int) $location['id']] = $this->importLocation($tag, $location, $summary);
+        }
+
         foreach ($payload['messages'] ?? [] as $message) {
             $messageIds[(int) $message['id']] = $this->importMessage(
                 $tag,
                 $message,
                 $teacherIds,
                 $serieIds,
+                $locationIds,
                 $plan['topics'],
                 $summary
             );
@@ -281,6 +287,8 @@ class Cwmcontentimporter
             }
         }
 
+        $locationIds = $this->validateLocations($payload['locations'] ?? []);
+
         $messageIds = $this->validateEntries($payload['messages'] ?? [], '#__bsms_studies', 'studytitle', 'messages');
 
         $topicMap = [];
@@ -293,6 +301,16 @@ class Cwmcontentimporter
                     'messages[%d].series_id %d does not match any series[].id.',
                     $i,
                     $seriesId
+                ));
+            }
+
+            $locationId = (int) ($message['location_id'] ?? 0);
+
+            if ($locationId > 0 && !isset($locationIds[$locationId])) {
+                throw new \RuntimeException(\sprintf(
+                    'messages[%d].location_id %d does not match any locations[].id.',
+                    $i,
+                    $locationId
                 ));
             }
 
@@ -378,6 +396,10 @@ class Cwmcontentimporter
         foreach ($payload['messages'] ?? [] as $i => $message) {
             if (isset($message['series_id']) && !\is_int($message['series_id'])) {
                 throw new \RuntimeException(\sprintf('messages[%d].series_id must be an integer.', $i));
+            }
+
+            if (isset($message['location_id']) && !\is_int($message['location_id'])) {
+                throw new \RuntimeException(\sprintf('messages[%d].location_id must be an integer.', $i));
             }
 
             foreach (['teacher_ids', 'topics', 'scriptures'] as $listField) {
@@ -512,6 +534,75 @@ class Cwmcontentimporter
 
             if ($aliasCollision) {
                 throw new \RuntimeException(\sprintf('%s[%d] alias "%s" already exists on this site.', $section, $i, $alias));
+            }
+        }
+
+        return $seenIds;
+    }
+
+    /**
+     * Every `locations[]` entry has a positive, unique `id` and a required,
+     * non-empty `location_text` that does not collide with an existing row's.
+     *
+     * `#__bsms_locations` has no `alias` column, so this cannot reuse
+     * {@see validateEntries()} — there is nothing to check an alias against.
+     * The collision checks that remain (payload-internal uniqueness, and no
+     * collision with an existing row) are exactly what makes
+     * `location_text` usable as {@see saveAndRecover()}'s lookup key later,
+     * the same guarantee an alias gives every other entity here.
+     *
+     * @param   array  $locations  The payload's `locations` section.
+     *
+     * @return  array<int, true>  The valid source ids seen, as lookup keys.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function validateLocations(array $locations): array
+    {
+        $db = $this->db();
+
+        $seenIds   = [];
+        $seenTexts = [];
+
+        foreach ($locations as $i => $location) {
+            $id = $location['id'] ?? null;
+
+            if (!\is_int($id) || $id <= 0) {
+                throw new \RuntimeException(\sprintf('locations[%d] is missing a positive integer id.', $i));
+            }
+
+            if (isset($seenIds[$id])) {
+                throw new \RuntimeException(\sprintf('locations[%d] reuses source id %d.', $i, $id));
+            }
+
+            $seenIds[$id] = true;
+
+            $locationText = trim((string) ($location['location_text'] ?? ''));
+
+            if ($locationText === '') {
+                throw new \RuntimeException(\sprintf('locations[%d] is missing location_text.', $i));
+            }
+
+            if (isset($seenTexts[$locationText])) {
+                throw new \RuntimeException(\sprintf('locations[%d] reuses location_text "%s".', $i, $locationText));
+            }
+
+            $seenTexts[$locationText] = true;
+
+            $collision = (int) $db->setQuery(
+                $db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName('#__bsms_locations'))
+                    ->where($db->quoteName('location_text') . ' = :text')
+                    ->bind(':text', $locationText, ParameterType::STRING)
+            )->loadResult() > 0;
+
+            if ($collision) {
+                throw new \RuntimeException(\sprintf(
+                    'locations[%d] "%s" already exists on this site.',
+                    $i,
+                    $locationText
+                ));
             }
         }
 
@@ -877,10 +968,75 @@ class Cwmcontentimporter
     }
 
     /**
+     * `#__bsms_locations` has no `alias` column, so `saveAndRecover()` is
+     * called with `location_text` as the lookup key instead — unambiguous
+     * because {@see validateLocations()} already confirmed it collides with
+     * nothing on this table before any creation began, the same guarantee
+     * `validateEntries()` gives every alias-keyed entity.
+     *
+     * Every column below with no schema default is set explicitly, mirroring
+     * {@see \CWM\Component\Proclaim\Administrator\Model\CwmsetupwizardModel}'s
+     * own raw-SQL location insert — the only other place in this codebase
+     * that creates a location outside the admin form, and so the closest
+     * thing to a verified-safe field list.
+     *
+     * @param   string  $tag       The import tag.
+     * @param   array   $location  One `locations[]` entry.
+     * @param   array   $summary   Running summary, updated in place.
+     *
+     * @return  int  The new location's id.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function importLocation(string $tag, array $location, array &$summary): int
+    {
+        $locationText = trim((string) $location['location_text']);
+
+        $data = [
+            'id'            => 0,
+            'location_text' => $locationText,
+            'address'       => (string) ($location['address'] ?? ''),
+            'suburb'        => (string) ($location['suburb'] ?? ''),
+            'state'         => (string) ($location['state'] ?? ''),
+            'country'       => (string) ($location['country'] ?? ''),
+            'postcode'      => (string) ($location['postcode'] ?? ''),
+            'telephone'     => (string) ($location['telephone'] ?? ''),
+            'published'     => (int) ($location['published'] ?? 1),
+            'access'        => (int) ($location['access'] ?? 1),
+            'language'      => '*',
+            'mobile'        => '',
+            'webpage'       => '',
+            'sortname1'     => '',
+            'sortname2'     => '',
+            'sortname3'     => '',
+            'params'        => '',
+            'metakey'       => '',
+            'metadesc'      => '',
+            'metadata'      => '',
+            'xreference'    => '',
+        ];
+
+        $newId = $this->saveAndRecover(
+            'Cwmlocation',
+            $data,
+            $tag,
+            '#__bsms_locations',
+            $locationText,
+            'location',
+            'location_text'
+        );
+
+        $summary['locations']++;
+
+        return $newId;
+    }
+
+    /**
      * @param   string             $tag         The import tag.
      * @param   array              $message     One `messages[]` entry.
      * @param   int[]              $teacherIds  Source teacher id => new teacher id.
      * @param   int[]              $serieIds    Source series id => new series id.
+     * @param   int[]              $locationIds Source location id => new location id.
      * @param   array<string, int> $topicMap    Topic text => id, built once by {@see validate()}.
      * @param   array              $summary     Running summary, updated in place.
      *
@@ -890,8 +1046,15 @@ class Cwmcontentimporter
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function importMessage(string $tag, array $message, array $teacherIds, array $serieIds, array $topicMap, array &$summary): int
-    {
+    private function importMessage(
+        string $tag,
+        array $message,
+        array $teacherIds,
+        array $serieIds,
+        array $locationIds,
+        array $topicMap,
+        array &$summary
+    ): int {
         $alias    = (string) $message['alias'];
         $teachers = [];
 
@@ -902,6 +1065,9 @@ class Cwmcontentimporter
         $sourceSerieId = (int) ($message['series_id'] ?? 0);
         $seriesId      = $sourceSerieId > 0 ? $serieIds[$sourceSerieId] : 0;
 
+        $sourceLocationId = (int) ($message['location_id'] ?? 0);
+        $locationId       = $sourceLocationId > 0 ? $locationIds[$sourceLocationId] : 0;
+
         $data = [
             'id'          => 0,
             'studytitle'  => trim((string) $message['studytitle']),
@@ -910,6 +1076,7 @@ class Cwmcontentimporter
             'studyintro'  => (string) ($message['studyintro'] ?? ''),
             'studytext'   => (string) ($message['studytext'] ?? ''),
             'series_id'   => $seriesId,
+            'location_id' => $locationId,
             'messagetype' => (string) ($message['messagetype'] ?? '1'),
             'published'   => (int) ($message['published'] ?? 1),
             'access'      => (int) ($message['access'] ?? 1),
@@ -964,16 +1131,19 @@ class Cwmcontentimporter
      * a deliberate choice — see this class's own docblock for why a
      * transaction does not actually protect against this class of failure.
      *
-     * The lookup-by-alias this relies on is unambiguous because
-     * {@see validateEntries()} already confirmed the alias collides with
+     * The lookup-by-key this relies on is unambiguous because
+     * {@see validateEntries()} (or, for a table with no `alias` column,
+     * {@see validateLocations()}) already confirmed the key collides with
      * nothing on this table before any creation began.
      *
      * @param   string  $modelName    Model name, e.g. `Cwmteacher`.
      * @param   array   $data         The data to save, with `id => 0` for a new row.
      * @param   string  $tag          The import tag.
      * @param   string  $table        `#__`-prefixed table the row belongs to.
-     * @param   string  $alias        The row's alias, already validated unique.
+     * @param   string  $key          The row's lookup key value, already validated unique.
      * @param   string  $entityLabel  Singular noun for the failure message (e.g. `teacher`).
+     * @param   string  $keyColumn    Column the key is unique on. Defaults to `alias`;
+     *                                pass e.g. `location_text` for a table with no alias column.
      *
      * @return  int  The new row's id.
      *
@@ -984,15 +1154,16 @@ class Cwmcontentimporter
         array $data,
         string $tag,
         string $table,
-        string $alias,
-        string $entityLabel
+        string $key,
+        string $entityLabel,
+        string $keyColumn = 'alias'
     ): int {
         $model = $this->model($modelName);
 
         try {
             $ok = $model->save($data);
         } catch (\Throwable $e) {
-            $this->recordIfOrphaned($tag, $table, $alias);
+            $this->recordIfOrphaned($tag, $table, $key, $keyColumn);
 
             throw $e;
         }
@@ -1000,9 +1171,9 @@ class Cwmcontentimporter
         if (!$ok) {
             $error = $model->getError() ?: 'unknown error';
 
-            $this->recordIfOrphaned($tag, $table, $alias);
+            $this->recordIfOrphaned($tag, $table, $key, $keyColumn);
 
-            throw new \RuntimeException(\sprintf('Failed to import %s "%s": %s', $entityLabel, $alias, $error));
+            throw new \RuntimeException(\sprintf('Failed to import %s "%s": %s', $entityLabel, $key, $error));
         }
 
         $newId = (int) $model->getState($model->getName() . '.id');
@@ -1013,15 +1184,16 @@ class Cwmcontentimporter
     }
 
     /**
-     * @param   string  $tag    The import tag.
-     * @param   string  $table  `#__`-prefixed table to check.
-     * @param   string  $alias  The alias to look up.
+     * @param   string  $tag        The import tag.
+     * @param   string  $table      `#__`-prefixed table to check.
+     * @param   string  $key        The key value to look up.
+     * @param   string  $keyColumn  Column the key is unique on. Defaults to `alias`.
      *
      * @return  void
      *
      * @since  __DEPLOY_VERSION__
      */
-    private function recordIfOrphaned(string $tag, string $table, string $alias): void
+    private function recordIfOrphaned(string $tag, string $table, string $key, string $keyColumn = 'alias'): void
     {
         $db = $this->db();
 
@@ -1029,8 +1201,8 @@ class Cwmcontentimporter
             $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName($table))
-                ->where($db->quoteName('alias') . ' = :alias')
-                ->bind(':alias', $alias, ParameterType::STRING)
+                ->where($db->quoteName($keyColumn) . ' = :key')
+                ->bind(':key', $key, ParameterType::STRING)
         )->loadResult();
 
         if ($id !== null) {

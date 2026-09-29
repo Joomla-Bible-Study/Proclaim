@@ -193,7 +193,10 @@ class CwmcontentimporterTest extends IntegrationTestCase
 
         $summary = (new Cwmcontentimporter($this->factory))->import($tag, $fixture['payload'], $fixture['dir']);
 
-        $this->assertSame(['teachers' => 1, 'series' => 1, 'messages' => 1, 'mediafiles' => 0, 'files' => 1], $summary);
+        $this->assertSame(
+            ['teachers' => 1, 'series' => 1, 'locations' => 0, 'messages' => 1, 'mediafiles' => 0, 'files' => 1],
+            $summary
+        );
 
         $rows = Cwmimportmanifest::rowsForTag($tag);
 
@@ -867,6 +870,154 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertContains(
             (int) $mediaId,
             $rows['#__bsms_mediafiles'] ?? [],
+            'The row Table::store() wrote must still be recorded even though save() reported failure.'
+        );
+    }
+
+    public function testRejectsALocationMissingLocationText(): void
+    {
+        $tag     = 'cwm2196-test-' . bin2hex(random_bytes(4));
+        $payload = ['locations' => [['id' => 1]]];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/is missing location_text/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsALocationThatReusesLocationTextWithinThePayload(): void
+    {
+        $tag     = 'cwm2196-test-' . bin2hex(random_bytes(4));
+        $payload = [
+            'locations' => [
+                ['id' => 1, 'location_text' => 'Duplicate Campus'],
+                ['id' => 2, 'location_text' => 'Duplicate Campus'],
+            ],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/reuses location_text/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsALocationThatCollidesWithAnExistingSiteLocation(): void
+    {
+        $locationText = 'cwm2196-existing-' . bin2hex(random_bytes(4));
+        $existing     = (object) [
+            'location_text' => $locationText,
+            'language'      => '*',
+            'sortname1'     => '',
+            'sortname2'     => '',
+            'sortname3'     => '',
+            'params'        => '',
+            'metakey'       => '',
+            'metadesc'      => '',
+            'metadata'      => '',
+            'xreference'    => '',
+        ];
+        $this->db->insertObject('#__bsms_locations', $existing, 'id');
+
+        $tag     = 'cwm2196-test-' . bin2hex(random_bytes(4));
+        $payload = ['locations' => [['id' => 1, 'location_text' => $locationText]]];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/already exists on this site/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    public function testRejectsAMessageLocationIdThatDoesNotMatchAnyLocation(): void
+    {
+        $tag             = 'cwm2196-test-' . bin2hex(random_bytes(4));
+        [$messageOnly]   = $this->fixtureMessageOnly();
+        $payload         = [
+            'messages' => [array_merge($messageOnly, ['location_id' => 999])],
+        ];
+
+        try {
+            (new Cwmcontentimporter($this->factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertMatchesRegularExpression('/location_id 999 does not match any locations\[].id/', $e->getMessage());
+        }
+
+        $this->assertFalse(Cwmimportmanifest::exists($tag));
+    }
+
+    /**
+     * The mirror of {@see testAnOrphanedRowIsStillRecordedInTheManifestWhenSaveFails()}
+     * for the one other entity with no `alias` column — `location_text` is the
+     * lookup key here instead, per {@see Cwmcontentimporter::importLocation()}.
+     */
+    public function testAnOrphanedLocationRowIsStillRecordedInTheManifestWhenSaveFails(): void
+    {
+        $tag = 'cwm2196-test-' . bin2hex(random_bytes(4));
+
+        $model = $this->createStub(AdminModel::class);
+        $model->method('save')->willReturnCallback(function () {
+            $location = (object) [
+                'location_text' => 'CWM2196 Orphan Location',
+                'language'      => '*',
+                'sortname1'     => '',
+                'sortname2'     => '',
+                'sortname3'     => '',
+                'params'        => '',
+                'metakey'       => '',
+                'metadesc'      => '',
+                'metadata'      => '',
+                'xreference'    => '',
+            ];
+            $this->db->insertObject('#__bsms_locations', $location, 'id');
+
+            throw new \RuntimeException('simulated after-save plugin failure');
+        });
+
+        $factory = $this->createStub(MVCFactoryInterface::class);
+        $factory->method('createModel')->willReturn($model);
+
+        $payload = [
+            'locations' => [[
+                'id'            => 1,
+                'location_text' => 'CWM2196 Orphan Location',
+            ]],
+        ];
+
+        try {
+            (new Cwmcontentimporter($factory))->import($tag, $payload, $this->fixture()['dir']);
+            $this->fail('Expected the simulated save failure to propagate.');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('simulated after-save plugin failure', $e->getMessage());
+        }
+
+        $locationText = 'CWM2196 Orphan Location';
+        $locationId   = $this->db->setQuery(
+            $this->db->createQuery()
+                ->select($this->db->quoteName('id'))
+                ->from($this->db->quoteName('#__bsms_locations'))
+                ->where($this->db->quoteName('location_text') . ' = :text')
+                ->bind(':text', $locationText, ParameterType::STRING)
+        )->loadResult();
+
+        $this->assertNotNull($locationId, 'The stub save() must have inserted the row.');
+
+        $rows = Cwmimportmanifest::rowsForTag($tag);
+
+        $this->assertContains(
+            (int) $locationId,
+            $rows['#__bsms_locations'] ?? [],
             'The row Table::store() wrote must still be recorded even though save() reported failure.'
         );
     }
