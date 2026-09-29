@@ -176,6 +176,7 @@
             metadesc: document.getElementById('wizard-metadesc')?.value.trim() || '',
             primary_media: media,
             create_sample_content: document.getElementById('wizard-sample-content').checked,
+            fetch_demo_content: document.getElementById('wizard-fetch-demo-content')?.checked || false,
             use_default_images: document.getElementById('wizard-default-images')?.checked || false,
             enable_ai: document.getElementById('wizard-enable-ai').checked,
             ai_voice: document.getElementById('wizard-ai-voice')?.value || 'third_person',
@@ -267,6 +268,9 @@
         html += `<tr><th>Comments</th><td>${data.enable_comments ? 'Enabled' : 'Disabled'}</td></tr>`;
         html += `<tr><th>Items Per Page</th><td>${esc(data.studylistlimit)}</td></tr>`;
         html += `<tr><th>Sample Content</th><td>${data.create_sample_content ? 'Yes' : 'No'}</td></tr>`;
+        if (document.getElementById('wizard-fetch-demo-content')) {
+            html += `<tr><th>Downloaded Demo Content</th><td>${data.fetch_demo_content ? 'Yes' : 'No'}</td></tr>`;
+        }
         html += `<tr><th>AI Assistant</th><td>${data.enable_ai ? 'Enabled' : 'Disabled'}</td></tr>`;
 
         if (data.enable_ai) {
@@ -309,7 +313,13 @@
             const result = await response.json();
 
             if (result.success) {
-                Joomla.renderMessages({ message: [result.message || 'Setup complete!'] });
+                const messages = { message: [result.message || 'Setup complete!'] };
+
+                if (result.data?.warning) {
+                    messages.warning = [result.data.warning];
+                }
+
+                Joomla.renderMessages(messages);
 
                 if (result.data?.redirect) {
                     setTimeout(() => {

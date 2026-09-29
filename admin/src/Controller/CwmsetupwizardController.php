@@ -133,6 +133,7 @@ class CwmsetupwizardController extends BaseController
             'primary_media'         => \in_array($data['primary_media'] ?? '', ['local', 'youtube', 'vimeo', 'direct'], true)
                 ? $data['primary_media'] : 'local',
             'create_sample_content' => !empty($data['create_sample_content']),
+            'fetch_demo_content'    => !empty($data['fetch_demo_content']),
             'use_default_images'    => !empty($data['use_default_images']),
             'enable_ai'             => !empty($data['enable_ai']),
             'ai_provider'           => \in_array($data['ai_provider'] ?? '', ['claude', 'openai', 'gemini'], true)
@@ -183,9 +184,25 @@ class CwmsetupwizardController extends BaseController
                 ? Text::_('JBS_WIZARD_SETUP_SUCCESS_CAMPUS')
                 : Text::_('JBS_WIZARD_SETUP_SUCCESS');
 
+            // Soft-failure has to be visible, not just non-fatal — an admin
+            // who asked for the demo content and didn't get it needs to know,
+            // even though the rest of setup succeeded regardless.
+            $demoStatus = $summary['demo_content']['status'] ?? null;
+            $warning    = null;
+
+            if ($demoStatus === 'failed') {
+                $warning = Text::sprintf(
+                    'JBS_WIZARD_DEMO_CONTENT_FAILED',
+                    $summary['demo_content']['reason'] ?? 'unknown'
+                );
+            } elseif ($demoStatus === 'skipped' && ($summary['demo_content']['reason'] ?? '') === 'already_imported') {
+                $warning = Text::_('JBS_WIZARD_DEMO_CONTENT_ALREADY');
+            }
+
             $this->sendJsonResponse(true, $message, [
                 'summary'  => $summary,
                 'redirect' => $redirect,
+                'warning'  => $warning,
             ]);
         } catch (\RuntimeException $e) {
             $this->sendJsonResponse(false, $e->getMessage() ?: Text::_('JERROR_AN_ERROR_HAS_OCCURRED'));

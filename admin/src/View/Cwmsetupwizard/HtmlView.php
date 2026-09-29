@@ -46,6 +46,16 @@ class HtmlView extends BaseHtmlView
     public array $presets = [];
 
     /**
+     * Whether a `proclaim-demo-content` release is pinned in this package —
+     * gates whether the "download rich demo content" checkbox is shown at
+     * all, per {@see \CWM\Component\Proclaim\Administrator\Model\CwmsetupwizardModel::isRemoteDemoContentAvailable()}.
+     *
+     * @var    bool
+     * @since  __DEPLOY_VERSION__
+     */
+    public bool $demoContentAvailable = false;
+
+    /**
      * Display the setup wizard.
      *
      * @param   string|null  $tpl  Layout override.
@@ -61,8 +71,9 @@ class HtmlView extends BaseHtmlView
         /** @var \CWM\Component\Proclaim\Administrator\Model\CwmsetupwizardModel $model */
         $model = $this->getModel();
 
-        $this->currentState = $model->getCurrentState();
-        $this->presets      = CwmsetupwizardHelper::PRESETS;
+        $this->currentState         = $model->getCurrentState();
+        $this->presets              = CwmsetupwizardHelper::PRESETS;
+        $this->demoContentAvailable = $model->isRemoteDemoContentAvailable();
 
         // Bulk-register all JBS_* language keys for JavaScript
         CwmlangHelper::registerAllForJs();
