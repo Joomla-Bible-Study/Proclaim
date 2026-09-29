@@ -489,30 +489,44 @@ class CwmimportremoverTest extends IntegrationTestCase
         $tag        = 'cwm2196-tag-' . bin2hex(random_bytes(4));
         Cwmimportmanifest::recordRow($tag, '#__bsms_locations', $locationId);
 
-        $raw = $this->db->setQuery(
+        $exists = (int) $this->db->setQuery(
             $this->db->createQuery()
-                ->select($this->db->quoteName('params'))
+                ->select('COUNT(*)')
                 ->from($this->db->quoteName('#__extensions'))
                 ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('com_proclaim'))
                 ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('component'))
-        )->loadResult();
+        )->loadResult() > 0;
 
-        // A fresh install's component params can be an empty string — the
-        // same shape isInGroupMapping() itself guards against with a
-        // try/catch, since json_decode('') is not valid JSON.
-        $params = trim((string) $raw) === '' ? [] : (json_decode((string) $raw, true) ?: []);
+        $encodedParams = json_encode(['location_group_mapping' => json_encode([(string) $locationId => [2]])]);
 
-        $params['location_group_mapping']  = json_encode([(string) $locationId => [2]]);
-        $encodedParams                     = json_encode($params);
-
-        $this->db->setQuery(
-            $this->db->createQuery()
-                ->update($this->db->quoteName('#__extensions'))
-                ->set($this->db->quoteName('params') . ' = :params')
-                ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('com_proclaim'))
-                ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('component'))
-                ->bind(':params', $encodedParams, \Joomla\Database\ParameterType::STRING)
-        )->execute();
+        if ($exists) {
+            $this->db->setQuery(
+                $this->db->createQuery()
+                    ->update($this->db->quoteName('#__extensions'))
+                    ->set($this->db->quoteName('params') . ' = :params')
+                    ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('com_proclaim'))
+                    ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('component'))
+                    ->bind(':params', $encodedParams, \Joomla\Database\ParameterType::STRING)
+            )->execute();
+        } else {
+            // A bare-SQL harness (this project's own CI DB build among them)
+            // loads Proclaim's install.mysql.utf8.sql directly, never through
+            // Joomla's real installer — so no #__extensions row for the
+            // component exists at all. isInGroupMapping() reads via this same
+            // table, so the test needs one to update against either way.
+            $row = (object) [
+                'name'           => 'com_proclaim',
+                'type'           => 'component',
+                'element'        => 'com_proclaim',
+                'folder'         => '',
+                'client_id'      => 1,
+                'enabled'        => 1,
+                'manifest_cache' => '',
+                'params'         => $encodedParams,
+                'custom_data'    => '',
+            ];
+            $this->db->insertObject('#__extensions', $row, 'extension_id');
+        }
 
         $plan = (new Cwmimportremover())->plan($tag);
 
