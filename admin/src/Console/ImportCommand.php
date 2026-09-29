@@ -172,9 +172,10 @@ final class ImportCommand extends AbstractCommand
         }
 
         $output->writeln(\sprintf(
-            '<info>Imported</info> %d teacher(s), %d serie(s), %d message(s), %d media file(s), %d file(s).',
+            '<info>Imported</info> %d teacher(s), %d serie(s), %d location(s), %d message(s), %d media file(s), %d file(s).',
             $summary['teachers'],
             $summary['series'],
+            $summary['locations'],
             $summary['messages'],
             $summary['mediafiles'],
             $summary['files']

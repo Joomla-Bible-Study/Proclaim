@@ -132,6 +132,46 @@ class CwmimportremoverTest extends IntegrationTestCase
         return (int) $this->db->insertid();
     }
 
+    private function seedLocation(bool $modified = false): int
+    {
+        $text = $this->unique();
+        $row  = (object) [
+            'location_text' => $text,
+            'language'      => '*',
+            'sortname1'     => '',
+            'sortname2'     => '',
+            'sortname3'     => '',
+            'params'        => '',
+            'metakey'       => '',
+            'metadesc'      => '',
+            'metadata'      => '',
+            'xreference'    => '',
+            'modified_by'   => $modified ? 99 : 0,
+        ];
+        $this->db->insertObject('#__bsms_locations', $row, 'id');
+
+        return (int) $this->db->insertid();
+    }
+
+    /**
+     * A minimal server row, only for exercising the "location used by a
+     * server" external-reference check — not a real, playable server.
+     */
+    private function seedServerAtLocation(int $locationId): int
+    {
+        $name = $this->unique();
+        $row  = (object) [
+            'server_name' => $name,
+            'type'        => 'legacy',
+            'location_id' => $locationId,
+            'params'      => '{}',
+            'media'       => '{}',
+        ];
+        $this->db->insertObject('#__bsms_servers', $row, 'id');
+
+        return (int) $this->db->insertid();
+    }
+
     /**
      * @return  string  A fresh, manifest-recorded tag for teacher/series/study
      *                   ids created together, with the study crediting the teacher.
@@ -157,6 +197,20 @@ class CwmimportremoverTest extends IntegrationTestCase
         foreach ($plan as $entry) {
             if ($entry['table'] === $table && $entry['id'] === $id) {
                 return $entry['action'];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param   array  $plan  As returned by {@see Cwmimportremover::plan()}.
+     */
+    private function entryFor(array $plan, string $table, int $id): ?array
+    {
+        foreach ($plan as $entry) {
+            if ($entry['table'] === $table && $entry['id'] === $id) {
+                return $entry;
             }
         }
 
@@ -373,5 +427,113 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->assertNotNull($fileEntry);
         $this->assertSame('delete', $fileEntry['action']);
         $this->assertNull($fileEntry['table']);
+    }
+
+    public function testPlanDeletesALocationAndItsStudyWhenBothWereImportedTogether(): void
+    {
+        $teacherId  = $this->seedTeacher();
+        $seriesId   = $this->seedSeries($teacherId);
+        $locationId = $this->seedLocation();
+        $studyId    = $this->seedStudy($seriesId);
+        $this->db->setQuery(
+            $this->db->createQuery()
+                ->update($this->db->quoteName('#__bsms_studies'))
+                ->set($this->db->quoteName('location_id') . ' = ' . $locationId)
+                ->where($this->db->quoteName('id') . ' = ' . $studyId)
+        )->execute();
+
+        $tag = $this->seedCleanSet($teacherId, $seriesId, $studyId);
+        Cwmimportmanifest::recordRow($tag, '#__bsms_locations', $locationId);
+
+        $plan = (new Cwmimportremover())->plan($tag);
+
+        $this->assertSame('delete', $this->actionFor($plan, '#__bsms_locations', $locationId));
+        $this->assertSame('delete', $this->actionFor($plan, '#__bsms_studies', $studyId));
+    }
+
+    /**
+     * The regression case this issue exists for: before locationHasExternalContent()
+     * excluded this import's own deletable studies, a location referenced by
+     * ANY study — including one this same import created — would have looked
+     * identical to a location a real site admin depends on.
+     */
+    public function testPlanKeepsALocationUsedByAServerOutsideTheImport(): void
+    {
+        $teacherId  = $this->seedTeacher();
+        $seriesId   = $this->seedSeries($teacherId);
+        $locationId = $this->seedLocation();
+        $studyId    = $this->seedStudy($seriesId);
+        $tag        = $this->seedCleanSet($teacherId, $seriesId, $studyId);
+        Cwmimportmanifest::recordRow($tag, '#__bsms_locations', $locationId);
+
+        $this->seedServerAtLocation($locationId);
+
+        $plan = (new Cwmimportremover())->plan($tag);
+
+        $locationEntry = $this->entryFor($plan, '#__bsms_locations', $locationId);
+
+        $this->assertNotNull($locationEntry);
+        $this->assertSame('keep', $locationEntry['action']);
+        $this->assertSame('used by a server', $locationEntry['reason']);
+
+        // A location kept for its own reason must not stop the rest of the
+        // clean set — teacher, series and study — from deleting normally.
+        $this->assertSame('delete', $this->actionFor($plan, '#__bsms_studies', $studyId));
+        $this->assertSame('delete', $this->actionFor($plan, '#__bsms_series', $seriesId));
+        $this->assertSame('delete', $this->actionFor($plan, '#__bsms_teachers', $teacherId));
+    }
+
+    public function testPlanKeepsALocationInTheGroupMapping(): void
+    {
+        $locationId = $this->seedLocation();
+        $tag        = 'cwm2196-tag-' . bin2hex(random_bytes(4));
+        Cwmimportmanifest::recordRow($tag, '#__bsms_locations', $locationId);
+
+        $exists = (int) $this->db->setQuery(
+            $this->db->createQuery()
+                ->select('COUNT(*)')
+                ->from($this->db->quoteName('#__extensions'))
+                ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('com_proclaim'))
+                ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('component'))
+        )->loadResult() > 0;
+
+        $encodedParams = json_encode(['location_group_mapping' => json_encode([(string) $locationId => [2]])]);
+
+        if ($exists) {
+            $this->db->setQuery(
+                $this->db->createQuery()
+                    ->update($this->db->quoteName('#__extensions'))
+                    ->set($this->db->quoteName('params') . ' = :params')
+                    ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('com_proclaim'))
+                    ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('component'))
+                    ->bind(':params', $encodedParams, \Joomla\Database\ParameterType::STRING)
+            )->execute();
+        } else {
+            // A bare-SQL harness (this project's own CI DB build among them)
+            // loads Proclaim's install.mysql.utf8.sql directly, never through
+            // Joomla's real installer — so no #__extensions row for the
+            // component exists at all. isInGroupMapping() reads via this same
+            // table, so the test needs one to update against either way.
+            $row = (object) [
+                'name'           => 'com_proclaim',
+                'type'           => 'component',
+                'element'        => 'com_proclaim',
+                'folder'         => '',
+                'client_id'      => 1,
+                'enabled'        => 1,
+                'manifest_cache' => '',
+                'params'         => $encodedParams,
+                'custom_data'    => '',
+            ];
+            $this->db->insertObject('#__extensions', $row, 'extension_id');
+        }
+
+        $plan = (new Cwmimportremover())->plan($tag);
+
+        $locationEntry = $this->entryFor($plan, '#__bsms_locations', $locationId);
+
+        $this->assertNotNull($locationEntry);
+        $this->assertSame('keep', $locationEntry['action']);
+        $this->assertSame('referenced in the location group mapping', $locationEntry['reason']);
     }
 }

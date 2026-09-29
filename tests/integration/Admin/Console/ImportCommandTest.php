@@ -195,7 +195,7 @@ class ImportCommandTest extends IntegrationTestCase
         $importer->expects($this->once())
             ->method('import')
             ->with('my-tag', $this->isArray(), \dirname($this->fixturePayloadPath()))
-            ->willReturn(['teachers' => 1, 'series' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0]);
+            ->willReturn(['teachers' => 1, 'series' => 0, 'locations' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0]);
 
         $command = $this->newCommand($importer);
         $output  = new BufferedOutput();
@@ -214,7 +214,7 @@ class ImportCommandTest extends IntegrationTestCase
         $userId = $this->createUser('cwm2188userid' . bin2hex(random_bytes(3)));
 
         $importer = $this->createStub(Cwmcontentimporter::class);
-        $importer->method('import')->willReturn(['teachers' => 0, 'series' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0]);
+        $importer->method('import')->willReturn(['teachers' => 0, 'series' => 0, 'locations' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0]);
 
         $command = $this->newCommand($importer);
         $output  = new BufferedOutput();
@@ -252,7 +252,7 @@ class ImportCommandTest extends IntegrationTestCase
         $userId = $this->createUser('cwm2188summary' . bin2hex(random_bytes(3)));
 
         $importer = $this->createStub(Cwmcontentimporter::class);
-        $importer->method('import')->willReturn(['teachers' => 2, 'series' => 1, 'messages' => 3, 'mediafiles' => 5, 'files' => 4]);
+        $importer->method('import')->willReturn(['teachers' => 2, 'series' => 1, 'locations' => 6, 'messages' => 3, 'mediafiles' => 5, 'files' => 4]);
 
         $command = $this->newCommand($importer);
         $output  = new BufferedOutput();
@@ -266,6 +266,7 @@ class ImportCommandTest extends IntegrationTestCase
         $text = $output->fetch();
         $this->assertStringContainsString('2 teacher(s)', $text);
         $this->assertStringContainsString('1 serie(s)', $text);
+        $this->assertStringContainsString('6 location(s)', $text);
         $this->assertStringContainsString('3 message(s)', $text);
         $this->assertStringContainsString('5 media file(s)', $text);
         $this->assertStringContainsString('4 file(s)', $text);
@@ -289,7 +290,7 @@ class ImportCommandTest extends IntegrationTestCase
         $this->ensureASuperAdminGroupExists();
 
         $importer = $this->createStub(Cwmcontentimporter::class);
-        $importer->method('import')->willReturn(['teachers' => 0, 'series' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0]);
+        $importer->method('import')->willReturn(['teachers' => 0, 'series' => 0, 'locations' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0]);
 
         $command = $this->newCommand($importer);
         $output  = new BufferedOutput();

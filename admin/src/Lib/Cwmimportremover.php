@@ -61,6 +61,7 @@ class Cwmimportremover
     private const array TABLE_MODELS = [
         '#__bsms_mediafiles' => 'Cwmmediafile',
         '#__bsms_studies'    => 'Cwmmessage',
+        '#__bsms_locations'  => 'Cwmlocation',
         '#__bsms_series'     => 'Cwmserie',
         '#__bsms_teachers'   => 'Cwmteacher',
     ];
@@ -69,8 +70,10 @@ class Cwmimportremover
      * Models whose `canDelete()` requires the record to already be trashed
      * (`published == -2`) — {@see CwmteacherModel::canDelete()},
      * {@see CwmserieModel::canDelete()}, {@see CwmmediafileModel::canDelete()}.
-     * `CwmmessageModel` has no override and uses core's ACL-only default, so
-     * it needs no trash step.
+     * `CwmmessageModel` and `CwmlocationModel` have no override and use
+     * core's ACL-only default, so neither needs a trash step —
+     * `CwmlocationModel::delete()` guards itself a different way instead
+     * (see {@see deleteRow()}'s try/catch and {@see locationHasExternalContent()}).
      *
      * @var string[]
      * @since  __DEPLOY_VERSION__
@@ -150,6 +153,16 @@ class Cwmimportremover
             }
         }
 
+        // Locations are planned after studies for the same reason series and
+        // teachers are: a location is referenced BY a study (location_id),
+        // never the other way round, so whether a location is still used
+        // depends on which studies are actually going away.
+        foreach ($rows['#__bsms_locations'] ?? [] as $id) {
+            $reason = $this->wasModified('#__bsms_locations', $id)
+                ?? $this->locationHasExternalContent($id, $deletableStudyIds);
+            $plan[] = $this->decision('#__bsms_locations', $id, $reason);
+        }
+
         $deletableSerieIds = [];
 
         foreach ($rows['#__bsms_series'] ?? [] as $id) {
@@ -191,6 +204,7 @@ class Cwmimportremover
         $removed = [
             '#__bsms_mediafiles' => 0,
             '#__bsms_studies'    => 0,
+            '#__bsms_locations'  => 0,
             '#__bsms_series'     => 0,
             '#__bsms_teachers'   => 0,
             'files'              => 0,
@@ -216,7 +230,20 @@ class Cwmimportremover
             $table = $entry['table'];
             $id    = $entry['id'];
 
-            if ($this->deleteRow($table, $id)) {
+            // CwmlocationModel::delete() throws \RuntimeException rather than
+            // returning false when a location is in use — locationHasExternalContent()
+            // in plan() is meant to catch every such case first, but this catch is
+            // the backstop: without it, one throw here would abort the whole loop
+            // and leave every row after it un-deleted and still in the manifest.
+            try {
+                $deleted = $this->deleteRow($table, $id);
+            } catch (\RuntimeException $e) {
+                $kept[] = ['table' => $table, 'id' => $id, 'file' => null, 'reason' => $e->getMessage()];
+
+                continue;
+            }
+
+            if ($deleted) {
                 Cwmimportmanifest::clearRow($tag, $table, $id);
                 $removed[$table]++;
             } else {
@@ -387,6 +414,109 @@ class Cwmimportremover
             $deletableMediaFileIds,
             'has media files'
         );
+    }
+
+    /**
+     * Mirrors {@see CwmlocationModel::assertLocationUnused()} — the same six
+     * tables it checks before allowing a location to trash or delete, plus
+     * the group-mapping check. Kept in step deliberately: `deleteRow()`
+     * calling `CwmlocationModel::delete()` on a location this check missed
+     * would throw instead of just failing, which is exactly the gap
+     * `execute()`'s try/catch exists to catch, not to rely on routinely.
+     *
+     * Only studies get the "excluding this import's own deletable rows"
+     * treatment — this importer has no `series`/`podcast`/`servers`/
+     * `templates`/`templatecode` import section, so any reference from one
+     * of those is necessarily external, full stop.
+     *
+     * @param   int    $locationId          The location's id.
+     * @param   int[]  $deletableStudyIds   Study ids this same run has already
+     *                                      decided to delete — see {@see plan()}.
+     *
+     * @return  ?string  A reason to keep the location, or null.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function locationHasExternalContent(int $locationId, array $deletableStudyIds): ?string
+    {
+        $reason = $this->hasExternalReference(
+            '#__bsms_studies',
+            'location_id',
+            $locationId,
+            'id',
+            $deletableStudyIds,
+            'used by a message outside this import'
+        );
+
+        if ($reason !== null) {
+            return $reason;
+        }
+
+        foreach ([
+            '#__bsms_series'       => 'used by a series',
+            '#__bsms_podcast'      => 'used by a podcast',
+            '#__bsms_servers'      => 'used by a server',
+            '#__bsms_templates'    => 'used by a template',
+            '#__bsms_templatecode' => 'used by template code',
+        ] as $table => $tableReason) {
+            if ($this->countWhere($table, 'location_id', $locationId) > 0) {
+                return $tableReason;
+            }
+        }
+
+        if ($this->isInGroupMapping($locationId)) {
+            return 'referenced in the location group mapping';
+        }
+
+        return null;
+    }
+
+    /**
+     * Mirrors {@see CwmlocationModel::isInGroupMapping()} — not reusable
+     * directly (private on that model), and decoded here rather than
+     * string-matched against the stored JSON: a LIKE pattern against a JSON
+     * blob breaks the moment `json_encode()`'s own escaping doesn't match
+     * what was searched for, so this decodes and checks the real key instead.
+     *
+     * @param   int  $locationId  The location's id.
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function isInGroupMapping(int $locationId): bool
+    {
+        $db = $this->db();
+
+        $raw = $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName('params'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+        )->loadResult();
+
+        if ($raw === null) {
+            return false;
+        }
+
+        try {
+            $params = json_decode((string) $raw, true, 512, \JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return false;
+        }
+
+        $mapping = $params['location_group_mapping'] ?? '{}';
+
+        if (\is_string($mapping)) {
+            try {
+                $mapping = json_decode($mapping, true, 512, \JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                return false;
+            }
+        }
+
+        return \is_array($mapping) && \array_key_exists((string) $locationId, $mapping);
     }
 
     /**
