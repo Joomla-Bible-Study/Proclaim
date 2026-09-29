@@ -40,9 +40,10 @@ class CwmHttpTimeoutTest extends ProclaimTestCase
     public static function httpCallerProvider(): array
     {
         return [
-            'podcast index' => ['admin/src/Helper/CwmpodcastIndexHelper.php'],
-            'addon base'    => ['admin/src/Addons/CWMAddon.php'],
-            'ai helper'     => ['admin/src/Helper/CwmaiHelper.php'],
+            'podcast index'      => ['admin/src/Helper/CwmpodcastIndexHelper.php'],
+            'addon base'         => ['admin/src/Addons/CWMAddon.php'],
+            'ai helper'          => ['admin/src/Helper/CwmaiHelper.php'],
+            'demo content fetch' => ['admin/src/Lib/Cwmdemocontentfetcher.php'],
         ];
     }
 
@@ -91,8 +92,9 @@ class CwmHttpTimeoutTest extends ProclaimTestCase
     public static function timeoutConstantProvider(): array
     {
         return [
-            'podcast index' => ['admin/src/Helper/CwmpodcastIndexHelper.php', 'HTTP_TIMEOUT'],
-            'addon base'    => ['admin/src/Addons/CWMAddon.php', 'HTTP_TIMEOUT'],
+            'podcast index'      => ['admin/src/Helper/CwmpodcastIndexHelper.php', 'HTTP_TIMEOUT'],
+            'addon base'         => ['admin/src/Addons/CWMAddon.php', 'HTTP_TIMEOUT'],
+            'demo content fetch' => ['admin/src/Lib/Cwmdemocontentfetcher.php', 'HTTP_TIMEOUT'],
         ];
     }
 

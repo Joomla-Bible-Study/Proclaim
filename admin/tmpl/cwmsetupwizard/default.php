@@ -327,6 +327,16 @@ use Joomla\CMS\Language\Text;
                         <small class="text-muted"><?php echo Text::_('JBS_WIZARD_CREATE_SAMPLE_DESC'); ?></small>
                     </label>
                 </div>
+
+                <?php if ($this->demoContentAvailable) : ?>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-fetch-demo-content">
+                    <label class="form-check-label" for="wizard-fetch-demo-content">
+                        <strong><?php echo Text::_('JBS_WIZARD_FETCH_DEMO_CONTENT'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_FETCH_DEMO_CONTENT_DESC'); ?></small>
+                    </label>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

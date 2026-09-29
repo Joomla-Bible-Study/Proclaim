@@ -13,7 +13,9 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmdemocontentfetcher;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmimportmanifest;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -42,6 +44,20 @@ class CwmsetupwizardModel extends BaseDatabaseModel
      * @since  __DEPLOY_VERSION__
      */
     private const string SAMPLE_CONTENT_TAG = 'wizard-sample';
+
+    /**
+     * The manifest tag {@see fetchRemoteDemoContent()} records its rows
+     * under — fixed, for the same reason as {@see SAMPLE_CONTENT_TAG}, and
+     * deliberately distinct from both that tag and from
+     * `build/seed-demo-content.php`'s `proclaim-demo-content` tag (a
+     * different, thinner, locally-fixtured import used only for E2E
+     * seeding) — sharing either would make this import refuse itself on a
+     * site the other path already touched.
+     *
+     * @var string
+     * @since  __DEPLOY_VERSION__
+     */
+    private const string DEMO_CONTENT_TAG = 'wizard-remote-demo-content';
 
     /**
      * Load the current admin params as a Registry.
@@ -314,6 +330,22 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         // Update template filter visibility based on ministry style
         $this->updateTemplateFilters($data);
 
+        // Remote demo content — run last, after everything essential above
+        // has already been created/saved, and never let it stop the wizard:
+        // an admin who cannot reach the internet (or whose pinned release
+        // has gone stale) must still finish setup. See
+        // Cwmdemocontentfetcher::fetchAndImport()'s own docblock for why it
+        // already can't throw; the try/catch here is deliberate
+        // defense-in-depth on top of that, not reliance on it.
+        if (!empty($data['fetch_demo_content'])) {
+            try {
+                $summary['demo_content'] = $this->fetchRemoteDemoContent();
+            } catch (\Throwable $e) {
+                CwmDebug::error('Remote demo content step raised unexpectedly', $e, 'democontent');
+                $summary['demo_content'] = ['status' => 'failed', 'reason' => 'unexpected_error'];
+            }
+        }
+
         // Mark wizard complete
         $params->set('setup_wizard_complete', 1);
 
@@ -537,6 +569,34 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         }
 
         return $ids;
+    }
+
+    /**
+     * Whether the setup wizard should offer the "download rich demo
+     * content" option at all — hidden, not shown-but-inert, when no
+     * `proclaim-demo-content` release is pinned yet (see
+     * {@see Cwmdemocontentfetcher::PINNED_RELEASE}).
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function isRemoteDemoContentAvailable(): bool
+    {
+        return (new Cwmdemocontentfetcher())->isReleaseAvailable();
+    }
+
+    /**
+     * Fetch and import the hosted `proclaim-demo-content` release.
+     *
+     * @return  array{status: string, reason?: string, counts?: array}  See
+     *          {@see Cwmdemocontentfetcher::fetchAndImport()}.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function fetchRemoteDemoContent(): array
+    {
+        return (new Cwmdemocontentfetcher())->fetchAndImport(self::DEMO_CONTENT_TAG);
     }
 
     /**
