@@ -26,9 +26,8 @@ use Joomla\Http\HttpFactory;
  * Fetches the hosted `proclaim-demo-content` archive, verifies it, and hands
  * it to {@see Cwmcontentimporter}.
  *
- * This is the network leg of #2145: an admin's own site is untrusted-network
- * input the moment a byte of it comes from a URL, so every step here follows
- * the epic's non-negotiables in order —
+ * A site fetching this over the network is untrusted input the moment a byte
+ * of it comes from a URL, so every step here follows a strict order —
  *
  * 1. the release (URL + sha256) is {@see PINNED_RELEASE}, a constant shipped
  *    inside this package, never fetched from the same host serving the
@@ -64,8 +63,7 @@ final class Cwmdemocontentfetcher
      *
      * Deliberately `null` on this release — `proclaim-demo-content`
      * (https://github.com/Joomla-Bible-Study/proclaim-demo-content) has no
-     * published archive yet (#2178 is still blocked on a real YouTube URL
-     * and ARS cataloguing). A future release process updates this constant
+     * published archive yet. A future release process updates this constant
      * exactly the way a submodule pin is bumped: to
      *
      *     private const ?array PINNED_RELEASE = [
