@@ -497,7 +497,11 @@ class CwmimportremoverTest extends IntegrationTestCase
                 ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('component'))
         )->loadResult();
 
-        $params                            = json_decode((string) $raw, true, 512, \JSON_THROW_ON_ERROR) ?: [];
+        // A fresh install's component params can be an empty string — the
+        // same shape isInGroupMapping() itself guards against with a
+        // try/catch, since json_decode('') is not valid JSON.
+        $params = trim((string) $raw) === '' ? [] : (json_decode((string) $raw, true) ?: []);
+
         $params['location_group_mapping']  = json_encode([(string) $locationId => [2]]);
         $encodedParams                     = json_encode($params);
 
