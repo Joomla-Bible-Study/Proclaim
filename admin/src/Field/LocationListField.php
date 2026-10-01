@@ -195,7 +195,8 @@ class LocationListField extends ListField
                     $db->setQuery($query);
                     $name = $db->loadResult() ?: Text::_('JBS_CMN_LOCATION');
 
-                    $html  = '<input type="text" value="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '" '
+                    $html  = '<input type="text" id="' . $this->id . '" '
+                           . 'value="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '" '
                            . 'class="form-control" readonly disabled />';
                     $html .= '<input type="hidden" name="' . $this->name . '" '
                            . 'value="' . $locationId . '" />';
@@ -205,6 +206,14 @@ class LocationListField extends ListField
             }
         }
 
-        return parent::getInput();
+        // getOptions() runs before collectLayoutData() captures $this->value --
+        // parent::getInput() (ListField) does the reverse, which would snapshot
+        // the stale value and leave the multi-campus auto-default (set as a
+        // side effect inside getOptions()) invisible in the rendered dropdown.
+        $options          = $this->getOptions();
+        $data             = $this->collectLayoutData();
+        $data['options']  = $options;
+
+        return $this->getRenderer($this->layout)->render($data);
     }
 }

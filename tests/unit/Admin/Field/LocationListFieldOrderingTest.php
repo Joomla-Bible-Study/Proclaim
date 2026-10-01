@@ -41,10 +41,10 @@ class LocationListFieldOrderingTest extends ProclaimTestCase
         );
 
         $getOptionsAt     = strpos($body, '$this->getOptions()');
-        $collectDataAt    = strpos($body, 'collectLayoutData()');
+        $collectDataAt    = strpos($body, '$this->collectLayoutData()');
 
         $this->assertNotFalse($getOptionsAt, 'Expected a $this->getOptions() call in getInput()');
-        $this->assertNotFalse($collectDataAt, 'Expected a collectLayoutData() call in getInput()');
+        $this->assertNotFalse($collectDataAt, 'Expected a $this->collectLayoutData() call in getInput()');
         $this->assertLessThan(
             $collectDataAt,
             $getOptionsAt,
@@ -58,7 +58,7 @@ class LocationListFieldOrderingTest extends ProclaimTestCase
         $source = (string) file_get_contents((new \ReflectionClass(LocationListField::class))->getFileName());
 
         $this->assertStringContainsString(
-            'id="' . '\' . $this->id . \'' . '"',
+            'id="\' . $this->id . \'"',
             $source,
             'The read-only single-campus <input> must carry an id, or the field\'s own <label for="..."> '
                 . 'points at a nonexistent element'
