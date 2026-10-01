@@ -73,6 +73,25 @@ class ServerListField extends ListField
             ->where($db->quoteName('published') . ' = 1')
             ->order($db->quoteName('server_name') . ' ASC');
 
+        // Legacy servers are excluded from the picker -- kept reachable for
+        // already-migrated 9.x data, but a new media file should not be
+        // pointed at one. The field's own currently-bound value is always
+        // kept in, though: otherwise an already-legacy-attached record's
+        // <select> would fall back to its first option on render, silently
+        // reassigning (or blanking) server_id the moment the record is next
+        // saved -- CwmmediafileModel::save() enforces the same rule server-
+        // side, this just keeps the dropdown truthful.
+        $currentId = (int) $this->value;
+
+        if ($currentId > 0) {
+            $query->andWhere(
+                [$db->quoteName('type') . ' != ' . $db->quote('legacy'), $db->quoteName('id') . ' = ' . $currentId],
+                'OR'
+            );
+        } else {
+            $query->where($db->quoteName('type') . ' != ' . $db->quote('legacy'));
+        }
+
         // Optional `capability` attribute restricts the list to servers whose
         // addon reports that capability — so forms don't hardcode platform
         // types. Currently only "playlists" is wired (see CWMAddon).

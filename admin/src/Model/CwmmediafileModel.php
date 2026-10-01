@@ -136,7 +136,7 @@ class CwmmediafileModel extends AdminModel
      *
      * @since   7.0
      */
-    public function save($data): bool
+    public function save($data, bool $allowLegacyServer = false): bool
     {
         if ($data) {
             // Implode only if they selected at least one podcast. Otherwise, just clear the podcast_id field
@@ -156,6 +156,44 @@ class CwmmediafileModel extends AdminModel
             $table = Factory::getApplication()->bootComponent('com_proclaim')
                 ->getMVCFactory()->createTable('Cwmserver', 'Administrator');
             $table->load($data['server_id']);
+
+            // Legacy servers (CWMAddon::getInstance('legacy')) stay reachable
+            // for already-migrated 9.x data (see CwmserverMigrationHelper),
+            // but a NEW assignment onto one works against the migration
+            // runway this is building. "New assignment" means a new record,
+            // or an existing one being pointed at a different server than it
+            // already had -- re-saving an already-legacy-attached record
+            // unchanged (editing its title, say) is not a new assignment and
+            // must keep working: legacy servers still work normally until
+            // migrated.
+            // $allowLegacyServer is a method parameter, not a $data key,
+            // specifically so it can never be set by anything reachable from
+            // form or API input -- only a trusted internal caller (e.g. the
+            // demo-content importer, which deliberately seeds legacy-server
+            // media because that addon is the only one verified side-effect-
+            // free on save) can opt in.
+            if (!$allowLegacyServer && $table->type === 'legacy') {
+                $recordId    = (int) ($data['id'] ?? 0);
+                $oldServerId = 0;
+
+                if ($recordId > 0) {
+                    $db = Factory::getContainer()->get(DatabaseInterface::class);
+                    $db->setQuery(
+                        $db->createQuery()
+                            ->select($db->quoteName('server_id'))
+                            ->from($db->quoteName('#__bsms_mediafiles'))
+                            ->where($db->quoteName('id') . ' = :legacyCheckId')
+                            ->bind(':legacyCheckId', $recordId, ParameterType::INTEGER)
+                    );
+                    $oldServerId = (int) $db->loadResult();
+                }
+
+                if ($oldServerId !== (int) $data['server_id']) {
+                    $this->setError(Text::_('JBS_MED_SERVER_LEGACY_NOT_SELECTABLE'));
+
+                    return false;
+                }
+            }
 
             $path = new Registry();
             $path->loadString($table->params);
@@ -690,12 +728,28 @@ class CwmmediafileModel extends AdminModel
             $server_id             = $this->getState('mediafile.server_id');
             $this->data->server_id = empty($server_id) ? $this->data->server_id : $server_id;
 
-            // For new items with no server, apply admin default
+            // For new items with no server, apply admin default -- unless that
+            // default is itself a legacy server, which save() would then
+            // refuse. A stale default pointing at a since-deprecated server
+            // is exactly the unmigrated-config case the picker (ServerList-
+            // Field) already excludes from selection for new records.
             if (empty($this->data->server_id) && empty($this->data->id)) {
                 $defaultServer = Cwmparams::getAdmin()->params->get('server');
 
                 if ($defaultServer !== null && $defaultServer !== '-1' && $defaultServer !== '') {
-                    $this->data->server_id = (int) $defaultServer;
+                    $defaultServerId = (int) $defaultServer;
+                    $db              = Factory::getContainer()->get(DatabaseInterface::class);
+                    $db->setQuery(
+                        $db->createQuery()
+                            ->select($db->quoteName('type'))
+                            ->from($db->quoteName('#__bsms_servers'))
+                            ->where($db->quoteName('id') . ' = :defaultServerId')
+                            ->bind(':defaultServerId', $defaultServerId, ParameterType::INTEGER)
+                    );
+
+                    if ($db->loadResult() !== 'legacy') {
+                        $this->data->server_id = $defaultServerId;
+                    }
                 }
             }
 
