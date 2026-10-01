@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ModalSelectField;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\ParameterType;
@@ -143,5 +144,31 @@ class TeacherDisplayField extends ModalSelectField
         }
 
         return $title ?: $value;
+    }
+
+    /**
+     * Pin the layout's override search path to com_proclaim regardless of
+     * which component is actually handling the current request.
+     *
+     * This field is also reused from site/tmpl/cwmteacher/default.xml, the
+     * "Single Teacher" menu-item type, which the Menu Manager renders under
+     * option=com_menus -- the 'auto' default FileLayout would otherwise
+     * search com_menus's own layout paths instead. Mirrors core's own
+     * dual-use Modal*Field fields, e.g. com_contact's ContactField.
+     *
+     * @param   string  $layoutId  Base name of layout file.
+     *
+     * @return  FileLayout
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    protected function getRenderer($layoutId = 'default')
+    {
+        $layout = parent::getRenderer($layoutId);
+        $layout->setComponent('com_proclaim');
+        $layout->setClient(1);
+
+        return $layout;
     }
 }
