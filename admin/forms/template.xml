@@ -1040,7 +1040,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tsteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteacherlinktype" type="TeacherLinkOptions" default="1" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteacherlinktype" type="LinkOptions" optionsFilter="0,3" default="1" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacherimagerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1052,7 +1052,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tsteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteacherimagelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteacherimagelinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1064,7 +1064,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tsteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteacher-titlelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteacher-titlelinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacherorgnamerow" type="RowOptions" size="1" default="0" label="JBS_TCH_ORG_NAME"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1086,7 +1086,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tsteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteachercardlinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteachercardlinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacheremailrow" type="RowOptions" size="1" default="0" label="JBS_TCH_EMAIL"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1156,7 +1156,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tsteachershortcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteachershortlinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteachershortlinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tscustomrow" type="RowOptions" size="1" default="" label="JBS_TPL_CUSTOM"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1303,7 +1303,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tdteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tdteacherimagelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tdteacherimagelinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tdteacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1315,7 +1315,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tdteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tdteacher-titlelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tdteacher-titlelinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tdteacherorgnamerow" type="RowOptions" size="1" default="0" label="JBS_TCH_ORG_NAME"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1337,7 +1337,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tdteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tdteachercardlinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tdteachercardlinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 
             <field name="tdteacheremailrow" type="RowOptions" size="1" default="0" label="JBS_TCH_EMAIL"
@@ -1643,7 +1643,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sseriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sserieslinktype" type="SeriesLinkOptions" default="1" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sserieslinktype" type="LinkOptions" optionsFilter="0,1" default="1" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sseriesthumbnailrow" type="RowOptions" default="0" label="JBS_SERIES_LIST_THUMBNAIL"
                    description="JBS_SERIES_LIST_THUMBNAIL_DESC"/>
@@ -1655,7 +1655,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sseriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sseriesthumbnaillinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sseriesthumbnaillinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="steacherrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1667,7 +1667,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="steachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="steacherlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="steacherlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="steacherimagerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1679,7 +1679,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="steacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="steacherimagelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="steacherimagelinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="steacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1691,7 +1691,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="steacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="steacher-titlelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="steacher-titlelinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="steachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1703,7 +1703,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="steachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="steachercardlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="steachercardlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdescriptionrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES_DESCRIPTION"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1715,7 +1715,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdescriptionlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdescriptionlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="scustomrow" type="RowOptions" size="1" default="" label="JBS_TPL_CUSTOM"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1818,7 +1818,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sdseriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdserieslinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdserieslinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdseriesthumbnailrow" type="RowOptions" default="0" label="JBS_SERIES_LIST_THUMBNAIL"
                    description="JBS_SERIES_LIST_THUMBNAIL_DESC"/>
@@ -1830,7 +1830,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sdseriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdseriesthumbnaillinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdseriesthumbnaillinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdteacherrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1842,7 +1842,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sdteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdteacherlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdteacherlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdteacherimagerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1854,7 +1854,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sdteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdteacherimagelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdteacherimagelinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdteacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1866,7 +1866,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sdteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdteacher-titlelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdteacher-titlelinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1878,7 +1878,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sdteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdteachercardlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdteachercardlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sddescriptionrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES_DESCRIPTION"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1890,7 +1890,7 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sddescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sddescriptionlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sddescriptionlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 
             <field name="sdcustomrow" type="RowOptions" size="1" default="" label="JBS_TPL_CUSTOM"
