@@ -16,10 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
@@ -53,7 +51,7 @@ class MediaFileField extends ListField
         $studyId = (int) $this->form->getValue('id');
 
         if ($studyId > 0) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $db    = $this->getDatabase();
             $query = $db->createQuery();
             $query->select($db->quoteName(['a.id', 'a.params']));
             $query->from($db->quoteName('#__bsms_mediafiles', 'a'));

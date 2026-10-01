@@ -16,10 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
+use CWM\Component\Proclaim\Administrator\Field\Trait\SearchableFancySelectTrait;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Media Playlists field.
@@ -36,6 +35,8 @@ use Joomla\Database\DatabaseInterface;
  */
 class MediaPlaylistsField extends ListField
 {
+    use SearchableFancySelectTrait;
+
     /**
      * The field type.
      *
@@ -64,14 +65,8 @@ class MediaPlaylistsField extends ListField
     {
         $result = parent::setup($element, $value, $group);
 
-        if ($result && (string) $this->element['searchable'] === 'true') {
-            $this->layout = 'joomla.form.field.list-fancy-select';
-
-            // Reuse the topics-field style so the Choices.js dropdown is not
-            // clipped by parent containers (same asset PodcastsField uses).
-            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-            $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
-            $wa->useStyle('com_proclaim.topics-field');
+        if ($result) {
+            $this->applySearchableFancySelect($element);
         }
 
         return $result;
@@ -89,7 +84,7 @@ class MediaPlaylistsField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $db    = $this->getDatabase();
         $query = $db->createQuery()
             ->select($db->quoteName(['id', 'title']))
             ->from($db->quoteName('#__bsms_playlists'))

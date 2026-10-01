@@ -22,7 +22,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Location List Form Field class for the Proclaim component.
@@ -58,12 +57,12 @@ class LocationListField extends ListField
     protected function getOptions(): array
     {
         $app       = Factory::getApplication();
-        $user      = $app->getIdentity();
+        $user      = $this->getCurrentUser();
         $isAdmin   = $user->authorise('core.admin');
         $enabled   = CwmlocationHelper::isEnabled();
         $currentId = (int) $this->value;
 
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->getDatabase();
 
         // Frontend filter: only locations used by published, accessible messages
         if ($app->isClient('site')) {
@@ -170,7 +169,7 @@ class LocationListField extends ListField
     #[\Override]
     protected function getInput(): string
     {
-        $user    = Factory::getApplication()->getIdentity();
+        $user    = $this->getCurrentUser();
         $enabled = CwmlocationHelper::isEnabled();
 
         $allowGlobal = ((string) ($this->element['global'] ?? '')) === 'true';
@@ -187,7 +186,7 @@ class LocationListField extends ListField
                 // already at this campus.  Never force a campus on existing records
                 // that currently have no location — show the dropdown instead.
                 if ($isNewRecord || $currentVal === $locationId) {
-                    $db    = Factory::getContainer()->get(DatabaseInterface::class);
+                    $db    = $this->getDatabase();
                     $query = $db->createQuery()
                         ->select($db->quoteName('location_text'))
                         ->from($db->quoteName('#__bsms_locations'))

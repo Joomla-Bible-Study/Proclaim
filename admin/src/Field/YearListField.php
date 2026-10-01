@@ -21,7 +21,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Year List Form Field class for the Proclaim component
@@ -61,9 +60,9 @@ class YearListField extends ListField
         }
 
         // Frontend: only years from published, accessible messages
-        $user   = $app->getIdentity();
+        $user   = $this->getCurrentUser();
         $groups = $user->getAuthorisedViewLevels();
-        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $db     = $this->getDatabase();
         $query  = $db->createQuery();
 
         $query->select(
