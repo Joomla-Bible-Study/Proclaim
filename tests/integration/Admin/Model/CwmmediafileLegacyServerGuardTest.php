@@ -283,6 +283,19 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
         $model = $this->createModel();
 
         $this->assertTrue($model->save($this->baseData($legacyId), true));
+
+        // This save() creates a brand-new row via CwmmediafileTable::store(),
+        // which is asset-tracked -- Joomla's asset machinery takes a table
+        // lock, and MySQL implicitly commits the whole transaction (every
+        // savepoint included) the moment that happens. The transactionStart
+        // (true)/rollback(true) pair in setUp()/tearDown() cannot undo this
+        // row; only tracking its id here and deleting it explicitly can. See
+        // the sibling tests' use of insertMediaFile() (which tracks on
+        // insert) for the same reasoning -- this is the one test that
+        // creates its row through save() instead, and had been missing it.
+        $newId = (int) $model->getState($model->getName() . '.id');
+        $this->assertGreaterThan(0, $newId, 'save() must report the new record id');
+        $this->createdMediaFiles[] = $newId;
     }
 
     /**

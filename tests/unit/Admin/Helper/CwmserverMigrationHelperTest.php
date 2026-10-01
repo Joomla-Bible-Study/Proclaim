@@ -1222,14 +1222,29 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $db->transactionStart();
+        // Belt-and-suspenders, not redundant: this bare insertObject() does
+        // not touch an asset-tracked table, but a savepoint-protected
+        // transaction here still is not sufficient on its own to guarantee
+        // cleanup in a long-running shared PHPUnit process -- #2218 found
+        // real "ZZTEST" rows left behind in the dev database from exactly
+        // this test despite the transactionStart()/rollback() pair below.
+        // Deleting the row explicitly is what actually guarantees cleanup.
+        $db->transactionStart(true);
+        $id = 0;
 
         try {
             $id = CwmserverMigrationHelper::createServerForType('local', 'ZZTEST Direct Call ' . uniqid());
 
             $this->assertGreaterThan(0, $id, 'must return a valid new server id -- see #1538');
         } finally {
-            $db->transactionRollback();
+            $db->transactionRollback(true);
+
+            if ($id > 0) {
+                $db->setQuery(
+                    'DELETE FROM ' . $db->quoteName('#__bsms_servers')
+                    . ' WHERE ' . $db->quoteName('id') . ' = ' . $id
+                )->execute();
+            }
         }
     }
 
