@@ -190,7 +190,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
     private function sectionRowId(string $section): int
     {
         $this->db->setQuery(
-            $this->db->getQuery(true)
+            $this->db->createQuery()
                 ->select($this->db->quoteName('id'))
                 ->from($this->db->quoteName('#__assets'))
                 ->where($this->db->quoteName('name') . ' = ' . $this->db->quote('com_proclaim.' . $section))

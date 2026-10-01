@@ -93,7 +93,7 @@ class ProclaimBridgeInstallerScript
 
             try {
                 // Look up the extension
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select($db->qn(['extension_id', 'enabled']))
                     ->from($db->qn('#__extensions'))
                     ->where($db->qn('element') . ' = ' . $db->q($element))
@@ -117,7 +117,7 @@ class ProclaimBridgeInstallerScript
                 }
 
                 // Disable it
-                $update = $db->getQuery(true)
+                $update = $db->createQuery()
                     ->update($db->qn('#__extensions'))
                     ->set($db->qn('enabled') . ' = 0')
                     ->where($db->qn('extension_id') . ' = ' . (int) $row->extension_id);
