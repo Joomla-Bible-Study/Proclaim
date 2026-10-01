@@ -109,7 +109,15 @@ class ServerListField extends ListField
     }
 
     /**
-     * Get the field input markup with a data-server-types attribute.
+     * Get the field input markup with data-server-types/data-server-info attributes.
+     *
+     * Uses FormField's own dataAttributes support (rendered by the list
+     * layout directly onto the <select>) instead of regex-editing the
+     * already-rendered HTML. getOptions() must run first: ListField::
+     * getInput() normally calls collectLayoutData() -- which snapshots
+     * dataAttributes into the render data -- before getOptions(), so setting
+     * them only inside getOptions() would arrive too late for the first
+     * render.
      *
      * @return  string  The field input markup.
      *
@@ -118,15 +126,15 @@ class ServerListField extends ListField
     #[\Override]
     protected function getInput(): string
     {
-        // parent::getInput() calls getOptions() internally, which populates serverTypeMap
-        $html = parent::getInput();
+        $options = $this->getOptions();
 
-        // Inject data-server-types JSON attribute onto the <select> element
-        // This contains both the type-only map (for backward compat) and extended info
-        $attr = ' data-server-types="' . htmlspecialchars(json_encode($this->serverTypeMap), ENT_QUOTES, 'UTF-8') . '"';
-        $attr .= ' data-server-info="' . htmlspecialchars(json_encode($this->serverInfoMap), ENT_QUOTES, 'UTF-8') . '"';
-        $html = preg_replace('/<select\b/', '<select' . $attr, $html, 1);
+        // Both the type-only map (for backward compat) and extended info.
+        $this->dataAttributes['data-server-types'] = json_encode($this->serverTypeMap);
+        $this->dataAttributes['data-server-info']  = json_encode($this->serverInfoMap);
 
-        return $html;
+        $data             = $this->collectLayoutData();
+        $data['options']  = $options;
+
+        return $this->getRenderer($this->layout)->render($data);
     }
 }
