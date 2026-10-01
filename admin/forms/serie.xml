@@ -54,7 +54,7 @@
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"/>
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-               description="COM_CONTENT_FIELD_LANGUAGE_DESC" class="col-12 small"
+               description="JBS_CMN_FIELD_LANGUAGE_DESC" class="col-12 small"
         >
             <option value="*">JALL</option>
         </field>

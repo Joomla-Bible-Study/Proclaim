@@ -9,7 +9,7 @@
            default="1"
            filter="int"/>
     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-           description="com_proclaim_LANGUAGE_DESC">
+           description="JBS_CMN_SELECT_LANGUAGE_DESC">
         <option value="*">JALL</option>
     </field>
     <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL" translate_label="false"
