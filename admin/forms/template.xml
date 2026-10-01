@@ -193,9 +193,9 @@
                 <option value="1">JYES</option>
                 <option value="2">JNO</option>
             </field>
-            <field name="player_width" type="int" default="640"
+            <field name="player_width" type="number" default="640" min="1"
                    label="JBS_TPL_MEDIA_PLAYER_WIDTH" description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>
-            <field name="player_height" type="int" default="385"
+            <field name="player_height" type="number" default="385" min="1"
                    label="JBS_TPL_MEDIA_PLAYER_HEIGHT" description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
             <field name="embedshare" type="list" default="1"
                    label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">
@@ -219,7 +219,7 @@
                    label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
             <field name="popupfooter" type="Custom" codeset="template" input="text" default=""
                    label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-            <field name="popupmargin" type="int" default="50"
+            <field name="popupmargin" type="number" default="50" min="0"
                    label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>
             <field name="popupbackground" type="ColorPicker" default="black"
                    label="JBS_TPL_MEDIA_POPUPBACKGROUND" description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
@@ -1220,7 +1220,7 @@
                 <option value="3">JBS_TPL_SHOW_STUDIES_CARDS</option>
                 <option value="4">JBS_TPL_SHOW_STUDIES_LIST</option>
             </field>
-            <field name="studies" type="int" default=""
+            <field name="studies" type="number" default="" min="0"
                    label="JBS_TPL_TEACHER_STUDIES" description="JBS_TPL_TEACHER_STUDIES_DESC"/>
             <field name="label_teacher" type="text" default="Latest Messages"
                    label="JBS_TPL_TEACHER_LABEL_TEACHER" description="JBS_TPL_TEACHER_LABEL_TEACHER_DESC"/>
@@ -1544,7 +1544,7 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="series_characters" type="int" default=""
+            <field name="series_characters" type="number" default="" min="0"
                    label="JBS_TPL_SERIES_SERIES_CHARACTERS" description="JBS_TPL_SERIES_SERIES_CHARACTERS_DESC"/>
             <field name="series_list_show_pagination" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
@@ -2455,9 +2455,8 @@
                 <option value="0">JBS_TPL_USE_LIMIT</option>
                 <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
             </field>
-            <field name="landingserieslimit" type="int"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGSERIESLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+            <field name="landingserieslimit" type="number" min="0"
+                   label="JBS_TPL_LANDINGPAGE_LANDINGSERIESLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="serieslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_SERIESLABEL" default="Series"/>
             <field name="series_linkto" type="radio" label="JBS_TPL_LANDINGPAGE_LINKTO"
@@ -2483,9 +2482,8 @@
         <!-- Landing Page: Books Section Settings -->
         <fieldset name="LANDINGPAGE_BOOKS" label="JBS_TPL_SETTINGS_PANEL" landingSection="books"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="landingbookslimit" type="int"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+            <field name="landingbookslimit" type="number" min="0"
+                   label="JBS_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="bookslabel" type="text" label="JBS_TPL_LANDINGPAGE_BOOKSLABEL"
                    default="Books"/>
             <field name="books_order"
@@ -2506,9 +2504,8 @@
         <!-- Landing Page: Topics Section Settings -->
         <fieldset name="LANDINGPAGE_TOPICS" label="JBS_TPL_SETTINGS_PANEL" landingSection="topics"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="landingtopicslimit" type="int"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+            <field name="landingtopicslimit" type="number" min="0"
+                   label="JBS_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="topicslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_TOPICSLABEL" default="Topics"/>
             <field name="topics_order"
@@ -2535,10 +2532,9 @@
                 <option value="0">JBS_TPL_USE_LIMIT</option>
                 <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
             </field>
-            <field name="landinglocationslimit" type="int"
+            <field name="landinglocationslimit" type="number" min="0"
                    label="JBS_TPL_LANDINGPAGE_LANDINGLOCATIONSLIMIT"
-                   description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+                   description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="locationslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_LOCATIONSLABEL" default="Locations"/>
             <field name="locations_order"
@@ -2565,10 +2561,9 @@
                 <option value="0">JBS_TPL_USE_LIMIT</option>
                 <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
             </field>
-            <field name="landingmessagetypeslimit" type="int"
+            <field name="landingmessagetypeslimit" type="number" min="0"
                    label="JBS_TPL_LANDINGPAGE_LANDINGMESSAGETYPESLIMIT"
-                   description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+                   description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="messagetypeslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_MESSAGETYPESLABEL" default="Message Types"/>
             <field name="messagetypes_order"
@@ -2589,9 +2584,8 @@
         <!-- Landing Page: Years Section Settings -->
         <fieldset name="LANDINGPAGE_YEARS" label="JBS_TPL_SETTINGS_PANEL" landingSection="years"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="landingyearslimit" type="int"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+            <field name="landingyearslimit" type="number" min="0"
+                   label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="yearslabel" type="text" label="JBS_TPL_LANDINGPAGE_YEARSLABEL"
                    default="Years"/>
             <field name="years_order"

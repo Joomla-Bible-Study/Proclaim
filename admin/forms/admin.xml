@@ -37,7 +37,7 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="studylistlimit" type="int" size="3" label="JBS_ADM_STUDYLISTLIMIT"
+        <field name="studylistlimit" type="number" label="JBS_ADM_STUDYLISTLIMIT"
                description="JBS_ADM_STUDYLISTLIMIT_DESC" default=""/>
         <field name="show_location_media"
                type="radio"
@@ -47,7 +47,7 @@
             <option value="0">JBS_CMN_HIDE</option>
             <option value="1">JBS_CMN_SHOW</option>
         </field>
-        <field name="popular_limit" type="int" default="" size="3" label="JBS_ADM_POPULAR_LIMIT"
+        <field name="popular_limit" type="number" default="" label="JBS_ADM_POPULAR_LIMIT"
                description="JBS_ADM_POPULAR_LIMIT_DESC"/>
 <field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
                description="JBS_ADM_FORMAT_POPULAR_DESC">
@@ -139,11 +139,11 @@
             <option value="-1">JBS_CMN_SELECT_USER</option>
         </field>
         <!--Thumbnail sizes-->
-        <field name="thumbnail_teacher_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
+        <field name="thumbnail_teacher_size" default="400" type="number" min="1" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
                description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" class="col-2"/>
-        <field name="thumbnail_series_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
+        <field name="thumbnail_series_size" default="400" type="number" min="1" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
                description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" class="col-2"/>
-        <field name="thumbnail_study_size" default="600" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
+        <field name="thumbnail_study_size" default="600" type="number" min="1" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
                description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" class="col-2"/>
 
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
