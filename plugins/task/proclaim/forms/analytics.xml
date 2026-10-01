@@ -8,7 +8,7 @@
 				   label="PLG_TASK_PROCLAIM_ANALYTICS_ROLLUP_LABEL"
 				   description="PLG_TASK_PROCLAIM_ANALYTICS_ROLLUP_DESC"
 				   default="1"
-				   class="btn-group btn-group-yesno">
+				   layout="joomla.form.field.radio.switcher">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
@@ -21,7 +21,7 @@
 				   label="PLG_TASK_PROCLAIM_ANALYTICS_PURGE_LABEL"
 				   description="PLG_TASK_PROCLAIM_ANALYTICS_PURGE_DESC"
 				   default="0"
-				   class="btn-group btn-group-yesno">
+				   layout="joomla.form.field.radio.switcher">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
@@ -43,7 +43,7 @@
 				   label="PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_LABEL"
 				   description="PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_DESC"
 				   default="0"
-				   class="btn-group btn-group-yesno">
+				   layout="joomla.form.field.radio.switcher">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>

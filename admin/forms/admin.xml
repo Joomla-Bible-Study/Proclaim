@@ -189,7 +189,7 @@
         </field>
         <field name="playlist_delete_sync" type="radio" default="0"
                label="JBS_ADM_PLAYLIST_DELETE_SYNC" description="JBS_ADM_PLAYLIST_DELETE_SYNC_DESC"
-               class="btn-group btn-group-yesno" layout="joomla.form.field.radio.switcher">
+               layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>

@@ -47,7 +47,7 @@
 
                 <field name="show_upcoming"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_UPCOMING"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_UPCOMING_DESC"
@@ -82,7 +82,7 @@
 
                 <field name="responsive"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_RESPONSIVE"
                        description="MOD_PROCLAIM_YOUTUBE_RESPONSIVE_DESC">
@@ -92,7 +92,7 @@
 
                 <field name="show_title"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_TITLE"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_TITLE_DESC">
@@ -102,7 +102,7 @@
 
                 <field name="show_description"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="0"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_DESC"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_DESC_DESC">
@@ -120,7 +120,7 @@
 
                 <field name="show_live_badge"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_LIVE_BADGE"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_LIVE_BADGE_DESC">
@@ -130,7 +130,7 @@
 
                 <field name="show_countdown"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_COUNTDOWN"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_COUNTDOWN_DESC"
@@ -141,7 +141,7 @@
 
                 <field name="show_notify_button"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_NOTIFY"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_NOTIFY_DESC"
@@ -152,7 +152,7 @@
 
                 <field name="enable_mini_player"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_MINI_PLAYER"
                        description="MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_DESC"
@@ -163,7 +163,7 @@
 
                 <field name="auto_link_message"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_AUTO_LINK"
                        description="MOD_PROCLAIM_YOUTUBE_AUTO_LINK_DESC">
@@ -173,7 +173,7 @@
 
                 <field name="autoplay_live"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="0"
                        label="MOD_PROCLAIM_YOUTUBE_AUTOPLAY_LIVE"
                        description="MOD_PROCLAIM_YOUTUBE_AUTOPLAY_LIVE_DESC">
@@ -183,7 +183,7 @@
 
                 <field name="show_no_video"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="0"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_NO_VIDEO"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_NO_VIDEO_DESC">
@@ -201,7 +201,7 @@
 
                 <field name="fallback_sermons"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_FALLBACK_SERMONS"
                        description="MOD_PROCLAIM_YOUTUBE_FALLBACK_SERMONS_DESC">
