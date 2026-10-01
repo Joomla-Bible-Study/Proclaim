@@ -2,7 +2,7 @@
 <form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
     <fieldset name="details">
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"/>
+               description="JGLOBAL_FIELD_ID_DESC" default="0" readonly="true"/>
 
         <field
                 name="published"
@@ -13,7 +13,7 @@
                 filter="int"/>
 
         <field name="title" type="text" label="JBS_PDC_PODCAST_NAME"
-               description="JBS_PDC_PODCAST_NAME_DESC" size="65" required="true" filter="trim"/>
+               description="JBS_PDC_PODCAST_NAME_DESC" required="true" filter="trim"/>
 
         <field name="description" type="editor" label="JBS_PDC_PODCAST_DESCRIPTION"
                description="JBS_PDC_PODCAST_DESCRIPTION_DESC" height="200"
@@ -23,26 +23,25 @@
         <field name="subtitle" type="hidden"/>
 
         <field name="website" type="url" label="JBS_PDC_WEBSITE_URL"
-               description="JBS_PDC_WEBSITE_URL_DESC"
-               size="80" hint="https://www.example.com" filter="url" required="true"/>
+               description="JBS_PDC_WEBSITE_URL_DESC" hint="https://www.example.com" filter="url" required="true"/>
 
         <field name="podcastlink" type="menuitem" label="JBS_PDC_PODCAST_URL"
                description="JBS_PDC_PODCAST_URL_DESC"
-               published="1" class="form-select">
+               published="1">
             <option value="">JBS_PDC_PODCAST_URL_NONE</option>
         </field>
 
         <field name="author" type="text" label="JBS_PDC_SHOW_AUTHOR"
-               description="JBS_PDC_SHOW_AUTHOR_DESC" size="50" required="true"/>
+               description="JBS_PDC_SHOW_AUTHOR_DESC" required="true"/>
 
         <field name="editor_name" type="text" label="JBS_PDC_OWNER_NAME"
-               description="JBS_PDC_OWNER_NAME_DESC" size="50" required="true"/>
+               description="JBS_PDC_OWNER_NAME_DESC" required="true"/>
 
         <field name="editor_email" type="email" label="JBS_PDC_OWNER_EMAIL"
-               description="JBS_PDC_OWNER_EMAIL_DESC" size="50" validate="email" required="true"/>
+               description="JBS_PDC_OWNER_EMAIL_DESC" validate="email" required="true"/>
 
         <field name="copyright" type="text" label="JBS_PDC_COPYRIGHT_HOLDER"
-               description="JBS_PDC_COPYRIGHT_HOLDER_DESC" size="50"/>
+               description="JBS_PDC_COPYRIGHT_HOLDER_DESC"/>
 
         <!-- Legacy podcastsearch — hidden, itunes:keywords deprecated by Apple in 2018 -->
         <field name="podcastsearch" type="hidden"/>
@@ -68,10 +67,9 @@
                label="JBS_PDC_SUBSCRIBE_IMAGE" description="JBS_PDC_SUBSCRIBE_IMAGE_DESC"/>
 
         <field name="filename" type="text" label="JBS_PDC_PODCAST_XML_FILENAME"
-               description="JBS_PDC_PODCAST_XML_FILENAME_DESC" size="50" required="true" filter="trim"/>
+               description="JBS_PDC_PODCAST_XML_FILENAME_DESC" required="true" filter="trim"/>
 
-        <field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE"
-               size="3" description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC" filter="int"/>
+        <field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE" description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC" filter="int"/>
 
         <field name="track_downloads" type="radio" default="1"
                layout="joomla.form.field.radio.switcher"
@@ -257,27 +255,27 @@
 
         <!-- Podcasting 2.0 optional settings -->
         <field name="funding_url" type="url" label="JBS_PDC_FUNDING_URL"
-               description="JBS_PDC_FUNDING_URL_DESC" size="80"
+               description="JBS_PDC_FUNDING_URL_DESC"
                hint="https://www.example.com/donate" filter="url"/>
 
         <field name="funding_text" type="text" label="JBS_PDC_FUNDING_TEXT"
-               description="JBS_PDC_FUNDING_TEXT_DESC" size="50"
+               description="JBS_PDC_FUNDING_TEXT_DESC"
                hint="Support Our Ministry" filter="string"/>
 
         <field name="podcast_license" type="text" label="JBS_PDC_LICENSE"
-               description="JBS_PDC_LICENSE_DESC" size="60"
+               description="JBS_PDC_LICENSE_DESC"
                hint="Creative Commons Attribution 4.0" filter="string"/>
 
         <field name="podcast_license_url" type="url" label="JBS_PDC_LICENSE_URL"
-               description="JBS_PDC_LICENSE_URL_DESC" size="80"
+               description="JBS_PDC_LICENSE_URL_DESC"
                hint="https://creativecommons.org/licenses/by/4.0/" filter="url"/>
 
         <field name="podcast_publisher" type="text" label="JBS_PDC_PUBLISHER"
-               description="JBS_PDC_PUBLISHER_DESC" size="60"
+               description="JBS_PDC_PUBLISHER_DESC"
                filter="string"/>
 
         <field name="podcast_txt_verify" type="text" label="JBS_PDC_TXT_VERIFY"
-               description="JBS_PDC_TXT_VERIFY_DESC" size="60"
+               description="JBS_PDC_TXT_VERIFY_DESC"
                filter="string"/>
 
         <field name="update_frequency" type="list" label="JBS_PDC_UPDATE_FREQUENCY"
@@ -297,7 +295,7 @@
         <field name="asset_id" type="hidden" filter="unset"/>
 
         <field name="podcast_subscribe_desc" type="text" label="JBS_PDC_SUBSCRIBE_WORDS"
-               description="JBS_PDC_SUBSCRIBE_WORDS_DESC" size="20" default=""/>
+               description="JBS_PDC_SUBSCRIBE_WORDS_DESC" default=""/>
 
         <field name="platform_links" type="subform"
                label="JBS_PDC_PLATFORM_LINKS" description="JBS_PDC_PLATFORM_LINKS_DESC"
@@ -345,7 +343,6 @@
                 name="modified"
                 type="calendar"
                 label="JGLOBAL_FIELD_MODIFIED_LABEL"
-                class="form-control"
                 translateformat="true"
                 showtime="true"
                 readonly="true"

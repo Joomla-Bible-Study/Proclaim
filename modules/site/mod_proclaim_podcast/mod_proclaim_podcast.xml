@@ -24,11 +24,10 @@
                 <field name="dummy" type="LoadLanguageFile" default=""/>   <!-- load common language file -->
                 <field name="t" type="sql" default="1"
                        label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
-                       class="form-select"
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
                        key_field="id" value_field="title" required="true"/>
 
-                <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
+                <field name="subscribeintro" type="text" default="Our Podcasts"
                        label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
             </fieldset>
             <fieldset name="advanced">
@@ -41,7 +40,6 @@
                 <field name="cache"
                        type="list"
                        default="1"
-                       class="form-select"
                        label="COM_MODULES_FIELD_CACHING_LABEL"
                        description="COM_MODULES_FIELD_CACHING_LABEL">
                     <option

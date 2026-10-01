@@ -2,7 +2,7 @@
 <form>
     <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+               description="JGLOBAL_FIELD_ID_DESC" default="0"
                readonly="true"/>
         <field name="published"
                type="status"
@@ -16,7 +16,7 @@
                description="JBS_MED_SERVER_DESC"
                required="true"/>
         <field name="server_name" type="text" label="JBS_SVR_SERVER_NAME"
-               description="JBS_SVR_SERVER_NAME_DESC" size="50" required="true" filter="trim"/>
+               description="JBS_SVR_SERVER_NAME_DESC" required="true" filter="trim"/>
 
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
                description="JBS_SVR_LOCATION_DESC" global="true">
@@ -51,7 +51,6 @@
                 name="modified"
                 type="calendar"
                 label="JGLOBAL_FIELD_MODIFIED_LABEL"
-                class="form-control"
                 translateformat="true"
                 showtime="true"
                 readonly="true"

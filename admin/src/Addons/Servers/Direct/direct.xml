@@ -7,8 +7,7 @@
     </config>
     <fields name="params">
         <fieldset name="server_settings" label="JBS_ADDON_DIRECT_DETAILS">
-            <field name="path" type="text" label="JBS_MED_PATH" description="JBS_MED_PATH_DESC"
-                   size="35"/>
+            <field name="path" type="text" label="JBS_MED_PATH" description="JBS_MED_PATH_DESC"/>
             <field name="protocol" type="list" label="JBS_ADDON_DIRECT_PROTOCOL"
                    description="JBS_ADDON_DIRECT_PROTOCOL_DESC" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>

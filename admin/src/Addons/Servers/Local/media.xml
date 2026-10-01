@@ -11,12 +11,12 @@
                    types="images,audios,videos,documents"
                    required="true"/>
             <field name="size" type="Filesize" label="JBS_CMN_FILESIZE"
-                   description="JBS_MED_FILESIZE_DESC" class="form-control" size="35"/>
-            <field name="media_hours" type="text" label="JBS_CMN_HOURS" description="" default="00" size="2">
+                   description="JBS_MED_FILESIZE_DESC" class="form-control"/>
+            <field name="media_hours" type="text" label="JBS_CMN_HOURS" description="" default="00">
             </field>
-            <field name="media_minutes" type="text" label="JBS_CMN_MINUTES" description="" default="00" size="2">
+            <field name="media_minutes" type="text" label="JBS_CMN_MINUTES" description="" default="00">
             </field>
-            <field name="media_seconds" type="text" label="JBS_CMN_SECONDS" description="" default="00" size="2">
+            <field name="media_seconds" type="text" label="JBS_CMN_SECONDS" description="" default="00">
             </field>
         </fieldset>
         <fieldset name="parameters1"

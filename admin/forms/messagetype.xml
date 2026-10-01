@@ -2,7 +2,7 @@
 <form>
     <fieldset name="details">
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+               description="JGLOBAL_FIELD_ID_DESC" default="0"
                readonly="true"/>
 
         <field name="published"
@@ -13,13 +13,12 @@
                filter="int"/>
 
         <field name="message_type" type="text" label="JBS_MST_MESSAGETYPE_TEXT"
-               description="JBS_MST_MESSAGETYPE_DESC" size="75" required="true" filter="trim"/>
+               description="JBS_MST_MESSAGETYPE_DESC" required="true" filter="trim"/>
 
         <field name="alias"
                type="text"
                label="JFIELD_ALIAS_LABEL"
                description="JFIELD_ALIAS_DESC"
-               size="30"
         />
 
         <field name="landing_show" default="1" type="list" label="JBS_CMN_LANDING_SHOW"
@@ -59,7 +58,6 @@
                 name="modified"
                 type="calendar"
                 label="JGLOBAL_FIELD_MODIFIED_LABEL"
-                class="form-control"
                 translateformat="true"
                 showtime="true"
                 readonly="true"

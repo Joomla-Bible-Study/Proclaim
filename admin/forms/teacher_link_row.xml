@@ -2,8 +2,7 @@
 <form>
     <field name="platform" type="list"
            label="JBS_TCH_LINK_PLATFORM"
-           default="website"
-           class="form-select">
+           default="website">
         <!-- General -->
         <option value="website">JBS_TCH_PLATFORM_WEBSITE</option>
         <option value="blog">JBS_TCH_PLATFORM_BLOG</option>

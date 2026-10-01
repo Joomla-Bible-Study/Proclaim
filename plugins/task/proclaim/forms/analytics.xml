@@ -53,7 +53,6 @@
 				   label="PLG_TASK_PROCLAIM_ANALYTICS_REPORT_EMAIL_LABEL"
 				   description="PLG_TASK_PROCLAIM_ANALYTICS_REPORT_EMAIL_DESC"
 				   default=""
-				   size="50"
 				   showon="enable_email:1"/>
 
 			<field name="report_days"

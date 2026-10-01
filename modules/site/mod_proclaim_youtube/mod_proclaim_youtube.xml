@@ -27,7 +27,6 @@
                        description="MOD_PROCLAIM_YOUTUBE_SERVER_DESC"
                        default=""
                        required="true"
-                       class="form-select"
                        query="SELECT id, server_name FROM #__bsms_servers WHERE published = 1 AND type = 'youtube' ORDER BY server_name ASC"
                        key_field="id"
                        value_field="server_name">
@@ -38,8 +37,7 @@
                        type="list"
                        label="MOD_PROCLAIM_YOUTUBE_PRIORITY"
                        description="MOD_PROCLAIM_YOUTUBE_PRIORITY_DESC"
-                       default="live_first"
-                       class="form-select">
+                       default="live_first">
                     <option value="live_first">MOD_PROCLAIM_YOUTUBE_LIVE_FIRST</option>
                     <option value="latest_only">MOD_PROCLAIM_YOUTUBE_LATEST_ONLY</option>
                     <option value="live_only">MOD_PROCLAIM_YOUTUBE_LIVE_ONLY</option>
@@ -196,7 +194,6 @@
                        label="MOD_PROCLAIM_YOUTUBE_NO_VIDEO_MSG"
                        description="MOD_PROCLAIM_YOUTUBE_NO_VIDEO_MSG_DESC"
                        default=""
-                       size="50"
                        showon="show_no_video:1"/>
 
                 <field name="fallback_sermons"
@@ -224,7 +221,6 @@
                        label="MOD_PROCLAIM_YOUTUBE_FALLBACK_TEMPLATE"
                        description="MOD_PROCLAIM_YOUTUBE_FALLBACK_TEMPLATE_DESC"
                        default="1"
-                       class="form-select"
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
                        key_field="id"
                        value_field="title"
@@ -243,7 +239,6 @@
                 <field name="cache"
                        type="list"
                        default="1"
-                       class="form-select"
                        label="COM_MODULES_FIELD_CACHING_LABEL">
                     <option value="1">JGLOBAL_USE_GLOBAL</option>
                     <option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>

@@ -11,7 +11,7 @@
                    description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5"
                    filter="raw"/>
             <field name="size" type="Filesize" label="JBS_CMN_FILESIZE"
-                   description="JBS_MED_FILESIZE_DESC" class="form-control" size="35"/>
+                   description="JBS_MED_FILESIZE_DESC" class="form-control"/>
             <field name="special"
                    type="list"
                    label="JBS_MED_LINK_TARGET"
@@ -65,11 +65,11 @@
                 <option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
                 <option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
             </field>
-            <field name="media_hours" type="text" label="JBS_CMN_HOURS" description="" default="00" size="2">
+            <field name="media_hours" type="text" label="JBS_CMN_HOURS" description="" default="00">
             </field>
-            <field name="media_minutes" type="text" label="JBS_CMN_MINUTES" description="" default="00" size="2">
+            <field name="media_minutes" type="text" label="JBS_CMN_MINUTES" description="" default="00">
             </field>
-            <field name="media_seconds" type="text" label="JBS_CMN_SECONDS" description="" default="00" size="2">
+            <field name="media_seconds" type="text" label="JBS_CMN_SECONDS" description="" default="00">
             </field>
         </fieldset>
         <fieldset name="files_linker" label="JBD_ADDON_LEGACY_FILE_LINKER">

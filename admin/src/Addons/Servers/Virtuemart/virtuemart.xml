@@ -8,7 +8,7 @@
     <fields name="params">
         <fieldset name="virtuemart_settings" label="JBS_ADDON_VIRTUEMART_SETTINGS">
             <field name="store_url" type="url" label="JBS_ADDON_VIRTUEMART_STORE_URL"
-                   description="JBS_ADDON_VIRTUEMART_STORE_URL_DESC" class="inputbox" size="60" />
+                   description="JBS_ADDON_VIRTUEMART_STORE_URL_DESC" class="inputbox" />
         </fieldset>
     </fields>
     <fields name="media">
