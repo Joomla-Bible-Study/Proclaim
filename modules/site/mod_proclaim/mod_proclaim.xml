@@ -101,26 +101,26 @@
                        label="JFIELD_LANGUAGE_LABEL" description="JBS_MDL_LANGUAGE_DESC">
                     <option value="*">JALL</option>
                 </field>
-                <field name="teacher_id" type="TeacherList" multiple="true" default=""
+                <field name="teacher_id" type="TeacherList" multiple="true" layout="joomla.form.field.list-fancy-select" default=""
                        class="form-select"
                        label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="series_id" type="Series" multiple="true" default=""
+                <field name="series_id" type="Series" multiple="true" layout="joomla.form.field.list-fancy-select" default=""
                        class="form-select"
                        label="JBS_CMN_FILTERS_SERIES" description="JBS_CMN_FILTERS_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="booknumber" type="BookList" multiple="true"
+                <field name="booknumber" type="BookList" multiple="true" layout="joomla.form.field.list-fancy-select"
                        class="form-select"
                        label="JBS_CMN_FILTERS_BOOKS" description="JBS_CMN_FILTERS_DESC"
                        default="">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="topic_id" type="TopicsList" multiple="true"
+                <field name="topic_id" type="TopicsList" multiple="true" layout="joomla.form.field.list-fancy-select"
                        class="form-select"
                        label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_DESC"
                        default="">
@@ -128,7 +128,7 @@
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
 
-                <field name="locations" type="Locations" multiple="true"
+                <field name="locations" type="Locations" multiple="true" layout="joomla.form.field.list-fancy-select"
                        class="form-select"
                        label="JBS_CMN_FILTERS_LOCATIONS" description="JBS_CMN_FILTERS_DESC"
                        default="">
@@ -155,7 +155,7 @@
                        description="JBS_MDL_SPECIFIC_LOCATION_DESC">
                     <option value="-1">JBS_CMN_SELECT_LOCATION</option>
                 </field>
-                <field name="messagetype" type="MessageTypeList" multiple="true"
+                <field name="messagetype" type="MessageTypeList" multiple="true" layout="joomla.form.field.list-fancy-select"
                        class="form-select"
                        label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC"
                        default="">

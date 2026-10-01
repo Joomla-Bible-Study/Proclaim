@@ -110,31 +110,31 @@
         </fieldset>
         <fieldset name="FILTERS" label="JBS_TPL_FILTERS"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="lteacher_id" type="TeacherList" default="-1" multiple="true"
+            <field name="lteacher_id" type="TeacherList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lseries_id" type="Series" default="-1" multiple="true"
+            <field name="lseries_id" type="Series" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_CMN_FILTERS_SERIES" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lbooknumber" type="BookList" default="-1" multiple="true"
+            <field name="lbooknumber" type="BookList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_CMN_FILTERS_BOOKS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="ltopic_id" type="TopicsList" default="-1" multiple="true"
+            <field name="ltopic_id" type="TopicsList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lmessagetype" type="MessageTypeList" default="-1" multiple="true"
+            <field name="lmessagetype" type="MessageTypeList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="5" label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="llocations" type="LocationList" default="-1" multiple="true"
+            <field name="llocations" type="LocationList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="5" label="JBS_CMN_FILTERS_LOCATIONS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lyears" type="YearList" default="-1" multiple="true"
+            <field name="lyears" type="YearList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="5" label="JBS_CMN_FILTERS_YEARS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
@@ -373,7 +373,7 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="listteachers" type="TeacherList" default="-1" multiple="true"
+            <field name="listteachers" type="TeacherList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_TPL_LISTITEMS_LISTTEACHERS" description="JBS_TPL_LISTITEMS_LISTTEACHERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
