@@ -28,15 +28,47 @@
  */
 
 const { test, expect } = require('@playwright/test');
+const { pickType } = require('../helpers/server-picker');
 
 const API_SERMONS = '/api/index.php/v1/proclaim/sermons';
 const API_INFO = '/api/index.php/v1/proclaim/info';
 const API_SERIES = '/api/index.php/v1/proclaim/series';
 const API_MEDIA = '/api/index.php/v1/proclaim/media';
+const API_SERVERS = '/api/index.php/v1/proclaim/servers';
+
+const ADD_SERVER = '/administrator/index.php?option=com_proclaim&task=cwmserver.add';
+const SERVER_LIST = '/administrator/index.php?option=com_proclaim&view=cwmservers';
+
+// The supported server the media tests attach their records to.
+//
+// A fresh install seeds only legacy-type servers, and a legacy server refuses
+// new media (the deprecation runway). The servers resource is read-only over the
+// API on purpose, since a server row carries credentials, so the fixture is made
+// the way an administrator makes one: through the admin form. It is found again
+// by name, so a copy left behind by an interrupted run is reused, not duplicated.
+const FIXTURE_SERVER = 'zz e2e api media fixture';
+let fixtureServerId = 0;
 
 // Set by the token test, consumed by the later ones. Safe because the describe
 // is serial.
 let apiToken = '';
+
+/**
+ * Every server the API lists, as { id, name, type }.
+ */
+async function listServers(request, headers) {
+    const response = await request.get(`${API_SERVERS}?page[limit]=100`, { headers });
+
+    expect(response.status(), await response.text()).toBe(200);
+
+    const body = await response.json();
+
+    return (body.data ?? []).map((row) => ({
+        id: Number(row.id),
+        name: row.attributes?.server_name,
+        type: row.attributes?.type,
+    }));
+}
 
 test.describe.serial('REST API acceptance (package install) @api', () => {
     test('Proclaim and its webservices plugin are installed and enabled', async ({ page }) => {
@@ -225,14 +257,48 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
         ).toBe(401);
     });
 
-    test('media: create, read, amend, confirm, trash and delete round-trip (#2135)', async ({ request }) => {
+    test('a supported (non-legacy) server exists to attach media to', async ({ page, request }) => {
         expect(apiToken, 'The token test did not run, so this proves nothing').not.toBe('');
 
         const headers = { 'X-Joomla-Token': apiToken };
 
-        // study 1 and server 1 are both seeded by install.mysql.utf8.sql —
-        // present on any site this harness provisions, not a fixture this
-        // test has to build.
+        let fixture = (await listServers(request, headers)).find((server) => server.name === FIXTURE_SERVER);
+
+        if (!fixture) {
+            await page.goto(ADD_SERVER, { waitUntil: 'domcontentloaded' });
+
+            // A new record opens the type picker on top of the form. `direct` has no remote calls
+            // to make, so saving it touches nothing outside the database.
+            await expect(page.locator('joomla-dialog iframe')).toBeVisible();
+            await pickType(page, 'direct', 'jform[params][path]');
+            await page.fill('#jform_server_name', FIXTURE_SERVER);
+
+            await page.evaluate(() => Joomla.submitbutton('cwmserver.save'));
+            await page.waitForLoadState('networkidle');
+            await expect(page.locator('#system-message-container')).toContainText(/saved/i);
+
+            fixture = (await listServers(request, headers)).find((server) => server.name === FIXTURE_SERVER);
+        }
+
+        expect(fixture, `"${FIXTURE_SERVER}" was saved but the servers API does not list it`).toBeTruthy();
+        expect(
+            fixture.type,
+            'the fixture must be a supported type, or the media tests would be refused for the same reason as before',
+        ).not.toBe('legacy');
+
+        fixtureServerId = fixture.id;
+    });
+
+    test('media: create, read, amend, confirm, trash and delete round-trip (#2135)', async ({ request }) => {
+        expect(apiToken, 'The token test did not run, so this proves nothing').not.toBe('');
+
+        expect(fixtureServerId, 'The fixture-server test did not run, so there is nothing to attach media to').toBeGreaterThan(0);
+
+        const headers = { 'X-Joomla-Token': apiToken };
+
+        // Study 1 is seeded by install.mysql.utf8.sql, present on any site this
+        // harness provisions. The server is the fixture made above: the install
+        // seeds only legacy servers, and those refuse new media.
         //
         // createdate is chosen to prove the write/read round-trip is now
         // symmetric: what is sent here must come back unchanged (#2135
@@ -245,7 +311,7 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
             headers,
             data: {
                 study_id: 1,
-                server_id: 1,
+                server_id: fixtureServerId,
                 language: '*',
                 createdate,
                 params: { filename: 'zz-2135-roundtrip.mp3' },
@@ -374,5 +440,76 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
         // instead of 404 — confirmed present before this fix too), out of
         // #2135's scope. 204 from the DELETE above is the round trip's own
         // confirmation that removal worked.
+    });
+
+    test('media: a legacy-type server is refused with a 400 that says why', async ({ request }) => {
+        expect(apiToken, 'The token test did not run, so this proves nothing').not.toBe('');
+
+        const headers = { 'X-Joomla-Token': apiToken };
+
+        const legacy = (await listServers(request, headers)).find((server) => server.type === 'legacy');
+
+        expect(legacy, 'the install seeds legacy servers and none is listed, so this proves nothing').toBeTruthy();
+
+        const response = await request.post(API_MEDIA, {
+            headers,
+            data: {
+                study_id: 1,
+                server_id: legacy.id,
+                language: '*',
+                params: { filename: 'zz-legacy-guard.mp3' },
+            },
+        });
+        const body = await response.text();
+
+        if (response.status() === 200) {
+            // The guard let it through, so a record exists that this test did not mean to leave.
+            const id = (JSON.parse(body).data ?? {}).id;
+
+            await request.patch(`${API_MEDIA}/${id}`, { headers, data: { published: '-2' } }).catch(() => {});
+            await request.delete(`${API_MEDIA}/${id}`, { headers }).catch(() => {});
+        }
+
+        expect(response.status(), body).toBe(400);
+        expect(body, 'the refusal should say the server type is the reason').toMatch(/legacy type/i);
+    });
+
+    test('the fixture server is removed', async ({ page }) => {
+        const find = encodeURIComponent(FIXTURE_SERVER);
+
+        // A form POST (trash, delete) navigates on its own, and a goto fired into that in-flight
+        // navigation aborts, so each goto is retried until it settles.
+        const gotoList = async (published) => {
+            for (let attempt = 0; attempt < 3; attempt++) {
+                try {
+                    await page.goto(`${SERVER_LIST}&filter[published]=${published}&filter[search]=${find}`, { waitUntil: 'domcontentloaded' });
+
+                    return;
+                } catch (error) {
+                    if (attempt === 2) {
+                        throw error;
+                    }
+
+                    await page.waitForTimeout(500);
+                }
+            }
+        };
+
+        await gotoList('');
+        await page.locator('tbody tr', { hasText: FIXTURE_SERVER }).locator('input[name="cid[]"]').check();
+        await page.evaluate(() => Joomla.submitform('cwmservers.trash', document.getElementById('adminForm')));
+        await page.waitForLoadState('networkidle');
+
+        await gotoList('-2');
+        await page.locator('tbody tr', { hasText: FIXTURE_SERVER }).locator('input[name="cid[]"]').check();
+        page.once('dialog', (dialog) => dialog.accept());
+        await page.evaluate(() => Joomla.submitform('cwmservers.delete', document.getElementById('adminForm')));
+        await page.waitForLoadState('networkidle');
+
+        await gotoList('-2');
+        await expect(
+            page.locator('tbody tr', { hasText: FIXTURE_SERVER }),
+            'the fixture server must not outlive the suite',
+        ).toHaveCount(0);
     });
 });
