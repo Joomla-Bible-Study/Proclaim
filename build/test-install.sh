@@ -68,7 +68,7 @@ echo "-- [7/10] verify the scripture library landed (tables, seed, plugin enable
 php build/verify-scripture-install.php || FAILURES+=("scripture library (verify-scripture-install)")
 
 echo "-- [8/10] seed the site menu items the front end is reached through (#1701)"
-php build/seed-testsite-menus.php || FAILURES+=("menu seeding (seed-testsite-menus)")
+php build/seed/menus.php apply || FAILURES+=("menu seeding (build/seed/menus.php)")
 # A fresh install has no verses until the Download Core Translations task runs,
 # and the seeded study cites a book. Without this the front-end check below only
 # ever exercises the unresolvable path.

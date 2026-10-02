@@ -194,6 +194,21 @@
             ]
         }
     },
+    "_seed_comment": "Seed data for developers and CI, run by cwm-seed (cwm-build-tools). Not demo data: demo data is small, clean and meant for users; this is deliberately awkward. Every row a layer writes carries `marker`, so `remove` finds exactly what was written. Layers run in the order declared. Needs a cwm-build-tools with cwm-seed; older versions ignore the key, and build/seed/menus.php also runs standalone.",
+    "seed": {
+        "marker": "cwmseed-",
+        "defaultProfile": "gate",
+        "layers": [
+            {
+                "name": "menus",
+                "script": "build/seed/menus.php",
+                "description": "Site menu items, one per front-end view, and the landing sections they need"
+            }
+        ],
+        "profiles": {
+            "gate": ["menus"]
+        }
+    },
     "_schemaReplay_comment": "`root` is the extension root the manifest's relative paths resolve against, as Joomla's extension_root does \u2014 proclaim.xml sits at the repo root while the sql/ it names is under admin/, so without it every path resolves one level too high. The baseline is a SITE's schema, not this extension's install SQL alone \u2014 four migrations write to core tables no Proclaim manifest creates. Order matters: core first. `from` is the highest migration file SHIPPED at that tag, not the release number: v10.0.0 contains exactly one, 10.0.0-20220921.sql, and a fresh install stamps #__schemas at whatever the highest file is without running any of them. Raising the supported floor means replacing com_proclaim-10.0.0.sql and moving `from` to the highest file that release shipped, not editing it.",
     "schemaReplay": {
         "targets": [

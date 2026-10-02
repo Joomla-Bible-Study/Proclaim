@@ -1,0 +1,59 @@
+{
+    "_comment": "Site menu items for the front end. Each item is one component view. `target` names a seeded row the view needs an id for (study, series or teacher); the first published one is used, so nothing here hardcodes an id. `access`, `published`, `language` and `params` are optional and default to a public, published, all-language item with no menu parameters.",
+    "items": [
+        {
+            "alias": "proclaim-seed-landing",
+            "title": "Proclaim Landing (seed)",
+            "view": "cwmlandingpage"
+        },
+        {
+            "alias": "proclaim-seed-sermons",
+            "title": "Proclaim Sermons (seed)",
+            "view": "cwmsermons"
+        },
+        {
+            "alias": "proclaim-seed-sermon",
+            "title": "Proclaim Sermon (seed)",
+            "view": "cwmsermon",
+            "target": "study"
+        },
+        {
+            "alias": "proclaim-seed-podcasts",
+            "title": "Proclaim Podcasts (seed)",
+            "view": "cwmseriespodcastlist"
+        },
+        {
+            "alias": "proclaim-seed-latest",
+            "title": "Proclaim Latest Sermon (seed)",
+            "view": "cwmlatest"
+        },
+        {
+            "alias": "proclaim-seed-series-list",
+            "title": "Proclaim Series List (seed)",
+            "view": "cwmseriesdisplays"
+        },
+        {
+            "alias": "proclaim-seed-series",
+            "title": "Proclaim Series (seed)",
+            "view": "cwmseriesdisplay",
+            "target": "series"
+        },
+        {
+            "alias": "proclaim-seed-series-podcast",
+            "title": "Proclaim Series Podcast (seed)",
+            "view": "cwmseriespodcastdisplay",
+            "target": "series"
+        },
+        {
+            "alias": "proclaim-seed-teachers",
+            "title": "Proclaim Teachers (seed)",
+            "view": "cwmteachers"
+        },
+        {
+            "alias": "proclaim-seed-teacher",
+            "title": "Proclaim Teacher (seed)",
+            "view": "cwmteacher",
+            "target": "teacher"
+        }
+    ]
+}

@@ -21,7 +21,7 @@
  * Both failures rendered a valid page with a 200 status. Checking only the
  * status code would have caught neither.
  *
- * Depends on build/seed-testsite-menus.php having run: it reads the menu items
+ * Depends on the `menus` seed layer (build/seed/menus.php) having run: it reads the menu items
  * back by their seed marker rather than guessing URLs, so the two scripts
  * cannot drift apart.
  *
@@ -44,9 +44,11 @@ $root = \dirname(__DIR__);
 require $root . '/libraries/vendor/autoload.php';
 
 /**
- * Must match build/seed-testsite-menus.php.
+ * Every menu item a seed layer wrote carries a `note` starting with the project's seed marker,
+ * declared once in cwm-build.config.json and shared with build/seed/menus.php.
  */
-const SEED_NOTE = 'proclaim-testsite-seed';
+$projectConfig = json_decode((string) file_get_contents($root . '/cwm-build.config.json'), true);
+$seedMarker    = (string) ($projectConfig['seed']['marker'] ?? 'cwmseed-');
 
 /**
  * Markers that mean the page failed while still returning 200.
@@ -116,9 +118,9 @@ foreach ($installs as $install) {
 
     $statement = $db->prepare(
         'SELECT id, alias, link FROM ' . $site->table('#__menu')
-        . ' WHERE client_id = 0 AND note = ? ORDER BY id'
+        . ' WHERE client_id = 0 AND LEFT(note, ?) = ? ORDER BY id'
     );
-    $statement->execute([SEED_NOTE]);
+    $statement->execute([\strlen($seedMarker), $seedMarker]);
     $items = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     // The book the seeded study cites, read from the stored reference rather
@@ -137,7 +139,7 @@ foreach ($installs as $install) {
     }
 
     if ($items === []) {
-        fwrite(STDERR, "  no seeded menu items — run build/seed-testsite-menus.php first.\n");
+        fwrite(STDERR, "  no seeded menu items — run `php build/seed/menus.php apply` first.\n");
         $failures++;
 
         continue;
