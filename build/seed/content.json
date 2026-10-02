@@ -1,0 +1,285 @@
+{
+    "_comment": "Awkward content for developers and CI: the cases that make a page break, not the clean content a user is shown (that is demo data, a different thing). Rows are written with the seed marker as an alias prefix, so `remove` finds exactly them. Keys are local to this file; studies name their teachers and series by key. `media` defaults to one YouTube link; each entry names a seeded server by addon type (the `servers` layer must have run) and must be a real public URL, because an invented path renders a broken player. `guest` is the HTTP status a logged-out visitor gets for the study's sermon page, checked by build/verify-frontend.php; it defaults to 200. 404 for access-restricted content is the current behaviour, not necessarily the intended one: it is recorded here so a change to it is noticed.",
+    "teachers": [
+        {
+            "key": "edge-one",
+            "name": "Edge One",
+            "title": "Pastor",
+            "images": true
+        },
+        {
+            "key": "edge-two",
+            "name": "Edge Two",
+            "title": "Elder",
+            "images": true
+        },
+        {
+            "key": "edge-three",
+            "name": "Edge Three",
+            "title": "Deacon",
+            "images": false
+        }
+    ],
+    "series": [
+        {
+            "key": "no-teacher",
+            "title": "Scenario series with no teacher",
+            "description": "Nobody was assigned to this one. The teacher column is NULL on purpose: the series form does not require one, and a NULL there once took the whole series listing down."
+        }
+    ],
+    "studies": [
+        {
+            "key": "unpublished",
+            "title": "Scenario unpublished",
+            "teachers": [
+                "edge-one"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-01 10:00:00",
+            "published": 0,
+            "guest": 404
+        },
+        {
+            "key": "archived",
+            "title": "Scenario archived",
+            "teachers": [
+                "edge-one"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-02 10:00:00",
+            "published": 2,
+            "guest": 200
+        },
+        {
+            "key": "access-registered",
+            "title": "Scenario access Registered",
+            "teachers": [
+                "edge-one"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-03 10:00:00",
+            "access": 2,
+            "guest": 404
+        },
+        {
+            "key": "access-special",
+            "title": "Scenario access Special",
+            "teachers": [
+                "edge-one"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-04 10:00:00",
+            "access": 3,
+            "guest": 404
+        },
+        {
+            "key": "no-teacher",
+            "title": "Scenario no teacher",
+            "teachers": [],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-05 10:00:00"
+        },
+        {
+            "key": "no-scripture",
+            "title": "Scenario no scripture",
+            "teachers": [
+                "edge-one"
+            ],
+            "scriptures": [],
+            "date": "2026-03-06 10:00:00"
+        },
+        {
+            "key": "teacherless-series",
+            "title": "Scenario in a teacherless series",
+            "teachers": [
+                "edge-one"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-07 10:00:00",
+            "series": "no-teacher"
+        },
+        {
+            "key": "three-teachers",
+            "title": "Scenario three teachers",
+            "teachers": [
+                "edge-one",
+                "edge-two",
+                "edge-three"
+            ],
+            "scriptures": [
+                [
+                    145,
+                    8,
+                    1,
+                    8,
+                    4
+                ]
+            ],
+            "date": "2026-03-08 10:00:00"
+        },
+        {
+            "key": "four-references",
+            "title": "Scenario four references",
+            "teachers": [
+                "edge-two"
+            ],
+            "scriptures": [
+                [
+                    101,
+                    1,
+                    1,
+                    1,
+                    5
+                ],
+                [
+                    119,
+                    1,
+                    1,
+                    1,
+                    6
+                ],
+                [
+                    143,
+                    1,
+                    1,
+                    1,
+                    14
+                ],
+                [
+                    145,
+                    8,
+                    28,
+                    8,
+                    39
+                ]
+            ],
+            "date": "2026-03-09 10:00:00"
+        },
+        {
+            "key": "other-language",
+            "title": "Scenario other language",
+            "teachers": [
+                "edge-two"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-10 10:00:00",
+            "language": "en-GB"
+        },
+        {
+            "key": "no-media",
+            "title": "Scenario no media",
+            "teachers": [
+                "edge-two"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-11 10:00:00",
+            "media": []
+        },
+        {
+            "key": "secondary-reference",
+            "title": "Scenario secondary reference text",
+            "teachers": [
+                "edge-three"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-12 10:00:00",
+            "secondary_reference": "See also the readings for Advent"
+        },
+        {
+            "key": "odd-title",
+            "title": "Scenario a title that is quite a lot longer than anyone expected, with \"quotes\", <em>markup</em>, an ampersand & a dash — and an accent: Café",
+            "teachers": [
+                "edge-three"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-13 10:00:00"
+        },
+        {
+            "key": "two-servers",
+            "title": "Scenario media on two servers",
+            "teachers": [
+                "edge-two"
+            ],
+            "scriptures": [
+                [
+                    143,
+                    3,
+                    16
+                ]
+            ],
+            "date": "2026-03-14 10:00:00",
+            "media": [
+                {
+                    "server": "youtube",
+                    "filename": "youtu.be/0LROzQHy140",
+                    "mime": "video/mp4"
+                },
+                {
+                    "server": "direct",
+                    "filename": "https://www.w3schools.com/html/horse.mp3",
+                    "mime": "audio/mpeg"
+                }
+            ]
+        }
+    ]
+}

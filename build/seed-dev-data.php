@@ -5,14 +5,10 @@
  * Seed a development site with content worth looking at, and content worth
  * breaking.
  *
- * Two modes, because they want opposite things:
- *
- *   --demo       clean, fully-populated, everything published. What a site
- *                should look like when someone is shown it.
- *   --scenarios  the awkward cases -- unpublished, access-restricted, no
- *                teacher, no scripture, four references, three teachers, a
- *                title full of entities. Useful, and it makes a site look
- *                broken, which is why it is separate.
+ * Writes clean, fully-populated, everything-published content: what a site should look
+ * like when someone is shown it. The awkward cases (unpublished, access-restricted, no
+ * teacher, no scripture, a title full of entities) are the `content` seed layer,
+ * build/seed/content.php, run with cwm-seed.
  *
  * Everything written carries the `cwmseed-` alias prefix and is removable with
  * --remove, so a dev site can be put back exactly as it was.
@@ -23,7 +19,6 @@
  *
  * Usage:
  *   php build/seed-dev-data.php --site=j6-dev --demo
- *   php build/seed-dev-data.php --site=j5-dev --scenarios
  *   php build/seed-dev-data.php --site=j5-dev --remove
  *   php build/seed-dev-data.php --site=j6-dev --list
  *
@@ -382,75 +377,6 @@ function seedDemo(mysqli $db, string $p): int
 }
 
 /**
- * The awkward cases. Useful to have, and they make a site look broken.
- *
- * @param   mysqli  $db  Connection
- * @param   string  $p   Table prefix
- *
- * @return  int  Studies written
- */
-function seedScenarios(mysqli $db, string $p): int
-{
-    $one   = seedTeacher($db, $p, 'Edge One', 'Pastor');
-    $two   = seedTeacher($db, $p, 'Edge Two', 'Elder');
-    $three = seedTeacher($db, $p, 'Edge Three', 'Deacon', false);
-
-    // ⚠️ teacher left NULL deliberately. The series form does not require one,
-    // and a NULL there used to throw a TypeError out of Cwmlisting::getLink()
-    // that took the entire series listing down -- every other series with it.
-    $orphan = seedSeries($db, $p, 'Scenario series with no teacher', 'Nobody was assigned to this one.');
-
-    $cases = [
-        ['title'         => 'Scenario unpublished', 'teachers' => [$one],
-            'scriptures' => [[143, 3, 16]], 'overrides' => ['published' => 0]],
-        ['title'         => 'Scenario archived', 'teachers' => [$one],
-            'scriptures' => [[143, 3, 16]], 'overrides' => ['published' => 2]],
-        ['title'         => 'Scenario access Registered', 'teachers' => [$one],
-            'scriptures' => [[143, 3, 16]], 'overrides' => ['access' => 2]],
-        ['title'         => 'Scenario access Special', 'teachers' => [$one],
-            'scriptures' => [[143, 3, 16]], 'overrides' => ['access' => 3]],
-        ['title'         => 'Scenario no teacher', 'teachers' => [],
-            'scriptures' => [[143, 3, 16]]],
-        ['title' => 'Scenario no scripture', 'teachers' => [$one], 'scriptures' => []],
-        // Gives the teacherless series something to list, so it reaches the page.
-        ['title'         => 'Scenario in a teacherless series', 'teachers' => [$one],
-            'scriptures' => [[143, 3, 16]], 'overrides' => ['series_id' => $orphan]],
-        ['title'         => 'Scenario three teachers', 'teachers' => [$one, $two, $three],
-            'scriptures' => [[145, 8, 1, 8, 4]]],
-        ['title'         => 'Scenario four references', 'teachers' => [$two],
-            'scriptures' => [[101, 1, 1, 1, 5], [119, 1, 1, 1, 6], [143, 1, 1, 1, 14], [145, 8, 28, 8, 39]]],
-        ['title'         => 'Scenario other language', 'teachers' => [$two],
-            'scriptures' => [[143, 3, 16]], 'overrides' => ['language' => 'en-GB']],
-        ['title'         => 'Scenario no media', 'teachers' => [$two],
-            'scriptures' => [[143, 3, 16]], 'media' => false],
-        ['title'         => 'Scenario secondary reference text', 'teachers' => [$three],
-            'scriptures' => [[143, 3, 16]],
-            'overrides'  => ['secondary_reference' => 'See also the readings for Advent']],
-        [
-            'title' => 'Scenario a title that is quite a lot longer than anyone expected, with '
-                . '"quotes", <em>markup</em>, an ampersand & a dash — and an accent: Café',
-            'teachers'   => [$three],
-            'scriptures' => [[143, 3, 16]],
-        ],
-    ];
-
-    foreach ($cases as $i => $spec) {
-        seedStudy($db, $p, [
-            'title'      => $spec['title'],
-            'teachers'   => $spec['teachers'],
-            'scriptures' => $spec['scriptures'],
-            'media'      => $spec['media'] ?? true,
-            'overrides'  => array_merge(
-                ['studydate' => date('Y-m-d H:i:s', strtotime('2026-03-01 10:00:00 +' . $i . ' days'))],
-                $spec['overrides'] ?? []
-            ),
-        ]);
-    }
-
-    return \count($cases);
-}
-
-/**
  * Remove everything this script wrote, and nothing else.
  *
  * @param   mysqli  $db  Connection
@@ -493,11 +419,11 @@ function removeSeeded(mysqli $db, string $p): array
 
 // ---------------------------------------------------------------------------
 
-$options = getopt('', ['site:', 'demo', 'scenarios', 'remove', 'list']);
+$options = getopt('', ['site:', 'demo', 'remove', 'list']);
 
 if (!isset($options['site'])) {
     fwrite(STDERR, "Usage: php build/seed-dev-data.php --site=<j5-dev|j6-dev|j62-dev|j70-dev> "
-        . "[--demo|--scenarios|--remove|--list]\n");
+        . "[--demo|--remove|--list]\n");
     exit(1);
 }
 
@@ -545,12 +471,8 @@ if (isset($options['demo'])) {
     $written += seedDemo($db, $prefix);
 }
 
-if (isset($options['scenarios'])) {
-    $written += seedScenarios($db, $prefix);
-}
-
 if ($written === 0) {
-    fwrite(STDERR, "Nothing to do: pass --demo, --scenarios, --remove or --list.\n");
+    fwrite(STDERR, "Nothing to do: pass --demo, --remove or --list.\n");
     exit(1);
 }
 

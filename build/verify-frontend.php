@@ -228,6 +228,8 @@ foreach ($installs as $install) {
 
         report(true, $item['alias'], \strlen($body) . ' bytes');
     }
+
+    $failures += checkSeededStudies($site, $install->url, $seedMarker, $root);
 }
 
 echo "\n";
@@ -298,4 +300,75 @@ function report(bool $ok, string $label, string $detail): void
         $label,
         $detail
     );
+}
+
+/**
+ * Fetch the sermon page of every study the `content` layer wrote and compare what a guest gets
+ * with what `content.json` declares.
+ *
+ * The declared status is the point: an unpublished or access-restricted study must not be
+ * served, and every other study, however awkward (no teacher, no scripture, a title full of
+ * markup), must render without an error marker. A study the layer should have written but did
+ * not is a failure, not a skip: a skipped check here would pass a gate that tested nothing.
+ *
+ * @param   TestSite  $site    The site under test
+ * @param   string    $url     The site's base URL
+ * @param   string    $marker  The seed marker (alias prefix)
+ * @param   string    $root    The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededStudies(TestSite $site, string $url, string $marker, string $root): int
+{
+    $file = $root . '/build/seed/content.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $db       = $site->db();
+    $template = $db->query('SELECT id FROM ' . $site->table('#__bsms_templates') . ' WHERE published = 1 ORDER BY id LIMIT 1')->fetchColumn();
+    $find     = $db->prepare('SELECT id FROM ' . $site->table('#__bsms_studies') . ' WHERE alias = ?');
+    $problems = 0;
+
+    echo "\n  -- seeded studies, as a guest\n";
+
+    foreach ($declared['studies'] as $study) {
+        $label = $study['key'];
+        $find->execute([$marker . $study['key']]);
+        $id = $find->fetchColumn();
+
+        if ($id === false) {
+            report(false, $label, 'not seeded — run the content layer');
+            $problems++;
+
+            continue;
+        }
+
+        $want = (int) ($study['guest'] ?? 200);
+        $body = fetch(rtrim($url, '/') . '/index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $template, $status);
+
+        if ($body === null || $status !== $want) {
+            report(false, $label, "HTTP {$status}, expected {$want}");
+            $problems++;
+
+            continue;
+        }
+
+        $found = array_filter(ERROR_MARKERS, static fn (string $m): bool => str_contains($body, $m));
+
+        if ($want === 200 && $found !== []) {
+            report(false, $label, 'error marker in body: ' . implode(', ', $found));
+            $problems++;
+
+            continue;
+        }
+
+        report(true, $label, "HTTP {$status}" . ($want === 200 ? ', ' . \strlen($body) . ' bytes' : ' (not served, as declared)'));
+    }
+
+    return $problems;
 }
