@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Direct;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -105,7 +106,7 @@ class CWMAddonDirect extends CWMAddon
         array $legacyServerParams = []
     ): array {
         return [
-            'filename'  => $filename,
+            'filename'  => CwmserverMigrationHelper::absoluteLegacyUrl($filename, $legacyServerParams),
             'player'    => '0',
             'mediacode' => '',
             'special'   => $params['special'] ?? '_blank',

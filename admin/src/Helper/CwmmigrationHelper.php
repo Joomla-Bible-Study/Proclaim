@@ -1438,6 +1438,7 @@ class CwmmigrationHelper
 
                 // Determine target type
                 $targetType = $detectedType === 'unknown' ? 'embed' : $detectedType;
+                $targetType = CwmserverMigrationHelper::resolveTargetType($targetType, $server['params']);
 
                 // Resolve target server: reuse existing or create new
                 if (!isset($targetServerIds[$targetType])) {

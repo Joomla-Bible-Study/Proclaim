@@ -1248,6 +1248,82 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         }
     }
 
+    // -------------------------------------------------------------------------
+    // Files a legacy server served from another host
+    // -------------------------------------------------------------------------
+
+    public function testRemoteLegacyHostIsDetected(): void
+    {
+        $legacy = ['path' => '//www.calvarychapelnewberg.net/', 'protocol' => 'http://'];
+
+        $this->assertTrue(CwmserverMigrationHelper::isRemoteLegacyHost($legacy, 'example.org'));
+    }
+
+    public function testTheSitesOwnHostIsNotRemoteEvenWithWww(): void
+    {
+        $legacy = ['path' => '//www.example.org/', 'protocol' => 'https://'];
+
+        $this->assertFalse(CwmserverMigrationHelper::isRemoteLegacyHost($legacy, 'example.org'));
+    }
+
+    public function testALegacyServerWithNoHostIsNotRemote(): void
+    {
+        $this->assertFalse(CwmserverMigrationHelper::isRemoteLegacyHost(['path' => '', 'protocol' => 'http://'], 'example.org'));
+        $this->assertFalse(CwmserverMigrationHelper::isRemoteLegacyHost([], 'example.org'));
+    }
+
+    public function testALocalFileOnARemoteHostGoesToADirectServer(): void
+    {
+        $legacy = ['path' => '//cdn.example.net/', 'protocol' => 'http://'];
+
+        $this->assertSame('direct', CwmserverMigrationHelper::resolveTargetType('local', $legacy, 'example.org'));
+    }
+
+    public function testOnlyLocalFilesAreRerouted(): void
+    {
+        $legacy = ['path' => '//cdn.example.net/', 'protocol' => 'http://'];
+
+        $this->assertSame('youtube', CwmserverMigrationHelper::resolveTargetType('youtube', $legacy, 'example.org'));
+        $this->assertSame('local', CwmserverMigrationHelper::resolveTargetType('local', [], 'example.org'));
+        $this->assertSame(
+            'local',
+            CwmserverMigrationHelper::resolveTargetType('local', ['path' => '//example.org/'], 'example.org')
+        );
+    }
+
+    public function testAMigratedRelativeFileKeepsItsLegacyHost(): void
+    {
+        $legacy = ['path' => '//www.calvarychapelnewberg.net/', 'protocol' => 'http://'];
+
+        $result = CwmserverMigrationHelper::transformParams(
+            ['filename' => '/MediaFiles/2015/2015-008.mp3', 'player' => '7'],
+            'direct',
+            $legacy
+        );
+
+        $this->assertSame('http://www.calvarychapelnewberg.net/MediaFiles/2015/2015-008.mp3', $result['filename']);
+    }
+
+    public function testALegacyPathWithItsOwnProtocolIsNotDoubled(): void
+    {
+        $legacy = ['path' => 'http://calvarynewberg.org/', 'protocol' => 'http://'];
+
+        $this->assertSame(
+            'http://calvarynewberg.org/images/q.pdf',
+            CwmserverMigrationHelper::absoluteLegacyUrl('/images/q.pdf', $legacy)
+        );
+    }
+
+    public function testAnAbsoluteFilenameIsLeftAlone(): void
+    {
+        $legacy = ['path' => '//cdn.example.net/', 'protocol' => 'http://'];
+
+        $this->assertSame(
+            'https://other.example.com/a.mp3',
+            CwmserverMigrationHelper::absoluteLegacyUrl('https://other.example.com/a.mp3', $legacy)
+        );
+    }
+
     public function testCreateServerForTypeGuardsAgainstANullIdentity(): void
     {
         $reflection = new \ReflectionMethod(CwmserverMigrationHelper::class, 'createServerForType');
