@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
@@ -785,6 +786,94 @@ class CwmserverMigrationHelper
 
         // Merge addon result into preserved display params (addon values override)
         return array_merge($result, $addonResult);
+    }
+
+    /**
+     * Host (and any path) a legacy server served its files from, without the protocol.
+     *
+     * @param   array  $legacyServerParams  Legacy server params (path, protocol)
+     *
+     * @return  string  e.g. "www.example.org/media", or '' when the server had no host
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function legacyBase(array $legacyServerParams): string
+    {
+        $base = trim((string) ($legacyServerParams['path'] ?? ''));
+        $base = (string) preg_replace('#^([a-z][a-z0-9+.-]*:)?//#i', '', $base);
+
+        return trim($base, '/');
+    }
+
+    /**
+     * Whether a legacy server served its files from a host other than this site.
+     *
+     * @param   array        $legacyServerParams  Legacy server params (path, protocol)
+     * @param   string|null  $siteHost            This site's host; defaults to the current one
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function isRemoteLegacyHost(array $legacyServerParams, ?string $siteHost = null): bool
+    {
+        $base = self::legacyBase($legacyServerParams);
+
+        if ($base === '') {
+            return false;
+        }
+
+        $siteHost ??= (string) parse_url(Uri::root(), PHP_URL_HOST);
+        $strip      = static fn (string $host): string => (string) preg_replace('/^www\./i', '', strtolower($host));
+
+        return $strip(explode('/', $base)[0]) !== $strip($siteHost);
+    }
+
+    /**
+     * Pick the server type a detected file belongs on.
+     *
+     * The Local type means "this website" and has no host setting, so a plain file
+     * that a legacy server served from another host goes to a Direct server instead.
+     *
+     * @param   string       $targetType          Type from detectContentType()
+     * @param   array        $legacyServerParams  Legacy server params (path, protocol)
+     * @param   string|null  $siteHost            This site's host; defaults to the current one
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function resolveTargetType(string $targetType, array $legacyServerParams, ?string $siteHost = null): string
+    {
+        if ($targetType === 'local' && self::isRemoteLegacyHost($legacyServerParams, $siteHost)) {
+            return 'direct';
+        }
+
+        return $targetType;
+    }
+
+    /**
+     * Absolute URL for a file a legacy server served, or the filename unchanged when it is already absolute.
+     *
+     * @param   string  $filename            Stored filename
+     * @param   array   $legacyServerParams  Legacy server params (path, protocol)
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function absoluteLegacyUrl(string $filename, array $legacyServerParams): string
+    {
+        $base = self::legacyBase($legacyServerParams);
+
+        if ($filename === '' || $base === '' || preg_match('#^([a-z][a-z0-9+.-]*:)?//#i', $filename)) {
+            return $filename;
+        }
+
+        $protocol = (string) ($legacyServerParams['protocol'] ?? '');
+        $protocol = $protocol !== '' ? $protocol : 'https://';
+
+        return $protocol . $base . '/' . ltrim($filename, '/');
     }
 
     /**
