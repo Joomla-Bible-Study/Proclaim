@@ -107,6 +107,53 @@ function insert(mysqli $db, string $table, array $row): int
 }
 
 /**
+ * The server every seeded media file points at, created on first use.
+ *
+ * A media file whose server row is missing renders as a fatal error on the
+ * listing, so the seeder owns its server rather than assuming one with a
+ * particular id exists on the target site.
+ *
+ * @param   mysqli  $db  Connection
+ * @param   string  $p   Table prefix
+ *
+ * @return  int  Server id
+ */
+function seedServer(mysqli $db, string $p): int
+{
+    static $ids = [];
+
+    $name = SEED_PREFIX . 'youtube';
+
+    if (isset($ids[$p])) {
+        return $ids[$p];
+    }
+
+    $existing = $db->query("SELECT id FROM {$p}bsms_servers WHERE server_name = '{$name}' LIMIT 1")->fetch_assoc();
+
+    if ($existing) {
+        return $ids[$p] = (int) $existing['id'];
+    }
+
+    return $ids[$p] = insert($db, $p . 'bsms_servers', [
+        'server_name' => $name,
+        'published'   => 1,
+        'access'      => 1,
+        'type'        => 'youtube',
+        'params'      => '{}',
+        'media'       => json_encode([
+            'player'                => '1',
+            'popup'                 => '3',
+            'media_use_button_icon' => '3',
+            'media_button_text'     => 'YouTube',
+            'media_icon_type'       => 'fa-solid fa-play',
+            'autostart'             => '2',
+        ]),
+        'created'  => '2026-02-01 10:00:00',
+        'modified' => '2026-02-01 10:00:00',
+    ]);
+}
+
+/**
  * Columns every #__bsms_studies row needs, whatever the scenario.
  *
  * @return  array
@@ -247,7 +294,7 @@ function seedStudy(mysqli $db, string $p, array $spec): int
         // defeats the point of having media at all.
         insert($db, $p . 'bsms_mediafiles', [
             'study_id'   => $studyId,
-            'server_id'  => 5,
+            'server_id'  => seedServer($db, $p),
             'metadata'   => '[]',
             'language'   => '*',
             'access'     => 1,
@@ -437,6 +484,9 @@ function removeSeeded(mysqli $db, string $p): array
         $db->query("DELETE FROM {$p}{$table} WHERE alias LIKE '{$like}'");
         $removed[$table] = $db->affected_rows;
     }
+
+    $db->query("DELETE FROM {$p}bsms_servers WHERE server_name LIKE '{$like}'");
+    $removed['bsms_servers'] = $db->affected_rows;
 
     return array_filter($removed);
 }
