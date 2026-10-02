@@ -126,7 +126,7 @@ function seedServers(TestSite $site, array $servers, string $marker): int
         $name = $marker . $type;
 
         if (!hasRequirement($site, $server)) {
-            echo sprintf("  - %-22s skipped: %s is not installed\n", $name, $server['requires']);
+            echo \sprintf("  - %-22s skipped: %s is not installed\n", $name, $server['requires']);
 
             continue;
         }
@@ -135,13 +135,13 @@ function seedServers(TestSite $site, array $servers, string $marker): int
         $id = $find->fetchColumn();
 
         if ($id !== false) {
-            echo sprintf("  = %-22s already present (id %d)\n", $name, $id);
+            echo \sprintf("  = %-22s already present (id %d)\n", $name, $id);
 
             continue;
         }
 
         $insert->execute([$name, $type, gmdate('Y-m-d H:i:s')]);
-        echo sprintf("  + %-22s id %d\n", $name, $db->lastInsertId());
+        echo \sprintf("  + %-22s id %d\n", $name, $db->lastInsertId());
     }
 
     return 0;
@@ -168,7 +168,7 @@ function removeServers(TestSite $site, string $marker): int
 
     foreach ($in->fetchAll(PDO::FETCH_ASSOC) as $row) {
         if ((int) $row['used'] > 0) {
-            fwrite(STDERR, sprintf("  ! %s kept: %d media file(s) still use it\n", $row['server_name'], $row['used']));
+            fwrite(STDERR, \sprintf("  ! %s kept: %d media file(s) still use it\n", $row['server_name'], $row['used']));
             $problems++;
 
             continue;
@@ -207,7 +207,7 @@ function checkServers(TestSite $site, array $servers, string $marker, string $ro
         }
 
         if (!hasRequirement($site, $server)) {
-            echo sprintf("  - %-22s skipped: %s is not installed\n", $name, $server['requires']);
+            echo \sprintf("  - %-22s skipped: %s is not installed\n", $name, $server['requires']);
 
             continue;
         }
@@ -222,7 +222,7 @@ function checkServers(TestSite $site, array $servers, string $marker, string $ro
             fwrite(STDERR, "  ! {$name}: type {$row['type']}, published {$row['published']}\n");
             $problems++;
         } else {
-            echo sprintf("  ok %-22s\n", $name);
+            echo \sprintf("  ok %-22s\n", $name);
         }
     }
 
