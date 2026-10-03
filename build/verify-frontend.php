@@ -42,6 +42,7 @@ use CWM\BuildTools\Dev\TestSite;
 $root = \dirname(__DIR__);
 
 require $root . '/libraries/vendor/autoload.php';
+require $root . '/build/seed/lib.php';
 
 /**
  * Every menu item a seed layer wrote carries a `note` starting with the project's seed marker,
@@ -235,6 +236,7 @@ foreach ($installs as $install) {
     $failures += checkSeededStudies($site, $install->url, $seedMarker, $root);
     $failures += checkSeededModules($site, $install->url, $items, $root);
     $failures += checkSeededPlugins($site, $install->url, $seedMarker, $root);
+    $failures += checkSeededAccounts($site, $install, $seedMarker, $root);
 }
 
 echo "\n";
@@ -547,4 +549,236 @@ function checkSeededPlugins(TestSite $site, string $url, string $marker, string 
     }
 
     return $problems;
+}
+
+/**
+ * Check the access rules and the API from the inside, as each seeded account.
+ *
+ * Logs in as the registered member, the editor and the manager over the real login form and
+ * compares the status each gets for every study that declares one in content.json: the access
+ * levels and the unpublished state are the rules most worth proving, and a guest check alone only
+ * proves the closed door. Then calls the API with the API user's token: reads answer 200, a write
+ * to the read-only servers resource has no route (404), and a write to sermons reaches validation
+ * (400) without creating anything.
+ *
+ * @param   TestSite      $site     The site under test
+ * @param   InstallConfig $install  The install (url, path)
+ * @param   string        $marker   The seed marker (username prefix)
+ * @param   string        $root     The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededAccounts(TestSite $site, $install, string $marker, string $root): int
+{
+    $accountsFile = $root . '/build/seed/accounts.json';
+    $contentFile  = $root . '/build/seed/content.json';
+
+    if (!is_file($accountsFile) || !is_file($contentFile)) {
+        return 0;
+    }
+
+    echo "\n  -- accounts, logged in\n";
+
+    if (!\function_exists('curl_init')) {
+        report(false, 'accounts', 'the curl extension is needed to log in');
+
+        return 1;
+    }
+
+    $accounts = json_decode((string) file_get_contents($accountsFile), true, 512, JSON_THROW_ON_ERROR);
+    $content  = json_decode((string) file_get_contents($contentFile), true, 512, JSON_THROW_ON_ERROR);
+    $url      = rtrim((string) $install->url, '/');
+    $db       = $site->db();
+    $problems = 0;
+
+    $template = $db->query('SELECT id FROM ' . $site->table('#__bsms_templates') . ' WHERE published = 1 ORDER BY id LIMIT 1')->fetchColumn();
+    $find     = $db->prepare('SELECT id FROM ' . $site->table('#__bsms_studies') . ' WHERE alias = ?');
+
+    foreach (['registered', 'editor', 'manager'] as $role) {
+        $jar = loginAs($url, $marker . $role, (string) $accounts['password']);
+
+        if ($jar === null) {
+            report(false, $role, 'could not log in as ' . $marker . $role . ' — run the accounts layer');
+            $problems++;
+
+            continue;
+        }
+
+        $wrong = [];
+        $count = 0;
+
+        foreach ($content['studies'] as $study) {
+            if (!isset($study[$role])) {
+                continue;
+            }
+
+            $find->execute([$marker . $study['key']]);
+            $id = $find->fetchColumn();
+
+            if ($id === false) {
+                $wrong[] = $study['key'] . ' not seeded';
+
+                continue;
+            }
+
+            $count++;
+            $status = 0;
+            fetchAs($url . '/index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $template, $jar, $status);
+
+            if ($status !== (int) $study[$role]) {
+                $wrong[] = $study['key'] . " HTTP {$status} (expected {$study[$role]})";
+            }
+        }
+
+        @unlink($jar);
+
+        if ($wrong !== []) {
+            report(false, $role, implode('; ', $wrong));
+            $problems++;
+        } else {
+            report(true, $role, "logged in; {$count} studies behave as declared");
+        }
+    }
+
+    $apiUser = null;
+
+    foreach ($accounts['accounts'] as $account) {
+        if ($account['token'] ?? false) {
+            $apiUser = $marker . $account['key'];
+        }
+    }
+
+    $token = $apiUser === null ? null : apiToken($site, $apiUser, (string) $install->path);
+
+    if ($token === null) {
+        report(false, 'api token', 'no API account with a token — run the accounts layer');
+
+        return $problems + 1;
+    }
+
+    $declared = json_decode((string) file_get_contents($root . '/build/seed/plugins.json'), true, 512, JSON_THROW_ON_ERROR);
+    $base     = $url . $declared['api']['path'];
+
+    foreach ([['GET', 'sermons', 200], ['GET', 'servers', 200], ['POST', 'servers', 404], ['POST', 'sermons', 400]] as [$method, $resource, $want]) {
+        $status = apiCall($method, $base . '/' . $resource, $token);
+
+        if ($status !== $want) {
+            report(false, "api {$method} {$resource}", "HTTP {$status}, expected {$want}");
+            $problems++;
+        } else {
+            report(true, "api {$method} {$resource}", "HTTP {$status} with the token");
+        }
+    }
+
+    return $problems;
+}
+
+/**
+ * Log in through the site's own login form, returning the cookie jar file, or null on failure.
+ *
+ * @param   string  $url       The site's base URL
+ * @param   string  $username  The username
+ * @param   string  $password  The password
+ *
+ * @return  string|null
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function loginAs(string $url, string $username, string $password): ?string
+{
+    $jar = (string) tempnam(sys_get_temp_dir(), 'cwmseed');
+
+    $form = fetchAs($url . '/index.php?option=com_users&view=login', $jar, $status);
+
+    if ($form === null || $status !== 200 || preg_match_all('/<input[^>]+type="hidden"[^>]*>/i', $form, $inputs) < 1) {
+        @unlink($jar);
+
+        return null;
+    }
+
+    $post = ['username' => $username, 'password' => $password, 'task' => 'user.login'];
+
+    foreach ($inputs[0] as $input) {
+        if (preg_match('/name="([^"]+)"/', $input, $name) === 1 && preg_match('/value="([^"]*)"/', $input, $value) === 1) {
+            $post[$name[1]] = html_entity_decode($value[1]);
+        }
+    }
+
+    $page = fetchAs($url . '/index.php?option=com_users&task=user.login', $jar, $status, $post);
+
+    if ($page === null || !str_contains($page, 'user.logout')) {
+        @unlink($jar);
+
+        return null;
+    }
+
+    return $jar;
+}
+
+/**
+ * Fetch a URL with a cookie jar, following redirects, optionally as a POST.
+ *
+ * @param   string                    $url     The URL
+ * @param   string                    $jar     The cookie jar file
+ * @param   int|null                  $status  Set to the final HTTP status
+ * @param   array<string, string>|null $post   Form fields, or null for a GET
+ *
+ * @return  string|null
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function fetchAs(string $url, string $jar, ?int &$status, ?array $post = null): ?string
+{
+    $curl = curl_init($url);
+
+    curl_setopt_array($curl, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_TIMEOUT        => 30,
+        CURLOPT_COOKIEJAR      => $jar,
+        CURLOPT_COOKIEFILE     => $jar,
+        CURLOPT_USERAGENT      => 'proclaim-release-gate',
+    ]);
+
+    if ($post !== null) {
+        curl_setopt_array($curl, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => http_build_query($post)]);
+    }
+
+    $body   = curl_exec($curl);
+    $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    return $body === false ? null : (string) $body;
+}
+
+/**
+ * Call the API with a token and return the HTTP status.
+ *
+ * @param   string  $method  GET or POST
+ * @param   string  $url     The URL
+ * @param   string  $token   The bearer token
+ *
+ * @return  int
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function apiCall(string $method, string $url, string $token): int
+{
+    $curl = curl_init($url);
+
+    curl_setopt_array($curl, [
+        CURLOPT_CUSTOMREQUEST  => $method,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_TIMEOUT        => 30,
+        CURLOPT_POSTFIELDS     => $method === 'POST' ? '{}' : null,
+        CURLOPT_HTTPHEADER     => ['Accept: application/vnd.api+json', 'Content-Type: application/json', 'X-Joomla-Token: ' . $token],
+    ]);
+    curl_exec($curl);
+
+    return (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
 }

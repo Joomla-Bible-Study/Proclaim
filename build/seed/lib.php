@@ -81,3 +81,74 @@ function scalar(PDO $db, string $sql): ?string
 
     return $value === false ? null : (string) $value;
 }
+
+/**
+ * Why the current target may not receive accounts with a published password, or null when it may.
+ *
+ * Standalone, only `role = test` installs are ever targeted, and those are reset by the release
+ * gate. Under cwm-seed the role comes from the environment: a test install is fine, and a dev
+ * install only when cwm-site-create made it (it leaves `.ddev/docker-compose.cwm.yaml`), because
+ * every other dev install is somebody's working copy, often with real data behind it.
+ */
+function disposable(): ?string
+{
+    $path = (string) getenv('CWM_SEED_SITE_PATH');
+
+    if ($path === '') {
+        return null;
+    }
+
+    $role = (string) getenv('CWM_SEED_SITE_ROLE');
+
+    if ($role === 'test') {
+        return null;
+    }
+
+    if ($role === 'dev' && is_file($path . '/.ddev/docker-compose.cwm.yaml')) {
+        return null;
+    }
+
+    return "not a disposable site (role \"{$role}\", no cwm-site-create marker at {$path}/.ddev/docker-compose.cwm.yaml)";
+}
+
+/**
+ * The site secret Joomla signs API tokens with, read from configuration.php.
+ *
+ * @throws \RuntimeException  when it cannot be read
+ */
+function siteSecret(string $path): string
+{
+    $source = is_file($path . '/configuration.php') ? (string) file_get_contents($path . '/configuration.php') : '';
+
+    if (preg_match('/public\s+\$secret\s*=\s*([\'"])(.*?)\1\s*;/s', $source, $m) !== 1 || $m[2] === '') {
+        throw new \RuntimeException("cannot read the site secret from {$path}/configuration.php.");
+    }
+
+    return stripslashes($m[2]);
+}
+
+/**
+ * The bearer token for a user whose token seed is stored, or null when the user has none.
+ *
+ * Joomla's token plugin keeps a seed per user and accepts base64("sha256:<id>:<hmac of the seed under
+ * the site secret>"), so the token follows from the database and configuration.php alone.
+ *
+ * @throws \RuntimeException  when the site secret cannot be read
+ */
+function apiToken(TestSite $site, string $username, string $path): ?string
+{
+    $statement = $site->db()->prepare(
+        'SELECT u.id, p.profile_value FROM ' . $site->table('#__users') . ' AS u '
+        . 'JOIN ' . $site->table('#__user_profiles') . " AS p ON p.user_id = u.id AND p.profile_key = 'joomlatoken.token' "
+        . 'WHERE u.username = ?'
+    );
+    $statement->execute([$username]);
+    $found = $statement->fetch(PDO::FETCH_ASSOC);
+    $seed  = $found === false ? false : base64_decode((string) $found['profile_value'], true);
+
+    if ($seed === false || $seed === '') {
+        return null;
+    }
+
+    return base64_encode('sha256:' . $found['id'] . ':' . hash_hmac('sha256', $seed, siteSecret($path)));
+}
