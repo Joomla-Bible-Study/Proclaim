@@ -234,6 +234,7 @@ foreach ($installs as $install) {
 
     $failures += checkSeededStudies($site, $install->url, $seedMarker, $root);
     $failures += checkSeededModules($site, $install->url, $items, $root);
+    $failures += checkSeededPlugins($site, $install->url, $seedMarker, $root);
 }
 
 echo "\n";
@@ -252,14 +253,15 @@ echo "Front-end OK.\n";
  * TLS verification is off: these are local .local hosts with self-signed
  * certificates, and the thing under test is the page, not the certificate.
  *
- * @param   string    $url     Absolute URL to fetch
- * @param   int|null  $status  Set to the HTTP status, or 0 when there was none
+ * @param   string    $url      Absolute URL to fetch
+ * @param   int|null  $status   Set to the HTTP status, or 0 when there was none
+ * @param   string    $accept   The Accept header; Joomla's API answers 406 to a request that names no JSON type
  *
  * @return  string|null  Body, or null when the request produced nothing
  *
  * @since __DEPLOY_VERSION__
  */
-function fetch(string $url, ?int &$status): ?string
+function fetch(string $url, ?int &$status, string $accept = '*/*'): ?string
 {
     $status  = 0;
     $context = stream_context_create([
@@ -267,6 +269,7 @@ function fetch(string $url, ?int &$status): ?string
             'timeout'       => 30,
             'ignore_errors' => true,
             'user_agent'    => 'proclaim-release-gate',
+            'header'        => 'Accept: ' . $accept,
         ],
         'ssl' => [
             'verify_peer'      => false,
@@ -460,6 +463,87 @@ function checkSeededModules(TestSite $site, string $url, array $items, string $r
         }
 
         report(true, $module['key'], $want ? 'shown' : 'hidden, as declared');
+    }
+
+    return $problems;
+}
+
+/**
+ * Check what the Proclaim plugins do for a guest.
+ *
+ * The webservices plugin registers its routes in Joomla's API application. Without a token a
+ * registered route answers 401 and an unknown one 404, so route registration is checked without
+ * needing credentials. The schema.org plugin family means a sermon page carries structured data:
+ * the page of the study named in plugins.json must have a JSON-LD CreativeWork node with its title.
+ *
+ * @param   TestSite  $site    The site under test
+ * @param   string    $url     The site's base URL
+ * @param   string    $marker  The seed marker (alias prefix)
+ * @param   string    $root    The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededPlugins(TestSite $site, string $url, string $marker, string $root): int
+{
+    $file = $root . '/build/seed/plugins.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $problems = 0;
+
+    echo "\n  -- plugins, as a guest\n";
+
+    $api = $declared['api'];
+
+    foreach ([...array_map(static fn (string $r): array => [$r, 401], $api['resources']), [$api['absent'], 404]] as [$resource, $want]) {
+        fetch(rtrim($url, '/') . $api['path'] . '/' . $resource, $status, 'application/vnd.api+json');
+
+        if ($status !== $want) {
+            report(false, 'api ' . $resource, "HTTP {$status}, expected {$want}" . ($want === 401 ? ' (route not registered?)' : ''));
+            $problems++;
+        } else {
+            report(true, 'api ' . $resource, "HTTP {$status}");
+        }
+    }
+
+    $key   = $declared['schemaorg']['study'];
+    $db    = $site->db();
+    $find  = $db->prepare('SELECT id, studytitle FROM ' . $site->table('#__bsms_studies') . ' WHERE alias = ?');
+    $find->execute([$marker . $key]);
+    $study = $find->fetch(PDO::FETCH_ASSOC);
+
+    if ($study === false) {
+        report(false, 'schema.org', "study \"{$key}\" is not seeded — run the content layer");
+
+        return $problems + 1;
+    }
+
+    $template = $db->query('SELECT id FROM ' . $site->table('#__bsms_templates') . ' WHERE published = 1 ORDER BY id LIMIT 1')->fetchColumn();
+    $body     = fetch(rtrim($url, '/') . '/index.php?option=com_proclaim&view=cwmsermon&id=' . $study['id'] . '&t=' . $template, $status);
+    $node     = false;
+
+    if ($body !== null && preg_match_all('#<script[^>]*ld\+json[^>]*>(.*?)</script>#s', $body, $blocks) > 0) {
+        foreach ($blocks[1] as $json) {
+            $data = json_decode($json, true);
+
+            foreach (\is_array($data) ? ($data['@graph'] ?? [$data]) : [] as $nodeData) {
+                if (($nodeData['@type'] ?? null) === 'CreativeWork' && ($nodeData['name'] ?? $nodeData['headline'] ?? '') === $study['studytitle']) {
+                    $node = true;
+                }
+            }
+        }
+    }
+
+    if (!$node) {
+        report(false, 'schema.org', 'no CreativeWork node named "' . $study['studytitle'] . '" on the sermon page');
+        $problems++;
+    } else {
+        report(true, 'schema.org', 'CreativeWork node present');
     }
 
     return $problems;
