@@ -32,6 +32,7 @@ use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
@@ -1188,8 +1189,12 @@ class Cwmpodcast
         // Bracketed deliberately — a top-level OR here would escape every
         // preceding condition, published ones included (see
         // tests/unit/Query/WhereClauseContractTest.php).
+        // The feed is a static file read by podcast apps with no session, so its reader is always the
+        // guest, whoever or whatever runs the build: the console application has no identity at all,
+        // and a Super User building it must not widen what it lists. The guest's own levels, not a
+        // fixed Public, keep a site that grants logged-out visitors more than Public correct.
         $levels = ArrayHelper::toInteger(
-            Factory::getApplication()->getIdentity()->getAuthorisedViewLevels()
+            Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0)->getAuthorisedViewLevels()
         );
         $levels = $levels ?: [0];
 

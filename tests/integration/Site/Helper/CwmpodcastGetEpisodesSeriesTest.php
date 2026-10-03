@@ -97,7 +97,7 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      *
      * @return  int
      */
-    private function insertSermon(string $title, int $published = 1, int $seriesId = 0): int
+    private function insertSermon(string $title, int $published = 1, int $seriesId = 0, int $access = 1): int
     {
         $row = (object) [
             'studytitle'  => $title,
@@ -108,7 +108,7 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
             'messagetype' => 1,
             'booknumber'  => 101,
             'published'   => $published,
-            'access'      => 1,
+            'access'      => $access,
             'language'    => '*',
             'ordering'    => 0,
             'hits'        => 0,
@@ -156,7 +156,7 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      *
      * @return  int
      */
-    private function insertMediaFile(int $studyId, int $podcastId): int
+    private function insertMediaFile(int $studyId, int $podcastId, int $access = 1): int
     {
         $row = (object) [
             'study_id'   => $studyId,
@@ -164,7 +164,7 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
             'metadata'   => '',
             'createdate' => '2026-07-25 11:05:00',
             'published'  => 1,
-            'access'     => 1,
+            'access'     => $access,
             'language'   => '*',
         ];
 
@@ -210,5 +210,59 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
             $sids,
             'A message whose series is unpublished must still be excluded from getEpisodes().'
         );
+    }
+
+    #[TestDox('The feed lists what a guest may see, and not a Registered-only message or media file')]
+    public function testRestrictedItemsAreNotListed(): void
+    {
+        $podcastId  = $this->insertPodcast();
+        $publicId   = $this->insertSermon('Public message');
+        $messageId  = $this->insertSermon('Registered message', 1, 0, 2);
+        $mediaId    = $this->insertSermon('Registered media');
+
+        $this->insertMediaFile($publicId, $podcastId);
+        $this->insertMediaFile($messageId, $podcastId);
+        $this->insertMediaFile($mediaId, $podcastId, 2);
+
+        $sids = array_map(static fn ($e) => (int) $e->sid, (new Cwmpodcast())->getEpisodes($podcastId, ''));
+
+        $this->assertContains($publicId, $sids);
+        $this->assertNotContains($messageId, $sids, 'A Registered-only message must not be listed in a public feed.');
+        $this->assertNotContains($mediaId, $sids, 'A Registered-only media file must not be listed in a public feed.');
+    }
+
+    #[TestDox('A Super User building the feed does not widen it')]
+    public function testASuperUserBuildingTheFeedDoesNotWidenIt(): void
+    {
+        $superUser = (int) $this->db->setQuery(
+            'SELECT ' . $this->db->quoteName('user_id') . ' FROM ' . $this->db->quoteName('#__user_usergroup_map')
+            . ' WHERE ' . $this->db->quoteName('group_id') . ' = 8',
+            0,
+            1
+        )->loadResult();
+
+        if ($superUser === 0) {
+            $this->markTestSkipped('No Super User on this database.');
+        }
+
+        $app      = Factory::getApplication();
+        $previous = $app->getIdentity();
+        $app->loadIdentity(\Joomla\CMS\User\User::getInstance($superUser));
+
+        try {
+            $podcastId = $this->insertPodcast();
+            $publicId  = $this->insertSermon('Public message');
+            $hiddenId  = $this->insertSermon('Registered message', 1, 0, 2);
+
+            $this->insertMediaFile($publicId, $podcastId);
+            $this->insertMediaFile($hiddenId, $podcastId);
+
+            $sids = array_map(static fn ($e) => (int) $e->sid, (new Cwmpodcast())->getEpisodes($podcastId, ''));
+        } finally {
+            $app->loadIdentity($previous);
+        }
+
+        $this->assertContains($publicId, $sids);
+        $this->assertNotContains($hiddenId, $sids, 'The feed is read by an anonymous app, whoever builds it.');
     }
 }
