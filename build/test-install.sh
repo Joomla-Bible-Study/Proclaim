@@ -70,6 +70,8 @@ php build/verify-scripture-install.php || FAILURES+=("scripture library (verify-
 echo "-- [8/10] seed the site menu items the front end is reached through (#1701)"
 php build/seed/servers.php apply || FAILURES+=("server seeding (build/seed/servers.php)")
 php build/seed/servers.php check || FAILURES+=("server seed check (build/seed/servers.php check)")
+php build/seed/content.php apply || FAILURES+=("content seeding (build/seed/content.php)")
+php build/seed/content.php check || FAILURES+=("content seed check (build/seed/content.php check)")
 php build/seed/menus.php apply || FAILURES+=("menu seeding (build/seed/menus.php)")
 # A fresh install has no verses until the Download Core Translations task runs,
 # and the seeded study cites a book. Without this the front-end check below only
