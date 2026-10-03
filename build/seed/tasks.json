@@ -1,0 +1,16 @@
+{
+    "_comment": "Scheduled tasks, run for real. `tasks` are the Proclaim routines that only touch this site's own tables and files: each is given a task row, run once with `scheduler:run --id`, and disabled again, so Joomla's web-triggered scheduler never fires them later. Not here, deliberately: proclaim.platformstats and proclaim.playlistsync call outside services, and the scripture translation download needs the network. `fixtures` are small studies of the layer's own, so the content layer's studies are never changed: the publish routine must publish the scheduled one and unpublish the expired one, and the archive routine, which does nothing unless archive_auto is on (it is off by default), must leave the old one alone. Dates are relative to the moment the layer runs. `after` is the published state each fixture must have once the tasks have run.",
+    "tasks": [
+        {"key": "analytics", "type": "proclaim.analytics", "title": "Seed task: analytics rollup"},
+        {"key": "podcast",   "type": "proclaim.podcast",   "title": "Seed task: podcast feeds"},
+        {"key": "backup",    "type": "proclaim.backup",    "title": "Seed task: database backup"},
+        {"key": "publish",   "type": "proclaim.publish",   "title": "Seed task: publish and expire"},
+        {"key": "archive",   "type": "proclaim.archive",   "title": "Seed task: archive (off by default)"}
+    ],
+    "fixtures": [
+        {"key": "task-scheduled", "title": "Task fixture scheduled to publish", "published": 0, "publish_up": "-1 day",  "after": 1},
+        {"key": "task-expired",   "title": "Task fixture past its end date",    "published": 1, "publish_down": "-1 day", "after": 0},
+        {"key": "task-old",       "title": "Task fixture from 2001",            "published": 1, "studydate": "2001-01-01 10:00:00", "after": 1},
+        {"key": "task-control",   "title": "Task fixture with no dates",        "published": 1, "after": 1}
+    ]
+}
