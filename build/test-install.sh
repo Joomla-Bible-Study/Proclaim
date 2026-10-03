@@ -73,6 +73,8 @@ php build/seed/servers.php check || FAILURES+=("server seed check (build/seed/se
 php build/seed/content.php apply || FAILURES+=("content seeding (build/seed/content.php)")
 php build/seed/content.php check || FAILURES+=("content seed check (build/seed/content.php check)")
 php build/seed/menus.php apply || FAILURES+=("menu seeding (build/seed/menus.php)")
+php build/seed/modules.php apply || FAILURES+=("module seeding (build/seed/modules.php)")
+php build/seed/modules.php check || FAILURES+=("module seed check (build/seed/modules.php check)")
 # A fresh install has no verses until the Download Core Translations task runs,
 # and the seeded study cites a book. Without this the front-end check below only
 # ever exercises the unresolvable path.

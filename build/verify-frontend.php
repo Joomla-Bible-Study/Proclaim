@@ -63,6 +63,9 @@ const ERROR_MARKERS = [
     'Parse error',
     'Warning:',
     'Deprecated:',
+    '<b>Warning</b>',
+    '<b>Deprecated</b>',
+    '<b>Notice</b>',
     'SQL=',
     'JDatabaseExceptionExecuting',
     'Error displaying the error page',
@@ -230,6 +233,7 @@ foreach ($installs as $install) {
     }
 
     $failures += checkSeededStudies($site, $install->url, $seedMarker, $root);
+    $failures += checkSeededModules($site, $install->url, $items, $root);
 }
 
 echo "\n";
@@ -368,6 +372,94 @@ function checkSeededStudies(TestSite $site, string $url, string $marker, string 
         }
 
         report(true, $label, "HTTP {$status}" . ($want === 200 ? ', ' . \strlen($body) . ' bytes' : ' (not served, as declared)'));
+    }
+
+    return $problems;
+}
+
+/**
+ * Fetch the seeded landing page as a guest and check which seeded module instances it carries.
+ *
+ * Instances are assigned to every page, so one page shows them all. A module with `guest`
+ * "hidden" (unpublished, or a level a guest lacks) must not appear; every other one must, with
+ * the text `modules.json` says its output contains. The admin module is not checked here: it
+ * only renders in the administrator, behind a login.
+ *
+ * @param   TestSite                           $site   The site under test
+ * @param   string                             $url    The site's base URL
+ * @param   list<array<string, string|int>>    $items  The seeded menu items (id, alias, link)
+ * @param   string                             $root   The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededModules(TestSite $site, string $url, array $items, string $root): int
+{
+    $file = $root . '/build/seed/modules.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $landing = null;
+
+    foreach ($items as $item) {
+        if (str_contains((string) $item['link'], 'cwmlandingpage')) {
+            $landing = $item;
+
+            break;
+        }
+    }
+
+    echo "\n  -- seeded modules, as a guest\n";
+
+    if ($landing === null) {
+        report(false, 'modules', 'no seeded landing page to carry them');
+
+        return 1;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $body     = fetch(rtrim($url, '/') . '/index.php?Itemid=' . $landing['id'], $status);
+    $problems = 0;
+
+    if ($body === null || $status !== 200) {
+        report(false, 'modules', "landing page HTTP {$status}");
+
+        return 1;
+    }
+
+    $found = array_filter(ERROR_MARKERS, static fn (string $m): bool => str_contains($body, $m));
+
+    if ($found !== []) {
+        report(false, 'modules', 'error marker in the page: ' . implode(', ', $found));
+        $problems++;
+    }
+
+    foreach ($declared['modules'] as $module) {
+        if (($module['client'] ?? 'site') !== 'site') {
+            continue;
+        }
+
+        $shown = str_contains($body, $module['title']);
+        $want  = ($module['guest'] ?? 'visible') === 'visible';
+
+        if ($shown !== $want) {
+            report(false, $module['key'], $want ? 'not on the page' : 'on the page, but a guest should not see it');
+            $problems++;
+
+            continue;
+        }
+
+        if ($want && isset($module['contains']) && !str_contains($body, $module['contains'])) {
+            report(false, $module['key'], 'rendered without "' . $module['contains'] . '"');
+            $problems++;
+
+            continue;
+        }
+
+        report(true, $module['key'], $want ? 'shown' : 'hidden, as declared');
     }
 
     return $problems;
