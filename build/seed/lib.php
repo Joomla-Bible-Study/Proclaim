@@ -152,3 +152,33 @@ function apiToken(TestSite $site, string $username, string $path): ?string
 
     return base64_encode('sha256:' . $found['id'] . ':' . hash_hmac('sha256', $seed, siteSecret($path)));
 }
+
+/**
+ * Run a command of Joomla's own command line on a site, the way that site is meant to be run.
+ *
+ * A DDEV site's database host (`db`) only resolves inside its container, so those run through
+ * `ddev exec` from the site folder; any other site runs under the PHP that is running this script.
+ *
+ * @param  list<string>  $arguments  e.g. ['finder:index']
+ *
+ * @return array{0: int, 1: string}  Exit code and combined output
+ */
+function runJoomlaCli(string $sitePath, array $arguments): array
+{
+    $command = is_dir($sitePath . '/.ddev')
+        ? array_merge(['ddev', 'exec', 'php', 'cli/joomla.php'], $arguments)
+        : array_merge([PHP_BINARY, $sitePath . '/cli/joomla.php'], $arguments);
+
+    $process = proc_open($command, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $sitePath);
+
+    if (!\is_resource($process)) {
+        return [1, 'could not start ' . $command[0]];
+    }
+
+    $output = stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]);
+
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    return [proc_close($process), preg_replace('/\e\[[0-9;]*m/', '', $output) ?? $output];
+}

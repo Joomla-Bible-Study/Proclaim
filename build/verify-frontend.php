@@ -237,6 +237,7 @@ foreach ($installs as $install) {
     $failures += checkSeededModules($site, $install->url, $items, $root);
     $failures += checkSeededPlugins($site, $install->url, $seedMarker, $root);
     $failures += checkSeededAccounts($site, $install, $seedMarker, $root);
+    $failures += checkSeededSearch($install, $seedMarker, $root);
 }
 
 echo "\n";
@@ -781,4 +782,96 @@ function apiCall(string $method, string $url, string $token): int
     curl_exec($curl);
 
     return (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+}
+
+/**
+ * Search the Smart Search index as a guest and as each seeded account.
+ *
+ * The studies in the results must be exactly the published seeded ones that role can open, which is
+ * the access matrix the pages follow: a guest never finds an unpublished or restricted study, a
+ * Registered member finds the Registered-level one, editors and managers find the Special-level one
+ * as well. An unpublished study is in the index but must be in no one's results.
+ *
+ * @param   InstallConfig  $install  The install (url)
+ * @param   string         $marker   The seed marker (username prefix)
+ * @param   string         $root     The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededSearch($install, string $marker, string $root): int
+{
+    $files = [$root . '/build/seed/finder.json', $root . '/build/seed/content.json', $root . '/build/seed/accounts.json'];
+
+    foreach ($files as $file) {
+        if (!is_file($file)) {
+            return 0;
+        }
+    }
+
+    echo "\n  -- search, as each role\n";
+
+    if (!\function_exists('curl_init')) {
+        report(false, 'search', 'the curl extension is needed to log in');
+
+        return 1;
+    }
+
+    [$finder, $content, $accounts] = array_map(
+        static fn (string $file): array => json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR),
+        $files
+    );
+
+    $url      = rtrim((string) $install->url, '/');
+    $problems = 0;
+
+    foreach (['guest', 'registered', 'editor', 'manager'] as $role) {
+        $jar = tempnam(sys_get_temp_dir(), 'cwmseed');
+
+        if ($role !== 'guest') {
+            $jar = loginAs($url, $marker . $role, (string) $accounts['password']);
+
+            if ($jar === null) {
+                report(false, 'search ' . $role, 'could not log in — run the accounts layer');
+                $problems++;
+
+                continue;
+            }
+        }
+
+        $body = fetchAs($url . '/index.php?option=com_finder&view=search&q=' . rawurlencode((string) $finder['query']), $jar, $status);
+        @unlink($jar);
+
+        if ($body === null || $status !== 200) {
+            report(false, 'search ' . $role, "HTTP {$status}");
+            $problems++;
+
+            continue;
+        }
+
+        $wrong = [];
+        $found = 0;
+
+        foreach ($content['studies'] as $study) {
+            // Search lists published content only, however much the role may open by direct link:
+            // an editor can open an unpublished study, and still must not find it here.
+            $expected = (int) ($study[$role] ?? 200) === 200 && (int) ($study['published'] ?? 1) !== 0;
+            $shown    = str_contains($body, htmlspecialchars(substr((string) $study['title'], 0, 30), ENT_QUOTES | ENT_SUBSTITUTE));
+            $found += $shown ? 1 : 0;
+
+            if ($shown !== $expected) {
+                $wrong[] = $study['key'] . ($expected ? ' missing' : ' should not appear');
+            }
+        }
+
+        if ($wrong !== []) {
+            report(false, 'search ' . $role, implode('; ', $wrong));
+            $problems++;
+        } else {
+            report(true, 'search ' . $role, "{$found} seeded studies found, as declared");
+        }
+    }
+
+    return $problems;
 }
