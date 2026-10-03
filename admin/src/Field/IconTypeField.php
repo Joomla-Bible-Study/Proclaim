@@ -49,12 +49,14 @@ class IconTypeField extends ListField
     #[\Override]
     protected function getInput(): string
     {
-        $data = $this->getLayoutData();
-
-        // Normalize legacy FA4/FA5 values to FA6 canonical
+        // Normalize legacy FA4/FA5 values to FA6 canonical before the layout
+        // data snapshots $this->value, or a pre-FA6 stored value never shows
+        // as the selected option on the edit screen.
         if ($this->value) {
             $this->value = Cwmmedia::normalizeIconClass($this->value);
         }
+
+        $data = $this->getLayoutData();
 
         $data['options'] = $this->getOptions();
 

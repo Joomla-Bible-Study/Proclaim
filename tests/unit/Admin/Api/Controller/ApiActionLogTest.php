@@ -123,6 +123,94 @@ class ApiActionLogTest extends ProclaimTestCase
     }
 
     /**
+     * {origin} is free text, translated at write time, and the action log only
+     * filters by `extension` — so an API change must also carry a structural,
+     * filterable signal, not just a human-readable one.
+     */
+    public function testLogUsesAFilterableContextNotAHardcodedExtension(): void
+    {
+        $helper = (string) file_get_contents(
+            \dirname(__DIR__, 5) . '/admin/src/Helper/CwmactionlogHelper.php'
+        );
+
+        $ref  = new \ReflectionMethod(
+            'CWM\\Component\\Proclaim\\Administrator\\Helper\\CwmactionlogHelper',
+            'log'
+        );
+        $body = self::methodBody($helper, $ref);
+
+        $this->assertStringContainsString(
+            'self::context($app)',
+            $body,
+            "log() must pass the API-aware context to addLog(), not a hardcoded 'com_proclaim' literal"
+        );
+        $this->assertStringNotContainsString(
+            "addLog([\$message], \$messageKey, 'com_proclaim',",
+            $body,
+            'The extension argument must vary by origin, not be a fixed string'
+        );
+    }
+
+    /**
+     * API writes get a dotted sub-extension so they can be isolated by a saved
+     * search or SQL query; other origins keep the plain extension every
+     * existing row already uses.
+     */
+    public function testApiContextUsesJoomlasDottedExtensionConvention(): void
+    {
+        $helper = (string) file_get_contents(
+            \dirname(__DIR__, 5) . '/admin/src/Helper/CwmactionlogHelper.php'
+        );
+
+        $ref  = new \ReflectionMethod(
+            'CWM\\Component\\Proclaim\\Administrator\\Helper\\CwmactionlogHelper',
+            'context'
+        );
+        $body = self::methodBody($helper, $ref);
+
+        $this->assertStringContainsString("isClient('api')", $body);
+        $this->assertStringContainsString('com_proclaim.api', $body);
+        $this->assertStringContainsString(
+            "'com_proclaim'",
+            $body,
+            'Non-API origins must fall back to the plain extension, matching historical rows'
+        );
+    }
+
+    /**
+     * The control panel's "Recent Activity" link filters on the plain
+     * extension — it must keep matching API rows via the list model's prefix
+     * LIKE, or splitting the context would silently hide API activity from it.
+     */
+    public function testCpanelActivityLinkStillUsesThePlainExtension(): void
+    {
+        $tmpl = (string) file_get_contents(
+            \dirname(__DIR__, 5) . '/admin/tmpl/cwmcpanel/default.php'
+        );
+
+        $this->assertStringContainsString(
+            'filter[extension]=com_proclaim',
+            $tmpl,
+            "The cpanel link must stay on the plain 'com_proclaim' filter — "
+                . "com_actionlogs' list model matches it via LIKE 'com_proclaim%', "
+                . "which still catches 'com_proclaim.api' rows"
+        );
+    }
+
+    /**
+     * Slice one method body out of a source string by reflection line numbers.
+     */
+    private static function methodBody(string $source, \ReflectionMethod $ref): string
+    {
+        $lines = explode("\n", $source);
+
+        return implode(
+            "\n",
+            \array_slice($lines, $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1)
+        );
+    }
+
+    /**
      * Every message key and origin label the code references must exist.
      */
     public function testUnifiedKeysExistInLanguageFile(): void

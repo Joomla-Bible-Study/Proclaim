@@ -39,7 +39,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_HOME_LABEL"
                         default="1"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -50,7 +49,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_MESSAGES_LABEL"
                         default="1"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -62,7 +60,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_MEDIAFILES_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -74,7 +71,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_TEACHERS_LABEL"
                         default="1"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -86,7 +82,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_SERIES_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -98,7 +93,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_MESSAGETYPES_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -110,7 +104,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_LOCATIONS_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -122,7 +115,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_TOPICS_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -134,7 +126,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_COMMENTS_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -146,7 +137,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_SERVERS_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -158,7 +148,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_PODCASTS_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -170,7 +159,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_TEMPLATES_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -182,7 +170,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_TEMPLATECODE_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -194,7 +181,6 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_ADMIN_LABEL"
                         default="0"
-                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>

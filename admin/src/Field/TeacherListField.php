@@ -16,11 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Field\Trait\SearchableFancySelectTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmfilterHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Teachers List Form Field class for the Proclaim component
@@ -34,6 +34,8 @@ use Joomla\Database\DatabaseInterface;
  */
 class TeacherListField extends ListField
 {
+    use SearchableFancySelectTrait;
+
     /**
      * The field type.
      *
@@ -59,14 +61,8 @@ class TeacherListField extends ListField
     {
         $result = parent::setup($element, $value, $group);
 
-        if ($result && (string) $this->element['searchable'] === 'true') {
-            $this->layout = 'joomla.form.field.list-fancy-select';
-
-            // Ensure the Choices.js dropdown is not clipped by parent containers
-            // and renders above adjacent subform rows (rules live in topics-field.css).
-            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-            $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
-            $wa->useStyle('com_proclaim.topics-field');
+        if ($result) {
+            $this->applySearchableFancySelect($element);
         }
 
         return $result;
@@ -83,14 +79,14 @@ class TeacherListField extends ListField
     protected function getOptions(): array
     {
         $app   = Factory::getApplication();
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $db    = $this->getDatabase();
         $query = $db->createQuery();
 
         $query->select('DISTINCT ' . $db->quoteName('t.id') . ', ' . $db->quoteName('t.teachername'))
             ->from($db->quoteName('#__bsms_teachers', 't'));
 
         if ($app->isClient('site')) {
-            $user   = $app->getIdentity();
+            $user   = $this->getCurrentUser();
             $groups = $user->getAuthorisedViewLevels();
 
             $query->join(

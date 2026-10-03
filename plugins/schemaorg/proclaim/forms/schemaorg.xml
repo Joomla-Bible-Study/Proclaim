@@ -17,7 +17,7 @@
 
                     <field name="headline" type="text"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_HEADLINE"
-                           filter="string" size="60"/>
+                           filter="string"/>
 
                     <field name="description" type="textarea"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION"
@@ -51,10 +51,10 @@
                         <form>
                             <field name="genericTitle" type="text"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_KEY"
-                                   filter="string" size="30"/>
+                                   filter="string"/>
                             <field name="genericValue" type="text"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_VALUE"
-                                   filter="string" size="30"/>
+                                   filter="string"/>
                         </form>
                     </field>
 
@@ -75,11 +75,11 @@
 
                     <field name="name" type="text"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_NAME"
-                           filter="string" size="60"/>
+                           filter="string"/>
 
                     <field name="jobTitle" type="text"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_JOB_TITLE"
-                           filter="string" size="60"/>
+                           filter="string"/>
 
                     <field name="description" type="textarea"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION"
@@ -95,7 +95,7 @@
                         <form>
                             <field name="value" type="url"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_SOCIAL_URL"
-                                   filter="url" validate="url" size="60"/>
+                                   filter="url" validate="url"/>
                         </form>
                     </field>
 
@@ -105,7 +105,7 @@
                             <field name="@type" type="hidden" default="Organization"/>
                             <field name="name" type="text"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_ORG_NAME"
-                                   filter="string" size="60"/>
+                                   filter="string"/>
                         </form>
                     </field>
 
@@ -115,10 +115,10 @@
                         <form>
                             <field name="genericTitle" type="text"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_KEY"
-                                   filter="string" size="30"/>
+                                   filter="string"/>
                             <field name="genericValue" type="text"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_VALUE"
-                                   filter="string" size="30"/>
+                                   filter="string"/>
                         </form>
                     </field>
 
@@ -139,7 +139,7 @@
 
                     <field name="name" type="text"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_NAME"
-                           filter="string" size="60"/>
+                           filter="string"/>
 
                     <field name="description" type="textarea"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION"
@@ -167,7 +167,7 @@
                             <field name="@type" type="hidden" default="Organization"/>
                             <field name="name" type="text"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_ORG_NAME"
-                                   filter="string" size="60"/>
+                                   filter="string"/>
                         </form>
                     </field>
 
@@ -177,10 +177,10 @@
                         <form>
                             <field name="genericTitle" type="text"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_KEY"
-                                   filter="string" size="30"/>
+                                   filter="string"/>
                             <field name="genericValue" type="text"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_VALUE"
-                                   filter="string" size="30"/>
+                                   filter="string"/>
                         </form>
                     </field>
 

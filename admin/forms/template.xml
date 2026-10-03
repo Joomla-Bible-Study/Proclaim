@@ -53,14 +53,14 @@
                 JTRASHED
             </option>
         </field>
-        <field name="title" type="text" size="50" label="JBS_TPL_TEMPLATE_NAME"
+        <field name="title" type="text" label="JBS_TPL_TEMPLATE_NAME"
                required="true"/>
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
                description="JBS_FLD_LOCATION_DESC">
             <option value="-1">JBS_CMN_SELECT_LOCATION</option>
         </field>
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+               description="JGLOBAL_FIELD_ID_DESC" default="0" readonly="true"
                class="col-12 small"/>
 
     </fieldset>
@@ -110,31 +110,31 @@
         </fieldset>
         <fieldset name="FILTERS" label="JBS_TPL_FILTERS"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="lteacher_id" type="TeacherList" default="-1" multiple="true"
+            <field name="lteacher_id" type="TeacherList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lseries_id" type="Series" default="-1" multiple="true"
+            <field name="lseries_id" type="Series" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_CMN_FILTERS_SERIES" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lbooknumber" type="BookList" default="-1" multiple="true"
+            <field name="lbooknumber" type="BookList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_CMN_FILTERS_BOOKS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="ltopic_id" type="TopicsList" default="-1" multiple="true"
+            <field name="ltopic_id" type="TopicsList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lmessagetype" type="MessageTypeList" default="-1" multiple="true"
+            <field name="lmessagetype" type="MessageTypeList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="5" label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="llocations" type="LocationList" default="-1" multiple="true"
+            <field name="llocations" type="LocationList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="5" label="JBS_CMN_FILTERS_LOCATIONS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lyears" type="YearList" default="-1" multiple="true"
+            <field name="lyears" type="YearList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="5" label="JBS_CMN_FILTERS_YEARS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
@@ -144,11 +144,11 @@
                    label="JBS_TPL_VERSES_SHOW_VERSES" description="JBS_TPL_VERSES_SHOW_VERSES_DESC"/>
             <field name="scripture_separator" type="ScriptureSeparator" default="middot"
                    label="JBS_TPL_SCRIPTURE_SEPARATOR" description="JBS_TPL_SCRIPTURE_SEPARATOR_DESC"/>
-            <field name="stylesheet" type="text" size="50" default=""
+            <field name="stylesheet" type="text" default=""
                    label="JBS_TPL_VERSES_STYLESHEET" description="JBS_TPL_VERSES_STYLESHEET_DESC"/>
             <field name="date_format" type="DateFormat" default="2"
                    label="JBS_TPL_VERSES_DATE_FORMAT" description="JBS_TPL_VERSES_DATE_FORMAT_DESC"/>
-            <field name="custom_date_format" type="text" size="25" default=""
+            <field name="custom_date_format" type="text" default=""
                    label="JBS_TPL_VERSES_CUSTOM_DATE_FORMAT" description="JBS_TPL_VERSES_CUSTOM_DATE_FORMAT_DESC"/>
         </fieldset>
         <fieldset name="MEDIA" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
@@ -193,9 +193,9 @@
                 <option value="1">JYES</option>
                 <option value="2">JNO</option>
             </field>
-            <field name="player_width" type="int" default="640"
+            <field name="player_width" type="number" default="640" min="1"
                    label="JBS_TPL_MEDIA_PLAYER_WIDTH" description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>
-            <field name="player_height" type="int" default="385"
+            <field name="player_height" type="number" default="385" min="1"
                    label="JBS_TPL_MEDIA_PLAYER_HEIGHT" description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
             <field name="embedshare" type="list" default="1"
                    label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">
@@ -215,11 +215,11 @@
                    label="JBS_TPL_MEDIA_LIGHTCOLOR" description="JBS_TPL_MEDIA_LIGHTCOLOR_DESC"/>
             <field name="screencolor" type="ColorPicker" default="black"
                    label="JBS_TPL_MEDIA_SCREENCOLOR" description="JBS_TPL_MEDIA_SCREENCOLOR_DESC"/>
-            <field name="popuptitle" type="Custom" codeset="template" input="text" size="75" default="{{title}}"
+            <field name="popuptitle" type="Custom" codeset="template" input="text" default="{{title}}"
                    label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-            <field name="popupfooter" type="Custom" codeset="template" input="text" size="75" default=""
+            <field name="popupfooter" type="Custom" codeset="template" input="text" default=""
                    label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-            <field name="popupmargin" type="int" default="50"
+            <field name="popupmargin" type="number" default="50" min="0"
                    label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>
             <field name="popupbackground" type="ColorPicker" default="black"
                    label="JBS_TPL_MEDIA_POPUPBACKGROUND" description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
@@ -373,7 +373,7 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="listteachers" type="TeacherList" default="-1" multiple="true"
+            <field name="listteachers" type="TeacherList" default="-1" multiple="true" layout="joomla.form.field.list-fancy-select"
                    size="10" label="JBS_TPL_LISTITEMS_LISTTEACHERS" description="JBS_TPL_LISTITEMS_LISTTEACHERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
@@ -393,7 +393,7 @@
                 <option value="1">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_TOP</option>
                 <option value="2">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_BOTTOM</option>
             </field>
-            <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
+            <field name="subscribeintro" type="text" default="Our Podcasts"
                    label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC"/>
         </fieldset>
         <fieldset name="SEARCHFILTERS" label="JBS_TPL_SEARCH_FILTERS" layoutContext="messages">
@@ -478,7 +478,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="scripture1element" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="scripture1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="scripture1custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="scripture1linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -493,7 +493,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="scripture2element" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="scripture2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="scripture2custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="scripture2linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -508,7 +508,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="scriptureselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="scripturescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="scripturescustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="scriptureslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -524,7 +524,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="secondaryelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="secondarycustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="secondarycustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="secondarylinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -539,7 +539,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="jbsmediaelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="jbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="jbsmediacustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="jbsmedialinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -552,7 +552,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="spacer1element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="spacer1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="spacer1custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="spacer2row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER2"
                    description="JBS_TPL_ROW_DESC"/>
@@ -562,7 +562,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="spacer2element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="spacer2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="spacer2custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="spacer3row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER3"
                    description="JBS_TPL_ROW_DESC"/>
@@ -572,7 +572,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="spacer3element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="spacer3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="spacer3custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
         </fieldset>
         <fieldset name="DISPLAYELEMENTS2" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
@@ -584,7 +584,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="titleelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="titlecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="titlelinktype" type="LinkOptions" default="1" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -596,7 +596,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dateelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="datecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="datecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="datelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -609,7 +609,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="teacherelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="teachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="teachercustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="teacherlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -621,7 +621,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="teacherimageelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="teacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="teacherimagecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="teacherimagelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -633,7 +633,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="teacher-titleelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="teacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="teacher-titlecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="teacher-titlelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -645,7 +645,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="teachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="teachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="teachercardcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="teachercardlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -659,7 +659,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="durationelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="durationcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="durationcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="durationlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -671,7 +671,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="studyintroelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="studyintrocustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="studyintrocustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="studyintrolinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -683,7 +683,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="serieselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="seriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="seriescustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="serieslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -695,7 +695,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="seriesthumbnailelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="seriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="seriesthumbnailcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="seriesthumbnaillinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -707,7 +707,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="seriesdescriptionelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="seriesdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="seriesdescriptioncustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="seriesdescriptionlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -721,7 +721,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="submittedelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="submittedcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="submittedcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="submittedlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -733,7 +733,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="hitselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="hitscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="hitscustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="hitslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -745,7 +745,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="downloadselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="downloadscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="downloadscustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="downloadslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -759,7 +759,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="studynumberelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="studynumbercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="studynumbercustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="studynumberlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -771,7 +771,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="topicelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="topiccustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="topiccustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="topiclinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -783,7 +783,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="locationselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="locationscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="locationscustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="locationslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -797,7 +797,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="messagetypeelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="messagetypecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="messagetypecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="messagetypelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -809,7 +809,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="thumbnailelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="thumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="thumbnailcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="thumbnaillinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -821,9 +821,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="customelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="customcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="customcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="customtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT"
+            <field name="customtext" type="text" default="" label="JBS_TPL_CUSTOM_TEXT"
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
 
         </fieldset>
@@ -837,7 +837,7 @@
                 <option value="1">JBS_TPL_DETAILS_SHOW_HEADER_TITLE</option>
                 <option value="2">JBS_TPL_DETAILS_SHOW_HEADER_SCRIPTURE</option>
             </field>
-            <field name="link_text" type="text" size="75"
+            <field name="link_text" type="text"
                    default="Return to Messages List" label="JBS_TPL_DETAILS_LINK_TEXT"
                    description="JBS_TPL_DETAILS_LINK_TEXT_DESC"/>
             <field name="showrelated" type="list" default="1"
@@ -958,7 +958,7 @@
                 <option value="0">JBS_TPL_APPROVAL_BACKEND</option>
                 <option value="1">JBS_TPL_NO_APPROVAL</option>
             </field>
-            <field name="comment_notify_email" type="email" default="" size="40"
+            <field name="comment_notify_email" type="email" default=""
                    label="JBS_CMT_NOTIFY_EMAIL" description="JBS_CMT_NOTIFY_EMAIL_DESC"
                    showon="comment_publish:0"/>
             <field name="email_comments" type="radio" default="1"
@@ -967,12 +967,10 @@
                 <option value="0">JBS_TPL_NO_EMAIL</option>
                 <option value="1">JBS_TPL_EMAIL_SENT</option>
             </field>
-            <field name="recipient" type="email" default="" size="40"
+            <field name="recipient" type="email" default=""
                    label="JBS_TPL_DETAILS_RECIPIENT" description="JBS_TPL_DETAILS_RECIPIENT_DESC"/>
-            <field name="subject" type="text" default="Comments on messages"
-                   size="40" label="JBS_TPL_DETAILS_SUBJECT"/>
-            <field name="body" type="text" default="Comments entered."
-                   size="40" label="JBS_TPL_DETAILS_BODY"/>
+            <field name="subject" type="text" default="Comments on messages" label="JBS_TPL_DETAILS_SUBJECT"/>
+            <field name="body" type="text" default="Comments entered." label="JBS_TPL_DETAILS_BODY"/>
         </fieldset>
         <fieldset name="TEACHER" label="JBS_TPL_TEACHER" layoutContext="teachers"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
@@ -1038,9 +1036,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteacherelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteachercustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteacherlinktype" type="TeacherLinkOptions" default="1" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteacherlinktype" type="LinkOptions" optionsFilter="0,3" default="1" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacherimagerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1050,9 +1048,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteacherimageelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteacherimagecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteacherimagelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteacherimagelinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1062,9 +1060,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteacher-titleelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteacher-titlecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteacher-titlelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteacher-titlelinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacherorgnamerow" type="RowOptions" size="1" default="0" label="JBS_TCH_ORG_NAME"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1074,7 +1072,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteacherorgnameelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteacherorgnamecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteacherorgnamecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1084,9 +1082,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteachercardcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteachercardlinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteachercardlinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacheremailrow" type="RowOptions" size="1" default="0" label="JBS_TCH_EMAIL"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1096,7 +1094,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteacheremailelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteacheremailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteacheremailcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsteacherwebrow" type="RowOptions" size="1" default="0" label="JBS_TCH_WEBSITE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1114,7 +1112,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteacherphoneelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteacherphonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteacherphonecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsteacherfbrow" type="RowOptions" size="1" default="0" label="JBS_TCH_FACEBOOK"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1124,7 +1122,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteacherfbelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteacherfbcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteacherfbcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsteachertwrow" type="RowOptions" size="1" default="0" label="JBS_TCH_TWITTER"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1134,7 +1132,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteachertwelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteachertwcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteachertwcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsteacherblogrow" type="RowOptions" size="1" default="0" label="JBS_TCH_BLOG"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1144,7 +1142,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteacherblogelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteacherblogcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteacherblogcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsteachershortrow" type="RowOptions" size="1" default="0" label="JBS_TCH_SHORT_LIST"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1154,9 +1152,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteachershortelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteachershortcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteachershortcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteachershortlinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tsteachershortlinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tscustomrow" type="RowOptions" size="1" default="" label="JBS_TPL_CUSTOM"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1166,9 +1164,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tscustomelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tscustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tscustomcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tscustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT"
+            <field name="tscustomtext" type="text" default="" label="JBS_TPL_CUSTOM_TEXT"
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
             <field name="tsteacherallinonerow" type="RowOptions" size="1" default="0" label="JBS_TCH_ALLINONE"
                    description="JBS_TCH_ALLINONE_DESC"/>
@@ -1178,7 +1176,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsteacherallinoneelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsteacherallinonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsteacherallinonecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsspacer1row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER1"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1188,7 +1186,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsspacer1element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsspacer1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsspacer1custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsspacer2row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER2"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1198,7 +1196,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsspacer2element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsspacer2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsspacer2custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsspacer3row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER3"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1208,7 +1206,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tsspacer3element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tsspacer3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tsspacer3custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
 
         </fieldset>
@@ -1222,7 +1220,7 @@
                 <option value="3">JBS_TPL_SHOW_STUDIES_CARDS</option>
                 <option value="4">JBS_TPL_SHOW_STUDIES_LIST</option>
             </field>
-            <field name="studies" type="int" default=""
+            <field name="studies" type="number" default="" min="0"
                    label="JBS_TPL_TEACHER_STUDIES" description="JBS_TPL_TEACHER_STUDIES_DESC"/>
             <field name="label_teacher" type="text" default="Latest Messages"
                    label="JBS_TPL_TEACHER_LABEL_TEACHER" description="JBS_TPL_TEACHER_LABEL_TEACHER_DESC"/>
@@ -1290,7 +1288,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteachercustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
 
             <field name="tdteacherimagerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE"
@@ -1301,9 +1299,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherimageelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherimagecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tdteacherimagelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tdteacherimagelinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tdteacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1313,9 +1311,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacher-titleelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacher-titlecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tdteacher-titlelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tdteacher-titlelinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tdteacherorgnamerow" type="RowOptions" size="1" default="0" label="JBS_TCH_ORG_NAME"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1325,7 +1323,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherorgnameelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherorgnamecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherorgnamecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1335,9 +1333,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteachercardcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tdteachercardlinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="tdteachercardlinktype" type="LinkOptions" optionsFilter="0,3" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 
             <field name="tdteacheremailrow" type="RowOptions" size="1" default="0" label="JBS_TCH_EMAIL"
@@ -1348,7 +1346,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacheremailelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacheremailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacheremailcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacherwebrow" type="RowOptions" size="1" default="0" label="JBS_TCH_WEBSITE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1366,7 +1364,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherphoneelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherphonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherphonecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacherfbrow" type="RowOptions" size="1" default="0" label="JBS_TCH_FACEBOOK"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1376,7 +1374,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherfbelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherfbcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherfbcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteachertwrow" type="RowOptions" size="1" default="0" label="JBS_TCH_TWITTER"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1386,7 +1384,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteachertwelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteachertwcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteachertwcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacherblogrow" type="RowOptions" size="1" default="0" label="JBS_TCH_BLOG"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1396,7 +1394,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherblogelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherblogcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherblogcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteachershortrow" type="RowOptions" size="1" default="0" label="JBS_TCH_SHORT_LIST"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1406,7 +1404,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteachershortelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteachershortcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteachershortcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacherlongrow" type="RowOptions" size="1" default="0" label="JBS_TCH_INFORMATION"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1416,7 +1414,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherlongelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherlongcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherlongcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacheraddressrow" type="RowOptions" size="1" default="0" label="JBS_TCH_ADDRESS"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1426,7 +1424,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacheraddresselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacheraddresscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacheraddresscustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacherlink1row" type="RowOptions" size="1" default="0" label="JBS_TCH_LINK1"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1436,7 +1434,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherlink1element" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherlink1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherlink1custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacherlink2row" type="RowOptions" size="1" default="0" label="JBS_TCH_LINK2"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1446,7 +1444,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherlink2element" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherlink2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherlink2custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacherlink3row" type="RowOptions" size="1" default="0" label="JBS_TCH_LINK3"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1456,7 +1454,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherlink3element" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherlink3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherlink3custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacherlargeimagerow" type="RowOptions" size="1" default="0" label="JBS_TCH_TEACHER_IMAGE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1466,7 +1464,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherlargeimageelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherlargeimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherlargeimagecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdcustomrow" type="RowOptions" size="1" default="" label="JBS_TPL_CUSTOM"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1476,9 +1474,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdcustomelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdcustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdcustomcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tdcustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT"
+            <field name="tdcustomtext" type="text" default="" label="JBS_TPL_CUSTOM_TEXT"
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
             <field name="tdteacherallinonerow" type="RowOptions" size="1" default="0" label="JBS_TCH_ALLINONE"
                    description="JBS_TCH_ALLINONE_DESC"/>
@@ -1488,7 +1486,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdteacherallinoneelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdteacherallinonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdteacherallinonecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdspacer1row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER1"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1498,7 +1496,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdspacer1element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdspacer1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdspacer1custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdspacer2row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER2"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1508,7 +1506,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdspacer2element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdspacer2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdspacer2custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdspacer3row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER3"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1518,7 +1516,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="tdspacer3element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="tdspacer3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="tdspacer3custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
         </fieldset>
         <fieldset name="SERIES" label="JBS_TPL_SERIESLIST" layoutContext="series"
@@ -1546,7 +1544,7 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="series_characters" type="int" default=""
+            <field name="series_characters" type="number" default="" min="0"
                    label="JBS_TPL_SERIES_SERIES_CHARACTERS" description="JBS_TPL_SERIES_SERIES_CHARACTERS_DESC"/>
             <field name="series_list_show_pagination" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
@@ -1641,9 +1639,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sserieselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sseriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sseriescustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sserieslinktype" type="SeriesLinkOptions" default="1" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sserieslinktype" type="LinkOptions" optionsFilter="0,1" default="1" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sseriesthumbnailrow" type="RowOptions" default="0" label="JBS_SERIES_LIST_THUMBNAIL"
                    description="JBS_SERIES_LIST_THUMBNAIL_DESC"/>
@@ -1653,9 +1651,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sseriesthumbnailelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sseriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sseriesthumbnailcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sseriesthumbnaillinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sseriesthumbnaillinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="steacherrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1665,9 +1663,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="steacherelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="steachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="steachercustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="steacherlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="steacherlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="steacherimagerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1677,9 +1675,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="steacherimageelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="steacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="steacherimagecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="steacherimagelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="steacherimagelinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="steacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1689,9 +1687,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="steacher-titleelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="steacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="steacher-titlecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="steacher-titlelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="steacher-titlelinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="steachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1701,9 +1699,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="steachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="steachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="steachercardcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="steachercardlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="steachercardlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdescriptionrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES_DESCRIPTION"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1713,9 +1711,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sdescriptionelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sdescriptioncustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdescriptionlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdescriptionlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="scustomrow" type="RowOptions" size="1" default="" label="JBS_TPL_CUSTOM"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1725,9 +1723,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="scustomelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="scustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="scustomcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="scustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT"
+            <field name="scustomtext" type="text" default="" label="JBS_TPL_CUSTOM_TEXT"
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
 
         </fieldset>
@@ -1816,9 +1814,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sdserieselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sdseriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sdseriescustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdserieslinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdserieslinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdseriesthumbnailrow" type="RowOptions" default="0" label="JBS_SERIES_LIST_THUMBNAIL"
                    description="JBS_SERIES_LIST_THUMBNAIL_DESC"/>
@@ -1828,9 +1826,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sdseriesthumbnailelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sdseriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sdseriesthumbnailcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdseriesthumbnaillinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdseriesthumbnaillinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdteacherrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1840,9 +1838,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sdteacherelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sdteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sdteachercustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdteacherlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdteacherlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdteacherimagerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1852,9 +1850,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sdteacherimageelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sdteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sdteacherimagecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdteacherimagelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdteacherimagelinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdteacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1864,9 +1862,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sdteacher-titleelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sdteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sdteacher-titlecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdteacher-titlelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdteacher-titlelinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1876,9 +1874,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sdteachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sdteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sdteachercardcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdteachercardlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sdteachercardlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sddescriptionrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES_DESCRIPTION"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1888,9 +1886,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sddescriptionelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sddescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sddescriptioncustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sddescriptionlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+            <field name="sddescriptionlinktype" type="LinkOptions" optionsFilter="0,1" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 
             <field name="sdcustomrow" type="RowOptions" size="1" default="" label="JBS_TPL_CUSTOM"
@@ -1901,9 +1899,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="sdcustomelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="sdcustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="sdcustomcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdcustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT"
+            <field name="sdcustomtext" type="text" default="" label="JBS_TPL_CUSTOM_TEXT"
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
 
         </fieldset>
@@ -1917,7 +1915,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dscripture1element" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dscripture1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dscripture1custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dscripture1linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -1932,7 +1930,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dscripture2element" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dscripture2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dscripture2custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dscripture2linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -1947,7 +1945,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dscriptureselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dscripturescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dscripturescustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dscriptureslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -1963,7 +1961,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dsecondaryelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dsecondarycustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dsecondarycustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dsecondarylinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -1978,7 +1976,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="djbsmediaelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="djbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="djbsmediacustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="djbsmedialinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -1991,9 +1989,9 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dcustomelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dcustomcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dcustomcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="dcustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM"
+            <field name="dcustomtext" type="text" default="" label="JBS_TPL_CUSTOM"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dspacer1row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER1"
                    description="JBS_TPL_ROW_DESC"/>
@@ -2003,7 +2001,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dspacer1element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dspacer1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dspacer1custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dspacer2row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER2"
                    description="JBS_TPL_ROW_DESC"/>
@@ -2013,7 +2011,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dspacer2element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dspacer2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dspacer2custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dspacer3row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER3"
                    description="JBS_TPL_ROW_DESC"/>
@@ -2023,7 +2021,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dspacer3element" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dspacer3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dspacer3custom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
 
         </fieldset>
@@ -2036,7 +2034,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dtitleelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dtitlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dtitlecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dtitlelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2048,7 +2046,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="ddateelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="ddatecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="ddatecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="ddatelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2061,7 +2059,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dteacherelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dteachercustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dteacherlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2073,7 +2071,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dteacherimageelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dteacherimagecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dteacherimagelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2085,7 +2083,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dteacher-titleelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dteacher-titlecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dteacher-titlelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2097,7 +2095,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dteachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dteachercardcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dteachercardlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2111,7 +2109,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="ddurationelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="ddurationcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="ddurationcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="ddurationlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2123,7 +2121,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dstudyintroelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dstudyintrocustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dstudyintrocustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dstudyintrolinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2135,7 +2133,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dstudytextelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dstudytextcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dstudytextcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dstudytextlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2147,7 +2145,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dserieselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dseriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dseriescustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dserieslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2159,7 +2157,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dseriesthumbnailelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dseriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dseriesthumbnailcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dseriesthumbnaillinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2171,7 +2169,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dseriesdescriptionelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dseriesdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dseriesdescriptioncustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dseriesdescriptionlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2185,7 +2183,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dsubmittedelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dsubmittedcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dsubmittedcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dsubmittedlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2197,7 +2195,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dhitselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dhitscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dhitscustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dhitslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2209,7 +2207,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="ddownloadselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="ddownloadscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="ddownloadscustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="ddownloadslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2223,7 +2221,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dstudynumberelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dstudynumbercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dstudynumbercustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dstudynumberlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2235,7 +2233,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dtopicelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dtopiccustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dtopiccustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dtopiclinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2247,7 +2245,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dlocationselement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dlocationscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dlocationscustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dlocationslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2261,7 +2259,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dmessagetypeelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dmessagetypecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dmessagetypecustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dmessagetypelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2273,7 +2271,7 @@
                    description="JBS_TPL_COLSPAN_DESC"/>
             <field name="dthumbnailelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="dthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+            <field name="dthumbnailcustom" type="text" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dthumbnaillinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
@@ -2409,7 +2407,7 @@
                 <option value="DESC">JBS_CMN_DESCENDING</option>
                 <option value="ASC">JBS_CMN_ASCENDING</option>
             </field>
-            <field type="text" name="landing_hidelabel" size="100"
+            <field type="text" name="landing_hidelabel"
                    default="Show/Hide All" label="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL"
                    description="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL_DESC"/>
         </fieldset>
@@ -2425,10 +2423,9 @@
                 <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
             </field>
             <field name="landingteacherslimit" type="text"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGTEACHERSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+                   label="JBS_TPL_LANDINGPAGE_LANDINGTEACHERSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="teacherslabel" type="text"
-                   label="JBS_TPL_LANDINGPAGE_TEACHERSLABEL" default="Speakers" size="45"/>
+                   label="JBS_TPL_LANDINGPAGE_TEACHERSLABEL" default="Speakers"/>
             <field name="linkto" type="radio" label="JBS_TPL_LANDINGPAGE_LINKTO" default="1"
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JBS_TPL_LINK_STUDIES_LIST</option>
@@ -2458,11 +2455,10 @@
                 <option value="0">JBS_TPL_USE_LIMIT</option>
                 <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
             </field>
-            <field name="landingserieslimit" type="int"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGSERIESLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+            <field name="landingserieslimit" type="number" min="0"
+                   label="JBS_TPL_LANDINGPAGE_LANDINGSERIESLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="serieslabel" type="text"
-                   label="JBS_TPL_LANDINGPAGE_SERIESLABEL" default="Series" size="45"/>
+                   label="JBS_TPL_LANDINGPAGE_SERIESLABEL" default="Series"/>
             <field name="series_linkto" type="radio" label="JBS_TPL_LANDINGPAGE_LINKTO"
                    default="0" layout="joomla.form.field.radio.switcher">
                 <option value="0">JBS_TPL_LINK_STUDIES_LIST</option>
@@ -2486,11 +2482,10 @@
         <!-- Landing Page: Books Section Settings -->
         <fieldset name="LANDINGPAGE_BOOKS" label="JBS_TPL_SETTINGS_PANEL" landingSection="books"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="landingbookslimit" type="int"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+            <field name="landingbookslimit" type="number" min="0"
+                   label="JBS_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="bookslabel" type="text" label="JBS_TPL_LANDINGPAGE_BOOKSLABEL"
-                   default="Books" size="45"/>
+                   default="Books"/>
             <field name="books_order"
                    type="list"
                    label="JBS_CMN_BOOKS_ORDERING"
@@ -2509,11 +2504,10 @@
         <!-- Landing Page: Topics Section Settings -->
         <fieldset name="LANDINGPAGE_TOPICS" label="JBS_TPL_SETTINGS_PANEL" landingSection="topics"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="landingtopicslimit" type="int"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+            <field name="landingtopicslimit" type="number" min="0"
+                   label="JBS_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="topicslabel" type="text"
-                   label="JBS_TPL_LANDINGPAGE_TOPICSLABEL" default="Topics" size="45"/>
+                   label="JBS_TPL_LANDINGPAGE_TOPICSLABEL" default="Topics"/>
             <field name="topics_order"
                    type="list"
                    label="JBS_CMN_TOPICS_ORDERING"
@@ -2538,12 +2532,11 @@
                 <option value="0">JBS_TPL_USE_LIMIT</option>
                 <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
             </field>
-            <field name="landinglocationslimit" type="int"
+            <field name="landinglocationslimit" type="number" min="0"
                    label="JBS_TPL_LANDINGPAGE_LANDINGLOCATIONSLIMIT"
-                   description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+                   description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="locationslabel" type="text"
-                   label="JBS_TPL_LANDINGPAGE_LOCATIONSLABEL" default="Locations" size="45"/>
+                   label="JBS_TPL_LANDINGPAGE_LOCATIONSLABEL" default="Locations"/>
             <field name="locations_order"
                    type="list"
                    label="JBS_CMN_LOCATIONS_ORDERING"
@@ -2568,13 +2561,11 @@
                 <option value="0">JBS_TPL_USE_LIMIT</option>
                 <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
             </field>
-            <field name="landingmessagetypeslimit" type="int"
+            <field name="landingmessagetypeslimit" type="number" min="0"
                    label="JBS_TPL_LANDINGPAGE_LANDINGMESSAGETYPESLIMIT"
-                   description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+                   description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="messagetypeslabel" type="text"
-                   label="JBS_TPL_LANDINGPAGE_MESSAGETYPESLABEL" default="Message Types"
-                   size="45"/>
+                   label="JBS_TPL_LANDINGPAGE_MESSAGETYPESLABEL" default="Message Types"/>
             <field name="messagetypes_order"
                    type="list"
                    label="JBS_CMN_MESSAGETYPE_ORDERING"
@@ -2593,11 +2584,10 @@
         <!-- Landing Page: Years Section Settings -->
         <fieldset name="LANDINGPAGE_YEARS" label="JBS_TPL_SETTINGS_PANEL" landingSection="years"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="landingyearslimit" type="int"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
+            <field name="landingyearslimit" type="number" min="0"
+                   label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"/>
             <field name="yearslabel" type="text" label="JBS_TPL_LANDINGPAGE_YEARSLABEL"
-                   default="Years" size="45"/>
+                   default="Years"/>
             <field name="years_order"
                    type="list"
                    label="JBS_CMN_YEARS_ORDERING"

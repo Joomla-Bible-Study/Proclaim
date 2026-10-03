@@ -22,7 +22,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Location List Form Field class for the Proclaim component.
@@ -58,12 +57,12 @@ class LocationListField extends ListField
     protected function getOptions(): array
     {
         $app       = Factory::getApplication();
-        $user      = $app->getIdentity();
+        $user      = $this->getCurrentUser();
         $isAdmin   = $user->authorise('core.admin');
         $enabled   = CwmlocationHelper::isEnabled();
         $currentId = (int) $this->value;
 
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->getDatabase();
 
         // Frontend filter: only locations used by published, accessible messages
         if ($app->isClient('site')) {
@@ -170,7 +169,7 @@ class LocationListField extends ListField
     #[\Override]
     protected function getInput(): string
     {
-        $user    = Factory::getApplication()->getIdentity();
+        $user    = $this->getCurrentUser();
         $enabled = CwmlocationHelper::isEnabled();
 
         $allowGlobal = ((string) ($this->element['global'] ?? '')) === 'true';
@@ -187,7 +186,7 @@ class LocationListField extends ListField
                 // already at this campus.  Never force a campus on existing records
                 // that currently have no location — show the dropdown instead.
                 if ($isNewRecord || $currentVal === $locationId) {
-                    $db    = Factory::getContainer()->get(DatabaseInterface::class);
+                    $db    = $this->getDatabase();
                     $query = $db->createQuery()
                         ->select($db->quoteName('location_text'))
                         ->from($db->quoteName('#__bsms_locations'))
@@ -195,7 +194,8 @@ class LocationListField extends ListField
                     $db->setQuery($query);
                     $name = $db->loadResult() ?: Text::_('JBS_CMN_LOCATION');
 
-                    $html  = '<input type="text" value="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '" '
+                    $html  = '<input type="text" id="' . $this->id . '" '
+                           . 'value="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '" '
                            . 'class="form-control" readonly disabled />';
                     $html .= '<input type="hidden" name="' . $this->name . '" '
                            . 'value="' . $locationId . '" />';
@@ -205,6 +205,14 @@ class LocationListField extends ListField
             }
         }
 
-        return parent::getInput();
+        // getOptions() runs before collectLayoutData() captures $this->value --
+        // parent::getInput() (ListField) does the reverse, which would snapshot
+        // the stale value and leave the multi-campus auto-default (set as a
+        // side effect inside getOptions()) invisible in the rendered dropdown.
+        $options          = $this->getOptions();
+        $data             = $this->collectLayoutData();
+        $data['options']  = $options;
+
+        return $this->getRenderer($this->layout)->render($data);
     }
 }

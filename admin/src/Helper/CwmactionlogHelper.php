@@ -86,7 +86,7 @@ class CwmactionlogHelper
                 return;
             }
 
-            $model->addLog([$message], $messageKey, 'com_proclaim', $user->id);
+            $model->addLog([$message], $messageKey, self::context($app), $user->id);
         } catch (\Throwable $e) {
             // Never break the main workflow. Throwable rather than Exception:
             // the failures actually available here -- a method call on a
@@ -111,12 +111,40 @@ class CwmactionlogHelper
     }
 
     /**
+     * The action log's extension/context value for this entry.
+     *
+     * {@see originLabel()} bakes the origin into the message text, but that text
+     * is translated at write time and the log view only filters by `extension`
+     * — so a text-only origin cannot be isolated by a saved search or a stable
+     * SQL query. `.api` reuses Joomla's own dotted-extension convention (core
+     * uses it per-entity, e.g. `com_content.article`); the control panel's
+     * "Recent Activity" link filters `extension=com_proclaim`, which still
+     * matches this via the list model's `LIKE 'com_proclaim%'`.
+     *
+     * Only API gets a suffix — admin/site/CLI keep the plain `com_proclaim`
+     * every existing row already uses, so this adds a filterable signal for
+     * the one origin that matters (remote, key-authenticated) without
+     * reshaping historical data.
+     *
+     * @param   CMSApplicationInterface  $app  The running application.
+     *
+     * @return  string  `com_proclaim.api` or `com_proclaim`.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function context(CMSApplicationInterface $app): string
+    {
+        return $app->isClient('api') ? 'com_proclaim.api' : 'com_proclaim';
+    }
+
+    /**
      * Language key naming where an action came from.
      *
      * Derived centrally from the running application rather than passed in by
      * callers. Two reasons: a caller cannot mislabel its own origin, and there is
      * exactly one place to extend when a new entry point appears. The action log
-     * has no origin column, so this is carried in the message text via {origin}.
+     * has no origin column, so this is carried in the message text via {origin}
+     * — for a structural, filterable signal see {@see context()} instead.
      *
      * @param   CMSApplicationInterface  $app  The running application.
      *

@@ -8,7 +8,7 @@
     <fields name="params">
         <fieldset name="soundcloud_settings" label="JBS_ADDON_SOUNDCLOUD_SETTINGS">
             <field name="profile_url" type="url" label="JBS_ADDON_SOUNDCLOUD_PROFILE_URL"
-                   description="JBS_ADDON_SOUNDCLOUD_PROFILE_URL_DESC" class="inputbox" size="60" />
+                   description="JBS_ADDON_SOUNDCLOUD_PROFILE_URL_DESC" class="inputbox" />
         </fieldset>
         <fieldset name="soundcloud_sync" simplemode="hide" label="JBS_ADDON_SOUNDCLOUD_SYNC_SETTINGS">
             <field name="description_format" type="DescriptionFormat" rows="6"

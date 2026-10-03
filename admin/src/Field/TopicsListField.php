@@ -21,7 +21,6 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Topic List Form Field class for the Proclaim component
@@ -55,7 +54,7 @@ class TopicsListField extends ListField
     protected function getOptions(): array
     {
         $app   = Factory::getApplication();
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $db    = $this->getDatabase();
         $query = $db->createQuery();
 
         $query->select(
@@ -78,7 +77,7 @@ class TopicsListField extends ListField
             ->whereIn($db->quoteName('s.published'), [1, 2]);
 
         if ($app->isClient('site')) {
-            $user   = $app->getIdentity();
+            $user   = $this->getCurrentUser();
             $groups = $user->getAuthorisedViewLevels();
             $query->whereIn($db->quoteName('s.access'), $groups);
 

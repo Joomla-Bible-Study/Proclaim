@@ -24,11 +24,11 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="metakey" type="text" size="30" rows="3" label="JBS_STY_METAKEYWORDS"
+        <field name="metakey" type="text" rows="3" label="JBS_STY_METAKEYWORDS"
                description="JBS_STY_METAKEYWORDS_DESC" useglobal="true" filter="string"/>
         <field name="metadesc" type="textarea" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
                description="JBS_STY_METADESCRIPTION_DESC" filter="string"/>
-        <field name="org_name" type="text" size="60" label="JBS_ADM_ORG_NAME"
+        <field name="org_name" type="text" label="JBS_ADM_ORG_NAME"
                description="JBS_ADM_ORG_NAME_DESC" filter="string"
                hint="JBS_ADM_ORG_NAME_HINT"/>
 <field name="jbsmigrationshow" type="radio" default="0"
@@ -37,7 +37,7 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="studylistlimit" type="int" size="3" label="JBS_ADM_STUDYLISTLIMIT"
+        <field name="studylistlimit" type="number" label="JBS_ADM_STUDYLISTLIMIT"
                description="JBS_ADM_STUDYLISTLIMIT_DESC" default=""/>
         <field name="show_location_media"
                type="radio"
@@ -47,7 +47,7 @@
             <option value="0">JBS_CMN_HIDE</option>
             <option value="1">JBS_CMN_SHOW</option>
         </field>
-        <field name="popular_limit" type="int" default="" size="3" label="JBS_ADM_POPULAR_LIMIT"
+        <field name="popular_limit" type="number" default="" label="JBS_ADM_POPULAR_LIMIT"
                description="JBS_ADM_POPULAR_LIMIT_DESC"/>
 <field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
                description="JBS_ADM_FORMAT_POPULAR_DESC">
@@ -61,14 +61,14 @@
             <option value="0">JBS_ADM_MAIN_IMAGE_USE_ICON</option>
             <option value="1">JBS_ADM_MAIN_IMAGE_USE_IMAGE</option>
         </field>
-        <field name="default_main_image" type="media" directory="biblestudy" size="50"
+        <field name="default_main_image" type="media" directory="biblestudy"
                label="JBS_ADM_DEFAULT_MAIN_IMAGE"
                description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC"
                showon="main_image_icon_or_image:1"/>
-        <field name="default_series_image" type="media" directory="biblestudy" size="50"
+        <field name="default_series_image" type="media" directory="biblestudy"
                label="JBS_ADM_DEFAULT_SERIES_IMAGE"
                description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC"/>
-        <field name="default_teacher_image" type="media" directory="biblestudy" size="50"
+        <field name="default_teacher_image" type="media" directory="biblestudy"
                label="JBS_ADM_DEFAULT_TEACHER_IMAGE"
                description="JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC"/>
 
@@ -139,11 +139,11 @@
             <option value="-1">JBS_CMN_SELECT_USER</option>
         </field>
         <!--Thumbnail sizes-->
-        <field name="thumbnail_teacher_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
+        <field name="thumbnail_teacher_size" default="400" type="number" min="1" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
                description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" class="col-2"/>
-        <field name="thumbnail_series_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
+        <field name="thumbnail_series_size" default="400" type="number" min="1" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
                description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" class="col-2"/>
-        <field name="thumbnail_study_size" default="600" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
+        <field name="thumbnail_study_size" default="600" type="number" min="1" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
                description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" class="col-2"/>
 
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
@@ -162,7 +162,7 @@
                label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
             <option value="-1">JBS_CMN_SHOW_ALL</option>
         </field>
-        <field name="default_study_image" type="media" size="50" directory="biblestudy"
+        <field name="default_study_image" type="media" directory="biblestudy"
                label="JBS_ADM_FILLIN_STUDY_IMAGE" description="JBS_ADM_FILLIN_STUDY_DESC"/>
 
         <field name="download" type="radio" default="0"
@@ -189,7 +189,7 @@
         </field>
         <field name="playlist_delete_sync" type="radio" default="0"
                label="JBS_ADM_PLAYLIST_DELETE_SYNC" description="JBS_ADM_PLAYLIST_DELETE_SYNC_DESC"
-               class="btn-group btn-group-yesno" layout="joomla.form.field.radio.switcher">
+               layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>

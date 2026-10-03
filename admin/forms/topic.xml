@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <field name="topic_text" type="text" label="JBS_TPC_TOPIC_ALIAS" description="JBS_TPC_TOPIC_ALIAS_DESC"
-           size="75" filter="trim"/>
+    <field name="topic_text" type="text" label="JBS_TPC_TOPIC_ALIAS" description="JBS_TPC_TOPIC_ALIAS_DESC" filter="trim"/>
     <field name="published"
            type="status"
            label="JSTATUS"
@@ -9,7 +8,7 @@
            default="1"
            filter="int"/>
     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-           description="com_proclaim_LANGUAGE_DESC">
+           description="JBS_CMN_SELECT_LANGUAGE_DESC">
         <option value="*">JALL</option>
     </field>
     <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL" translate_label="false"
@@ -17,7 +16,7 @@
            component="com_proclaim" section="topic" validate="rules"/>
     <field name="asset_id" type="hidden" filter="unset"/>
     <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-           description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"/>
+           description="JGLOBAL_FIELD_ID_DESC" default="0" readonly="true"/>
 
     <field
             name="created"
@@ -42,7 +41,6 @@
             name="modified"
             type="calendar"
             label="JGLOBAL_FIELD_MODIFIED_LABEL"
-            class="form-control"
             translateformat="true"
             showtime="true"
             readonly="true"

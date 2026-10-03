@@ -8,10 +8,10 @@
     <fields name="params">
         <fieldset name="wistia_api" label="JBS_ADDON_WISTIA_API_SETTINGS">
             <field name="api_token" type="ApiKey" label="JBS_ADDON_WISTIA_API_TOKEN"
-                   description="JBS_ADDON_WISTIA_API_TOKEN_DESC" class="inputbox" size="60"
+                   description="JBS_ADDON_WISTIA_API_TOKEN_DESC" class="inputbox"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
             <field name="project_id" type="text" label="JBS_ADDON_WISTIA_PROJECT_ID"
-                   description="JBS_ADDON_WISTIA_PROJECT_ID_DESC" class="inputbox" size="40" />
+                   description="JBS_ADDON_WISTIA_PROJECT_ID_DESC" class="inputbox" />
         </fieldset>
         <fieldset name="wistia_sync" simplemode="hide" label="JBS_ADDON_WISTIA_SYNC_SETTINGS">
             <field name="description_format" type="DescriptionFormat" rows="6"

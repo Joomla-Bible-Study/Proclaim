@@ -27,7 +27,6 @@
                        description="MOD_PROCLAIM_YOUTUBE_SERVER_DESC"
                        default=""
                        required="true"
-                       class="form-select"
                        query="SELECT id, server_name FROM #__bsms_servers WHERE published = 1 AND type = 'youtube' ORDER BY server_name ASC"
                        key_field="id"
                        value_field="server_name">
@@ -38,8 +37,7 @@
                        type="list"
                        label="MOD_PROCLAIM_YOUTUBE_PRIORITY"
                        description="MOD_PROCLAIM_YOUTUBE_PRIORITY_DESC"
-                       default="live_first"
-                       class="form-select">
+                       default="live_first">
                     <option value="live_first">MOD_PROCLAIM_YOUTUBE_LIVE_FIRST</option>
                     <option value="latest_only">MOD_PROCLAIM_YOUTUBE_LATEST_ONLY</option>
                     <option value="live_only">MOD_PROCLAIM_YOUTUBE_LIVE_ONLY</option>
@@ -47,7 +45,7 @@
 
                 <field name="show_upcoming"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_UPCOMING"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_UPCOMING_DESC"
@@ -82,7 +80,7 @@
 
                 <field name="responsive"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_RESPONSIVE"
                        description="MOD_PROCLAIM_YOUTUBE_RESPONSIVE_DESC">
@@ -92,7 +90,7 @@
 
                 <field name="show_title"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_TITLE"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_TITLE_DESC">
@@ -102,7 +100,7 @@
 
                 <field name="show_description"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="0"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_DESC"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_DESC_DESC">
@@ -120,7 +118,7 @@
 
                 <field name="show_live_badge"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_LIVE_BADGE"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_LIVE_BADGE_DESC">
@@ -130,7 +128,7 @@
 
                 <field name="show_countdown"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_COUNTDOWN"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_COUNTDOWN_DESC"
@@ -141,7 +139,7 @@
 
                 <field name="show_notify_button"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_NOTIFY"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_NOTIFY_DESC"
@@ -152,7 +150,7 @@
 
                 <field name="enable_mini_player"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_MINI_PLAYER"
                        description="MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_DESC"
@@ -163,7 +161,7 @@
 
                 <field name="auto_link_message"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_AUTO_LINK"
                        description="MOD_PROCLAIM_YOUTUBE_AUTO_LINK_DESC">
@@ -173,7 +171,7 @@
 
                 <field name="autoplay_live"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="0"
                        label="MOD_PROCLAIM_YOUTUBE_AUTOPLAY_LIVE"
                        description="MOD_PROCLAIM_YOUTUBE_AUTOPLAY_LIVE_DESC">
@@ -183,7 +181,7 @@
 
                 <field name="show_no_video"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="0"
                        label="MOD_PROCLAIM_YOUTUBE_SHOW_NO_VIDEO"
                        description="MOD_PROCLAIM_YOUTUBE_SHOW_NO_VIDEO_DESC">
@@ -196,12 +194,11 @@
                        label="MOD_PROCLAIM_YOUTUBE_NO_VIDEO_MSG"
                        description="MOD_PROCLAIM_YOUTUBE_NO_VIDEO_MSG_DESC"
                        default=""
-                       size="50"
                        showon="show_no_video:1"/>
 
                 <field name="fallback_sermons"
                        type="radio"
-                       class="btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="MOD_PROCLAIM_YOUTUBE_FALLBACK_SERMONS"
                        description="MOD_PROCLAIM_YOUTUBE_FALLBACK_SERMONS_DESC">
@@ -224,7 +221,6 @@
                        label="MOD_PROCLAIM_YOUTUBE_FALLBACK_TEMPLATE"
                        description="MOD_PROCLAIM_YOUTUBE_FALLBACK_TEMPLATE_DESC"
                        default="1"
-                       class="form-select"
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
                        key_field="id"
                        value_field="title"
@@ -243,7 +239,6 @@
                 <field name="cache"
                        type="list"
                        default="1"
-                       class="form-select"
                        label="COM_MODULES_FIELD_CACHING_LABEL">
                     <option value="1">JGLOBAL_USE_GLOBAL</option>
                     <option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>

@@ -19,7 +19,6 @@
 			type="rules"
 			label="JCONFIG_PERMISSIONS_LABEL"
 			translate_label="false"
-			class="inputbox"
 			component="com_proclaim"
 			section="component"
 			asset_field="asset_id"

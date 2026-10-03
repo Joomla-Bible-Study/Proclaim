@@ -22,12 +22,10 @@
                 <field name="dummy" type="LoadLanguageFile" default=""/>
                 <field name="t" type="sql" label="JBS_MDL_SELECT_TEMPLATE"
                        description="JBS_MDL_SELECT_TEMPLATE_DESC" default="1"
-                       class="form-select"
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
                        key_field="id" value_field="title" required="true"/>
                 <field name="moduletemplate" type="sql" label="JBS_MDL_TEMPLATE"
                        description="JBS_MDL_TEMPLATE_DESC" hide_none="true"
-                       class="form-select"
                        query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=7 AND published =1 ORDER BY filename ASC"
                        key_field="filename" value_field="filename">
                     <option value="0">JBS_CMN_USE_DEFAULT</option>
@@ -52,7 +50,6 @@
                        default="5"
                        min="1"
                        max="100"
-                       class="form-control"
                        label="JBS_MDL_ITEMS"
                        description="JBS_MDL_ITEMS_DESC"/>
                 <field name="use_headers_list" type="radio"
@@ -73,7 +70,6 @@
                 </field>
                 <field name="pagetext" type="text"
                        default="More Messages"
-                       class="form-control"
                        label="JBS_MDL_LINK_TEXT"
                        description="JBS_MDL_LINK_TEXT_DESC"/>
             </fieldset>
@@ -82,7 +78,6 @@
                        type="list"
                        label="JBS_CMN_ORDERING"
                        description="JBS_CMN_ORDERING_DESC"
-                       class="form-select"
                        default="">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="1">JBS_CMN_DESCENDING</option>
@@ -92,35 +87,34 @@
                        type="list"
                        label="JBS_MDL_AND_OR"
                        description="JBS_MDL_AND_OR_DESC"
-                       class="form-select"
                        default="0">
                     <option value="0">JBS_MDL_OR</option>
                     <option value="1">JBS_MDL_AND</option>
                 </field>
-                <field name="language" type="contentlanguage" class="form-select"
+                <field name="language" type="contentlanguage"
                        label="JFIELD_LANGUAGE_LABEL" description="JBS_MDL_LANGUAGE_DESC">
                     <option value="*">JALL</option>
                 </field>
-                <field name="teacher_id" type="TeacherList" multiple="true" default=""
+                <field name="teacher_id" type="TeacherList" multiple="true" layout="joomla.form.field.list-fancy-select" default=""
                        class="form-select"
                        label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="series_id" type="Series" multiple="true" default=""
+                <field name="series_id" type="Series" multiple="true" layout="joomla.form.field.list-fancy-select" default=""
                        class="form-select"
                        label="JBS_CMN_FILTERS_SERIES" description="JBS_CMN_FILTERS_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="booknumber" type="BookList" multiple="true"
+                <field name="booknumber" type="BookList" multiple="true" layout="joomla.form.field.list-fancy-select"
                        class="form-select"
                        label="JBS_CMN_FILTERS_BOOKS" description="JBS_CMN_FILTERS_DESC"
                        default="">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="topic_id" type="TopicsList" multiple="true"
+                <field name="topic_id" type="TopicsList" multiple="true" layout="joomla.form.field.list-fancy-select"
                        class="form-select"
                        label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_DESC"
                        default="">
@@ -128,7 +122,7 @@
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
 
-                <field name="locations" type="Locations" multiple="true"
+                <field name="locations" type="Locations" multiple="true" layout="joomla.form.field.list-fancy-select"
                        class="form-select"
                        label="JBS_CMN_FILTERS_LOCATIONS" description="JBS_CMN_FILTERS_DESC"
                        default="">
@@ -139,7 +133,6 @@
                 <field name="location_filter"
                        type="list"
                        default="all"
-                       class="form-select"
                        label="JBS_MDL_LOCATION_FILTER"
                        description="JBS_MDL_LOCATION_FILTER_DESC">
                     <option value="all">JBS_MDL_LOCATION_FILTER_ALL</option>
@@ -150,12 +143,11 @@
                 <field name="specific_location"
                        type="LocationList"
                        showon="location_filter:specific"
-                       class="form-select"
                        label="JBS_MDL_SPECIFIC_LOCATION"
                        description="JBS_MDL_SPECIFIC_LOCATION_DESC">
                     <option value="-1">JBS_CMN_SELECT_LOCATION</option>
                 </field>
-                <field name="messagetype" type="MessageTypeList" multiple="true"
+                <field name="messagetype" type="MessageTypeList" multiple="true" layout="joomla.form.field.list-fancy-select"
                        class="form-select"
                        label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC"
                        default="">
@@ -164,7 +156,6 @@
                 </field>
 
                 <field name="year" type="sql" default="" multiple="true"
-                       class="form-select"
                        label="JBS_CMN_FILTERS_YEARS" description="JBS_CMN_FILTERS_DESC"
                        query="SELECT DISTINCT(YEAR(studydate)) as date FROM #__bsms_studies ORDER BY studydate DESC"
                        key_field="date" value_field="date">
@@ -174,7 +165,7 @@
             </fieldset>
             <fieldset name="JBS_MDL_MEDIA" label="JBS_MDL_MEDIA">
                 <field name="player" type="list" label="JBS_MED_PLAYER"
-                       description="JBS_MED_PLAYER_DESC" default="" class="form-select">
+                       description="JBS_MED_PLAYER_DESC" default="">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="0">JBS_CMN_DIRECT_LINK</option>
                     <option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
@@ -184,7 +175,7 @@
                 </field>
                 <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
                        description="JBS_MED_INTERNAL_POPUP_DESC"
-                       default="" class="form-select">
+                       default="">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="1">JBS_CMN_POPUP</option>
                     <option value="2">JBS_CMN_INLINE</option>
@@ -194,17 +185,15 @@
                        default="400"
                        min="100"
                        max="1920"
-                       class="form-control"
                        label="JBS_TPL_MEDIA_PLAYER_WIDTH"
                        description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>
                 <field name="player_height" type="number"
                        default="300"
                        min="100"
                        max="1080"
-                       class="form-control"
                        label="JBS_TPL_MEDIA_PLAYER_HEIGHT"
                        description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
-                <field name="embedshare" type="list" default="" class="form-select"
+                <field name="embedshare" type="list" default=""
                        label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="0">JBS_CMN_HIDE</option>
@@ -229,19 +218,16 @@
                        description="JBS_TPL_MEDIA_SCREENCOLOR_DESC"/>
                 <field name="popuptitle" type="Custom" codeset="template" input="text"
                        default="{{title}}"
-                       size="75"
                        label="JBS_MED_MEDIA_POPUPTITLE"
                        description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
                 <field name="popupfooter" type="Custom" codeset="template" input="text"
                        default=""
-                       size="75"
                        label="JBS_MED_MEDIA_POPUPFOOTER"
                        description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
                 <field name="popupmargin" type="number"
                        default="50"
                        min="0"
                        max="200"
-                       class="form-control"
                        label="JBS_MED_MEDIA_POPUPMARGIN"
                        description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>
                 <field name="popupbackground" type="ColorPicker"
@@ -250,7 +236,6 @@
                        description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
                 <field name="media_popout_yes" type="list"
                        default="1"
-                       class="form-select"
                        label="JBS_MED_MEDIA_POPOUT_YES"
                        description="JBS_MED_MEDIA_POPOUT_YES_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -259,11 +244,10 @@
                 </field>
                 <field name="media_popout_text" type="text"
                        default=""
-                       class="form-control"
                        placeholder="Text to use for pop out button"
                        label="JBS_MED_MEDIA_POPOUT_TEXT"
                        description="JBS_MED_MEDIA_POPOUT_TEXT_DESC"/>
-                <field name="show_filesize" type="list" default="" class="form-select"
+                <field name="show_filesize" type="list" default=""
                        label="JBS_TPL_MEDIA_SHOW_FILESIZE" description="JBS_TPL_MEDIA_SHOW_FILESIZE_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="0">JBS_CMN_HIDE</option>
@@ -273,7 +257,7 @@
                 </field>
             </fieldset>
             <fieldset name="JBS_MDL_MORE_SETTINGS" label="JBS_MDL_MORE_SETTINGS">
-                <field name="use_headers_module" type="list" default="" class="form-select"
+                <field name="use_headers_module" type="list" default=""
                        label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
                     <option value="0">JBS_TPL_NO_HEADER_ROW</option>
                     <option value="1">JBS_TPL_USE_HEADER_ROW</option>
@@ -282,7 +266,6 @@
                        cols="75" label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
                 <field name="stylesheet" type="text"
                        default=""
-                       class="form-control"
                        label="JBS_TPL_VERSES_STYLESHEET"
                        description="JBS_TPL_VERSES_STYLESHEET_DESC"/>
             </fieldset>
@@ -480,7 +463,6 @@
                         name="cache"
                         type="list"
                         default="1"
-                        class="form-select"
                         label="COM_MODULES_FIELD_CACHING_LABEL"
                         description="COM_MODULES_FIELD_CACHING_LABEL">
                     <option

@@ -467,7 +467,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
     private function junctionRows(int $playlistId): array
     {
         return $this->db->setQuery(
-            $this->db->getQuery(true)
+            $this->db->createQuery()
                 ->select('*')
                 ->from($this->db->quoteName('#__bsms_playlist_items'))
                 ->where($this->db->quoteName('playlist_id') . ' = ' . (int) $playlistId)

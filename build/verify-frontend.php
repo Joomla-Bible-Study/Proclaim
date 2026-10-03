@@ -21,7 +21,7 @@
  * Both failures rendered a valid page with a 200 status. Checking only the
  * status code would have caught neither.
  *
- * Depends on build/seed-testsite-menus.php having run: it reads the menu items
+ * Depends on the `menus` seed layer (build/seed/menus.php) having run: it reads the menu items
  * back by their seed marker rather than guessing URLs, so the two scripts
  * cannot drift apart.
  *
@@ -44,9 +44,11 @@ $root = \dirname(__DIR__);
 require $root . '/libraries/vendor/autoload.php';
 
 /**
- * Must match build/seed-testsite-menus.php.
+ * Every menu item a seed layer wrote carries a `note` starting with the project's seed marker,
+ * declared once in cwm-build.config.json and shared with build/seed/menus.php.
  */
-const SEED_NOTE = 'proclaim-testsite-seed';
+$projectConfig = json_decode((string) file_get_contents($root . '/cwm-build.config.json'), true);
+$seedMarker    = (string) ($projectConfig['seed']['marker'] ?? 'cwmseed-');
 
 /**
  * Markers that mean the page failed while still returning 200.
@@ -61,6 +63,9 @@ const ERROR_MARKERS = [
     'Parse error',
     'Warning:',
     'Deprecated:',
+    '<b>Warning</b>',
+    '<b>Deprecated</b>',
+    '<b>Notice</b>',
     'SQL=',
     'JDatabaseExceptionExecuting',
     'Error displaying the error page',
@@ -116,9 +121,9 @@ foreach ($installs as $install) {
 
     $statement = $db->prepare(
         'SELECT id, alias, link FROM ' . $site->table('#__menu')
-        . ' WHERE client_id = 0 AND note = ? ORDER BY id'
+        . ' WHERE client_id = 0 AND LEFT(note, ?) = ? ORDER BY id'
     );
-    $statement->execute([SEED_NOTE]);
+    $statement->execute([\strlen($seedMarker), $seedMarker]);
     $items = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     // The book the seeded study cites, read from the stored reference rather
@@ -137,7 +142,7 @@ foreach ($installs as $install) {
     }
 
     if ($items === []) {
-        fwrite(STDERR, "  no seeded menu items — run build/seed-testsite-menus.php first.\n");
+        fwrite(STDERR, "  no seeded menu items — run `php build/seed/menus.php apply` first.\n");
         $failures++;
 
         continue;
@@ -226,6 +231,9 @@ foreach ($installs as $install) {
 
         report(true, $item['alias'], \strlen($body) . ' bytes');
     }
+
+    $failures += checkSeededStudies($site, $install->url, $seedMarker, $root);
+    $failures += checkSeededModules($site, $install->url, $items, $root);
 }
 
 echo "\n";
@@ -296,4 +304,163 @@ function report(bool $ok, string $label, string $detail): void
         $label,
         $detail
     );
+}
+
+/**
+ * Fetch the sermon page of every study the `content` layer wrote and compare what a guest gets
+ * with what `content.json` declares.
+ *
+ * The declared status is the point: an unpublished or access-restricted study must not be
+ * served, and every other study, however awkward (no teacher, no scripture, a title full of
+ * markup), must render without an error marker. A study the layer should have written but did
+ * not is a failure, not a skip: a skipped check here would pass a gate that tested nothing.
+ *
+ * @param   TestSite  $site    The site under test
+ * @param   string    $url     The site's base URL
+ * @param   string    $marker  The seed marker (alias prefix)
+ * @param   string    $root    The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededStudies(TestSite $site, string $url, string $marker, string $root): int
+{
+    $file = $root . '/build/seed/content.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $db       = $site->db();
+    $template = $db->query('SELECT id FROM ' . $site->table('#__bsms_templates') . ' WHERE published = 1 ORDER BY id LIMIT 1')->fetchColumn();
+    $find     = $db->prepare('SELECT id FROM ' . $site->table('#__bsms_studies') . ' WHERE alias = ?');
+    $problems = 0;
+
+    echo "\n  -- seeded studies, as a guest\n";
+
+    foreach ($declared['studies'] as $study) {
+        $label = $study['key'];
+        $find->execute([$marker . $study['key']]);
+        $id = $find->fetchColumn();
+
+        if ($id === false) {
+            report(false, $label, 'not seeded — run the content layer');
+            $problems++;
+
+            continue;
+        }
+
+        $want = (int) ($study['guest'] ?? 200);
+        $body = fetch(rtrim($url, '/') . '/index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $template, $status);
+
+        if ($body === null || $status !== $want) {
+            report(false, $label, "HTTP {$status}, expected {$want}");
+            $problems++;
+
+            continue;
+        }
+
+        $found = array_filter(ERROR_MARKERS, static fn (string $m): bool => str_contains($body, $m));
+
+        if ($want === 200 && $found !== []) {
+            report(false, $label, 'error marker in body: ' . implode(', ', $found));
+            $problems++;
+
+            continue;
+        }
+
+        report(true, $label, "HTTP {$status}" . ($want === 200 ? ', ' . \strlen($body) . ' bytes' : ' (not served, as declared)'));
+    }
+
+    return $problems;
+}
+
+/**
+ * Fetch the seeded landing page as a guest and check which seeded module instances it carries.
+ *
+ * Instances are assigned to every page, so one page shows them all. A module with `guest`
+ * "hidden" (unpublished, or a level a guest lacks) must not appear; every other one must, with
+ * the text `modules.json` says its output contains. The admin module is not checked here: it
+ * only renders in the administrator, behind a login.
+ *
+ * @param   TestSite                           $site   The site under test
+ * @param   string                             $url    The site's base URL
+ * @param   list<array<string, string|int>>    $items  The seeded menu items (id, alias, link)
+ * @param   string                             $root   The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededModules(TestSite $site, string $url, array $items, string $root): int
+{
+    $file = $root . '/build/seed/modules.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $landing = null;
+
+    foreach ($items as $item) {
+        if (str_contains((string) $item['link'], 'cwmlandingpage')) {
+            $landing = $item;
+
+            break;
+        }
+    }
+
+    echo "\n  -- seeded modules, as a guest\n";
+
+    if ($landing === null) {
+        report(false, 'modules', 'no seeded landing page to carry them');
+
+        return 1;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $body     = fetch(rtrim($url, '/') . '/index.php?Itemid=' . $landing['id'], $status);
+    $problems = 0;
+
+    if ($body === null || $status !== 200) {
+        report(false, 'modules', "landing page HTTP {$status}");
+
+        return 1;
+    }
+
+    $found = array_filter(ERROR_MARKERS, static fn (string $m): bool => str_contains($body, $m));
+
+    if ($found !== []) {
+        report(false, 'modules', 'error marker in the page: ' . implode(', ', $found));
+        $problems++;
+    }
+
+    foreach ($declared['modules'] as $module) {
+        if (($module['client'] ?? 'site') !== 'site') {
+            continue;
+        }
+
+        $shown = str_contains($body, $module['title']);
+        $want  = ($module['guest'] ?? 'visible') === 'visible';
+
+        if ($shown !== $want) {
+            report(false, $module['key'], $want ? 'not on the page' : 'on the page, but a guest should not see it');
+            $problems++;
+
+            continue;
+        }
+
+        if ($want && isset($module['contains']) && !str_contains($body, $module['contains'])) {
+            report(false, $module['key'], 'rendered without "' . $module['contains'] . '"');
+            $problems++;
+
+            continue;
+        }
+
+        report(true, $module['key'], $want ? 'shown' : 'hidden, as declared');
+    }
+
+    return $problems;
 }

@@ -8,10 +8,10 @@
     <fields name="params">
         <fieldset name="youtube_api" label="JBS_ADDON_YOUTUBE_API_SETTINGS">
             <field name="api_key" type="ApiKey" label="JBS_ADDON_YOUTUBE_API_KEY"
-                   description="JBS_ADDON_YOUTUBE_API_KEY_DESC" class="inputbox" size="60"
+                   description="JBS_ADDON_YOUTUBE_API_KEY_DESC" class="inputbox"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
             <field name="channel_id" type="text" label="JBS_ADDON_YOUTUBE_CHANNEL_ID"
-                   description="JBS_ADDON_YOUTUBE_CHANNEL_ID_DESC" class="inputbox" size="40" />
+                   description="JBS_ADDON_YOUTUBE_CHANNEL_ID_DESC" class="inputbox" />
             <field name="test_api" type="YoutubeTestApi" label="JBS_ADDON_YOUTUBE_TEST_API"
                    description="JBS_ADDON_YOUTUBE_TEST_API_DESC"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
@@ -25,9 +25,9 @@
             <field name="oauth_note" type="note" label="JBS_ADDON_YOUTUBE_OAUTH_NOTE"
                    description="JBS_ADDON_YOUTUBE_OAUTH_NOTE_DESC" />
             <field name="client_id" type="text" label="JBS_ADDON_YOUTUBE_CLIENT_ID"
-                   description="JBS_ADDON_YOUTUBE_CLIENT_ID_DESC" class="inputbox" size="60" />
+                   description="JBS_ADDON_YOUTUBE_CLIENT_ID_DESC" class="inputbox" />
             <field name="client_secret" type="ApiKey" label="JBS_ADDON_YOUTUBE_CLIENT_SECRET"
-                   description="JBS_ADDON_YOUTUBE_CLIENT_SECRET_DESC" class="inputbox" size="60"
+                   description="JBS_ADDON_YOUTUBE_CLIENT_SECRET_DESC" class="inputbox"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
             <field name="oauth_status" type="YoutubeOAuthStatus" label="JBS_ADDON_YOUTUBE_OAUTH_STATUS"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />

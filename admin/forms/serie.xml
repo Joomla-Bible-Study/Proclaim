@@ -17,7 +17,7 @@
         />
 
         <field name="alias" type="text" label="JFIELD_ALIAS_LABEL"
-               description="JFIELD_ALIAS_DESC" size="45"/>
+               description="JFIELD_ALIAS_DESC"/>
 
         <field name="landing_show" default="1" type="list" label="JBS_CMN_LANDING_SHOW"
                description="JBS_CMN_LANDING_SHOW_DESC">
@@ -52,9 +52,9 @@
                translate_label="false" filter="rules" component="com_proclaim"
                section="serie" validate="rules"/>
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"/>
+               description="JGLOBAL_FIELD_ID_DESC" default="0" readonly="true"/>
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-               description="COM_CONTENT_FIELD_LANGUAGE_DESC" class="col-12 small"
+               description="JBS_CMN_FIELD_LANGUAGE_DESC" class="col-12 small"
         >
             <option value="*">JALL</option>
         </field>
@@ -62,7 +62,6 @@
                type="text"
                label="JBS_CMN_ORDERING"
                description="JBS_CMN_ORDERING_DESC"
-               size="5"
                default="0"/>
 
         <field
@@ -88,7 +87,6 @@
                 name="modified"
                 type="calendar"
                 label="JGLOBAL_FIELD_MODIFIED_LABEL"
-                class="form-control"
                 translateformat="true"
                 showtime="true"
                 readonly="true"

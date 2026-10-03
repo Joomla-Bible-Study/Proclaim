@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Location-to-user-group mapping field.
@@ -53,7 +52,7 @@ class LocationGroupMappingField extends FormField
     #[\Override]
     public function getInput(): string
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->getDatabase();
 
         // Load published locations with message counts
         $locQuery = $db->createQuery()
