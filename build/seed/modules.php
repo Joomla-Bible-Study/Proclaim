@@ -11,7 +11,7 @@
  *
  * Parameters are written as strings, the way the admin form saves them.
  *
- * Instances are assigned to all pages and carry the seed marker in `note`, which is how
+ * Instances are assigned to the seeded landing menu item (`page` in the declaration) and carry the seed marker in `note`, which is how
  * `remove` finds them. The instances the installer wrote are left alone.
  *
  * Run two ways:
@@ -23,10 +23,11 @@
  *       Under cwm-seed, which names one site through CWM_SEED_* variables.
  *
  * `check` compares the database with the declaration (installed, client, position, published,
- * access, assigned to all pages). build/verify-frontend.php then fetches a page as a guest and
+ * access, assigned to the landing page). build/verify-frontend.php then fetches a page as a guest and
  * checks which module titles appear.
  *
- * The servers and content layers must have run: some parameters name a seeded server or teacher.
+ * The servers, content and menus layers must have run: some parameters name a seeded server or
+ * teacher, and the instances are assigned to a seeded menu item.
  * Idempotent: `apply` removes what it wrote first.
  *
  * @package    Proclaim.Build
@@ -66,9 +67,9 @@ foreach (targets($root) as $label => $makeSite) {
         $site = $makeSite();
 
         match ($action) {
-            'apply'  => applyModules($site, $declared['modules'], $marker, $note),
+            'apply'  => applyModules($site, $declared['modules'], $marker, $note, $declared['page']),
             'remove' => removeModules($site, $note),
-            default  => $failures += checkModules($site, $declared['modules'], $note),
+            default  => $failures += checkModules($site, $declared['modules'], $marker, $note, $declared['page']),
         };
     } catch (\RuntimeException | \PDOException $e) {
         fwrite(STDERR, '  ' . $e->getMessage() . "\n");
@@ -149,11 +150,21 @@ function resolveParams(TestSite $site, array $params, string $marker): array
  *
  * @throws \RuntimeException  when a module's extension is not installed or a placeholder cannot be resolved
  */
-function applyModules(TestSite $site, array $modules, string $marker, string $note): void
+function applyModules(TestSite $site, array $modules, string $marker, string $note, string $page): void
 {
     $db = $site->db();
 
     removeModules($site, $note, true);
+
+    // Site instances go on the one seeded menu item built to carry them, not on every page: the
+    // browser suites open bare component URLs and follow the first card link, and a module's
+    // cards would be first in the document. Administrator instances have no menu assignment.
+    $pageId = scalar($db, 'SELECT id FROM ' . $site->table('#__menu')
+        . ' WHERE client_id = 0 AND alias = ' . $db->quote($page) . ' AND note = ' . $db->quote($marker . 'menus'));
+
+    if ($pageId === null) {
+        throw new \RuntimeException("no \"{$page}\" menu item to carry the modules — run the menus layer first.");
+    }
 
     $installed = $db->prepare(
         'SELECT COUNT(*) FROM ' . $site->table('#__extensions') . " WHERE type = 'module' AND element = ? AND client_id = ?"
@@ -163,7 +174,7 @@ function applyModules(TestSite $site, array $modules, string $marker, string $no
         . ' (title, note, content, ordering, position, published, module, access, showtitle, params, client_id, language) '
         . "VALUES (?, ?, '', ?, ?, ?, ?, ?, 1, ?, ?, '*')"
     );
-    $assign = $db->prepare('INSERT INTO ' . $site->table('#__modules_menu') . ' (moduleid, menuid) VALUES (?, 0)');
+    $assign = $db->prepare('INSERT INTO ' . $site->table('#__modules_menu') . ' (moduleid, menuid) VALUES (?, ?)');
 
     foreach ($modules as $order => $module) {
         $client = clientId($module);
@@ -187,7 +198,7 @@ function applyModules(TestSite $site, array $modules, string $marker, string $no
         ]);
 
         $id = (int) $db->lastInsertId();
-        $assign->execute([$id]);
+        $assign->execute([$id, $client === 0 ? (int) $pageId : 0]);
 
         printf("  + %-18s id %-5d %-14s %s%s\n", $module['key'], $id, $module['position'], $module['module'], $client === 1 ? ' (administrator)' : '');
     }
@@ -225,14 +236,17 @@ function removeModules(TestSite $site, string $note, bool $quiet = false): void
  *
  * @return int  Problems found
  */
-function checkModules(TestSite $site, array $modules, string $note): int
+function checkModules(TestSite $site, array $modules, string $marker, string $note, string $page): int
 {
     $db       = $site->db();
     $problems = 0;
 
+    $pageId = (int) scalar($db, 'SELECT id FROM ' . $site->table('#__menu')
+        . ' WHERE client_id = 0 AND alias = ' . $db->quote($page) . ' AND note = ' . $db->quote($marker . 'menus'));
+
     $find = $db->prepare(
         'SELECT m.id, m.position, m.published, m.access, m.client_id, '
-        . '(SELECT COUNT(*) FROM ' . $site->table('#__modules_menu') . ' AS mm WHERE mm.moduleid = m.id AND mm.menuid = 0) AS everywhere '
+        . '(SELECT GROUP_CONCAT(mm.menuid) FROM ' . $site->table('#__modules_menu') . ' AS mm WHERE mm.moduleid = m.id) AS assigned '
         . 'FROM ' . $site->table('#__modules') . ' AS m WHERE m.note = ? AND m.title = ?'
     );
 
@@ -248,11 +262,11 @@ function checkModules(TestSite $site, array $modules, string $note): int
         }
 
         $expected = [
-            'position'   => $module['position'],
-            'published'  => $module['published'] ?? 1,
-            'access'     => $module['access'] ?? 1,
-            'client_id'  => clientId($module),
-            'everywhere' => 1,
+            'position'  => $module['position'],
+            'published' => $module['published'] ?? 1,
+            'access'    => $module['access'] ?? 1,
+            'client_id' => clientId($module),
+            'assigned'  => clientId($module) === 0 ? $pageId : 0,
         ];
         $wrong = [];
 
