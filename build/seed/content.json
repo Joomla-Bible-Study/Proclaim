@@ -1,5 +1,5 @@
 {
-    "_comment": "Awkward content for developers and CI: the cases that make a page break, not the clean content a user is shown (that is demo data, a different thing). Rows are written with the seed marker as an alias prefix, so `remove` finds exactly them. Keys are local to this file; studies name their teachers and series by key. `media` defaults to one YouTube link; each entry names a seeded server by addon type (the `servers` layer must have run) and must be a real public URL, because an invented path renders a broken player. `guest` is the HTTP status a logged-out visitor gets for the study's sermon page, checked by build/verify-frontend.php; it defaults to 200. 404 for access-restricted content is the current behaviour, not necessarily the intended one: it is recorded here so a change to it is noticed.",
+    "_comment": "Awkward content for developers and CI: the cases that make a page break, not the clean content a user is shown (that is demo data, a different thing). Rows are written with the seed marker as an alias prefix, so `remove` finds exactly them. Keys are local to this file; studies name their teachers and series by key. `media` defaults to one YouTube link; each entry names a seeded server by addon type (the `servers` layer must have run) and must be a real public URL, because an invented path renders a broken player. `guest` is the HTTP status a logged-out visitor gets for the study's sermon page, checked by build/verify-frontend.php; it defaults to 200. `registered`, `editor` and `manager` are the same for a visitor logged in as that seeded account (the accounts layer), and default to 200 too. Observed and intended: a Registered member opens Registered-level studies but not Special-level or unpublished ones; editors and managers open everything. 404 for access-restricted content is the current behaviour, not necessarily the intended one: it is recorded here so a change to it is noticed.",
     "teachers": [
         {
             "key": "edge-one",
@@ -43,7 +43,10 @@
             ],
             "date": "2026-03-01 10:00:00",
             "published": 0,
-            "guest": 404
+            "guest": 404,
+            "registered": 404,
+            "editor": 200,
+            "manager": 200
         },
         {
             "key": "archived",
@@ -77,7 +80,10 @@
             ],
             "date": "2026-03-03 10:00:00",
             "access": 2,
-            "guest": 404
+            "guest": 404,
+            "registered": 200,
+            "editor": 200,
+            "manager": 200
         },
         {
             "key": "access-special",
@@ -94,7 +100,10 @@
             ],
             "date": "2026-03-04 10:00:00",
             "access": 3,
-            "guest": 404
+            "guest": 404,
+            "registered": 404,
+            "editor": 200,
+            "manager": 200
         },
         {
             "key": "no-teacher",
