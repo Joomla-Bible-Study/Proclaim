@@ -1,0 +1,148 @@
+{
+    "_comment": "Module instances for developers and CI, one per behaviour worth seeing: each site module with its main parameter variations, one a guest may not see, one unpublished, and the admin icon module with every tile on. Instances carry the seed marker in `note`, which is how `remove` finds them. They are assigned to all pages, and `cache` is 0 so the page shows what the module renders now, not what it rendered last. A params value (or a list item) of \"@template\", \"@server:<type>\" or \"@teacher:<key>\" is resolved at apply time to the first published template, the seeded server of that addon type, or the seeded teacher of that key, so nothing here hardcodes an id; the servers and content layers must have run. `guest` is \"visible\" (the default) or \"hidden\": whether a logged-out visitor's page should contain the module's title. `contains` is text the module's own output must include. build/verify-frontend.php checks both against the seeded landing page. The admin module is not fetched, because that needs a login; it is checked in the database only. Note that a fresh install has the global admin setting simple_mode on, and a module inherits it, so an instance that sets nothing renders the simple layout; `sermons-full` turns it off to reach the full layout.",
+    "modules": [
+        {
+            "key": "sermons",
+            "module": "mod_proclaim",
+            "title": "Seed modules: latest messages",
+            "position": "sidebar-right",
+            "params": {
+                "t": "@template",
+                "moduleitems": 5,
+                "show_media": 1,
+                "cache": 0
+            },
+            "contains": "Scenario media on two servers"
+        },
+        {
+            "key": "sermons-compact",
+            "module": "mod_proclaim",
+            "title": "Seed modules: three messages, no media",
+            "position": "main-bottom",
+            "params": {
+                "t": "@template",
+                "moduleitems": 3,
+                "show_media": 0,
+                "show_link": 0,
+                "cache": 0
+            },
+            "contains": "Scenario media on two servers"
+        },
+        {
+            "key": "sermons-simple",
+            "module": "mod_proclaim",
+            "title": "Seed modules: simple layout, set explicitly",
+            "position": "bottom-a",
+            "params": {
+                "t": "@template",
+                "simple_mode": 1,
+                "moduleitems": 4,
+                "cache": 0
+            },
+            "contains": "Scenario media on two servers"
+        },
+        {
+            "key": "sermons-full",
+            "module": "mod_proclaim",
+            "title": "Seed modules: full layout",
+            "position": "main-top",
+            "params": {
+                "t": "@template",
+                "simple_mode": 0,
+                "moduleitems": 4,
+                "show_media": 1,
+                "cache": 0
+            },
+            "contains": "Scenario media on two servers"
+        },
+        {
+            "key": "sermons-teacher",
+            "module": "mod_proclaim",
+            "title": "Seed modules: one teacher only",
+            "position": "bottom-b",
+            "params": {
+                "t": "@template",
+                "teacher_id": [
+                    "@teacher:edge-one"
+                ],
+                "moduleitems": 5,
+                "cache": 0
+            }
+        },
+        {
+            "key": "podcast",
+            "module": "mod_proclaim_podcast",
+            "title": "Seed modules: podcast subscribe",
+            "position": "sidebar-left",
+            "params": {
+                "t": "@template",
+                "subscribeintro": "Seed podcasts",
+                "cache": 0
+            },
+            "contains": "Seed podcasts"
+        },
+        {
+            "key": "youtube",
+            "module": "mod_proclaim_youtube",
+            "title": "Seed modules: YouTube channel",
+            "position": "top-a",
+            "params": {
+                "server_id": "@server:youtube",
+                "fallback_sermons": 1,
+                "fallback_count": 3,
+                "fallback_template": "@template",
+                "cache": 0
+            },
+            "contains": "Scenario media on two servers"
+        },
+        {
+            "key": "restricted",
+            "module": "mod_proclaim",
+            "title": "Seed modules: Registered users only",
+            "position": "top-b",
+            "params": {
+                "t": "@template",
+                "cache": 0
+            },
+            "access": 2,
+            "guest": "hidden"
+        },
+        {
+            "key": "unpublished",
+            "module": "mod_proclaim",
+            "title": "Seed modules: unpublished",
+            "position": "footer",
+            "params": {
+                "t": "@template",
+                "cache": 0
+            },
+            "published": 0,
+            "guest": "hidden"
+        },
+        {
+            "key": "admin-icons",
+            "module": "mod_proclaimicon",
+            "title": "Seed modules: every admin icon",
+            "position": "icon",
+            "params": {
+                "header_icon": "fas fa-bible",
+                "show_home": 1,
+                "show_messages": 1,
+                "show_mediafiles": 1,
+                "show_teachers": 1,
+                "show_series": 1,
+                "show_messagetypes": 1,
+                "show_locations": 1,
+                "show_topics": 1,
+                "show_comments": 1,
+                "show_servers": 1,
+                "show_podcasts": 1,
+                "show_templates": 1,
+                "show_templatecode": 1,
+                "show_admin": 1
+            },
+            "client": "administrator",
+            "guest": "hidden"
+        }
+    ]
+}
