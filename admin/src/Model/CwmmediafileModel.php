@@ -563,7 +563,13 @@ class CwmmediafileModel extends AdminModel
         /** @var CwmserverModel $model */
         $model       = Factory::getApplication()->bootComponent('com_proclaim')
             ->getMVCFactory()->createModel('Cwmserver', 'Administrator');
-        $s_item      = $model->getItem($server_id);
+        $s_item = $model->getItem($server_id);
+
+        // A deleted server leaves the media file pointing at nothing.
+        if ($s_item === false) {
+            return null;
+        }
+
         $server_type = $s_item->type;
 
         if (empty($server_type)) {
@@ -696,7 +702,15 @@ class CwmmediafileModel extends AdminModel
             return $this->data;
         }
 
-        $this->data = parent::getItem($pk);
+        $item = parent::getItem($pk);
+
+        // A missing record comes back as false, which $data's object type refuses;
+        // returning it lets the API's view answer 404 instead of a 500.
+        if ($item === false) {
+            return false;
+        }
+
+        $this->data = $item;
 
         if (!empty($this->data)) {
             // Make PodCast Id to be array for view
