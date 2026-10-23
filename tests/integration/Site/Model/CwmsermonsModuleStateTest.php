@@ -304,6 +304,80 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Insert a published teacher and one published study taught by them.
+     *
+     * @param   string  $label  Distinguishes the fixtures in failure output
+     *
+     * @return  array{teacher: int, title: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function insertTeacherWithStudy(string $label): array
+    {
+        $unique  = uniqid('', false);
+        $teacher = (object) [
+            'teachername' => 'Module Filter ' . $label,
+            'alias'       => 'module-filter-' . $label . '-' . $unique,
+            'published'   => 1,
+            'access'      => 1,
+            'language'    => '*',
+            'ordering'    => 0,
+            'address'     => '',
+            'phone'       => '',
+            'website'     => '',
+            'email'       => '',
+            'title'       => '',
+            'short'       => '',
+            'information' => '',
+            'params'      => '{}',
+        ];
+        $this->db->insertObject('#__bsms_teachers', $teacher, 'id');
+        $teacherId = (int) $this->db->insertid();
+
+        $title = 'Module Filter Study ' . $label . ' ' . $unique;
+        $study = (object) [
+            'studytitle'  => $title,
+            'alias'       => 'module-filter-study-' . $label . '-' . $unique,
+            'studydate'   => '2026-01-15 10:00:00',
+            'series_id'   => 0,
+            'messagetype' => 1,
+            'published'   => 1,
+            'access'      => 1,
+            'language'    => '*',
+            'ordering'    => 0,
+            'params'      => '{}',
+        ];
+        $this->db->insertObject('#__bsms_studies', $study, 'id');
+
+        $link = (object) [
+            'study_id'   => (int) $this->db->insertid(),
+            'teacher_id' => $teacherId,
+            'ordering'   => 0,
+        ];
+        $this->db->insertObject('#__bsms_study_teachers', $link);
+
+        return ['teacher' => $teacherId, 'title' => $title];
+    }
+
+    #[TestDox('A teacher module param lists only that teacher\'s studies')]
+    public function testTeacherParamKeepsOnlyThatTeachersStudies(): void
+    {
+        // Two teachers, one study each. The filter's subquery used to bind its ids to
+        // a placeholder the outer query never received, so the ids it matched were the
+        // access levels' instead and the chosen teacher's own studies never appeared.
+        $wanted = $this->insertTeacherWithStudy('wanted');
+        $other  = $this->insertTeacherWithStudy('other');
+
+        $model = $this->createModel();
+        $model->setModuleState($this->moduleParams(['teacher_id' => [(string) $wanted['teacher']]]));
+
+        $titles = array_column($this->items($model), 'studytitle');
+
+        $this->assertSame([$wanted['title']], $titles, 'Only the chosen teacher\'s study may be listed');
+        $this->assertNotContains($other['title'], $titles);
+    }
+
     #[TestDox('getItems returns an array for default module params without throwing')]
     public function testGetItemsReturnsArray(): void
     {
