@@ -334,6 +334,11 @@ class com_proclaimInstallerScript extends InstallerScript
         '/administrator/modules/mod_proclaimicon/language/nl-NL/nl-NL.mod_proclaimicon.sys.ini',
         '/administrator/modules/mod_proclaimicon/language/no-NO/no-NO.mod_proclaimicon.ini',
         '/administrator/modules/mod_proclaimicon/language/no-NO/no-NO.mod_proclaimicon.sys.ini',
+
+        // The series "custom" layouts, the last of expert mode (retired for every
+        // other view in 9.0.0). They call render helpers that no longer exist.
+        '/components/com_proclaim/tmpl/cwmseriesdisplays/default_custom.php',
+        '/components/com_proclaim/tmpl/cwmseriesdisplay/default_custom.php',
     ];
 
     /**
