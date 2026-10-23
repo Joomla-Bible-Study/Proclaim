@@ -18,6 +18,7 @@ namespace CWM\Plugin\Schemaorg\Proclaim\Extension;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\BeforeCompileHeadEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareDataEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareFormEvent;
@@ -30,6 +31,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Schemaorg\SchemaorgPluginTrait;
 use Joomla\CMS\Schemaorg\SchemaorgPrepareDateTrait;
 use Joomla\CMS\Schemaorg\SchemaorgPrepareImageTrait;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Event\Priority;
 use Joomla\Event\SubscriberInterface;
 
@@ -418,7 +420,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     public function onSchemaBeforeCompileHead(BeforeCompileHeadEvent $event): void
     {
         $schema = $event->getSchema();
-        $graph  = $schema->get('@graph');
+        $graph  = $this->withStoredItem((array) $schema->get('@graph'), $event->getContext());
 
         foreach ($graph as &$entry) {
             $type = $entry['@type'] ?? '';
@@ -471,6 +473,92 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         unset($entry);
 
         $schema->set('@graph', $graph);
+    }
+
+    /**
+     * Add the item's stored row to a front-end page's graph when core could not find it.
+     *
+     * Core looks the row up under the page's view context; the form saves it under
+     * the form context (CwmschemaorgHelper::FRONTEND_CONTEXTS maps one to the other).
+     *
+     * @param   array   $graph         The @graph core built
+     * @param   string  $eventContext  "<option>.<view>.<id>", as core dispatches it
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function withStoredItem(array $graph, string $eventContext): array
+    {
+        $dot = strrpos($eventContext, '.');
+
+        if ($dot === false) {
+            return $graph;
+        }
+
+        $viewContext = substr($eventContext, 0, $dot);
+        $itemId      = (int) substr($eventContext, $dot + 1);
+        $formContext = class_exists(CwmschemaorgHelper::class)
+            ? (CwmschemaorgHelper::FRONTEND_CONTEXTS[$viewContext] ?? null)
+            : null;
+
+        if ($formContext === null || $itemId <= 0) {
+            return $graph;
+        }
+
+        return self::appendStoredItem(
+            $graph,
+            $viewContext,
+            $itemId,
+            $this->loadExistingSchema($itemId, $formContext),
+            Uri::root()
+        );
+    }
+
+    /**
+     * Append a stored item node unless core already printed one for the page.
+     *
+     * The node gets the `@id` and `isPartOf` core gives the row it finds itself, so
+     * the result is the same whichever context the row was stored under.
+     *
+     * @param   array       $graph        The @graph core built
+     * @param   string      $viewContext  The page's view context
+     * @param   int         $itemId       Item ID
+     * @param   array|null  $stored       The form-context row's schema, or null if none
+     * @param   string      $domain       Site root URL
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function appendStoredItem(array $graph, string $viewContext, int $itemId, ?array $stored, string $domain): array
+    {
+        if ($stored === null) {
+            return $graph;
+        }
+
+        $id        = $domain . '#/schema/' . str_replace('.', '/', $viewContext) . '/' . $itemId;
+        $webPageId = null;
+
+        foreach ($graph as $entry) {
+            if (($entry['@id'] ?? null) === $id) {
+                return $graph;
+            }
+
+            if (($entry['@type'] ?? null) === 'WebPage') {
+                $webPageId = $entry['@id'] ?? null;
+            }
+        }
+
+        $stored['@id'] = $id;
+
+        if ($webPageId !== null) {
+            $stored['isPartOf'] = ['@id' => $webPageId];
+        }
+
+        $graph[] = $stored;
+
+        return $graph;
     }
 
     /**

@@ -1,5 +1,5 @@
 {
-    "_comment": "The Proclaim plugins a site should have working, and what a guest can see of them. `plugins` are installed and enabled by the layer (a precondition: every other check here is meaningless with one off). `api` lists the webservices resources: an unauthenticated request to a registered route answers 401 and to an unknown one 404, so route registration is checked without a token. `schemaorg` names a seeded study whose sermon page must carry a CreativeWork node of its own. Finder and the scheduled tasks need Joomla's command line and are a separate step. The content plugin (scripturelinks) is only checked as enabled: its output needs a template that renders a study's body text, and the default one does not.",
+    "_comment": "The Proclaim plugins a site should have working, and what a guest can see of them. `plugins` are installed and enabled by the layer (a precondition: every other check here is meaningless with one off). `api` lists the webservices resources: an unauthenticated request to a registered route answers 401 and to an unknown one 404, so route registration is checked without a token. `schemaorg.study` names a seeded study whose sermon page must carry a CreativeWork node of its own. `schemaorg.stored` names one the layer gives a saved schema row, under the form context the admin edit form writes (not the page's view context, which is the one Joomla looks up); its page must print that row exactly once, in place of its own node. Finder and the scheduled tasks need Joomla's command line and are a separate step. The content plugin (scripturelinks) is only checked as enabled: its output needs a template that renders a study's body text, and the default one does not.",
     "plugins": [
         {
             "folder": "system",
@@ -45,6 +45,10 @@
         "absent": "nonexistent"
     },
     "schemaorg": {
-        "study": "no-scripture"
+        "study": "no-scripture",
+        "stored": {
+            "study": "no-teacher",
+            "name": "Seeded stored schema"
+        }
     }
 }

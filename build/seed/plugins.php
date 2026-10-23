@@ -8,6 +8,9 @@
  * fixture: with a plugin off, the checks that depend on it say nothing. `remove` leaves them
  * enabled, because switching a plugin off cannot be told apart from a site that never had it on.
  *
+ * `apply` also gives one seeded study a saved schema.org row, stored under the form context the
+ * admin edit form writes; `remove` deletes it. Run after the content layer, which makes the study.
+ *
  * Run two ways:
  *
  *   php build/seed/plugins.php apply|remove|check
@@ -45,6 +48,7 @@ if (!\in_array($action, ['apply', 'remove', 'check'], true)) {
 }
 
 $declared = json_decode((string) file_get_contents(__DIR__ . '/plugins.json'), true, 512, JSON_THROW_ON_ERROR);
+$marker   = getenv('CWM_SEED_MARKER') ?: markerFromConfig($root);
 
 $failures = 0;
 
@@ -55,8 +59,8 @@ foreach (targets($root) as $label => $makeSite) {
         $site = $makeSite();
 
         $failures += match ($action) {
-            'apply'  => enablePlugins($site, $declared['plugins']),
-            'remove' => leavePlugins(),
+            'apply'  => enablePlugins($site, $declared['plugins']) + storeSchema($site, $declared['schemaorg']['stored'], $marker),
+            'remove' => leavePlugins() + removeSchema($site, $declared['schemaorg']['stored'], $marker),
             default  => checkPlugins($site, $declared['plugins']),
         };
     } catch (\RuntimeException | \PDOException $e) {
@@ -125,6 +129,68 @@ function enablePlugins(TestSite $site, array $plugins): int
     }
 
     return $problems;
+}
+
+/**
+ * The seeded study a stored schema row is given, or null if the content layer has not run.
+ *
+ * @param  array{study: string, name: string}  $stored
+ */
+function storedSchemaStudy(TestSite $site, array $stored, string $marker): ?int
+{
+    $find = $site->db()->prepare('SELECT id FROM ' . $site->table('#__bsms_studies') . ' WHERE alias = ?');
+    $find->execute([$marker . $stored['study']]);
+    $id = $find->fetchColumn();
+
+    return $id === false ? null : (int) $id;
+}
+
+/**
+ * Give the declared study a saved schema row, the way the admin edit form stores one.
+ *
+ * @param  array{study: string, name: string}  $stored
+ *
+ * @return int  Problems found: the study is not seeded
+ */
+function storeSchema(TestSite $site, array $stored, string $marker): int
+{
+    $studyId = storedSchemaStudy($site, $stored, $marker);
+
+    if ($studyId === null) {
+        fwrite(STDERR, "  ! schema.org: study \"{$stored['study']}\" is not seeded — run the content layer first.\n");
+
+        return 1;
+    }
+
+    removeSchema($site, $stored, $marker);
+
+    $schema = json_encode(['@context' => 'https://schema.org', '@type' => 'CreativeWork', 'name' => $stored['name']], JSON_THROW_ON_ERROR);
+    $site->db()
+        ->prepare('INSERT INTO ' . $site->table('#__schemaorg') . " (itemId, context, schemaType, `schema`) VALUES (?, 'com_proclaim.cwmmessage', 'Sermon', ?)")
+        ->execute([$studyId, $schema]);
+    echo "  + schema.org row for study \"{$stored['study']}\"\n";
+
+    return 0;
+}
+
+/**
+ * Delete the declared study's saved schema row.
+ *
+ * @param  array{study: string, name: string}  $stored
+ *
+ * @return int  Problems found (none: a missing study has no row to delete)
+ */
+function removeSchema(TestSite $site, array $stored, string $marker): int
+{
+    $studyId = storedSchemaStudy($site, $stored, $marker);
+
+    if ($studyId !== null) {
+        $site->db()
+            ->prepare('DELETE FROM ' . $site->table('#__schemaorg') . " WHERE itemId = ? AND context = 'com_proclaim.cwmmessage'")
+            ->execute([$studyId]);
+    }
+
+    return 0;
 }
 
 /**

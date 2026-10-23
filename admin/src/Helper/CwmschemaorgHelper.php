@@ -18,10 +18,12 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
+use Joomla\Registry\Registry;
 
 /**
  * Schema.org JSON-LD structured data helper.
@@ -33,6 +35,22 @@ use Joomla\Database\ParameterType;
  */
 class CwmschemaorgHelper
 {
+    /**
+     * Front-end view contexts, each mapped to the form context its rows are stored under.
+     *
+     * ⚠️ Joomla's system plugin looks a page's row up by `option.view`, but the edit
+     * form saves it under the form context, so core alone never finds a saved row.
+     * The schemaorg plugin bridges the two on the page; inject() relies on that.
+     *
+     * @var    array<string, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    public const FRONTEND_CONTEXTS = [
+        'com_proclaim.cwmsermon'        => 'com_proclaim.cwmmessage',
+        'com_proclaim.cwmteacher'       => 'com_proclaim.teacher',
+        'com_proclaim.cwmseriesdisplay' => 'com_proclaim.serie',
+    ];
+
     /**
      * Build CreativeWork JSON-LD for a single sermon detail page.
      *
@@ -515,11 +533,42 @@ class CwmschemaorgHelper
     }
 
     /**
+     * Whether a stored #__schemaorg row will be printed on this item's page.
+     *
+     * A row under the view context is printed by Joomla's system plugin alone; one
+     * under the form context only when the Proclaim schemaorg plugin adds it. Neither
+     * is printed unless the system plugin runs and has a base type configured.
+     *
+     * @param   int     $itemId       Item ID
+     * @param   string  $formContext  Admin form context (e.g. 'com_proclaim.cwmmessage')
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function storedSchemaRenders(int $itemId, string $formContext): bool
+    {
+        $core = PluginHelper::getPlugin('system', 'schemaorg');
+
+        if (!$core || !\in_array((new Registry($core->params ?? ''))->get('baseType', 'organization'), ['organization', 'person'], true)) {
+            return false;
+        }
+
+        $viewContext = array_search($formContext, self::FRONTEND_CONTEXTS, true);
+
+        if ($viewContext !== false && self::hasJoomlaSchema($itemId, $viewContext)) {
+            return true;
+        }
+
+        return PluginHelper::isEnabled('schemaorg', 'proclaim') && self::hasJoomlaSchema($itemId, $formContext);
+    }
+
+    /**
      * Inject a JSON-LD array into the document head.
      *
-     * When $itemId and $context are provided, checks if Joomla's system
-     * schema.org plugin already has per-item schema stored — if so, skips
-     * injection to avoid duplicate structured data.
+     * When $itemId and $context are provided, skips injection if a stored
+     * #__schemaorg row will be printed for the item instead, so the page carries
+     * one node for it, not two and not none.
      *
      * @param   array   $data     JSON-LD data array
      * @param   int     $itemId   Optional item ID for duplicate check
@@ -535,8 +584,7 @@ class CwmschemaorgHelper
             return;
         }
 
-        // Skip if Joomla's system plugin already has per-item schema for this item
-        if ($itemId > 0 && $context !== '' && self::hasJoomlaSchema($itemId, $context)) {
+        if ($itemId > 0 && $context !== '' && self::storedSchemaRenders($itemId, $context)) {
             return;
         }
 
