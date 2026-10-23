@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Plumbing shared by the seed layers: which sites to work on, the marker, a query helper.
+ * Plumbing shared by the seed layers: which sites to work on, the marker, a query helper, and
+ * the menu-tree rebuild every layer that writes menu items needs.
  *
  * Each layer is a script that runs standalone against every `role = test` install (how
  * `composer test:install` calls it) or under cwm-seed against one named site. Both entry
@@ -181,4 +182,45 @@ function runJoomlaCli(string $sitePath, array $arguments): array
     fclose($pipes[2]);
 
     return [proc_close($process), preg_replace('/\e\[[0-9;]*m/', '', $output) ?? $output];
+}
+
+/**
+ * Renumber lft/rgt across the whole menu tree from parent_id.
+ *
+ * The tree is rebuilt for the whole table, admin items included, because lft/rgt
+ * are shared across client_id: renumbering only the site items would leave the two
+ * halves overlapping.
+ */
+function rebuildTree(TestSite $site): void
+{
+    $db       = $site->db();
+    $children = [];
+
+    $rows = $db->query('SELECT id, parent_id FROM ' . $site->table('#__menu') . ' ORDER BY parent_id, lft, id');
+
+    foreach ($rows as $row) {
+        $children[(int) $row['parent_id']][] = (int) $row['id'];
+    }
+
+    $updates = [];
+
+    $walk = static function (int $id, int $left, int $level) use (&$walk, $children, &$updates): int {
+        $right = $left + 1;
+
+        foreach ($children[$id] ?? [] as $childId) {
+            $right = $walk($childId, $right, $level + 1);
+        }
+
+        $updates[] = [$id, $left, $right, $level];
+
+        return $right + 1;
+    };
+
+    $walk(1, 0, 0);
+
+    $update = $db->prepare('UPDATE ' . $site->table('#__menu') . ' SET lft = ?, rgt = ?, level = ? WHERE id = ?');
+
+    foreach ($updates as [$id, $left, $right, $level]) {
+        $update->execute([$left, $right, $level, $id]);
+    }
 }
