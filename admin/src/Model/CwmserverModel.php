@@ -102,7 +102,15 @@ class CwmserverModel extends AdminModel
             return $this->data;
         }
 
-        $this->data = parent::getItem($pk);
+        $item = parent::getItem($pk);
+
+        // A missing record comes back as false, which $data's object type refuses;
+        // returning it lets the API's view answer 404 instead of a 500.
+        if ($item === false) {
+            return false;
+        }
+
+        $this->data = $item;
 
         if ($this->data) {
             // Convert media field to array
