@@ -477,7 +477,8 @@ function checkSeededModules(TestSite $site, string $url, array $items, string $r
  * The webservices plugin registers its routes in Joomla's API application. Without a token a
  * registered route answers 401 and an unknown one 404, so route registration is checked without
  * needing credentials. The schema.org plugin family means a sermon page carries structured data:
- * the page of the study named in plugins.json must have a JSON-LD CreativeWork node with its title.
+ * the page of the study named in plugins.json must have a JSON-LD CreativeWork node with its title,
+ * and the page of the study given a saved schema row must print that row once and nothing else.
  *
  * @param   TestSite  $site    The site under test
  * @param   string    $url     The site's base URL
@@ -527,29 +528,68 @@ function checkSeededPlugins(TestSite $site, string $url, string $marker, string 
     }
 
     $template = $db->query('SELECT id FROM ' . $site->table('#__bsms_templates') . ' WHERE published = 1 ORDER BY id LIMIT 1')->fetchColumn();
-    $body     = fetch(rtrim($url, '/') . '/index.php?option=com_proclaim&view=cwmsermon&id=' . $study['id'] . '&t=' . $template, $status);
-    $node     = false;
+    $sermon   = static fn (int $id): array => creativeWorkNames(
+        fetch(rtrim($url, '/') . '/index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $template, $status)
+    );
 
-    if ($body !== null && preg_match_all('#<script[^>]*ld\+json[^>]*>(.*?)</script>#s', $body, $blocks) > 0) {
-        foreach ($blocks[1] as $json) {
-            $data = json_decode($json, true);
-
-            foreach (\is_array($data) ? ($data['@graph'] ?? [$data]) : [] as $nodeData) {
-                if (($nodeData['@type'] ?? null) === 'CreativeWork' && ($nodeData['name'] ?? $nodeData['headline'] ?? '') === $study['studytitle']) {
-                    $node = true;
-                }
-            }
-        }
-    }
-
-    if (!$node) {
+    if (!\in_array($study['studytitle'], $sermon((int) $study['id']), true)) {
         report(false, 'schema.org', 'no CreativeWork node named "' . $study['studytitle'] . '" on the sermon page');
         $problems++;
     } else {
         report(true, 'schema.org', 'CreativeWork node present');
     }
 
+    // The saved row is stored under the form context, not the view context Joomla looks up.
+    $stored = $declared['schemaorg']['stored'];
+    $find->execute([$marker . $stored['study']]);
+    $storedStudy = $find->fetch(PDO::FETCH_ASSOC);
+
+    if ($storedStudy === false) {
+        report(false, 'schema.org stored', "study \"{$stored['study']}\" is not seeded — run the content layer");
+
+        return $problems + 1;
+    }
+
+    $names = $sermon((int) $storedStudy['id']);
+
+    if ($names !== [$stored['name']]) {
+        report(false, 'schema.org stored', 'expected one CreativeWork node, "' . $stored['name'] . '"; found ' . json_encode($names));
+        $problems++;
+    } else {
+        report(true, 'schema.org stored', 'the saved row, printed once');
+    }
+
     return $problems;
+}
+
+/**
+ * The names of the CreativeWork nodes in a page's JSON-LD blocks.
+ *
+ * @param   ?string  $body  The page, or null if it could not be fetched
+ *
+ * @return  list<string>
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function creativeWorkNames(?string $body): array
+{
+    $names = [];
+
+    if ($body === null || preg_match_all('#<script[^>]*ld\+json[^>]*>(.*?)</script>#s', $body, $blocks) === 0) {
+        return $names;
+    }
+
+    foreach ($blocks[1] as $json) {
+        $data = json_decode($json, true);
+
+        foreach (\is_array($data) ? ($data['@graph'] ?? [$data]) : [] as $node) {
+            if (($node['@type'] ?? null) === 'CreativeWork') {
+                $names[] = (string) ($node['name'] ?? $node['headline'] ?? '');
+            }
+        }
+    }
+
+    return $names;
 }
 
 /**

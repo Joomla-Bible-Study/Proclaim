@@ -555,4 +555,31 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
         // title's two "</script" sequences must be neutralized.
         $this->assertSame(1, substr_count(strtolower($box->html), '</script'));
     }
+
+    /**
+     * The schemaorg plugin prints an item's saved row only for an item the view
+     * rendered; a view refusing the item (unpublished, restricted) never calls inject().
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testInjectRecordsTheRenderedItem(): void
+    {
+        $rendered = new \ReflectionProperty(CwmschemaorgHelper::class, 'rendered');
+        $rendered->setValue(null, []);
+
+        try {
+            $this->assertFalse(CwmschemaorgHelper::wasRendered('com_proclaim.cwmmessage', 7));
+
+            // Empty data returns before any document or database work.
+            CwmschemaorgHelper::inject([], 7, 'com_proclaim.cwmmessage');
+
+            $this->assertTrue(CwmschemaorgHelper::wasRendered('com_proclaim.cwmmessage', 7));
+            $this->assertFalse(CwmschemaorgHelper::wasRendered('com_proclaim.cwmmessage', 8));
+            $this->assertFalse(CwmschemaorgHelper::wasRendered('com_proclaim.teacher', 7));
+        } finally {
+            $rendered->setValue(null, []);
+        }
+    }
 }

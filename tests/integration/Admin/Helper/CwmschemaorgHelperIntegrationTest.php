@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Tests\Integration\Admin\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Database\DatabaseDriver;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -263,6 +264,107 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         // context predicate is actually applied, not swallowed.
         $this->assertFalse(CwmschemaorgHelper::hasJoomlaSchema($itemId, 'com_proclaim.other'));
         $this->assertFalse(CwmschemaorgHelper::hasJoomlaSchema($itemId + 777, 'com_proclaim.cwmmessage'));
+    }
+
+    /**
+     * Turn a plugin on or off inside the test's transaction, and drop PluginHelper's
+     * cached list so the change is seen.
+     *
+     * @param   string  $folder   Plugin group
+     * @param   string  $element  Plugin element
+     * @param   bool    $enabled  Wanted state
+     *
+     * @return  void
+     */
+    private function setPluginEnabled(string $folder, string $element, bool $enabled): void
+    {
+        $query = $this->db->createQuery()
+            ->update($this->db->quoteName('#__extensions'))
+            ->set($this->db->quoteName('enabled') . ' = ' . (int) $enabled)
+            ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('plugin'))
+            ->where($this->db->quoteName('folder') . ' = ' . $this->db->quote($folder))
+            ->where($this->db->quoteName('element') . ' = ' . $this->db->quote($element));
+        $this->db->setQuery($query)->execute();
+
+        if ($this->db->getAffectedRows() === 0 && !$this->pluginExists($folder, $element)) {
+            $this->markTestSkipped('plg_' . $folder . '_' . $element . ' is not installed on the test database.');
+        }
+
+        $this->resetPluginCache();
+    }
+
+    /**
+     * @param   string  $folder   Plugin group
+     * @param   string  $element  Plugin element
+     *
+     * @return  bool
+     */
+    private function pluginExists(string $folder, string $element): bool
+    {
+        $query = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from($this->db->quoteName('#__extensions'))
+            ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('plugin'))
+            ->where($this->db->quoteName('folder') . ' = ' . $this->db->quote($folder))
+            ->where($this->db->quoteName('element') . ' = ' . $this->db->quote($element));
+
+        return (int) $this->db->setQuery($query)->loadResult() > 0;
+    }
+
+    /**
+     * @return  void
+     */
+    private function resetPluginCache(): void
+    {
+        (new \ReflectionProperty(PluginHelper::class, 'plugins'))->setValue(null, null);
+    }
+
+    #[TestDox('storedSchemaRenders(): a form-context row renders only while both schemaorg plugins run')]
+    public function testFormContextRowNeedsBothPlugins(): void
+    {
+        $itemId = $this->insertSchemaRow('com_proclaim.cwmmessage', 'Sermon', ['@type' => 'CreativeWork', 'name' => 'X']);
+
+        try {
+            $this->setPluginEnabled('system', 'schemaorg', true);
+            $this->setPluginEnabled('schemaorg', 'proclaim', true);
+            $this->assertTrue(CwmschemaorgHelper::storedSchemaRenders($itemId, 'com_proclaim.cwmmessage'));
+
+            // Without the Proclaim plugin nothing adds the row, so the page must keep its own node.
+            $this->setPluginEnabled('schemaorg', 'proclaim', false);
+            $this->assertFalse(CwmschemaorgHelper::storedSchemaRenders($itemId, 'com_proclaim.cwmmessage'));
+
+            $this->setPluginEnabled('schemaorg', 'proclaim', true);
+            $this->setPluginEnabled('system', 'schemaorg', false);
+            $this->assertFalse(CwmschemaorgHelper::storedSchemaRenders($itemId, 'com_proclaim.cwmmessage'));
+        } finally {
+            $this->resetPluginCache();
+        }
+    }
+
+    #[TestDox('storedSchemaRenders(): a view-context row renders through Joomla\'s system plugin alone')]
+    public function testViewContextRowNeedsOnlyTheSystemPlugin(): void
+    {
+        $itemId = $this->insertSchemaRow('com_proclaim.cwmsermon', 'Sermon', ['@type' => 'CreativeWork', 'name' => 'X']);
+
+        try {
+            $this->setPluginEnabled('system', 'schemaorg', true);
+            $this->setPluginEnabled('schemaorg', 'proclaim', false);
+            $this->assertTrue(CwmschemaorgHelper::storedSchemaRenders($itemId, 'com_proclaim.cwmmessage'));
+        } finally {
+            $this->resetPluginCache();
+        }
+    }
+
+    #[TestDox('storedSchemaRenders(): an item with no row lets the page print its own node')]
+    public function testNoRowDoesNotRender(): void
+    {
+        try {
+            $this->setPluginEnabled('system', 'schemaorg', true);
+            $this->setPluginEnabled('schemaorg', 'proclaim', true);
+            $this->assertFalse(CwmschemaorgHelper::storedSchemaRenders(98765, 'com_proclaim.cwmmessage'));
+        } finally {
+            $this->resetPluginCache();
+        }
     }
 
     /**
