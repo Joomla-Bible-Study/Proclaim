@@ -502,7 +502,9 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             ? (CwmschemaorgHelper::FRONTEND_CONTEXTS[$viewContext] ?? null)
             : null;
 
-        if ($formContext === null || $itemId <= 0) {
+        // Core dispatches this for the request's id even when the view refused the item
+        // (unpublished, restricted: a 404), so only bridge an item the view rendered.
+        if ($formContext === null || $itemId <= 0 || !CwmschemaorgHelper::wasRendered($formContext, $itemId)) {
             return $graph;
         }
 
@@ -556,7 +558,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $stored['isPartOf'] = ['@id' => $webPageId];
         }
 
-        $graph[] = $stored;
+        // Sanitised here whatever its @type: the cleanup loop only reaches the three item types.
+        $graph[] = self::sanitizeForScriptEmbedding($stored);
 
         return $graph;
     }

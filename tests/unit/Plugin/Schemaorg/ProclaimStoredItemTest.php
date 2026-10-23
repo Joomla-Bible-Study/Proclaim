@@ -110,4 +110,13 @@ class ProclaimStoredItemTest extends ProclaimTestCase
     {
         $this->assertSame($this->coreGraph(), $this->append($this->coreGraph(), null));
     }
+
+    #[TestDox('the added node is sanitised whatever its @type, not only the three item types')]
+    public function testSanitisesTheAddedNodeOfAnyType(): void
+    {
+        $graph = $this->append($this->coreGraph(), ['@type' => 'Event', 'name' => 'x</script><script>alert(1)</script>']);
+
+        $this->assertStringNotContainsStringIgnoringCase('</script', $graph[3]['name']);
+        $this->assertSame('Event', $graph[3]['@type']);
+    }
 }

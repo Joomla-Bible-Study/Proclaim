@@ -52,6 +52,30 @@ class CwmschemaorgHelper
     ];
 
     /**
+     * Items whose page reached inject() in this request, keyed "<form context>.<id>".
+     *
+     * @var    array<string, true>
+     * @since  __DEPLOY_VERSION__
+     */
+    private static array $rendered = [];
+
+    /**
+     * Whether this request's view rendered the item, i.e. it passed the view's own
+     * published and access checks and reached inject().
+     *
+     * @param   string  $formContext  Admin form context (e.g. 'com_proclaim.cwmmessage')
+     * @param   int     $itemId       Item ID
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function wasRendered(string $formContext, int $itemId): bool
+    {
+        return isset(self::$rendered[$formContext . '.' . $itemId]);
+    }
+
+    /**
      * Build CreativeWork JSON-LD for a single sermon detail page.
      *
      * @param   object  $item      Sermon item from model
@@ -580,6 +604,10 @@ class CwmschemaorgHelper
      */
     public static function inject(array $data, int $itemId = 0, string $context = ''): void
     {
+        if ($itemId > 0 && $context !== '') {
+            self::$rendered[$context . '.' . $itemId] = true;
+        }
+
         if ($data === []) {
             return;
         }
