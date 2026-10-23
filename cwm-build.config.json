@@ -215,6 +215,11 @@
                 "description": "Awkward teachers, series and studies: unpublished, restricted, no teacher, odd titles"
             },
             {
+                "name": "templates",
+                "script": "build/seed/templates.php",
+                "description": "A template, and a menu item using it, for each layout the package ships besides the default one"
+            },
+            {
                 "name": "modules",
                 "script": "build/seed/modules.php",
                 "description": "Module instances: each site module with its parameter variations, a restricted and an unpublished one, and the admin icon module"

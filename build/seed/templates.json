@@ -1,0 +1,77 @@
+{
+    "_comment": "Templates that switch a page to each layout the package ships besides the default one, for developers and CI. A Proclaim template is its params blob, so each entry is a copy of the installed Default template's params with `params` merged over it (values as strings, the way the form saves them). A template is applied through a menu item, not a `t=` query parameter, which is ignored once a menu item matches; so each `pages` entry becomes a menu item (note `<marker>templates`) whose page build/verify-frontend.php fetches as a guest. `expect` is markup only that layout produces; `differsFromDefault` (default true) also asserts the same view under the Default template does not contain it. That cannot hold for `sermonstemplate = simple` while the site is in Simple Mode, which a fresh install is: Default renders the same layout then. `item` names a row from content.json (`teacher:<key>` or `series:<key>`) for views that show one. `undeclared` lists params no form declares, which a site can only have from old data or an import; every other key must be declared in admin/forms/template.xml, because the form drops undeclared keys on save. Only `sermonstemplate` is selectable from the admin on a fresh install; the teacher and series layouts are not (see the issue tracker: teacher cards/list unselectable, useexpert_* undeclared). The series-list custom layout is left out until its 500 is fixed; add it then.",
+    "templates": [
+        {
+            "key": "sermons-simple2",
+            "title": "Sermons list: simple2",
+            "params": {
+                "sermonstemplate": "simple2"
+            },
+            "pages": [
+                {
+                    "view": "cwmsermons",
+                    "expect": "cwm-simple2"
+                }
+            ]
+        },
+        {
+            "key": "sermons-simple",
+            "title": "Sermons list: simple",
+            "params": {
+                "sermonstemplate": "simple"
+            },
+            "pages": [
+                {
+                    "view": "cwmsermons",
+                    "expect": "com-content-article__body",
+                    "differsFromDefault": false
+                }
+            ]
+        },
+        {
+            "key": "teacher-cards",
+            "title": "Teacher: cards",
+            "params": {
+                "teachertemplate": "cards",
+                "show_teacher_studies": "1"
+            },
+            "pages": [
+                {
+                    "view": "cwmteacher",
+                    "item": "teacher:edge-two",
+                    "expect": "proclaim-teacher-cards"
+                }
+            ]
+        },
+        {
+            "key": "teacher-list",
+            "title": "Teacher: list",
+            "params": {
+                "teachertemplate": "list",
+                "show_teacher_studies": "1"
+            },
+            "pages": [
+                {
+                    "view": "cwmteacher",
+                    "item": "teacher:edge-two",
+                    "expect": "proclaim-teacher-list"
+                }
+            ]
+        },
+        {
+            "key": "series-detail-custom",
+            "title": "Series detail: custom",
+            "params": {
+                "useexpert_seriesdetail": "1"
+            },
+            "undeclared": ["useexpert_seriesdetail"],
+            "pages": [
+                {
+                    "view": "cwmseriesdisplay",
+                    "item": "series:no-teacher",
+                    "expect": "bslisttable"
+                }
+            ]
+        }
+    ]
+}

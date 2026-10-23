@@ -236,6 +236,7 @@ foreach ($installs as $install) {
     $failures += checkSeededStudies($site, $install->url, $seedMarker, $root);
     $failures += checkSeededModules($site, $install->url, $items, $root);
     $failures += checkSeededPlugins($site, $install->url, $seedMarker, $root);
+    $failures += checkSeededTemplates($site, $install->url, $seedMarker, $root);
     $failures += checkSeededAccounts($site, $install, $seedMarker, $root);
     $failures += checkSeededSearch($install, $seedMarker, $root);
 }
@@ -557,6 +558,79 @@ function checkSeededPlugins(TestSite $site, string $url, string $marker, string 
         $problems++;
     } else {
         report(true, 'schema.org stored', 'the saved row, printed once');
+    }
+
+    return $problems;
+}
+
+/**
+ * Check that each seeded template's page renders its own layout, not the default one.
+ *
+ * HTTP 200 alone also passes when a layout selector is ignored and the default layout renders,
+ * so each page must carry markup only its layout produces (`expect` in templates.json), and,
+ * unless the entry says otherwise, the same view under the Default template (the menus layer's
+ * item for it) must not.
+ *
+ * @param   TestSite  $site    The site under test
+ * @param   string    $url     The site's base URL
+ * @param   string    $marker  The seed marker
+ * @param   string    $root    The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededTemplates(TestSite $site, string $url, string $marker, string $root): int
+{
+    $file = $root . '/build/seed/templates.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $db       = $site->db();
+    $find     = $db->prepare('SELECT id FROM ' . $site->table('#__menu') . ' WHERE client_id = 0 AND note = ? AND alias = ?');
+    $base     = $db->prepare('SELECT id FROM ' . $site->table('#__menu') . ' WHERE client_id = 0 AND note = ? AND link LIKE ? ORDER BY id LIMIT 1');
+    $page     = static fn (int $itemId): ?string => fetch(rtrim($url, '/') . '/index.php?Itemid=' . $itemId, $status);
+    $problems = 0;
+
+    echo "\n  -- templates, as a guest\n";
+
+    foreach ($declared['templates'] as $template) {
+        foreach ($template['pages'] as $declaredPage) {
+            $label = 'template ' . $template['key'];
+            $find->execute([$marker . 'templates', $marker . 'tpl-' . $template['key'] . '-' . $declaredPage['view']]);
+            $itemId = $find->fetchColumn();
+
+            if ($itemId === false) {
+                report(false, $label, 'menu item missing — run the templates layer');
+                $problems++;
+
+                continue;
+            }
+
+            if (!str_contains((string) $page((int) $itemId), $declaredPage['expect'])) {
+                report(false, $label, "\"{$declaredPage['expect']}\" not on the page: the layout did not render");
+                $problems++;
+
+                continue;
+            }
+
+            if ($declaredPage['differsFromDefault'] ?? true) {
+                $base->execute([$marker . 'menus', '%view=' . $declaredPage['view'] . '&%']);
+                $baseId = $base->fetchColumn();
+
+                if ($baseId === false || str_contains((string) $page((int) $baseId), $declaredPage['expect'])) {
+                    report(false, $label, "\"{$declaredPage['expect']}\" is also on the Default template's page, so it proves nothing");
+                    $problems++;
+
+                    continue;
+                }
+            }
+
+            report(true, $label, 'its own layout rendered');
+        }
     }
 
     return $problems;
