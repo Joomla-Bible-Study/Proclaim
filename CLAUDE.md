@@ -11,49 +11,6 @@ Proclaim (CWM Proclaim) is a Joomla 5+ component (minimum 5.4.0, Joomla 6 suppor
 
 > **Claude Code:** load the `joomla` skill (Skill tool) at the start of any session touching this project's PHP, forms, manifests, or extension structure — it carries the J5/J6 API rules, canonical upstream references, and the gotchas this codebase is built against.
 
-## Architecture
-
-### Key Admin Components
-
-- **Extension/ProclaimComponent.php** - Main component class
-- **Lib/** - Core utilities (backup, restore, assets, stats, conversion)
-- **Helper/** - Shared utilities (params, thumbnails, images, database, tags)
-
-### Core Entities
-
-Messages (sermons), Teachers, Series, Topics, Locations, MediaFiles, Servers, Podcasts, Templates, TemplateCodes, Comments
-
-### Service Provider
-
-`admin/services/provider.php` - Registers component with Joomla's DI container using MVCFactory, CategoryFactory, ComponentDispatcherFactory, and RouterFactory.
-
-## Testing
-
-### PHP Tests (PHPUnit)
-
-Tests are in `tests/unit/`, structure mirrors the source.
-
-Base test class: `CWM\Component\Proclaim\Tests\ProclaimTestCase`
-
-### JavaScript Tests (Jest)
-
-JS tests are in `tests/js/` and use Jest with jsdom for DOM testing.
-
-```bash
-# Run JS tests
-npm test
-
-# Run JS tests in watch mode (for development)
-npm run test:watch
-
-# Run JS tests with coverage
-npm run test:coverage
-```
-
-Test files should be named `*.test.js` or `*.spec.js`. Coverage reports are generated in `build/reports/coverage-js/`.
-
-**PhpStorm Integration**: Jest is auto-detected. Use gutter icons next to tests, or right-click test files to run.
-
 ## Code Style
 
 This project follows **PSR-12** coding standards. All code must pass PHP CS Fixer before committing.
