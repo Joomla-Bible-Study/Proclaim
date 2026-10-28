@@ -113,4 +113,39 @@ class CwmimagesTest extends ProclaimTestCase
     {
         $this->assertSame('', Cwmimages::renderPicture((object) ['path' => ''], null));
     }
+
+    /**
+     * A file with a space in its name, saved by the media field as %20, is
+     * found on disk and keeps its stored URL as the output path.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testGetImagePathFindsFileStoredWithEncodedSpace(): void
+    {
+        $dir = 'tests/tmp-cwmimages-' . bin2hex(random_bytes(4));
+        $png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+
+        mkdir(JPATH_ROOT . '/' . $dir, 0755, true);
+        file_put_contents(JPATH_ROOT . '/' . $dir . '/my photo.png', $png);
+        file_put_contents(JPATH_ROOT . '/' . $dir . '/my photo.webp', $png);
+
+        try {
+            // Guard: the file must exist where getImagePath() looks, or a null path proves nothing
+            $this->assertFileExists(JPATH_ROOT . DIRECTORY_SEPARATOR . $dir . '/my photo.png');
+
+            $image = Cwmimages::getImagePath(
+                $dir . '/my%20photo.png#joomlaImage://local-images/my photo.png?width=1&height=1'
+            );
+
+            $this->assertSame($dir . '/my%20photo.png', $image->path);
+            $this->assertSame(1, $image->width);
+            $this->assertGreaterThan(0, $image->size);
+            $this->assertSame($dir . '/my%20photo.webp', $image->webp_path);
+        } finally {
+            array_map('unlink', glob(JPATH_ROOT . '/' . $dir . '/*'));
+            rmdir(JPATH_ROOT . '/' . $dir);
+        }
+    }
 }

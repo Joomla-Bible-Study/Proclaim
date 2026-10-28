@@ -26,7 +26,6 @@ use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -395,8 +394,7 @@ class CwmteacherModel extends AdminModel
         /** @var Registry $params */
         $params        = Cwmparams::getAdmin()->params;
         $app           = Factory::getApplication();
-        $image         = HTMLHelper::cleanImageURL($data['image']);
-        $data['image'] = urldecode($image->url);
+        $data['image'] = Cwmthumbnail::mediaFieldPath($data['image']);
 
         // Set contact to be an Int to work with Database
         $data['contact'] = (int) $data['contact'];
