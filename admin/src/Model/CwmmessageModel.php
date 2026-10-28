@@ -35,7 +35,6 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -383,7 +382,6 @@ class CwmmessageModel extends AdminModel
         $app    = Factory::getApplication();
         $params = Cwmparams::getAdmin()->params;
         $input  = $app->getInput();
-        $image  = HTMLHelper::cleanImageURL((string)$data['image']);
 
         // Extract subform data before table binding strips it.
         //
@@ -406,7 +404,7 @@ class CwmmessageModel extends AdminModel
         $studyText  = (string) ($data['studytext'] ?? '');
         $language   = (string) ($data['language'] ?? '*');
 
-        $data['image'] = $image->url;
+        $data['image'] = Cwmthumbnail::mediaFieldPath((string) $data['image']);
         $this->cleanCache();
 
         // The front end calls this model and uses a_id to avoid id clashes,

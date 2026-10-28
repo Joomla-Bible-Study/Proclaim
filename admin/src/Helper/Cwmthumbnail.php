@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Log\Log;
 use Joomla\Filesystem\File;
@@ -310,6 +311,36 @@ class Cwmthumbnail
         }
 
         return $base !== '' ? $base : 'image';
+    }
+
+    /**
+     * Turn a stored media-field value into a path relative to JPATH_ROOT.
+     *
+     * The media field stores a URL: the #joomlaImage:// fragment is stripped
+     * and percent-escapes are decoded (Joomla's local adapter encodes spaces
+     * as %20). rawurldecode keeps a literal "+" intact. A decoded value that
+     * contains a NUL byte or a ".." segment is refused, since the result is
+     * handed to filesystem calls.
+     *
+     * @param   ?string  $value  Value as saved by a type="media" field
+     *
+     * @return  string  Relative path, or '' when empty or refused
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function mediaFieldPath(?string $value): string
+    {
+        if ($value === null || $value === '') {
+            return '';
+        }
+
+        $path = rawurldecode(HTMLHelper::cleanImageURL($value)->url);
+
+        if (str_contains($path, "\0") || \in_array('..', preg_split('#[/\\\\]#', $path), true)) {
+            return '';
+        }
+
+        return $path;
     }
 
     public static function create(

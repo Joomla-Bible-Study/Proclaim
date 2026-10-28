@@ -25,7 +25,6 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -200,8 +199,7 @@ class CwmserieModel extends AdminModel
         /** @var Registry $params */
         $params        = Cwmparams::getAdmin()->params;
         $app           = Factory::getApplication();
-        $image         = HTMLHelper::cleanImageURL($data['image']);
-        $data['image'] = $image->url;
+        $data['image'] = Cwmthumbnail::mediaFieldPath($data['image']);
 
         // Alter the title for save as copy
         if ($app->getInput()->get('task') === 'save2copy') {

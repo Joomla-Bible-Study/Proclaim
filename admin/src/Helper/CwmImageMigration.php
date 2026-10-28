@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
@@ -355,8 +354,7 @@ class CwmImageMigration
         $newFolder = 'images/biblestudy/' . $type . '/' . $alias . '-' . $id;
 
         // Clean Joomla media field metadata (#joomlaImage://...)
-        $cleanImage = HTMLHelper::_('cleanImageURL', $oldPath);
-        $cleanPath  = $cleanImage->url;
+        $cleanPath = Cwmthumbnail::mediaFieldPath($oldPath);
 
         // Handle bare filenames (no directory separator) by prepending configured image folder
         if (!str_contains($cleanPath, '/')) {
@@ -832,8 +830,7 @@ class CwmImageMigration
                 }
 
                 // Clean Joomla media field metadata
-                $cleanImage = HTMLHelper::_('cleanImageURL', $imagePath);
-                $cleanPath  = $cleanImage->url;
+                $cleanPath = Cwmthumbnail::mediaFieldPath($imagePath);
 
                 // Handle bare filenames
                 if (!str_contains($cleanPath, '/')) {

@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Uri\Uri;
@@ -98,8 +99,9 @@ class Cwmimages
         }
 
         $imagePath  = HTMLHelper::_('cleanImageURL', $path);
-        $fullPath   = JPATH_ROOT . DIRECTORY_SEPARATOR . $imagePath->url;
-        $fileExists = file_exists($fullPath) && is_file($fullPath);
+        $filePath   = Cwmthumbnail::mediaFieldPath($path);
+        $fullPath   = JPATH_ROOT . DIRECTORY_SEPARATOR . $filePath;
+        $fileExists = $filePath !== '' && is_file($fullPath);
 
         if ($imagePath->attributes['width'] === 0 && $fileExists) {
             $tmp       = Image::getImageFileProperties($fullPath);
@@ -113,10 +115,11 @@ class Cwmimages
 
         // Check for WebP sibling file
         if ($tmp->path !== null) {
-            $ext     = pathinfo($tmp->path, PATHINFO_EXTENSION);
-            $webpUrl = preg_replace('/\.' . preg_quote($ext, '/') . '$/', '.webp', $tmp->path);
+            $ext      = pathinfo($tmp->path, PATHINFO_EXTENSION);
+            $webpUrl  = preg_replace('/\.' . preg_quote($ext, '/') . '$/', '.webp', $tmp->path);
+            $webpFile = preg_replace('/\.' . preg_quote($ext, '/') . '$/', '.webp', $filePath);
 
-            if ($ext !== 'webp' && is_file(JPATH_ROOT . DIRECTORY_SEPARATOR . $webpUrl)) {
+            if ($ext !== 'webp' && is_file(JPATH_ROOT . DIRECTORY_SEPARATOR . $webpFile)) {
                 $tmp->webp_path = $webpUrl;
             }
         }
