@@ -1,7 +1,8 @@
 Proclaim 10.7.3 is a maintenance release. It closes a gap that could put
 restricted messages into your public podcast feed, ships a patched HTTP library
-for the YouTube integration, and fixes a set of faults that broke pages,
-discarded images, or sent migrated media links to the wrong address.
+for the YouTube integration, repairs message links that led to the wrong page,
+and fixes a set of faults that broke pages, discarded images, or sent migrated
+media links to the wrong address.
 
 ## Rebuild your podcast feeds after updating
 
@@ -23,6 +24,28 @@ copy is updated to 7.15.2, which fixes GHSA-v5mv-p594-2x33 (a host check that
 could be bypassed) and GHSA-f7vp-7xgx-4w4r (cookie scope). The addon only talks
 to Google's own servers, so practical exposure was low, but the vulnerable
 version is no longer shipped.
+
+## Message links that led to the wrong page
+
+With **Remove IDs from URLs** turned on (the default), some message links did
+not open their message:
+
+- Under a menu item whose alias is a word like `sermons` or `teachers`, a
+  message whose alias starts with a number — "911 Rescue", or any title that
+  begins with a numbered book such as "1 John" — was redirected to a page that
+  did not exist.
+- When two messages shared an alias and one of them was trashed or unpublished,
+  the link could open the hidden one and show "Message Not Found".
+- Older links that include the message number, such as
+  `/sermons/588-911-rescue`, now forward to the message's current address with
+  the full menu path. Teacher and series links do the same.
+
+With caching turned on, a "Message Not Found" page now always tells search
+engines the page does not exist, rather than only the first time it is shown.
+
+Proclaim does not yet stop two messages from being saved with the same alias.
+If two published messages share one, only one of them can be reached at that
+address; give the other a different alias in its edit form.
 
 ## Images with spaces in their names
 
