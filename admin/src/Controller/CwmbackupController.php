@@ -1005,7 +1005,7 @@ class CwmbackupController extends BaseController
         // A backup taken before the unique alias index restores without it, and
         // the schema fixer cannot add an index that is created from PHP.
         try {
-            Cwmalias::ensureAllUniqueAliases($db);
+            Cwmalias::reportRenames($db, Cwmalias::ensureAllUniqueAliases($db));
         } catch (\RuntimeException $e) {
             Log::add('Post-restore unique alias fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }

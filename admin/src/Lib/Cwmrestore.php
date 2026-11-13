@@ -1034,12 +1034,14 @@ class Cwmrestore
         // A backup taken before the unique alias index restores without it, and
         // the ChangeSet cannot add an index that is created from PHP.
         try {
-            $changed = Cwmalias::ensureAllUniqueAliases(Factory::getContainer()->get(DatabaseInterface::class));
+            $db      = Factory::getContainer()->get(DatabaseInterface::class);
+            $changed = Cwmalias::ensureAllUniqueAliases($db);
             Log::add(
                 'Post-restore: gave ' . array_sum(array_map('count', $changed)) . ' messages and series their own alias',
                 Log::INFO,
                 'com_proclaim'
             );
+            Cwmalias::reportRenames($db, $changed);
         } catch (\Exception $e) {
             Log::add('Post-restore unique alias fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }

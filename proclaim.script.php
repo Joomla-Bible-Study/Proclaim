@@ -155,6 +155,15 @@ class com_proclaimInstallerScript extends InstallerScript
     private array $taskLog = [];
 
     /**
+     * The messages and series the unique alias task renamed, held for the
+     * email that goes out once every other task has run.
+     *
+     * @var    array<string, list<object>>
+     * @since  __DEPLOY_VERSION__
+     */
+    private array $aliasRenames = [];
+
+    /**
      * When preflight ran, as a float second.
      *
      * ⚠️ The gap between this and the start of postflight is the only view
@@ -2604,6 +2613,9 @@ class com_proclaimInstallerScript extends InstallerScript
             }
         }
 
+        // Last of the tasks, so a slow mail server holds up none of the others.
+        $this->task('Alias rename email', fn () => $this->emailAliasRenames());
+
         // ⚠️ The leading "N step(s) in Ns" is parsed by build/verify-install-log.php,
         // which cross-checks it against the per-step lines. Keep it at the front.
         $this->logInstall(\sprintf(
@@ -3517,9 +3529,11 @@ class com_proclaimInstallerScript extends InstallerScript
      * index that keeps it so.
      *
      * A renamed message or series gets a new address, so each rename is written
-     * to the install log and the administrator is told which ones changed. The
-     * shared address keeps opening the record the router already served there.
-     * A row that had no alias only gains one, so it is logged but not announced.
+     * to the install log, and the administrator is shown the renamed records
+     * with links to give them clearer titles and aliases; the email goes out
+     * last, from emailAliasRenames(). The shared address keeps opening the
+     * record the router already served there. A row that had no alias only
+     * gains one, so it is logged but not reported.
      *
      * @return  void
      *
@@ -3527,33 +3541,50 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function ensureUniqueAliases(): void
     {
-        $notices = [
-            '#__bsms_studies' => 'JBS_INS_MESSAGE_ALIASES_RENAMED',
-            '#__bsms_series'  => 'JBS_INS_SERIES_ALIASES_RENAMED',
-        ];
-
-        $changed = Cwmalias::ensureAllUniqueAliases(Factory::getContainer()->get(DatabaseInterface::class));
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $changed = Cwmalias::ensureAllUniqueAliases($db);
 
         foreach ($changed as $table => $rows) {
             foreach ($rows as $row) {
                 $this->logInstall(\sprintf('  alias %s %d: %s -> %s', $table, $row['id'], $row['from'], $row['to']));
             }
-
-            $shared = array_filter($rows, static fn (array $row): bool => $row['from'] !== '');
-
-            if ($shared === []) {
-                continue;
-            }
-
-            Factory::getApplication()->enqueueMessage(
-                Text::plural(
-                    $notices[$table],
-                    \count($shared),
-                    implode(', ', array_map(static fn (array $row): string => $row['from'] . ' → ' . $row['to'], $shared))
-                ),
-                'notice'
-            );
         }
+
+        $this->aliasRenames = Cwmalias::sharedRenames($db, $changed);
+        Cwmalias::announceRenames($this->aliasRenames);
+    }
+
+    /**
+     * Email the renamed messages and series to the Super Users who receive
+     * system emails, since an update run remotely shows its notices to no one.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function emailAliasRenames(): void
+    {
+        if ($this->aliasRenames === []) {
+            return;
+        }
+
+        // A mail failure is logged here, not thrown: the update itself is done.
+        try {
+            $sent = Cwmalias::emailRenames(Factory::getContainer()->get(DatabaseInterface::class), $this->aliasRenames);
+        } catch (\Throwable $e) {
+            $this->logInstall('  alias rename list not emailed: ' . $e->getMessage());
+
+            return;
+        }
+
+        if ($sent === 0) {
+            $this->logInstall('  alias rename list not emailed: no Super User receives system emails');
+
+            return;
+        }
+
+        $this->logInstall(\sprintf('  alias rename list emailed to %d Super User(s)', $sent));
+        Factory::getApplication()->enqueueMessage(Text::plural('JBS_INS_ALIASES_EMAILED', $sent), 'notice');
     }
 
     /**

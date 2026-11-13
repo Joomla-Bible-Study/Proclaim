@@ -409,12 +409,14 @@ class CwmupgradeHelper
 
         // 8a. One alias per message and per series, and the unique index on each
         try {
-            $changed = Cwmalias::ensureAllUniqueAliases(Factory::getContainer()->get(DatabaseInterface::class));
+            $db      = Factory::getContainer()->get(DatabaseInterface::class);
+            $changed = Cwmalias::ensureAllUniqueAliases($db);
             $steps[] = [
                 'name'    => 'ensureUniqueAliases',
                 'success' => true,
                 'detail'  => array_sum(array_map('count', $changed)) . ' renamed',
             ];
+            Cwmalias::reportRenames($db, $changed);
         } catch (\Exception $e) {
             $errors[] = 'ensureUniqueAliases: ' . $e->getMessage();
             $steps[]  = ['name' => 'ensureUniqueAliases', 'success' => false, 'detail' => $e->getMessage()];
