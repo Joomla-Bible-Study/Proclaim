@@ -55,7 +55,7 @@ class ProclaimYoutubeHelper implements DatabaseAwareInterface
      * interval, so all of a page's visitors share one YouTube API call.
      *
      * @var    int
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.4
      */
     public const int STATUS_CACHE_TTL = 120;
 
@@ -222,7 +222,7 @@ class ProclaimYoutubeHelper implements DatabaseAwareInterface
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function withPolledStatus(array $video, int $serverId): array
     {
@@ -255,7 +255,7 @@ class ProclaimYoutubeHelper implements DatabaseAwareInterface
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private static function statusCacheKey(int $serverId, string $videoId): string
     {
@@ -855,7 +855,7 @@ class ProclaimYoutubeHelper implements DatabaseAwareInterface
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function loadComponentApi(): void
     {

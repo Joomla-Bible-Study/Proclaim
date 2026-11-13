@@ -54,7 +54,7 @@ class Cwmalias
      * Teachers are not listed: their unique index predates this list.
      *
      * @var array<string, string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.4
      */
     public const array UNIQUE_ALIAS_TABLES = [
         '#__bsms_studies' => 'studytitle',
@@ -65,7 +65,7 @@ class Cwmalias
      * Name of the unique index on each alias column, as on #__bsms_teachers.
      *
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.4
      */
     public const string UNIQUE_ALIAS_INDEX = 'idx_alias';
 
@@ -74,7 +74,7 @@ class Cwmalias
      * refuses a taken alias and the task that edits the row holding it.
      *
      * @var array<string, array{0: string, 1: string}>
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.4
      */
     private const array TAKEN_ALIAS = [
         '#__bsms_studies' => ['JBS_STY_DUPLICATE_ALIAS', 'cwmmessage.edit'],
@@ -86,7 +86,7 @@ class Cwmalias
      * rows a repair renamed: the notice's plural family and the email heading.
      *
      * @var array<string, array{0: string, 1: string}>
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.4
      */
     private const array RENAME_REPORT = [
         '#__bsms_studies' => ['JBS_INS_MESSAGE_ALIASES_RENAMED', 'JBS_INS_ALIASES_EMAIL_MESSAGES'],
@@ -166,7 +166,7 @@ class Cwmalias
      *
      * @throws  \RuntimeException  When the database refuses a rename or an index
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function ensureAllUniqueAliases(DatabaseInterface $db): array
     {
@@ -200,7 +200,7 @@ class Cwmalias
      *
      * @throws  \RuntimeException  When the database refuses a rename or the index
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function ensureUniqueAliases(DatabaseInterface $db, string $table, string $titleField): array
     {
@@ -281,7 +281,7 @@ class Cwmalias
      *
      * @return  array<string, list<object>>  Per table, each record's id, title, date, from and to
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function sharedRenames(DatabaseInterface $db, array $changed): array
     {
@@ -329,7 +329,7 @@ class Cwmalias
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function announceRenames(array $renames): void
     {
@@ -372,7 +372,7 @@ class Cwmalias
      *
      * @throws  \Throwable  When the mail cannot be sent, for the caller to log where it logs
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function emailRenames(DatabaseInterface $db, array $renames, ?MailerFactoryInterface $mailers = null): int
     {
@@ -438,7 +438,7 @@ class Cwmalias
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function reportRenames(DatabaseInterface $db, array $changed, ?MailerFactoryInterface $mailers = null): void
     {
@@ -459,7 +459,7 @@ class Cwmalias
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private static function renameLabel(object $record): string
     {
@@ -475,7 +475,7 @@ class Cwmalias
      *
      * @return  list<object>  Each with name and email
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private static function systemEmailRecipients(DatabaseInterface $db): array
     {
@@ -505,7 +505,7 @@ class Cwmalias
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private static function adminLink(string $query): string
     {
@@ -538,7 +538,7 @@ class Cwmalias
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private static function loadSysLanguage(): void
     {
@@ -566,7 +566,7 @@ class Cwmalias
      *
      * @return  array{0: string, 1: string}  The title and alias to store
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function forCopy(
         DatabaseInterface $db,
@@ -598,7 +598,7 @@ class Cwmalias
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function nextCopyTitle(DatabaseInterface $db, string $table, string $title): string
     {
@@ -621,7 +621,7 @@ class Cwmalias
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function aliasForInsert(DatabaseInterface $db, string $table, string $alias, string $title): string
     {
@@ -645,7 +645,7 @@ class Cwmalias
      *
      * @return  ?object  That row's id, title and published state, or null when the alias is free
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function findAliasOwner(DatabaseInterface $db, string $table, string $alias, int $excludeId): ?object
     {
@@ -675,7 +675,7 @@ class Cwmalias
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function takenAliasMessage(DatabaseInterface $db, string $table, string $alias, object $owner): string
     {
@@ -708,7 +708,7 @@ class Cwmalias
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private static function listShowsRow(DatabaseInterface $db, string $table, int $id): bool
     {
@@ -737,7 +737,7 @@ class Cwmalias
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function isNewAlias(DatabaseInterface $db, string $table, string $alias, int $id): bool
     {
@@ -767,7 +767,7 @@ class Cwmalias
      *
      * @return  array{id: int, from: string, to: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private static function realias(DatabaseInterface $db, string $table, object $row, string $from, string $base): array
     {
@@ -794,7 +794,7 @@ class Cwmalias
      *
      * @return  string  'unique', 'other' when an index of that name is not unique, or 'none'
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private static function aliasIndexState(DatabaseInterface $db, string $table): string
     {
