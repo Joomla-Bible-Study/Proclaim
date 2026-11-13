@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
@@ -35,10 +36,11 @@ class CwmnotificationHelper
     /**
      * Send a notification email when a comment is submitted and held for approval
      *
-     * @param   int       $studyId      The study ID the comment is for
-     * @param   string    $authorName   The comment author's name
-     * @param   string    $commentText  The comment text
-     * @param   Registry  $params       Template parameters containing notification settings
+     * @param   int                          $studyId      The study ID the comment is for
+     * @param   string                       $authorName   The comment author's name
+     * @param   string                       $commentText  The comment text
+     * @param   Registry                     $params       Template parameters containing notification settings
+     * @param   MailerFactoryInterface|null  $mailers      The mailer factory; the application's when null
      *
      * @return  bool  True on success, false on failure
      *
@@ -49,7 +51,8 @@ class CwmnotificationHelper
         int $studyId,
         string $authorName,
         string $commentText,
-        Registry $params
+        Registry $params,
+        ?MailerFactoryInterface $mailers = null
     ): bool {
         try {
             $app = Factory::getApplication();
@@ -90,8 +93,7 @@ class CwmnotificationHelper
                 $adminUrl
             );
 
-            // Get mailer instance
-            $mailer = Factory::getContainer()->get(\Joomla\CMS\Mail\MailerInterface::class);
+            $mailer = ($mailers ?? Factory::getContainer()->get(MailerFactoryInterface::class))->createMailer();
             $mailer->addRecipient($recipientEmail);
             $mailer->setSubject($subject);
             $mailer->setBody($body);

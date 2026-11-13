@@ -486,7 +486,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function withStoredItem(array $graph, string $eventContext): array
     {
@@ -531,7 +531,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private static function appendStoredItem(array $graph, string $viewContext, int $itemId, ?array $stored, string $domain): array
     {

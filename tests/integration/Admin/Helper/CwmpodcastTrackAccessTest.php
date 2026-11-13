@@ -137,6 +137,7 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
         if ($state['in_series']) {
             $series = (object) [
                 'series_text' => 'ghsa fixture series',
+                'alias'       => $this->uniqueAlias('cwmpodcasttrackaccess-series'),
                 'published'   => $state['series_published'],
                 'access'      => $state['series_access'],
                 'language'    => '*',
@@ -147,6 +148,7 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
 
         $study = (object) [
             'studytitle' => 'ghsa fixture message',
+            'alias'      => $this->uniqueAlias('cwmpodcasttrackaccess-study'),
             'series_id'  => $seriesId,
             'published'  => $state['study_published'],
             'access'     => $state['study_access'],

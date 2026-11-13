@@ -19,6 +19,43 @@ const { expectNoViolations } = require('../helpers/axe');
 
 const PROCLAIM_CONTENT = '.com-proclaim';
 
+const THIRD_PARTY_FRAME = 'iframe[data-a11y-third-party]';
+
+/**
+ * Exclude embedded third-party documents from a scan, and check the part of
+ * each embed Proclaim does own.
+ *
+ * A Google Drive preview or a video player is a frame from another origin:
+ * the document inside belongs to its provider. Google Drive's viewer reports
+ * aria-prohibited-attr against its own markup, which nothing in Proclaim can
+ * fix. The frame's title is ours: every addon sets it through
+ * CWMAddon::frameTitle(). axe stops checking it once the frame is excluded,
+ * so it is asserted here instead.
+ *
+ * @param {import('@playwright/test').Page} page
+ *
+ * @returns {Promise<string[]>} Selectors to pass as the scan's exclude list.
+ */
+async function excludeThirdPartyFrames(page) {
+    await page.evaluate(([scope, attribute]) => {
+        for (const frame of document.querySelectorAll(`${scope} iframe[src]`)) {
+            try {
+                if (new URL(frame.getAttribute('src'), location.href).origin !== location.origin) {
+                    frame.setAttribute(attribute, '');
+                }
+            } catch {
+                // An unparseable src loads nothing, so there is nothing to exclude.
+            }
+        }
+    }, [PROCLAIM_CONTENT, 'data-a11y-third-party']);
+
+    for (const frame of await page.locator(THIRD_PARTY_FRAME).all()) {
+        await expect(frame).toHaveAttribute('title', /\S/);
+    }
+
+    return [THIRD_PARTY_FRAME];
+}
+
 /**
  * Every site view reachable without a record id.
  *
@@ -95,7 +132,10 @@ test.describe('Site accessibility (WCAG 2.2 AA) @a11y', () => {
             // response still fails — there is no container to attach.
             await expect(page.locator(PROCLAIM_CONTENT).first()).toBeAttached({ timeout: 15000 });
 
-            await expectNoViolations(page, expect, { include: PROCLAIM_CONTENT });
+            await expectNoViolations(page, expect, {
+                include: PROCLAIM_CONTENT,
+                exclude: await excludeThirdPartyFrames(page),
+            });
         });
     }
 
@@ -143,7 +183,10 @@ test.describe('Site accessibility (WCAG 2.2 AA) @a11y', () => {
                 await page.goto(href, { waitUntil: 'networkidle' });
                 await expect(page.locator(PROCLAIM_CONTENT).first()).toBeVisible({ timeout: 15000 });
 
-                await expectNoViolations(page, expect, { include: PROCLAIM_CONTENT });
+                await expectNoViolations(page, expect, {
+                    include: PROCLAIM_CONTENT,
+                    exclude: await excludeThirdPartyFrames(page),
+                });
             }
         });
     }

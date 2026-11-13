@@ -34,16 +34,30 @@ use Joomla\Registry\Registry;
  * are delegated to the server addon (CWMAddonYoutube) and its supporting
  * helpers (CwmyoutubeQuota, CwmyoutubeFileCache, CwmyoutubeLogHelper).
  *
- * This class only handles module-specific concerns: Joomla output caching,
- * priority mode orchestration, AJAX endpoints, and Proclaim model queries.
+ * This class only handles module-specific concerns: caching, priority mode
+ * orchestration, AJAX endpoints, and Proclaim model queries.
+ *
+ * The name is the one com_ajax asks the module's helper factory for: for
+ * module=proclaim_youtube it looks up ProclaimYoutubeHelper and calls its
+ * <method>Ajax() on an instance. Under any other name the status poll gets an
+ * error instead of an answer.
  *
  * @package     Proclaim.Module
  * @subpackage  mod_proclaim_youtube
  * @since       10.1.0
  */
-class YoutubeHelper implements DatabaseAwareInterface
+class ProclaimYoutubeHelper implements DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
+
+    /**
+     * Seconds a video's live or upcoming status is cached: the browser's poll
+     * interval, so all of a page's visitors share one YouTube API call.
+     *
+     * @var    int
+     * @since  __DEPLOY_VERSION__
+     */
+    public const int STATUS_CACHE_TTL = 120;
 
     /**
      * Whether the last getVideo() call fetched fresh data from the API
@@ -80,7 +94,7 @@ class YoutubeHelper implements DatabaseAwareInterface
         $cacheKey    = 'mod_proclaim_youtube_' . $serverId . '_' . $priorityMode . '_' . ($showUpcoming ? '1' : '0') . '_' . $excludeHash;
         $cacheTime   = (int) $params->get('cache_time', 300);
 
-        // Primary cache: file-based (works even with Joomla caching disabled)
+        // File-based, so it works even with Joomla caching disabled
         $fileCached = CwmyoutubeFileCache::getVideoCache($cacheKey);
 
         if ($fileCached !== null) {
@@ -89,29 +103,6 @@ class YoutubeHelper implements DatabaseAwareInterface
             }
 
             return $fileCached;
-        }
-
-        // Secondary cache: Joomla output cache (when enabled)
-        try {
-            $cache = Factory::getContainer()->get('cache.output');
-            $cache->setLifeTime((int) ceil($cacheTime / 60));
-
-            $cachedVideo = $cache->get($cacheKey, 'mod_proclaim_youtube');
-
-            if ($cachedVideo !== false) {
-                $decoded = json_decode($cachedVideo, true, 512, JSON_THROW_ON_ERROR);
-
-                if ($decoded !== null) {
-                    // Sentinel: cached "no video available" result
-                    if (!empty($decoded['_noVideo'])) {
-                        return null;
-                    }
-
-                    return $decoded;
-                }
-            }
-        } catch (\Exception $e) {
-            // Cache not available, continue without it
         }
 
         $this->freshFetch = true;
@@ -212,17 +203,8 @@ class YoutubeHelper implements DatabaseAwareInterface
         // (getStatusAjax), not by page loads.
         $cacheData = $video ?? ['_noVideo' => true];
 
-        // Primary: file-based cache (always works, even with Joomla caching off)
+        // File-based, so it works even with Joomla caching off
         CwmyoutubeFileCache::storeVideoCache($cacheKey, $cacheData, $cacheTime);
-
-        // Secondary: Joomla output cache (when enabled)
-        try {
-            $cache = Factory::getContainer()->get('cache.output');
-            $cache->setLifeTime((int) ceil($cacheTime / 60));
-            $cache->store(json_encode($cacheData, JSON_THROW_ON_ERROR), $cacheKey, 'mod_proclaim_youtube');
-        } catch (\Exception $e) {
-            // Cache not available, continue without it
-        }
 
         return $video;
     }
@@ -263,31 +245,20 @@ class YoutubeHelper implements DatabaseAwareInterface
             return $video;
         }
 
-        // Check cache first to avoid redundant API calls across page loads
+        // Check cache first to avoid redundant API calls across page loads. The
+        // file cache works even with Joomla caching off, which many sites leave.
         $cacheKey = 'mod_proclaim_youtube_verify_' . $serverId . '_' . $video['videoId'];
+        $cached   = CwmyoutubeFileCache::getVideoCache($cacheKey);
 
-        try {
-            $cache = Factory::getContainer()->get('cache.output');
-            $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
+        if ($cached !== null) {
+            $video['isLive']     = $cached['isLive'] ?? false;
+            $video['isUpcoming'] = $cached['isUpcoming'] ?? false;
 
-            $cachedResult = $cache->get($cacheKey, 'mod_proclaim_youtube_status');
-
-            if ($cachedResult !== false) {
-                $decoded = json_decode($cachedResult, true, 512, JSON_THROW_ON_ERROR);
-
-                if ($decoded !== null) {
-                    $video['isLive']     = $decoded['isLive'] ?? false;
-                    $video['isUpcoming'] = $decoded['isUpcoming'] ?? false;
-
-                    if (!empty($decoded['scheduledStartTime'])) {
-                        $video['scheduledStartTime'] = $decoded['scheduledStartTime'];
-                    }
-
-                    return $video;
-                }
+            if (!empty($cached['scheduledStartTime'])) {
+                $video['scheduledStartTime'] = $cached['scheduledStartTime'];
             }
-        } catch (\Exception $e) {
-            // Cache not available, continue without it
+
+            return $video;
         }
 
         // Quota gate: videos.list costs 1 unit
@@ -319,24 +290,14 @@ class YoutubeHelper implements DatabaseAwareInterface
                 }
             }
 
-            // Cache the status result for 2 minutes
+            // Cache the status for 2 minutes, the poll interval
             $cacheData = ['isLive' => $video['isLive'], 'isUpcoming' => $video['isUpcoming']];
 
             if (!empty($video['scheduledStartTime'])) {
                 $cacheData['scheduledStartTime'] = $video['scheduledStartTime'];
             }
 
-            try {
-                $cache = Factory::getContainer()->get('cache.output');
-                $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
-                $cache->store(
-                    json_encode($cacheData, JSON_THROW_ON_ERROR),
-                    $cacheKey,
-                    'mod_proclaim_youtube_status'
-                );
-            } catch (\Exception $e) {
-                // Cache not available, continue without it
-            }
+            CwmyoutubeFileCache::storeVideoCache($cacheKey, $cacheData, self::STATUS_CACHE_TTL);
         }
 
         return $video;
@@ -645,7 +606,8 @@ class YoutubeHelper implements DatabaseAwareInterface
      * Uses a short-lived server-side cache (2 min) to prevent excessive YouTube API calls
      * when multiple module instances or rapid polling would otherwise exhaust the daily quota.
      *
-     * Called via com_ajax: index.php?option=com_ajax&module=mod_proclaim_youtube&method=getStatus&format=json
+     * Called via com_ajax: index.php?option=com_ajax&module=proclaim_youtube&method=getStatus&format=json,
+     * which returns this array as the data of a JsonResponse.
      *
      * If video_id is provided, checks the specific video's status using the Videos API.
      * Otherwise returns "no stream" without any API call.
@@ -655,7 +617,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      * @throws \Exception
      * @since   10.1.0
      */
-    public static function getStatusAjax(): array
+    public function getStatusAjax(): array
     {
         $app      = Factory::getApplication();
         $input    = $app->getInput();
@@ -665,7 +627,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         // Validate token to prevent external abuse
         // Token is generated from server_id + a site secret
-        $expectedToken = self::generateStatusToken($serverId);
+        $expectedToken = self::generateStatusToken($serverId, $videoId);
 
         if (empty($token) || !hash_equals($expectedToken, $token)) {
             return [
@@ -683,23 +645,15 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         // Check server-side cache to avoid redundant API calls (2-minute TTL)
         $statusCacheKey = 'mod_proclaim_youtube_status_' . $serverId . '_' . $videoId;
+        $cachedStatus   = CwmyoutubeFileCache::getVideoCache($statusCacheKey);
 
-        try {
-            $cache = Factory::getContainer()->get('cache.output');
-            $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
-
-            $cachedStatus = $cache->get($statusCacheKey, 'mod_proclaim_youtube_status');
-
-            if ($cachedStatus !== false) {
-                $decoded = json_decode($cachedStatus, true, 512, JSON_THROW_ON_ERROR);
-
-                if ($decoded !== null) {
-                    return $decoded;
-                }
-            }
-        } catch (\Exception $e) {
-            // Cache not available, continue without it
+        if ($cachedStatus !== null) {
+            return $cachedStatus;
         }
+
+        // A com_ajax request reaches this helper without the module's
+        // dispatcher, which is what loads the paths the server addon needs.
+        self::loadComponentApi();
 
         $youtube      = new CWMAddonYoutube();
         $statusResult = null;
@@ -776,13 +730,7 @@ class YoutubeHelper implements DatabaseAwareInterface
         $statusResult['quotaRemaining'] = CwmyoutubeQuota::getRemaining($serverId);
 
         // Cache the result for 2 minutes to avoid redundant API calls
-        try {
-            $cache = Factory::getContainer()->get('cache.output');
-            $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
-            $cache->store(json_encode($statusResult, JSON_THROW_ON_ERROR), $statusCacheKey, 'mod_proclaim_youtube_status');
-        } catch (\Exception $e) {
-            // Cache not available, continue without it
-        }
+        CwmyoutubeFileCache::storeVideoCache($statusCacheKey, $statusResult, self::STATUS_CACHE_TTL);
 
         return $statusResult;
     }
@@ -825,23 +773,47 @@ class YoutubeHelper implements DatabaseAwareInterface
     /**
      * Generate a secure token for AJAX status requests
      *
-     * Token is based on server_id and Joomla's secret key, ensuring
-     * Only requests from pages that rendered the module can call the API.
+     * An HMAC of the server and the video under Joomla's secret, so only a
+     * page that rendered the module for that video can ask about it. A poll
+     * cannot name a video of its own: each one would be a new status cache
+     * file and, while quota lasted, a YouTube API call.
      *
-     * @param   int  $serverId  Server ID
+     * @param   int     $serverId  Server ID
+     * @param   string  $videoId   The video the page shows; empty when it shows none
      *
      * @return  string  Token hash
      *
      * @since   10.1.0
      */
-    public static function generateStatusToken(int $serverId): string
+    public static function generateStatusToken(int $serverId, string $videoId): string
     {
         try {
-            $secret = Factory::getApplication()->get('secret', '');
+            $secret = (string) Factory::getApplication()->get('secret', '');
 
-            return hash('sha256', 'mod_proclaim_youtube_status_' . $serverId . '_' . $secret);
+            return hash_hmac('sha256', 'mod_proclaim_youtube_status_' . $serverId . '_' . $videoId, $secret);
         } catch (\Exception $e) {
             return '';
+        }
+    }
+
+    /**
+     * Load Proclaim's API, which defines the paths and constants the server
+     * addons rely on, unless it is loaded already.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function loadComponentApi(): void
+    {
+        if (\defined('CWM_LOADED')) {
+            return;
+        }
+
+        $apiFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+        if (is_file($apiFile)) {
+            require_once $apiFile;
         }
     }
 }
