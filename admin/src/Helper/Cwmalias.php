@@ -16,14 +16,19 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Access\Access;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Mail\MailerFactoryInterface;
+use Joomla\CMS\Table\Asset;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\String\StringHelper;
+use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * Class for updating the alias in certain tables
@@ -74,6 +79,18 @@ class Cwmalias
     private const array TAKEN_ALIAS = [
         '#__bsms_studies' => ['JBS_STY_DUPLICATE_ALIAS', 'cwmmessage.edit'],
         '#__bsms_series'  => ['JBS_SER_DUPLICATE_ALIAS', 'cwmserie.edit'],
+    ];
+
+    /**
+     * For each table in UNIQUE_ALIAS_TABLES, the language keys that report the
+     * rows a repair renamed: the notice's plural family and the email heading.
+     *
+     * @var array<string, array{0: string, 1: string}>
+     * @since __DEPLOY_VERSION__
+     */
+    private const array RENAME_REPORT = [
+        '#__bsms_studies' => ['JBS_INS_MESSAGE_ALIASES_RENAMED', 'JBS_INS_ALIASES_EMAIL_MESSAGES'],
+        '#__bsms_series'  => ['JBS_INS_SERIES_ALIASES_RENAMED', 'JBS_INS_ALIASES_EMAIL_SERIES'],
     ];
 
     /**
@@ -250,6 +267,285 @@ class Cwmalias
         )->execute();
 
         return $changed;
+    }
+
+    /**
+     * The messages and series a repair renamed because they shared an alias,
+     * with what an administrator needs to find each again. Records that
+     * shared a title are told apart by id and, for a message, its date.
+     *
+     * A row that had no alias only gained one, so it is left out.
+     *
+     * @param   DatabaseInterface  $db       Database driver
+     * @param   array              $changed  What ensureAllUniqueAliases() returned
+     *
+     * @return  array<string, list<object>>  Per table, each record's id, title, date, from and to
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function sharedRenames(DatabaseInterface $db, array $changed): array
+    {
+        $renames = [];
+
+        foreach ($changed as $table => $rows) {
+            $rows = array_filter($rows, static fn (array $row): bool => $row['from'] !== '');
+
+            if ($rows === [] || !isset(self::UNIQUE_ALIAS_TABLES[$table])) {
+                continue;
+            }
+
+            $query = $db->createQuery()
+                ->select($db->quoteName(['id', self::UNIQUE_ALIAS_TABLES[$table]], ['id', 'title']))
+                ->from($db->quoteName($table))
+                ->whereIn($db->quoteName('id'), array_column($rows, 'id'));
+
+            if ($table === '#__bsms_studies') {
+                $query->select($db->quoteName('studydate', 'date'));
+            }
+
+            $records = $db->setQuery($query)->loadObjectList('id');
+
+            foreach ($rows as $row) {
+                $date = substr((string) ($records[$row['id']]->date ?? ''), 0, 10);
+
+                $renames[$table][] = (object) [
+                    'id'    => (int) $row['id'],
+                    'title' => (string) ($records[$row['id']]->title ?? ''),
+                    'date'  => $date === '0000-00-00' ? '' : $date,
+                    'from'  => $row['from'],
+                    'to'    => $row['to'],
+                ];
+            }
+        }
+
+        return $renames;
+    }
+
+    /**
+     * Queue a notice per table listing the renamed records, each linking to
+     * its edit form, so they can be given clearer titles and aliases.
+     *
+     * @param   array<string, list<object>>  $renames  From sharedRenames()
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function announceRenames(array $renames): void
+    {
+        if ($renames === []) {
+            return;
+        }
+
+        self::loadSysLanguage();
+
+        foreach ($renames as $table => $records) {
+            $items = array_map(
+                static fn (object $record): string => '<a href="index.php?option=com_proclaim&task='
+                    . self::TAKEN_ALIAS[$table][1] . '&id=' . $record->id . '">'
+                    . htmlspecialchars(self::renameLabel($record), ENT_QUOTES, 'UTF-8') . '</a> ('
+                    . htmlspecialchars($record->from . ' → ' . $record->to, ENT_QUOTES, 'UTF-8') . ')',
+                $records
+            );
+
+            Factory::getApplication()->enqueueMessage(
+                Text::plural(self::RENAME_REPORT[$table][0], \count($records), implode(', ', $items)),
+                'notice'
+            );
+        }
+    }
+
+    /**
+     * Email the renamed records to the Super Users who receive system emails,
+     * since an update run remotely shows its notices to no one.
+     *
+     * One message carries every recipient in Bcc. SMTP gets five seconds to
+     * connect and to answer, rather than PHPMailer's five minutes, and Joomla
+     * makes a second attempt without opportunistic TLS, so an unreachable mail
+     * server holds the caller up by about ten seconds.
+     *
+     * @param   DatabaseInterface            $db       Database driver
+     * @param   array<string, list<object>>  $renames  From sharedRenames()
+     * @param   MailerFactoryInterface|null  $mailers  The mailer factory; the application's when null
+     *
+     * @return  int  How many it was sent to; 0 when there was nothing to send or no one to send it to
+     *
+     * @throws  \Throwable  When the mail cannot be sent, for the caller to log where it logs
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function emailRenames(DatabaseInterface $db, array $renames, ?MailerFactoryInterface $mailers = null): int
+    {
+        if ($renames === []) {
+            return 0;
+        }
+
+        $recipients = self::systemEmailRecipients($db);
+
+        if ($recipients === []) {
+            return 0;
+        }
+
+        self::loadSysLanguage();
+
+        $lines = [];
+
+        foreach ($renames as $table => $records) {
+            $lines[] = Text::_(self::RENAME_REPORT[$table][1]);
+
+            foreach ($records as $record) {
+                $lines[] = '- ' . self::renameLabel($record) . ' (#' . $record->id . '): ' . $record->from . ' → ' . $record->to;
+                $link    = self::adminLink('option=com_proclaim&task=' . self::TAKEN_ALIAS[$table][1] . '&id=' . $record->id);
+
+                if ($link !== '') {
+                    $lines[] = '  ' . $link;
+                }
+            }
+
+            $lines[] = '';
+        }
+
+        $sitename = (string) Factory::getApplication()->get('sitename');
+        $mailer   = ($mailers ?? Factory::getContainer()->get(MailerFactoryInterface::class))->createMailer();
+
+        if ($mailer instanceof PHPMailer) {
+            $mailer->Timeout                      = 5;
+            $mailer->getSMTPInstance()->Timelimit = 5;
+        }
+
+        foreach ($recipients as $recipient) {
+            $mailer->addBcc($recipient->email, $recipient->name);
+        }
+
+        $mailer->setSubject(Text::sprintf('JBS_INS_ALIASES_EMAIL_SUBJECT', $sitename));
+        $mailer->setBody(Text::sprintf('JBS_INS_ALIASES_EMAIL_BODY', $sitename, rtrim(implode("\n", $lines))));
+
+        if (!$mailer->send()) {
+            throw new \RuntimeException('the mailer reported a failure');
+        }
+
+        return \count($recipients);
+    }
+
+    /**
+     * Report what ensureAllUniqueAliases() renamed: a notice for whoever ran
+     * it, and an email to the Super Users who receive system emails. Never
+     * throws, so a report cannot undo the repair it describes.
+     *
+     * @param   DatabaseInterface            $db       Database driver
+     * @param   array                        $changed  What ensureAllUniqueAliases() returned
+     * @param   MailerFactoryInterface|null  $mailers  The mailer factory; the application's when null
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function reportRenames(DatabaseInterface $db, array $changed, ?MailerFactoryInterface $mailers = null): void
+    {
+        try {
+            $renames = self::sharedRenames($db, $changed);
+
+            self::announceRenames($renames);
+            self::emailRenames($db, $renames, $mailers);
+        } catch (\Throwable $e) {
+            Log::add('Alias rename report failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+    }
+
+    /**
+     * A renamed record as the report names it: its title, and a message's date.
+     *
+     * @param   object  $record  An entry from sharedRenames()
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function renameLabel(object $record): string
+    {
+        return $record->title . ($record->date !== '' ? ', ' . $record->date : '');
+    }
+
+    /**
+     * The Super Users who receive system emails, found as core's update
+     * notification finds them: the groups granted core.admin on the root
+     * asset, without blocked users or those who opted out.
+     *
+     * @param   DatabaseInterface  $db  Database driver
+     *
+     * @return  list<object>  Each with name and email
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function systemEmailRecipients(DatabaseInterface $db): array
+    {
+        $rules  = Access::getAssetRules((new Asset($db))->getRootId())->getData();
+        $groups = isset($rules['core.admin']) ? array_keys(array_filter($rules['core.admin']->getData())) : [];
+
+        if ($groups === []) {
+            return [];
+        }
+
+        $query = $db->createQuery()
+            ->select('DISTINCT ' . $db->quoteName('u.name') . ', ' . $db->quoteName('u.email'))
+            ->from($db->quoteName('#__users', 'u'))
+            ->join('INNER', $db->quoteName('#__user_usergroup_map', 'm'), $db->quoteName('m.user_id') . ' = ' . $db->quoteName('u.id'))
+            ->whereIn($db->quoteName('m.group_id'), $groups)
+            ->where($db->quoteName('u.block') . ' = 0')
+            ->where($db->quoteName('u.sendEmail') . ' = 1');
+
+        return $db->setQuery($query)->loadObjectList();
+    }
+
+    /**
+     * An absolute link into the administrator, built as core builds the one
+     * in its update email, or '' when the site's address is not known.
+     *
+     * @param   string  $query  The query string after index.php?
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function adminLink(string $query): string
+    {
+        // From the command line Uri takes the script name for the host unless
+        // the site's Live Site is configured, so without one there is no link.
+        if (str_contains(PHP_SAPI, 'cli') && trim((string) Factory::getContainer()->get('config')->get('live_site', '')) === '') {
+            return '';
+        }
+
+        $base  = rtrim(Uri::base(), '/');
+        $base .= str_ends_with($base, 'administrator') ? '/' : '/administrator/';
+        $uri   = new Uri($base . 'index.php?' . $query);
+
+        if ((string) $uri->getHost() === '') {
+            return '';
+        }
+
+        // Lets a security extension add the secret its administrator login needs.
+        Factory::getApplication()->triggerEvent('onBuildAdministratorLoginURL', [&$uri]);
+
+        return $uri->toString();
+    }
+
+    /**
+     * Load the strings the rename report uses, as the installer's
+     * post-install page does: reloaded from the component's own copy, English
+     * first. An update still holds the strings it loaded before its new files
+     * were copied in, which would show an older wording or a bare key, and a
+     * translation may lack a newer string.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function loadSysLanguage(): void
+    {
+        $language = Factory::getApplication()->getLanguage();
+
+        $language->load('com_proclaim.sys', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
+        $language->load('com_proclaim.sys', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
     }
 
     /**

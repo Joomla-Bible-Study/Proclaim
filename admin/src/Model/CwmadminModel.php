@@ -404,7 +404,7 @@ class CwmadminModel extends AdminModel
         // The ChangeSet knows only the update SQL, and the unique alias index is
         // added from PHP, so Fix would never restore it by itself.
         try {
-            Cwmalias::ensureAllUniqueAliases($this->getDatabase());
+            Cwmalias::reportRenames($this->getDatabase(), Cwmalias::ensureAllUniqueAliases($this->getDatabase()));
         } catch (\RuntimeException $e) {
             Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
         }
