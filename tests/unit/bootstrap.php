@@ -326,6 +326,7 @@ spl_autoload_register(function ($class) use ($componentRoot) {
         'CWM\\Component\\Proclaim\\Tests\\Contract\\'     => $componentRoot . '/tests/contract/',
         'CWM\\Module\\Proclaim\\Site\\'                   => $componentRoot . '/modules/site/mod_proclaim/src/',
         'CWM\\Plugin\\WebServices\\Proclaim\\Extension\\' => $componentRoot . '/plugins/webservices/proclaim/src/Extension/',
+        'CWM\\Plugin\\System\\Proclaim\\Extension\\'      => $componentRoot . '/plugins/system/proclaim/src/Extension/',
     ];
 
     foreach ($mappings as $prefix => $baseDir) {
