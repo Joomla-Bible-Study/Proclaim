@@ -26,7 +26,7 @@ use Joomla\CMS\Factory;
  * Used by TeacherListField, MediaPlaylistsField, and PodcastsField, which
  * each carried an identical setup() body for this before extraction here.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 trait SearchableFancySelectTrait
 {
@@ -37,7 +37,7 @@ trait SearchableFancySelectTrait
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     protected function applySearchableFancySelect(\SimpleXMLElement $element): void
     {

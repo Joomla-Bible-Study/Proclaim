@@ -160,7 +160,7 @@ class TeacherDisplayField extends ModalSelectField
      *
      * @return  FileLayout
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[\Override]
     protected function getRenderer($layoutId = 'default')

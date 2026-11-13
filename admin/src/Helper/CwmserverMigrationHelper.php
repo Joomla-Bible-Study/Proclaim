@@ -795,7 +795,7 @@ class CwmserverMigrationHelper
      *
      * @return  string  e.g. "www.example.org/media", or '' when the server had no host
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     public static function legacyBase(array $legacyServerParams): string
     {
@@ -813,7 +813,7 @@ class CwmserverMigrationHelper
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     public static function isRemoteLegacyHost(array $legacyServerParams, ?string $siteHost = null): bool
     {
@@ -841,7 +841,7 @@ class CwmserverMigrationHelper
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     public static function resolveTargetType(string $targetType, array $legacyServerParams, ?string $siteHost = null): string
     {
@@ -860,7 +860,7 @@ class CwmserverMigrationHelper
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     public static function absoluteLegacyUrl(string $filename, array $legacyServerParams): string
     {
