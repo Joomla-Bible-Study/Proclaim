@@ -17,7 +17,7 @@ namespace CWM\Module\ProclaimYoutube\Site\Dispatcher;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Module\ProclaimYoutube\Site\Helper\YoutubeHelper;
+use CWM\Module\ProclaimYoutube\Site\Helper\ProclaimYoutubeHelper;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
@@ -42,19 +42,12 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
     #[\Override]
     protected function getLayoutData(): array
     {
-        // Load component API
-        if (!\defined('CWM_LOADED')) {
-            $apiFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-            if (file_exists($apiFile)) {
-                require_once $apiFile;
-            }
-        }
+        ProclaimYoutubeHelper::loadComponentApi();
 
         $data = parent::getLayoutData();
 
-        /** @var YoutubeHelper $helper */
-        $helper = $this->getHelperFactory()->getHelper('YoutubeHelper');
+        /** @var ProclaimYoutubeHelper $helper */
+        $helper = $this->getHelperFactory()->getHelper('ProclaimYoutubeHelper');
 
         // Get video data (served from cache when available)
         $video    = $helper->getVideo($data['params'], $this->getApplication());

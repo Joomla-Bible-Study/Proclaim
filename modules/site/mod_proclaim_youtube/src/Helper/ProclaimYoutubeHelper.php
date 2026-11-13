@@ -37,11 +37,16 @@ use Joomla\Registry\Registry;
  * This class only handles module-specific concerns: caching, priority mode
  * orchestration, AJAX endpoints, and Proclaim model queries.
  *
+ * The name is the one com_ajax asks the module's helper factory for: for
+ * module=proclaim_youtube it looks up ProclaimYoutubeHelper and calls its
+ * <method>Ajax() on an instance. Under any other name the status poll gets an
+ * error instead of an answer.
+ *
  * @package     Proclaim.Module
  * @subpackage  mod_proclaim_youtube
  * @since       10.1.0
  */
-class YoutubeHelper implements DatabaseAwareInterface
+class ProclaimYoutubeHelper implements DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
 
@@ -601,7 +606,8 @@ class YoutubeHelper implements DatabaseAwareInterface
      * Uses a short-lived server-side cache (2 min) to prevent excessive YouTube API calls
      * when multiple module instances or rapid polling would otherwise exhaust the daily quota.
      *
-     * Called via com_ajax: index.php?option=com_ajax&module=mod_proclaim_youtube&method=getStatus&format=json
+     * Called via com_ajax: index.php?option=com_ajax&module=proclaim_youtube&method=getStatus&format=json,
+     * which returns this array as the data of a JsonResponse.
      *
      * If video_id is provided, checks the specific video's status using the Videos API.
      * Otherwise returns "no stream" without any API call.
@@ -611,7 +617,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      * @throws \Exception
      * @since   10.1.0
      */
-    public static function getStatusAjax(): array
+    public function getStatusAjax(): array
     {
         $app      = Factory::getApplication();
         $input    = $app->getInput();
@@ -644,6 +650,10 @@ class YoutubeHelper implements DatabaseAwareInterface
         if ($cachedStatus !== null) {
             return $cachedStatus;
         }
+
+        // A com_ajax request reaches this helper without the module's
+        // dispatcher, which is what loads the paths the server addon needs.
+        self::loadComponentApi();
 
         $youtube      = new CWMAddonYoutube();
         $statusResult = null;
@@ -783,6 +793,27 @@ class YoutubeHelper implements DatabaseAwareInterface
             return hash_hmac('sha256', 'mod_proclaim_youtube_status_' . $serverId . '_' . $videoId, $secret);
         } catch (\Exception $e) {
             return '';
+        }
+    }
+
+    /**
+     * Load Proclaim's API, which defines the paths and constants the server
+     * addons rely on, unless it is loaded already.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function loadComponentApi(): void
+    {
+        if (\defined('CWM_LOADED')) {
+            return;
+        }
+
+        $apiFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+        if (is_file($apiFile)) {
+            require_once $apiFile;
         }
     }
 }
