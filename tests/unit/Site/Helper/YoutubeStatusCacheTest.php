@@ -13,13 +13,16 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Module\ProclaimYoutube\Site\Helper\ProclaimYoutubeHelper;
 use Joomla\CMS\Application\CMSApplicationInterface;
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
 use Joomla\Input\Input;
+use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * The YouTube module's live-status checks answer from the file cache, so
- * repeated page loads and status polls share one YouTube API call.
+ * The YouTube module's status polls answer from the file cache, so polls from
+ * every visitor share one YouTube API call, and the page renders the status
+ * the last poll found.
  *
  * Each test caches a status the API path could not produce for this unknown
  * server, then checks that the status comes back: a cache that stopped
@@ -65,23 +68,42 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
      *
      * @since   __DEPLOY_VERSION__
      */
-    #[TestDox('A page load is told the cached live status rather than asking YouTube again')]
-    public function testPageLoadUsesTheCachedStatus(): void
+    #[TestDox('A page reloaded because the poll saw the stream go live renders it live, so the poll does not reload it again')]
+    public function testPageRendersThePolledStatus(): void
     {
+        $this->cacheVideo(['isLive' => false, 'isUpcoming' => true]);
         CwmyoutubeFileCache::storeVideoCache(
-            'mod_proclaim_youtube_verify_' . self::SERVER_ID . '_' . self::VIDEO_ID,
-            ['isLive' => true, 'isUpcoming' => false, 'scheduledStartTime' => '2026-11-15T15:00:00Z'],
+            'mod_proclaim_youtube_status_' . self::SERVER_ID . '_' . self::VIDEO_ID,
+            ['success' => true, 'isLive' => true, 'isUpcoming' => false, 'videoId' => self::VIDEO_ID, 'scheduledStartTime' => '2026-11-15T15:00:00Z'],
             ProclaimYoutubeHelper::STATUS_CACHE_TTL
         );
 
-        $video = (new ProclaimYoutubeHelper())->verifyLiveStatus(
-            ['videoId' => self::VIDEO_ID, 'isLive' => false, 'isUpcoming' => true],
-            self::SERVER_ID
-        );
+        $video = $this->render();
 
         $this->assertTrue($video['isLive']);
         $this->assertFalse($video['isUpcoming']);
         $this->assertSame('2026-11-15T15:00:00Z', $video['scheduledStartTime']);
+    }
+
+    /**
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('A status the poll only guessed because the quota ran out does not change the page')]
+    public function testQuotaGuessDoesNotChangeThePage(): void
+    {
+        $this->cacheVideo(['isLive' => true, 'isUpcoming' => false]);
+        CwmyoutubeFileCache::storeVideoCache(
+            'mod_proclaim_youtube_status_' . self::SERVER_ID . '_' . self::VIDEO_ID,
+            ['success' => true, 'isLive' => false, 'isUpcoming' => true, 'videoId' => self::VIDEO_ID, 'quotaExceeded' => true],
+            ProclaimYoutubeHelper::STATUS_CACHE_TTL
+        );
+
+        $video = $this->render();
+
+        $this->assertTrue($video['isLive']);
+        $this->assertFalse($video['isUpcoming']);
     }
 
     /**
@@ -129,6 +151,40 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
 
         $this->assertFalse($status['success']);
         $this->assertNull(CwmyoutubeFileCache::getVideoCache('mod_proclaim_youtube_status_' . self::SERVER_ID . '_zzOtherVideo'));
+    }
+
+    /**
+     * Cache the module's video, as getVideo() stores it for a module with the
+     * default settings, so the page renders without asking YouTube.
+     *
+     * @param   array  $status  The video's isLive and isUpcoming flags
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function cacheVideo(array $status): void
+    {
+        CwmyoutubeFileCache::storeVideoCache(
+            'mod_proclaim_youtube_' . self::SERVER_ID . '_live_first_1_' . md5(''),
+            ['videoId' => self::VIDEO_ID, 'title' => 'zz Status Video'] + $status
+        );
+    }
+
+    /**
+     * The video the module renders, for a module with the default settings.
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function render(): array
+    {
+        // getVideo() takes the application but does not use it, and the class
+        // is final, so it cannot be stubbed
+        $app = (new \ReflectionClass(SiteApplication::class))->newInstanceWithoutConstructor();
+
+        return (new ProclaimYoutubeHelper())->getVideo(new Registry(['server_id' => self::SERVER_ID]), $app);
     }
 
     /**
