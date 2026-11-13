@@ -325,6 +325,7 @@ spl_autoload_register(function ($class) use ($componentRoot) {
         'CWM\\Component\\Proclaim\\Tests\\Integration\\'  => $componentRoot . '/tests/integration/',
         'CWM\\Component\\Proclaim\\Tests\\Contract\\'     => $componentRoot . '/tests/contract/',
         'CWM\\Module\\Proclaim\\Site\\'                   => $componentRoot . '/modules/site/mod_proclaim/src/',
+        'CWM\\Module\\ProclaimYoutube\\Site\\'            => $componentRoot . '/modules/site/mod_proclaim_youtube/src/',
         'CWM\\Plugin\\WebServices\\Proclaim\\Extension\\' => $componentRoot . '/plugins/webservices/proclaim/src/Extension/',
         'CWM\\Plugin\\System\\Proclaim\\Extension\\'      => $componentRoot . '/plugins/system/proclaim/src/Extension/',
     ];

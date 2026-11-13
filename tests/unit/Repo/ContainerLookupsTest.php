@@ -38,18 +38,6 @@ class ContainerLookupsTest extends ProclaimTestCase
     private const array ROOTS = ['admin/src', 'site/src', 'api/src', 'plugins', 'modules', 'proclaim.script.php'];
 
     /**
-     * Keys known to be missing from the container, each with its open issue.
-     * Drop an entry once its lookup is fixed.
-     *
-     * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
-     */
-    private const array KNOWN_UNREGISTERED = [
-        'cache.output' => 'Issue #2289. mod_proclaim_youtube catches the throw, so nothing errors, but its caches '
-            . 'never run: the live-status checks call the YouTube API on every page load and poll',
-    ];
-
-    /**
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
@@ -66,28 +54,12 @@ class ContainerLookupsTest extends ProclaimTestCase
         $missing = [];
 
         foreach ($lookups as [$key, $where]) {
-            if (!Factory::getContainer()->has($key) && !isset(self::KNOWN_UNREGISTERED[$key])) {
+            if (!Factory::getContainer()->has($key)) {
                 $missing[] = $key . ' at ' . $where;
             }
         }
 
         $this->assertSame([], $missing, 'These keys are not registered in Joomla\'s container, so the lookup throws');
-    }
-
-    /**
-     * @return  void
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    #[TestDox('Each key listed as known to be missing is still looked up and still missing')]
-    public function testKnownGapsAreStillGaps(): void
-    {
-        $keys = array_column($this->lookups(), 0);
-
-        foreach (array_keys(self::KNOWN_UNREGISTERED) as $key) {
-            $this->assertContains($key, $keys, $key . ' is no longer looked up; drop it from KNOWN_UNREGISTERED');
-            $this->assertFalse(Factory::getContainer()->has($key), $key . ' is registered now; drop it from KNOWN_UNREGISTERED');
-        }
     }
 
     /**
