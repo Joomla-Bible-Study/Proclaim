@@ -19,6 +19,47 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.7.4                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.7.4</version>
+        <date>2026-11-13</date>
+        <note>
+            <item>Where records share an alias, the one the address already showed keeps it:</item>
+            <item>Each of the others gets a numbered alias, such as christmas-program-2, and</item>
+            <item>A message or series with no alias gets one made from its title.</item>
+            <item>Proclaim lists every record it renamed, with a link to edit each one. The</item>
+            <item>A message can&#x27;t be saved with an alias another message already has, and the</item>
+            <item>An alias made from the title takes the next free number, with a warning, as</item>
+            <item>Save as Copy gives the copy a numbered title and a matching alias: &quot;The Road</item>
+            <item>The setup wizard, the CSV import, and the PreachIt and SermonSpeaker</item>
+            <item>Restoring an older backup repairs shared aliases the same way, and lists its</item>
+            <item>The email to the template&#x27;s Moderation Notification Email address when a</item>
+            <item>The email for each new comment when the template&#x27;s **Email when comments</item>
+            <item>The checks run every Status Poll Interval (two minutes by default),</item>
+            <item>Every visitor&#x27;s checks share one answer for two minutes, so a busy page costs</item>
+            <item>A check only answers about the video the page is showing, so it can&#x27;t be</item>
+            <item>chore: build-tools 1.39.0 so ARS items get past ModSecurity; clear the 10.7.3 notes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2282</item>
+            <item>fix: give every message and series its own alias by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2283</item>
+            <item>fix: number a copied message as the next episode in its series by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2285</item>
+            <item>feat: list renamed messages and series so administrators can tidy them by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2286</item>
+            <item>fix: send comment emails through Joomla&#x27;s mailer factory by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2288</item>
+            <item>fix: keep the YouTube module&#x27;s status cache in its file cache by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2290</item>
+            <item>fix: let com_ajax answer the YouTube module&#x27;s status poll by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2292</item>
+            <item>ci: bump github/codeql-action from 4.39.1 to 4.39.3 in the actions-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2272</item>
+            <item>chore(deps): bump the composer-minor-and-patch group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2273</item>
+            <item>chore(deps-dev): bump the npm-minor-and-patch group across 1 directory with 7 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2274</item>
+            <item>fix: render the YouTube module&#x27;s video with the status its poll found by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2294</item>
+            <item>docs: write the 10.7.4 release notes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2295</item>
+            <item>chore(deps): move glob and minimatch to their fixed releases by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2296</item>
+            <item>chore: open the 10.7.4 release cycle by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2297</item>
+            <item>fix: let a fresh install&#x27;s postflight load Proclaim&#x27;s own classes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2299</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.7.3                                                   -->
     <!-- ============================================================ -->
     <changelog>
