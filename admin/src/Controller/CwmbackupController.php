@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmJsonResponseTrait;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -1000,6 +1001,14 @@ class CwmbackupController extends BaseController
         // Run Joomla's schema fixer — processes all SQL update files in order
         $databaseModel = new DatabaseModel();
         $databaseModel->fix([$cid]);
+
+        // A backup taken before the unique alias index restores without it, and
+        // the schema fixer cannot add an index that is created from PHP.
+        try {
+            Cwmalias::ensureAllUniqueAliases($db);
+        } catch (\RuntimeException $e) {
+            Log::add('Post-restore unique alias fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
 
         Log::add('Schema version reset and migrations re-applied after restore', Log::INFO, 'com_proclaim');
 

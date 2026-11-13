@@ -367,6 +367,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series`
     `checked_out`      INT(10) UNSIGNED                                 NOT NULL DEFAULT 0,
     `checked_out_time` DATETIME                                                  DEFAULT NULL,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_alias` (`alias`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
     KEY `idx_checkout` (`checked_out`),
@@ -506,6 +507,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     `studynumber_uk`      VARCHAR(100) GENERATED ALWAYS AS
         (IF(`series_id` > 0 AND `studynumber` <> '', `studynumber`, NULL)) STORED,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_alias` (`alias`),
     UNIQUE KEY `uq_series_studynumber` (`series_id`, `studynumber_uk`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),

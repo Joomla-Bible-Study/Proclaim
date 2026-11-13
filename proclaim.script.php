@@ -10,6 +10,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
@@ -2351,6 +2352,12 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->task('Analytics index', fn () => $this->reconcileAnalyticsAggregateIndex());
         $this->task('Upload media types', fn () => $this->normaliseUploadMediaTypes());
 
+        // One alias per message and per series, then the unique index that keeps
+        // it so. Not a gated step, and on install too: a reinstall over tables an
+        // uninstall kept skips their CREATE TABLE, and a restored older backup
+        // has no index either. No-op once the index exists.
+        $this->task('Unique aliases', fn () => $this->ensureUniqueAliases());
+
         // Seeded on update as well as install: access.xml can gain a section in
         // any release, and a section with no asset is a permission the UI can
         // offer but nothing can store.
@@ -3502,6 +3509,50 @@ class com_proclaimInstallerScript extends InstallerScript
         } catch (\Exception $e) {
             // Non-fatal — leave legacy tables in place rather than block the upgrade
             Log::add('dropLegacyTables: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+    }
+
+    /**
+     * Give every message and every series its own alias, and add the unique
+     * index that keeps it so.
+     *
+     * A renamed message or series gets a new address, so each rename is written
+     * to the install log and the administrator is told which ones changed. The
+     * shared address keeps opening the record the router already served there.
+     * A row that had no alias only gains one, so it is logged but not announced.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function ensureUniqueAliases(): void
+    {
+        $notices = [
+            '#__bsms_studies' => 'JBS_INS_MESSAGE_ALIASES_RENAMED',
+            '#__bsms_series'  => 'JBS_INS_SERIES_ALIASES_RENAMED',
+        ];
+
+        $changed = Cwmalias::ensureAllUniqueAliases(Factory::getContainer()->get(DatabaseInterface::class));
+
+        foreach ($changed as $table => $rows) {
+            foreach ($rows as $row) {
+                $this->logInstall(\sprintf('  alias %s %d: %s -> %s', $table, $row['id'], $row['from'], $row['to']));
+            }
+
+            $shared = array_filter($rows, static fn (array $row): bool => $row['from'] !== '');
+
+            if ($shared === []) {
+                continue;
+            }
+
+            Factory::getApplication()->enqueueMessage(
+                Text::plural(
+                    $notices[$table],
+                    \count($shared),
+                    implode(', ', array_map(static fn (array $row): string => $row['from'] . ' → ' . $row['to'], $shared))
+                ),
+                'notice'
+            );
         }
     }
 

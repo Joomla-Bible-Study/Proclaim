@@ -127,6 +127,59 @@ abstract class IntegrationTestCase extends ProclaimTestCase
     }
 
     /**
+     * An alias no other row will have, for seeding #__bsms_studies and
+     * #__bsms_series.
+     *
+     * Both tables carry a unique index on alias, and the column defaults to
+     * '', so two seeded rows without an alias collide. Seed every row with one
+     * of these: a row left behind by a test whose writes were committed (a
+     * Table::store() that creates an asset commits the transaction) would
+     * otherwise make every later alias-less insert fail, depending on order.
+     *
+     * @param   string  $label  A readable part, to tell rows apart
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function uniqueAlias(string $label = 'row'): string
+    {
+        return 'zz-' . $label . '-' . str_replace('.', '-', uniqid('', true));
+    }
+
+    /**
+     * Run code under a stand-in application, putting the real one back after.
+     *
+     * The suite runs under the console application, which is never the
+     * administrator and never clears its message queue; a stub can be both.
+     * Factory::$language is pinned to the real application's language first:
+     * with none set, Text builds one from the application's config, which a
+     * stub does not have.
+     *
+     * @param   \Joomla\CMS\Application\CMSApplicationInterface  $app  The stand-in
+     * @param   callable                                         $run  The code to run under it
+     *
+     * @return  mixed  What $run returned
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function withApplication(\Joomla\CMS\Application\CMSApplicationInterface $app, callable $run): mixed
+    {
+        $savedApp      = \Joomla\CMS\Factory::$application;
+        $savedLanguage = \Joomla\CMS\Factory::$language;
+
+        \Joomla\CMS\Factory::$language    = $savedApp->getLanguage();
+        \Joomla\CMS\Factory::$application = $app;
+
+        try {
+            return $run();
+        } finally {
+            \Joomla\CMS\Factory::$application = $savedApp;
+            \Joomla\CMS\Factory::$language    = $savedLanguage;
+        }
+    }
+
+    /**
      * Reset a static property on a class to its default value.
      *
      * Useful for clearing static caches (e.g., Cwmstats::$cache) between tests.

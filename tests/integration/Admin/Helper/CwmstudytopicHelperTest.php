@@ -59,6 +59,7 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
         $study = (object) [
             'published'  => 0,
             'studytitle' => 'cwm1574 fixture',
+            'alias'      => $this->uniqueAlias('cwmstudytopichelper-study'),
             'language'   => '*',
         ];
         $this->db->insertObject('#__bsms_studies', $study, 'id');

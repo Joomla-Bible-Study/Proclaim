@@ -350,7 +350,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
     {
         $row = (object) [
             'series_text' => 'Test Series',
-            'alias'       => 'test-series',
+            'alias'       => $this->uniqueAlias('playlistpush-series'),
             'published'   => 1,
             'access'      => 1,
             'language'    => '*',
@@ -376,7 +376,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
     {
         $study = (object) [
             'studytitle'  => $title,
-            'alias'       => strtolower(str_replace(' ', '-', $title)),
+            'alias'       => $this->uniqueAlias('playlistpush-study'),
             'studydate'   => '2026-01-15 10:00:00',
             'series_id'   => $this->seriesId,
             'messagetype' => 1,
