@@ -30,10 +30,15 @@ echo "========================================================================"
 echo " CLEAN-INSTALL TEST — pkg_proclaim ${VERSION}"
 echo "========================================================================"
 
-echo "-- [1/10] reset test site(s) to a clean slate"
+echo "-- [1/11] reset test site(s) to a clean slate"
 "$BIN/cwm-reset-testsite"
+# The reset leaves Joomla's namespace map listing Proclaim, which a site that
+# never had it would not, and that hid install steps that could not load
+# Proclaim's classes. Joomla rebuilds the map from #__extensions when the file
+# is missing, so the install below starts as cold as a new site's.
+php -r 'require "libraries/vendor/autoload.php"; foreach ((new CWM\BuildTools\Dev\PropertiesReader("build.properties"))->installsFor("test") as $i) { @unlink($i->path . "/administrator/cache/autoload_psr4.php"); }'
 
-echo "-- [2/10] build full package ${VERSION}"
+echo "-- [2/11] build full package ${VERSION}"
 bash build/build-package.sh "$VERSION"
 
 if [ ! -f "$ZIP" ]; then
@@ -41,7 +46,7 @@ if [ ! -f "$ZIP" ]; then
     exit 1
 fi
 
-echo "-- [3/10] install ${ZIP} (fresh)"
+echo "-- [3/11] install ${ZIP} (fresh)"
 "$BIN/cwm-install-zip" --zip "$ZIP"
 
 # Verification steps record their result and carry on; the reset/build/install
@@ -55,19 +60,24 @@ echo "-- [3/10] install ${ZIP} (fresh)"
 # Joomla-Bible-Study/cwm-build-tools#142 is what surfaced the difference.
 FAILURES=()
 
-echo "-- [4/10] verify extension registration"
+# A postflight step that fails is reported and the install carries on, so this
+# is the only check that sees one.
+echo "-- [4/11] verify the install reported what it did"
+php build/verify-install-log.php install || FAILURES+=("install log (verify-install-log)")
+
+echo "-- [5/11] verify extension registration"
 "$BIN/cwm-verify" --target test || FAILURES+=("extension registration (cwm-verify)")
 
-echo "-- [5/10] verify migrations landed"
+echo "-- [6/11] verify migrations landed"
 php build/verify-migrations.php "$VERSION" || FAILURES+=("migrations (verify-migrations)")
 
-echo "-- [6/10] verify the REST API landed (#1309/#1310/#1331 guards)"
+echo "-- [7/11] verify the REST API landed (#1309/#1310/#1331 guards)"
 php build/verify-api-install.php || FAILURES+=("REST API (verify-api-install)")
 
-echo "-- [7/10] verify the scripture library landed (tables, seed, plugin enabled)"
+echo "-- [8/11] verify the scripture library landed (tables, seed, plugin enabled)"
 php build/verify-scripture-install.php || FAILURES+=("scripture library (verify-scripture-install)")
 
-echo "-- [8/10] seed the site menu items the front end is reached through (#1701)"
+echo "-- [9/11] seed the site menu items the front end is reached through (#1701)"
 php build/seed/servers.php apply || FAILURES+=("server seeding (build/seed/servers.php)")
 php build/seed/servers.php check || FAILURES+=("server seed check (build/seed/servers.php check)")
 php build/seed/content.php apply || FAILURES+=("content seeding (build/seed/content.php)")
@@ -90,10 +100,10 @@ php build/seed/finder.php check || FAILURES+=("finder index check (build/seed/fi
 # ever exercises the unresolvable path.
 php build/seed-scripture-fixture.php || FAILURES+=("scripture fixture (seed-scripture-fixture)")
 
-echo "-- [9/10] verify the front end renders (#1701 guards)"
+echo "-- [10/11] verify the front end renders (#1701 guards)"
 php build/verify-frontend.php || FAILURES+=("front end (verify-frontend)")
 
-echo "-- [10/10] verify Joomla's own schema check is clean"
+echo "-- [11/11] verify Joomla's own schema check is clean"
 php build/verify-schema-check.php || FAILURES+=("Joomla schema check (verify-schema-check)")
 
 echo

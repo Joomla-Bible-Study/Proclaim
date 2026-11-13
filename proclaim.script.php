@@ -2291,6 +2291,28 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Make Proclaim's administrator classes loadable for the rest of postflight
+     *
+     * Joomla adds a new extension's namespace to its autoload map only after
+     * the install has finished. On a site that has never had Proclaim, the
+     * postflight steps could not load the component's own classes until this
+     * registers them, as preflight does for the scripture library. An update
+     * already has them in the map, so nothing is registered twice.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function registerComponentNamespace(): void
+    {
+        $src = JPATH_ADMINISTRATOR . '/components/com_proclaim/src';
+
+        if (!class_exists(CwmdbHelper::class) && is_dir($src)) {
+            \JLoader::registerNamespace('CWM\\Component\\Proclaim\\Administrator', $src);
+        }
+    }
+
+    /**
      * Post Flight
      *
      * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
@@ -2343,6 +2365,8 @@ class com_proclaimInstallerScript extends InstallerScript
 
             return;
         }
+
+        $this->registerComponentNamespace();
 
         $this->task('Scripture library check', fn () => $this->checkScriptureLibraryVersion());
 
