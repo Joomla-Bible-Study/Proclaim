@@ -38,15 +38,15 @@ class ContainerLookupsTest extends ProclaimTestCase
     private const array ROOTS = ['admin/src', 'site/src', 'api/src', 'plugins', 'modules', 'proclaim.script.php'];
 
     /**
-     * Keys known to be missing from the container, each with why the lookup
-     * is tolerated for now. Drop an entry once its lookup is fixed.
+     * Keys known to be missing from the container, each with its open issue.
+     * Drop an entry once its lookup is fixed.
      *
      * @var    array<string, string>
      * @since  __DEPLOY_VERSION__
      */
     private const array KNOWN_UNREGISTERED = [
-        'cache.output' => 'mod_proclaim_youtube asks for it inside a try/catch around a secondary cache; '
-            . 'its file cache does the work, so the miss costs only that second layer',
+        'cache.output' => 'Issue #2289. mod_proclaim_youtube catches the throw, so nothing errors, but its caches '
+            . 'never run: the live-status checks call the YouTube API on every page load and poll',
     ];
 
     /**
