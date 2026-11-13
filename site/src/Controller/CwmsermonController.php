@@ -18,6 +18,7 @@ use Joomla\CMS\Captcha\Captcha;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
@@ -347,7 +348,7 @@ class CwmsermonController extends FormController
         $comment_details    = $db->loadObject();
         $comment_title      = $comment_details->studytitle;
         $comment_study_date = $comment_details->studydate;
-        $mail               = Factory::getContainer()->get(\Joomla\CMS\Mail\MailerInterface::class);
+        $mail               = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
         $ToEmail            = $params->get('recipient', '');
         $Subject            = $params->get('subject', 'Comments');
 

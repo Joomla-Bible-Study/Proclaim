@@ -130,6 +130,7 @@ class CwmdownloadReachableTest extends IntegrationTestCase
 
         $series = (object) [
             'series_text' => 'reachable fixture series',
+            'alias'       => $this->uniqueAlias('cwmdownloadreachable-series'),
             'published'   => 1,
             'access'      => $state['series_access'],
             'language'    => '*',
@@ -139,6 +140,7 @@ class CwmdownloadReachableTest extends IntegrationTestCase
 
         $study = (object) [
             'studytitle' => 'reachable fixture message',
+            'alias'      => $this->uniqueAlias('cwmdownloadreachable-study'),
             'series_id'  => $seriesId,
             'published'  => 1,
             'access'     => $state['study_access'],

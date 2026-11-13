@@ -183,7 +183,7 @@ class CwmcsvimportHelper
         $locationId    = self::processLocation($rowData['location'] ?? '', $autoCreate, (int) ($user ? $user->id : 0));
         $messageTypeId = self::resolveOrCreateMessageType($rowData['messagetype'] ?? '', $autoCreate);
         $published     = self::parsePublished($rowData['published'] ?? null, $defaultPublished);
-        $alias         = OutputFilter::stringURLSafe($title);
+        $alias         = Cwmalias::aliasForInsert($db, '#__bsms_studies', '', $title);
 
         // Build columns and values
         $columns = [
@@ -507,7 +507,7 @@ class CwmcsvimportHelper
             return 0;
         }
 
-        $alias = OutputFilter::stringURLSafe($name);
+        $alias = Cwmalias::aliasForInsert($db, '#__bsms_series', '', $name);
 
         // ⚠️ Every NOT-NULL column with no default is supplied, because under
         // strict-mode MySQL omitting any one of them fails the whole insert —

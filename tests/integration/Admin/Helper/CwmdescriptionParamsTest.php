@@ -56,6 +56,7 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
         $study = (object) [
             'published'  => 1,
             'studytitle' => 'cwm1580 fixture',
+            'alias'      => $this->uniqueAlias('cwmdescriptionparams-study'),
             'language'   => '*',
         ];
         $this->db->insertObject('#__bsms_studies', $study, 'id');

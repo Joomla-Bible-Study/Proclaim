@@ -90,6 +90,32 @@ class CwmepisodenumberHelper
     }
 
     /**
+     * The episode number a Save as Copy should store.
+     *
+     * A copy that keeps the original's series and number would only collide
+     * with the original, so the number is cleared and the save gives the copy
+     * the next one in its series. A number or series the user changed is
+     * kept, for the table's check() to refuse if another message holds it.
+     *
+     * @param   string  $number            The submitted episode number
+     * @param   int     $seriesId          The submitted series
+     * @param   string  $originalNumber    The original's episode number
+     * @param   int     $originalSeriesId  The original's series
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function forCopy(string $number, int $seriesId, string $originalNumber, int $originalSeriesId): string
+    {
+        if ($seriesId > 0 && $seriesId === $originalSeriesId && trim($number) === trim($originalNumber)) {
+            return '';
+        }
+
+        return $number;
+    }
+
+    /**
      * Find every series with more than one message sharing the same episode
      * number, for the admin audit report.
      *

@@ -43,7 +43,7 @@ class CwmschemaorgHelper
      * The schemaorg plugin bridges the two on the page; inject() relies on that.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.3
      */
     public const FRONTEND_CONTEXTS = [
         'com_proclaim.cwmsermon'        => 'com_proclaim.cwmmessage',
@@ -55,7 +55,7 @@ class CwmschemaorgHelper
      * Items whose page reached inject() in this request, keyed "<form context>.<id>".
      *
      * @var    array<string, true>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.3
      */
     private static array $rendered = [];
 
@@ -68,7 +68,7 @@ class CwmschemaorgHelper
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     public static function wasRendered(string $formContext, int $itemId): bool
     {
@@ -568,7 +568,7 @@ class CwmschemaorgHelper
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     public static function storedSchemaRenders(int $itemId, string $formContext): bool
     {
