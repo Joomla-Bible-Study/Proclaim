@@ -621,7 +621,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         // Validate token to prevent external abuse
         // Token is generated from server_id + a site secret
-        $expectedToken = self::generateStatusToken($serverId);
+        $expectedToken = self::generateStatusToken($serverId, $videoId);
 
         if (empty($token) || !hash_equals($expectedToken, $token)) {
             return [
@@ -763,21 +763,24 @@ class YoutubeHelper implements DatabaseAwareInterface
     /**
      * Generate a secure token for AJAX status requests
      *
-     * Token is based on server_id and Joomla's secret key, ensuring
-     * Only requests from pages that rendered the module can call the API.
+     * An HMAC of the server and the video under Joomla's secret, so only a
+     * page that rendered the module for that video can ask about it. A poll
+     * cannot name a video of its own: each one would be a new status cache
+     * file and, while quota lasted, a YouTube API call.
      *
-     * @param   int  $serverId  Server ID
+     * @param   int     $serverId  Server ID
+     * @param   string  $videoId   The video the page shows; empty when it shows none
      *
      * @return  string  Token hash
      *
      * @since   10.1.0
      */
-    public static function generateStatusToken(int $serverId): string
+    public static function generateStatusToken(int $serverId, string $videoId): string
     {
         try {
-            $secret = Factory::getApplication()->get('secret', '');
+            $secret = (string) Factory::getApplication()->get('secret', '');
 
-            return hash('sha256', 'mod_proclaim_youtube_status_' . $serverId . '_' . $secret);
+            return hash_hmac('sha256', 'mod_proclaim_youtube_status_' . $serverId . '_' . $videoId, $secret);
         } catch (\Exception $e) {
             return '';
         }

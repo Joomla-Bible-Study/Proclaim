@@ -118,16 +118,31 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     }
 
     /**
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('A token for one video cannot ask about another, so a poll cannot fill the cache with videos of its own choosing')]
+    public function testTokenIsBoundToItsVideo(): void
+    {
+        $status = $this->poll('zzOtherVideo', self::VIDEO_ID);
+
+        $this->assertFalse($status['success']);
+        $this->assertNull(CwmyoutubeFileCache::getVideoCache('mod_proclaim_youtube_status_' . self::SERVER_ID . '_zzOtherVideo'));
+    }
+
+    /**
      * A browser's status poll for a video, answered under a stand-in
      * application that carries the request and the site secret.
      *
-     * @param   string  $videoId  The video to ask about
+     * @param   string       $videoId   The video to ask about
+     * @param   string|null  $tokenFor  The video the token was minted for; the asked-about one when null
      *
      * @return  array
      *
      * @since   __DEPLOY_VERSION__
      */
-    private function poll(string $videoId): array
+    private function poll(string $videoId, ?string $tokenFor = null): array
     {
         $saved = Factory::$application;
         $app   = $this->createStub(CMSApplicationInterface::class);
@@ -141,7 +156,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
             $app->method('getInput')->willReturn(new Input([
                 'server_id' => self::SERVER_ID,
                 'video_id'  => $videoId,
-                'token'     => YoutubeHelper::generateStatusToken(self::SERVER_ID),
+                'token'     => YoutubeHelper::generateStatusToken(self::SERVER_ID, $tokenFor ?? $videoId),
             ]));
 
             return YoutubeHelper::getStatusAjax();
