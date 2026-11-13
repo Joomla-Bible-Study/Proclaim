@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmepisodenumberHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
@@ -423,6 +424,19 @@ class CwmmessageModel extends AdminModel
             (int) ($data['id'] ?? 0),
             (int) ($data['location_id'] ?? 0)
         );
+
+        // A copy arrives with the original's title and alias; give it its own.
+        if ($input->get('task') === 'save2copy') {
+            $original = $this->getTable();
+            $original->load($app->isClient('site') ? $input->getInt('a_id') : $input->getInt('id'));
+
+            [$data['studytitle'], $data['alias']] = Cwmalias::forCopy(
+                (string) ($data['studytitle'] ?? ''),
+                (string) ($data['alias'] ?? ''),
+                (string) $original->studytitle,
+                (string) $original->alias
+            );
+        }
 
         // Correct legacy thumb_ paths submitted from pre-migration records
         $imageBasename = basename($data['image']);
@@ -1432,8 +1446,19 @@ class CwmmessageModel extends AdminModel
         $table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
         $table->alias      = ApplicationHelper::stringURLSafe($table->alias);
 
+        // An alias built from the title takes the next free -2, -3, ... form, as
+        // core does for articles. One the user typed is left for check(), which
+        // refuses a duplicate rather than quietly changing it.
         if (empty($table->alias)) {
-            $table->alias = ApplicationHelper::stringURLSafe($table->studytitle);
+            $base         = ApplicationHelper::stringURLSafe($table->studytitle) ?: $date->format('Y-m-d-H-i-s');
+            $table->alias = Cwmalias::makeUniqueAlias($this->getDatabase(), '#__bsms_studies', $base, (int) $table->id);
+
+            if ($table->alias !== $base) {
+                Factory::getApplication()->enqueueMessage(
+                    Text::sprintf('JBS_STY_ALIAS_NUMBERED', $base, $table->alias),
+                    'warning'
+                );
+            }
         }
 
         // Always ensure created date is set (handles empty string from form)

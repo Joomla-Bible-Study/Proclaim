@@ -13,13 +13,15 @@ use CWM\Component\Proclaim\Site\Service\Router;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
  * How the site router turns a URL segment into a record id when "Remove IDs
- * from URLs" is on. Real rows, because the behaviour is about which of several
- * rows the database hands back.
+ * from URLs" is on.
+ *
+ * Which record keeps an alias several rows once shared is decided by
+ * Cwmalias::ensureUniqueAliases() and asserted in CwmaliasUniqueTest: the
+ * unique index on alias means no test can seed a shared one here.
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -78,58 +80,12 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     #[TestDox('An alias that starts with another record\'s id resolves to its own record')]
     public function testAliasStartingWithAnotherRecordsIdResolvesByAlias(): void
     {
-        $other = $this->seedStudy($this->uniqueAlias('other'), 1);
-        $alias = $other . '-' . $this->uniqueAlias('rescue');
+        $other = $this->seedStudy($this->uniqueAlias('router-other'), 1);
+        $alias = $other . '-' . $this->uniqueAlias('router-rescue');
         $own   = $this->seedStudy($alias, 1);
 
         $this->assertSame($own, $this->router->getCWMSermonId($alias, []));
         $this->assertSame(0, $this->router->taints, 'An exact alias match is the canonical URL');
-    }
-
-    /**
-     * @return  array<string, array{int}>
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    public static function hiddenStates(): array
-    {
-        return [
-            'trashed'     => [-2],
-            'unpublished' => [0],
-        ];
-    }
-
-    /**
-     * @param   int  $hiddenState  The state of the older record sharing the alias
-     *
-     * @return  void
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    #[DataProvider('hiddenStates')]
-    #[TestDox('A published record wins an alias it shares with an older $_dataName one')]
-    public function testPublishedRecordWinsASharedAlias(int $hiddenState): void
-    {
-        $alias = $this->uniqueAlias('shared');
-        $this->seedStudy($alias, $hiddenState);
-        $published = $this->seedStudy($alias, 1);
-
-        $this->assertSame($published, $this->router->getCWMSermonId($alias, []));
-    }
-
-    /**
-     * @return  void
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    #[TestDox('An archived record also wins an alias it shares with a trashed one')]
-    public function testArchivedRecordWinsASharedAlias(): void
-    {
-        $alias = $this->uniqueAlias('archived');
-        $this->seedStudy($alias, -2);
-        $archived = $this->seedStudy($alias, 2);
-
-        $this->assertSame($archived, $this->router->getCWMSermonId($alias, []));
     }
 
     /**
@@ -140,7 +96,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     #[TestDox('An <id>-<alias> segment resolves to that record and is flagged for a redirect')]
     public function testIdAliasSegmentResolvesAndIsFlagged(): void
     {
-        $alias = $this->uniqueAlias('idalias');
+        $alias = $this->uniqueAlias('router-idalias');
         $id    = $this->seedStudy($alias, 1);
 
         $this->assertSame($id, $this->router->getCWMSermonId($id . '-' . $alias, []));
@@ -155,7 +111,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     #[TestDox('A bare id segment resolves to that record and is flagged for a redirect')]
     public function testBareIdSegmentResolvesAndIsFlagged(): void
     {
-        $id = $this->seedStudy($this->uniqueAlias('bare'), 1);
+        $id = $this->seedStudy($this->uniqueAlias('router-bare'), 1);
 
         $this->assertSame($id, $this->router->getCWMSermonId((string) $id, []));
         $this->assertSame(1, $this->router->taints);
@@ -166,26 +122,10 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
      *
      * @since   __DEPLOY_VERSION__
      */
-    #[TestDox('An <id>-<alias> segment is served in place when its alias leads to another record')]
-    public function testIdAliasSegmentIsNotFlaggedWhenTheAliasLeadsElsewhere(): void
-    {
-        $alias = $this->uniqueAlias('twin');
-        $this->seedStudy($alias, 1);
-        $second = $this->seedStudy($alias, 1);
-
-        $this->assertSame($second, $this->router->getCWMSermonId($second . '-' . $alias, []));
-        $this->assertSame(0, $this->router->taints, 'Redirecting would show the other record');
-    }
-
-    /**
-     * @return  void
-     *
-     * @since   __DEPLOY_VERSION__
-     */
     #[TestDox('An <id>-<alias> segment for a trashed record is not found')]
     public function testIdAliasSegmentForAHiddenRecordIsNotFound(): void
     {
-        $alias = $this->uniqueAlias('gone');
+        $alias = $this->uniqueAlias('router-gone');
         $id    = $this->seedStudy($alias, -2);
 
         $this->assertSame(-1, $this->router->getCWMSermonId($id . '-' . $alias, []));
@@ -200,9 +140,9 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     #[TestDox('A segment that starts with an id but carries a different alias is not found')]
     public function testIdWithAnotherAliasIsNotFound(): void
     {
-        $id = $this->seedStudy($this->uniqueAlias('real'), 1);
+        $id = $this->seedStudy($this->uniqueAlias('router-real'), 1);
 
-        $this->assertSame(-1, $this->router->getCWMSermonId($id . '-' . $this->uniqueAlias('wrong'), []));
+        $this->assertSame(-1, $this->router->getCWMSermonId($id . '-' . $this->uniqueAlias('router-wrong'), []));
         $this->assertSame(0, $this->router->taints);
     }
 
@@ -214,7 +154,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     #[TestDox('An unknown alias is not found')]
     public function testUnknownAliasIsNotFound(): void
     {
-        $this->assertSame(-1, $this->router->getCWMSermonId($this->uniqueAlias('missing'), []));
+        $this->assertSame(-1, $this->router->getCWMSermonId($this->uniqueAlias('router-missing'), []));
     }
 
     /**
@@ -222,14 +162,17 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
      *
      * @since   __DEPLOY_VERSION__
      */
-    #[TestDox('A published series wins an alias it shares with a trashed one')]
-    public function testPublishedSeriesWinsASharedAlias(): void
+    #[TestDox('A series resolves by alias, and by <id>-<alias> with a redirect flag')]
+    public function testSeriesResolvesByAliasAndIdAlias(): void
     {
-        $alias = $this->uniqueAlias('series');
-        $this->seedRow('#__bsms_series', ['series_text' => 'zz router series', 'alias' => $alias, 'published' => -2]);
-        $published = $this->seedRow('#__bsms_series', ['series_text' => 'zz router series', 'alias' => $alias, 'published' => 1]);
+        $alias = $this->uniqueAlias('router-series');
+        $id    = $this->seedRow('#__bsms_series', ['series_text' => 'zz router series', 'alias' => $alias, 'published' => 1]);
 
-        $this->assertSame($published, $this->router->getCWMSeriesDisplayId($alias, []));
+        $this->assertSame($id, $this->router->getCWMSeriesDisplayId($alias, []));
+        $this->assertSame(0, $this->router->taints);
+
+        $this->assertSame($id, $this->router->getCWMSeriesDisplayId($id . '-' . $alias, []));
+        $this->assertSame(1, $this->router->taints);
     }
 
     /**
@@ -240,7 +183,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     #[TestDox('A teacher resolves by alias, and by <id>-<alias> with a redirect flag')]
     public function testTeacherResolvesByAliasAndIdAlias(): void
     {
-        $alias = $this->uniqueAlias('teacher');
+        $alias = $this->uniqueAlias('router-teacher');
         $id    = $this->seedRow('#__bsms_teachers', [
             'teachername' => 'zz router teacher',
             'alias'       => $alias,
@@ -253,18 +196,6 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
 
         $this->assertSame($id, $this->router->getCWMTeacherId($id . '-' . $alias, []));
         $this->assertSame(1, $this->router->taints);
-    }
-
-    /**
-     * @param   string  $label  A readable part of the alias
-     *
-     * @return  string
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    private function uniqueAlias(string $label): string
-    {
-        return 'zz-router-' . $label . '-' . str_replace('.', '-', uniqid('', true));
     }
 
     /**

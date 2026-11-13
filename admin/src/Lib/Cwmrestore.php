@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
@@ -1028,6 +1029,19 @@ class Cwmrestore
             Log::add('Post-restore: fixed ' . $fixed . ' teacher alias/duplicate issues', Log::INFO, 'com_proclaim');
         } catch (\Exception $e) {
             Log::add('Post-restore teacher alias fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        // A backup taken before the unique alias index restores without it, and
+        // the ChangeSet cannot add an index that is created from PHP.
+        try {
+            $changed = Cwmalias::ensureAllUniqueAliases(Factory::getContainer()->get(DatabaseInterface::class));
+            Log::add(
+                'Post-restore: gave ' . array_sum(array_map('count', $changed)) . ' messages and series their own alias',
+                Log::INFO,
+                'com_proclaim'
+            );
+        } catch (\Exception $e) {
+            Log::add('Post-restore unique alias fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
 
         try {

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -31,6 +32,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
+use Joomla\String\StringHelper;
 
 /**
  * Serie administrator model
@@ -201,11 +203,19 @@ class CwmserieModel extends AdminModel
         $app           = Factory::getApplication();
         $data['image'] = Cwmthumbnail::mediaFieldPath($data['image']);
 
-        // Alter the title for save as copy
+        // A copy arrives with the original's title and alias; give it its own.
+        // Not generateNewTitle(): it looks rows up by catid, which this table
+        // does not have, so Table::load() throws.
         if ($app->getInput()->get('task') === 'save2copy') {
-            list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['series_text']);
-            $data['series_text'] = $title;
-            $data['alias']       = $alias;
+            $original = $this->getTable();
+            $original->load($app->getInput()->getInt('id'));
+
+            [$data['series_text'], $data['alias']] = Cwmalias::forCopy(
+                (string) ($data['series_text'] ?? ''),
+                (string) ($data['alias'] ?? ''),
+                (string) $original->series_text,
+                (string) $original->alias
+            );
         }
 
         // If no image, clear thumbnail and save
@@ -338,10 +348,15 @@ class CwmserieModel extends AdminModel
                 continue;
             }
 
-            // Alter the title & alias
-            $data               = $this->generateNewTitle('', $table->alias, $table->series_text);
-            $table->series_text = $data['0'];
-            $table->alias       = $data['1'];
+            // Alter the title & alias. Not generateNewTitle(): it looks rows up
+            // by catid, which this table does not have, so Table::load() throws.
+            $table->series_text = StringHelper::increment((string) $table->series_text);
+            $table->alias       = Cwmalias::makeUniqueAlias(
+                $this->getDatabase(),
+                '#__bsms_series',
+                ApplicationHelper::stringURLSafe($table->series_text) ?: (new Date())->format('Y-m-d-H-i-s'),
+                0
+            );
 
             // Reset the ID because we are making a copy
             $table->id = 0;
@@ -471,8 +486,19 @@ class CwmserieModel extends AdminModel
         $table->series_text = htmlspecialchars_decode($table->series_text, ENT_QUOTES);
         $table->alias       = ApplicationHelper::stringURLSafe($table->alias);
 
+        // An alias built from the title takes the next free -2, -3, ... form, as
+        // core does for articles. One the user typed is left for check(), which
+        // refuses a duplicate rather than quietly changing it.
         if (empty($table->alias)) {
-            $table->alias = ApplicationHelper::stringURLSafe($table->series_text);
+            $base         = ApplicationHelper::stringURLSafe($table->series_text) ?: $date->format('Y-m-d-H-i-s');
+            $table->alias = Cwmalias::makeUniqueAlias($this->getDatabase(), '#__bsms_series', $base, (int) $table->id);
+
+            if ($table->alias !== $base) {
+                Factory::getApplication()->enqueueMessage(
+                    Text::sprintf('JBS_SER_ALIAS_NUMBERED', $base, $table->alias),
+                    'warning'
+                );
+            }
         }
 
         // Always ensure the created date is set (handles empty string from form)

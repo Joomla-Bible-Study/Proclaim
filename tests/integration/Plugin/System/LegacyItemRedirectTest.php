@@ -154,18 +154,6 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
-     * @param   string  $label  A readable part of the alias
-     *
-     * @return  string
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    private function uniqueAlias(string $label): string
-    {
-        return 'zz-legacy-' . $label . '-' . str_replace('.', '-', uniqid('', true));
-    }
-
-    /**
      * Seed a site menu item under a parent of its own, so the alias cannot
      * collide with a real item at the same level.
      *

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
@@ -399,6 +400,14 @@ class CwmadminModel extends AdminModel
         $installer->fixemptyaccess();
         $installer->fixemptylanguage();
         $this->fixDefaultTextFilters();
+
+        // The ChangeSet knows only the update SQL, and the unique alias index is
+        // added from PHP, so Fix would never restore it by itself.
+        try {
+            Cwmalias::ensureAllUniqueAliases($this->getDatabase());
+        } catch (\RuntimeException $e) {
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+        }
 
         return true;
     }
