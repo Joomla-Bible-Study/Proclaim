@@ -104,7 +104,7 @@ class CwmepisodenumberHelper
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function forCopy(string $number, int $seriesId, string $originalNumber, int $originalSeriesId): string
     {

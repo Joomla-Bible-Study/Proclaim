@@ -159,7 +159,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * email that goes out once every other task has run.
      *
      * @var    array<string, list<object>>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.4
      */
     private array $aliasRenames = [];
 
@@ -2301,7 +2301,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function registerComponentNamespace(): void
     {
@@ -3561,7 +3561,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function ensureUniqueAliases(): void
     {
@@ -3584,7 +3584,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function emailAliasRenames(): void
     {
