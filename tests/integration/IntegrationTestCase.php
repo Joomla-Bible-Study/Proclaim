@@ -180,6 +180,57 @@ abstract class IntegrationTestCase extends ProclaimTestCase
     }
 
     /**
+     * A real Mail whose send() records the call instead of connecting, or
+     * fails as an unreachable SMTP server does, so a test can read what would
+     * have gone out without sending anything.
+     *
+     * @param   bool  $succeed  Whether send() succeeds
+     *
+     * @return  \Joomla\CMS\Mail\Mail  With a public $sends count
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function recordingMailer(bool $succeed = true): \Joomla\CMS\Mail\Mail
+    {
+        return new class ($succeed) extends \Joomla\CMS\Mail\Mail {
+            public int $sends = 0;
+
+            public function __construct(private readonly bool $succeed)
+            {
+                parent::__construct(true);
+            }
+
+            public function Send()
+            {
+                $this->sends++;
+
+                if (!$this->succeed) {
+                    throw new \RuntimeException('SMTP Error: Could not connect to SMTP host.');
+                }
+
+                return true;
+            }
+        };
+    }
+
+    /**
+     * A mailer factory that hands out the given mailer.
+     *
+     * @param   \Joomla\CMS\Mail\Mail  $mail  The mailer to hand out
+     *
+     * @return  \Joomla\CMS\Mail\MailerFactoryInterface
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function mailerFactoryFor(\Joomla\CMS\Mail\Mail $mail): \Joomla\CMS\Mail\MailerFactoryInterface
+    {
+        $factory = $this->createStub(\Joomla\CMS\Mail\MailerFactoryInterface::class);
+        $factory->method('createMailer')->willReturn($mail);
+
+        return $factory;
+    }
+
+    /**
      * Reset a static property on a class to its default value.
      *
      * Useful for clearing static caches (e.g., Cwmstats::$cache) between tests.
