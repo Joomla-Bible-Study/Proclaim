@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Language\Text;
@@ -254,27 +255,63 @@ class Cwmalias
     /**
      * The title and alias a Save as Copy should store.
      *
-     * The copy arrives with the original's title and alias. As core does, an
-     * unchanged title gets a number and the alias is cleared, so the save
-     * builds the copy an alias of its own; an alias the user changed is kept,
-     * for the table's check() to refuse if another row holds it.
+     * The copy arrives with the original's title and alias. An alias the user
+     * typed is kept, for the table's check() to refuse if another row holds
+     * it. Otherwise the alias is cleared for the save to build from the title,
+     * and an unchanged title is numbered first, as core numbers a copied
+     * article.
      *
-     * @param   string  $title          The submitted title
-     * @param   string  $alias          The submitted alias
-     * @param   string  $originalTitle  The original's title
-     * @param   string  $originalAlias  The original's alias
+     * @param   DatabaseInterface  $db             Database driver
+     * @param   string             $table          A table in UNIQUE_ALIAS_TABLES
+     * @param   string             $title          The submitted title
+     * @param   string             $alias          The submitted alias
+     * @param   string             $originalTitle  The original's title
+     * @param   string             $originalAlias  The original's alias
      *
      * @return  array{0: string, 1: string}  The title and alias to store
      *
      * @since   __DEPLOY_VERSION__
      */
-    public static function forCopy(string $title, string $alias, string $originalTitle, string $originalAlias): array
-    {
-        if ($title === $originalTitle) {
-            return [StringHelper::increment($title), ''];
+    public static function forCopy(
+        DatabaseInterface $db,
+        string $table,
+        string $title,
+        string $alias,
+        string $originalTitle,
+        string $originalAlias
+    ): array {
+        if ($alias !== '' && $alias !== $originalAlias) {
+            return [$title, $alias];
         }
 
-        return [$title, $alias === $originalAlias ? '' : $alias];
+        return [$title === $originalTitle ? self::nextCopyTitle($db, $table, $title) : $title, ''];
+    }
+
+    /**
+     * A copy's title: the next (2), (3), ... whose alias no row holds yet, so
+     * a second copy of an original becomes (3) rather than another (2), and
+     * the alias built from it carries the same number.
+     *
+     * Core's generateNewTitle() is not used. It looks rows up by catid, which
+     * these tables do not have, and it steps the alias's own trailing number,
+     * so a copy of "psalm-23" would become "psalm-24".
+     *
+     * @param   DatabaseInterface  $db     Database driver
+     * @param   string             $table  A table in UNIQUE_ALIAS_TABLES
+     * @param   string             $title  The original's title
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function nextCopyTitle(DatabaseInterface $db, string $table, string $title): string
+    {
+        do {
+            $title = StringHelper::increment($title);
+            $slug  = ApplicationHelper::stringURLSafe($title);
+        } while ($slug !== '' && self::aliasInUse($db, $table, $slug, 0));
+
+        return $title;
     }
 
     /**

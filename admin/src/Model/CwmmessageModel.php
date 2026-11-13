@@ -431,6 +431,8 @@ class CwmmessageModel extends AdminModel
             $original->load($app->isClient('site') ? $input->getInt('a_id') : $input->getInt('id'));
 
             [$data['studytitle'], $data['alias']] = Cwmalias::forCopy(
+                $this->getDatabase(),
+                '#__bsms_studies',
                 (string) ($data['studytitle'] ?? ''),
                 (string) ($data['alias'] ?? ''),
                 (string) $original->studytitle,

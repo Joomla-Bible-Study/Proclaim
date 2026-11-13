@@ -32,7 +32,6 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
-use Joomla\String\StringHelper;
 
 /**
  * Serie administrator model
@@ -204,13 +203,13 @@ class CwmserieModel extends AdminModel
         $data['image'] = Cwmthumbnail::mediaFieldPath($data['image']);
 
         // A copy arrives with the original's title and alias; give it its own.
-        // Not generateNewTitle(): it looks rows up by catid, which this table
-        // does not have, so Table::load() throws.
         if ($app->getInput()->get('task') === 'save2copy') {
             $original = $this->getTable();
             $original->load($app->getInput()->getInt('id'));
 
             [$data['series_text'], $data['alias']] = Cwmalias::forCopy(
+                $this->getDatabase(),
+                '#__bsms_series',
                 (string) ($data['series_text'] ?? ''),
                 (string) ($data['alias'] ?? ''),
                 (string) $original->series_text,
@@ -348,9 +347,8 @@ class CwmserieModel extends AdminModel
                 continue;
             }
 
-            // Alter the title & alias. Not generateNewTitle(): it looks rows up
-            // by catid, which this table does not have, so Table::load() throws.
-            $table->series_text = StringHelper::increment((string) $table->series_text);
+            // Alter the title & alias
+            $table->series_text = Cwmalias::nextCopyTitle($this->getDatabase(), '#__bsms_series', (string) $table->series_text);
             $table->alias       = Cwmalias::makeUniqueAlias(
                 $this->getDatabase(),
                 '#__bsms_series',

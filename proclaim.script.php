@@ -3519,6 +3519,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * A renamed message or series gets a new address, so each rename is written
      * to the install log and the administrator is told which ones changed. The
      * shared address keeps opening the record the router already served there.
+     * A row that had no alias only gains one, so it is logged but not announced.
      *
      * @return  void
      *
@@ -3534,19 +3535,21 @@ class com_proclaimInstallerScript extends InstallerScript
         $changed = Cwmalias::ensureAllUniqueAliases(Factory::getContainer()->get(DatabaseInterface::class));
 
         foreach ($changed as $table => $rows) {
-            if ($rows === []) {
-                continue;
-            }
-
             foreach ($rows as $row) {
                 $this->logInstall(\sprintf('  alias %s %d: %s -> %s', $table, $row['id'], $row['from'], $row['to']));
+            }
+
+            $shared = array_filter($rows, static fn (array $row): bool => $row['from'] !== '');
+
+            if ($shared === []) {
+                continue;
             }
 
             Factory::getApplication()->enqueueMessage(
                 Text::plural(
                     $notices[$table],
-                    \count($rows),
-                    implode(', ', array_map(static fn (array $row): string => $row['from'] . ' → ' . $row['to'], $rows))
+                    \count($shared),
+                    implode(', ', array_map(static fn (array $row): string => $row['from'] . ' → ' . $row['to'], $shared))
                 ),
                 'notice'
             );
