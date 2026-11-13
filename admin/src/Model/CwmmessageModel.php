@@ -425,7 +425,8 @@ class CwmmessageModel extends AdminModel
             (int) ($data['location_id'] ?? 0)
         );
 
-        // A copy arrives with the original's title and alias; give it its own.
+        // A copy arrives with the original's title, alias and episode number;
+        // give it its own.
         if ($input->get('task') === 'save2copy') {
             $original = $this->getTable();
             $original->load($app->isClient('site') ? $input->getInt('a_id') : $input->getInt('id'));
@@ -437,6 +438,13 @@ class CwmmessageModel extends AdminModel
                 (string) ($data['alias'] ?? ''),
                 (string) $original->studytitle,
                 (string) $original->alias
+            );
+
+            $data['studynumber'] = CwmepisodenumberHelper::forCopy(
+                (string) ($data['studynumber'] ?? ''),
+                (int) ($data['series_id'] ?? 0),
+                (string) $original->studynumber,
+                (int) $original->series_id
             );
         }
 
