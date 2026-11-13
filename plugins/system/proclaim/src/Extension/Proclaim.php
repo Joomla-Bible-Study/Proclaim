@@ -773,7 +773,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  ?string  The path to redirect to, or null when this is not an old item URL
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function legacyItemRedirectPath(string $path): ?string
     {
@@ -848,7 +848,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function endsWithMenuRoute(string $path): bool
     {

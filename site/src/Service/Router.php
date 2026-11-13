@@ -530,7 +530,7 @@ class Router extends RouterView
      *
      * @return  int  The record id, or 0 when nothing matches
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function resolveSegment(string $table, string $segment): int
     {
@@ -573,7 +573,7 @@ class Router extends RouterView
      *
      * @return  int  The record id, or 0 when no record has the alias
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function findIdByAlias(string $table, string $alias): int
     {
@@ -595,7 +595,7 @@ class Router extends RouterView
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     protected function markTainted(): void
     {

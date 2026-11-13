@@ -146,7 +146,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function isNotFoundResponse(): bool
     {
@@ -166,7 +166,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function forgetCachedView(string $viewName): void
     {
@@ -187,7 +187,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private static function viewCacheId(object $view): string
     {
