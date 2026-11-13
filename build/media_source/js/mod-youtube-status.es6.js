@@ -298,10 +298,15 @@
                 .then(function (response) {
                     return response.json();
                 })
-                .then(function (data) {
+                .then(function (response) {
                     fetchInFlight = false;
 
-                    if (!data.success) {
+                    // com_ajax returns the helper's answer as the data of a
+                    // JsonResponse; its own success is false when the request
+                    // failed before the helper ran.
+                    const data = response.success ? response.data : null;
+
+                    if (!data || !data.success) {
                         return;
                     }
 

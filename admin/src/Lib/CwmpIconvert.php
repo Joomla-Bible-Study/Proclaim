@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Library\Scripture\Helper\ScriptureReference;
@@ -386,7 +387,7 @@ class CwmpIconvert
                 $dataseries                   = new \stdClass();
                 $dataseries->id               = null;
                 $dataseries->series_text      = $pi->name;
-                $dataseries->alias            = $pi->alias;
+                $dataseries->alias            = Cwmalias::aliasForInsert($db, '#__bsms_series', (string) $pi->alias, (string) $pi->name);
                 $dataseries->description      = $pi->description;
                 $dataseries->series_thumbnail = $pi->image_folderlrg . $pi->series_image_lrg;
                 $dataseries->published        = $pi->published;
@@ -548,7 +549,7 @@ class CwmpIconvert
                 $datastudies->user_id        = $user_id;
                 $datastudies->show_level     = $show_level;
                 $datastudies->location_id    = $location_id;
-                $datastudies->alias          = $alias;
+                $datastudies->alias          = Cwmalias::aliasForInsert($db, '#__bsms_studies', (string) $alias, (string) $datastudies->studytitle);
                 $datastudies->studyintro     = $studyintro;
                 $datastudies->series_id      = $series_id;
                 $datastudies->studytext      = $studytext;

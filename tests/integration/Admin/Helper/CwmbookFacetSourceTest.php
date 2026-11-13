@@ -87,6 +87,7 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
             'published'  => 1,
             'access'     => 1,
             'studytitle' => 'cwm1623 facet fixture',
+            'alias'      => $this->uniqueAlias('cwmbookfacetsource-study'),
             'language'   => '*',
         ];
 

@@ -80,7 +80,12 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
      */
     private function referenceWithoutText(int $book = 143): int
     {
-        $study = (object) ['studytitle' => 'cwm1623 migration fixture', 'published' => 0, 'language' => '*'];
+        $study = (object) [
+            'studytitle' => 'cwm1623 migration fixture',
+            'alias'      => $this->uniqueAlias('scripturemigration-study'),
+            'published'  => 0,
+            'language'   => '*',
+        ];
         $this->db->insertObject('#__bsms_studies', $study, 'id');
 
         $row = (object) [

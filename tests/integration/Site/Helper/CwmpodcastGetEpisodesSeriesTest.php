@@ -76,7 +76,7 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
     {
         $row = (object) [
             'series_text' => $title,
-            'alias'       => strtolower(str_replace(' ', '-', $title)),
+            'alias'       => $this->uniqueAlias('podcastepisodes-series'),
             'published'   => $published,
             'access'      => 1,
             'language'    => '*',
@@ -101,7 +101,7 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
     {
         $row = (object) [
             'studytitle'  => $title,
-            'alias'       => strtolower(str_replace(' ', '-', $title)),
+            'alias'       => $this->uniqueAlias('podcastepisodes-study'),
             'studydate'   => '2026-01-15 10:00:00',
             'teacher_id'  => 0,
             'series_id'   => $seriesId,

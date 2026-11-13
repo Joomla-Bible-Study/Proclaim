@@ -326,7 +326,7 @@ class Cwmthumbnail
      *
      * @return  string  Relative path, or '' when empty or refused
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     public static function mediaFieldPath(?string $value): string
     {

@@ -130,7 +130,7 @@ class CwmactionlogHelper
      *
      * @return  string  `com_proclaim.api` or `com_proclaim`.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private static function context(CMSApplicationInterface $app): string
     {

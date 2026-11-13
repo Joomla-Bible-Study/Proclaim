@@ -10,6 +10,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
@@ -152,6 +153,15 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  10.5.10
      */
     private array $taskLog = [];
+
+    /**
+     * The messages and series the unique alias task renamed, held for the
+     * email that goes out once every other task has run.
+     *
+     * @var    array<string, list<object>>
+     * @since  __DEPLOY_VERSION__
+     */
+    private array $aliasRenames = [];
 
     /**
      * When preflight ran, as a float second.
@@ -2351,6 +2361,12 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->task('Analytics index', fn () => $this->reconcileAnalyticsAggregateIndex());
         $this->task('Upload media types', fn () => $this->normaliseUploadMediaTypes());
 
+        // One alias per message and per series, then the unique index that keeps
+        // it so. Not a gated step, and on install too: a reinstall over tables an
+        // uninstall kept skips their CREATE TABLE, and a restored older backup
+        // has no index either. No-op once the index exists.
+        $this->task('Unique aliases', fn () => $this->ensureUniqueAliases());
+
         // Seeded on update as well as install: access.xml can gain a section in
         // any release, and a section with no asset is a permission the UI can
         // offer but nothing can store.
@@ -2596,6 +2612,9 @@ class com_proclaimInstallerScript extends InstallerScript
                 // Silently ignore detection failures during install
             }
         }
+
+        // Last of the tasks, so a slow mail server holds up none of the others.
+        $this->task('Alias rename email', fn () => $this->emailAliasRenames());
 
         // ⚠️ The leading "N step(s) in Ns" is parsed by build/verify-install-log.php,
         // which cross-checks it against the per-step lines. Keep it at the front.
@@ -3503,6 +3522,69 @@ class com_proclaimInstallerScript extends InstallerScript
             // Non-fatal — leave legacy tables in place rather than block the upgrade
             Log::add('dropLegacyTables: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
+    }
+
+    /**
+     * Give every message and every series its own alias, and add the unique
+     * index that keeps it so.
+     *
+     * A renamed message or series gets a new address, so each rename is written
+     * to the install log, and the administrator is shown the renamed records
+     * with links to give them clearer titles and aliases; the email goes out
+     * last, from emailAliasRenames(). The shared address keeps opening the
+     * record the router already served there. A row that had no alias only
+     * gains one, so it is logged but not reported.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function ensureUniqueAliases(): void
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $changed = Cwmalias::ensureAllUniqueAliases($db);
+
+        foreach ($changed as $table => $rows) {
+            foreach ($rows as $row) {
+                $this->logInstall(\sprintf('  alias %s %d: %s -> %s', $table, $row['id'], $row['from'], $row['to']));
+            }
+        }
+
+        $this->aliasRenames = Cwmalias::sharedRenames($db, $changed);
+        Cwmalias::announceRenames($this->aliasRenames);
+    }
+
+    /**
+     * Email the renamed messages and series to the Super Users who receive
+     * system emails, since an update run remotely shows its notices to no one.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function emailAliasRenames(): void
+    {
+        if ($this->aliasRenames === []) {
+            return;
+        }
+
+        // A mail failure is logged here, not thrown: the update itself is done.
+        try {
+            $sent = Cwmalias::emailRenames(Factory::getContainer()->get(DatabaseInterface::class), $this->aliasRenames);
+        } catch (\Throwable $e) {
+            $this->logInstall('  alias rename list not emailed: ' . $e->getMessage());
+
+            return;
+        }
+
+        if ($sent === 0) {
+            $this->logInstall('  alias rename list not emailed: no Super User receives system emails');
+
+            return;
+        }
+
+        $this->logInstall(\sprintf('  alias rename list emailed to %d Super User(s)', $sent));
+        Factory::getApplication()->enqueueMessage(Text::plural('JBS_INS_ALIASES_EMAILED', $sent), 'notice');
     }
 
     /**

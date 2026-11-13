@@ -407,6 +407,21 @@ class CwmupgradeHelper
             $steps[]  = ['name' => 'fixTeacherAliases', 'success' => false, 'detail' => $e->getMessage()];
         }
 
+        // 8a. One alias per message and per series, and the unique index on each
+        try {
+            $db      = Factory::getContainer()->get(DatabaseInterface::class);
+            $changed = Cwmalias::ensureAllUniqueAliases($db);
+            $steps[] = [
+                'name'    => 'ensureUniqueAliases',
+                'success' => true,
+                'detail'  => array_sum(array_map('count', $changed)) . ' renamed',
+            ];
+            Cwmalias::reportRenames($db, $changed);
+        } catch (\Exception $e) {
+            $errors[] = 'ensureUniqueAliases: ' . $e->getMessage();
+            $steps[]  = ['name' => 'ensureUniqueAliases', 'success' => false, 'detail' => $e->getMessage()];
+        }
+
         // 9b. Retire the legacy teacher column, if this database still has it
         try {
             $count   = CwmmigrationHelper::retireLegacyTeacherColumn();

@@ -752,13 +752,44 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         // Pattern B: /legacyview/id-alias or /legacyview/id-alias/templateid
-        if (!preg_match('#/(' . $legacyViews . ')/(\d+)[-:]([^/]+?)(?:/(\d+))?$#i', $path, $m)) {
-            return;
+        $target = $this->legacyItemRedirectPath($path);
+
+        if ($target !== null) {
+            $app->redirect(Uri::base(true) . $target, 301);
+        }
+    }
+
+    /**
+     * Work out where an old item URL redirects to: the same path with the old
+     * view segment, the id-alias and any template id replaced by the record's
+     * current alias.
+     *
+     * A view name that is really the last segment of a menu item's route is not
+     * an old view segment. Under a menu item aliased "sermons",
+     * /resources/sermons/911-rescue is a current message URL for the router to
+     * resolve, not record 911 of the old "sermons" view.
+     *
+     * @param   string  $path  The raw URI path
+     *
+     * @return  ?string  The path to redirect to, or null when this is not an old item URL
+     *
+     * @since   10.7.3
+     */
+    private function legacyItemRedirectPath(string $path): ?string
+    {
+        $legacyViews = implode('|', array_keys(self::LEGACY_VIEW_MAP));
+
+        if (!preg_match('#/(' . $legacyViews . ')/(\d+)[-:]([^/]+?)(?:/(\d+))?$#i', $path, $m, PREG_OFFSET_CAPTURE)) {
+            return null;
         }
 
-        $oldView = strtolower($m[1]);
-        $id      = (int) $m[2];
-        $alias   = $m[3];
+        if ($this->endsWithMenuRoute(substr($path, 0, $m[1][1] + \strlen($m[1][0])))) {
+            return null;
+        }
+
+        $oldView = strtolower($m[1][0]);
+        $id      = (int) $m[2][0];
+        $alias   = $m[3][0];
 
         // Determine the database table for this view type
         $tableMap = [
@@ -800,13 +831,52 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         // e.g., /resources/sermons/sermon/671-broken-but-not-destroyed/1
         //     → /resources/sermons/broken-but-not-destroyed
         // This avoids Route::_() which may not work before routing is initialised.
-        $cleanPath = preg_replace(
+        return preg_replace(
             '#/(' . $legacyViews . ')/\d+[-:][^/]+?(?:/\d+)?$#i',
             '/' . $currentAlias,
             $path
         );
+    }
 
-        $app->redirect(Uri::base(true) . $cleanPath, 301);
+    /**
+     * Whether a path ends with the route of a published site menu item.
+     *
+     * Matched as a suffix, so a base path, index.php or a language prefix in
+     * front of the route makes no difference.
+     *
+     * @param   string  $path  The path to test
+     *
+     * @return  bool
+     *
+     * @since   10.7.3
+     */
+    private function endsWithMenuRoute(string $path): bool
+    {
+        $path  = strtolower($path);
+        $alias = substr($path, strrpos($path, '/') + 1);
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()
+                ->select($db->quoteName('path'))
+                ->from($db->quoteName('#__menu'))
+                ->where($db->quoteName('client_id') . ' = 0')
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('alias') . ' = :alias')
+                ->bind(':alias', $alias);
+
+            $routes = $db->setQuery($query)->loadColumn();
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        foreach ($routes as $route) {
+            if (str_ends_with($path, '/' . strtolower($route))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
