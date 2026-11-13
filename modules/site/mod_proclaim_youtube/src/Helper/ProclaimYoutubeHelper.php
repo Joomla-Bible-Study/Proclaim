@@ -102,7 +102,9 @@ class ProclaimYoutubeHelper implements DatabaseAwareInterface
                 return null;
             }
 
-            return $fileCached;
+            // The poll reloads the page when the stream goes live, so the page
+            // must render what the poll found, or each poll reloads it again.
+            return $this->withPolledStatus($fileCached, $serverId);
         }
 
         $this->freshFetch = true;
@@ -207,6 +209,57 @@ class ProclaimYoutubeHelper implements DatabaseAwareInterface
         CwmyoutubeFileCache::storeVideoCache($cacheKey, $cacheData, $cacheTime);
 
         return $video;
+    }
+
+    /**
+     * The video with the live status the browser's poll last found for it
+     *
+     * Read from the poll's own cache, so no API call is made. A status kept
+     * only because the quota ran out is a guess, and is not applied.
+     *
+     * @param   array  $video     Video data from the video cache
+     * @param   int    $serverId  Server ID
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function withPolledStatus(array $video, int $serverId): array
+    {
+        if (empty($video['videoId'])) {
+            return $video;
+        }
+
+        $status = CwmyoutubeFileCache::getVideoCache(self::statusCacheKey($serverId, $video['videoId']));
+
+        if ($status === null || empty($status['success']) || !empty($status['quotaExceeded'])) {
+            return $video;
+        }
+
+        $video['isLive']     = (bool) ($status['isLive'] ?? false);
+        $video['isUpcoming'] = (bool) ($status['isUpcoming'] ?? false);
+
+        if (!empty($status['scheduledStartTime'])) {
+            $video['scheduledStartTime'] = $status['scheduledStartTime'];
+        }
+
+        return $video;
+    }
+
+    /**
+     * The file-cache key for a video's live status, written by the status
+     * poll and read when the page renders
+     *
+     * @param   int     $serverId  Server ID
+     * @param   string  $videoId   YouTube video ID; empty when the page shows none
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function statusCacheKey(int $serverId, string $videoId): string
+    {
+        return 'mod_proclaim_youtube_status_' . $serverId . '_' . $videoId;
     }
 
     /**
@@ -644,7 +697,7 @@ class ProclaimYoutubeHelper implements DatabaseAwareInterface
         }
 
         // Check server-side cache to avoid redundant API calls (2-minute TTL)
-        $statusCacheKey = 'mod_proclaim_youtube_status_' . $serverId . '_' . $videoId;
+        $statusCacheKey = self::statusCacheKey($serverId, $videoId);
         $cachedStatus   = CwmyoutubeFileCache::getVideoCache($statusCacheKey);
 
         if ($cachedStatus !== null) {
