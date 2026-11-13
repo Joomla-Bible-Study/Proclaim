@@ -15,7 +15,7 @@
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\CwmrouteHelper;
-use CWM\Module\ProclaimYoutube\Site\Helper\YoutubeHelper;
+use CWM\Module\ProclaimYoutube\Site\Helper\ProclaimYoutubeHelper;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -50,7 +50,7 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
     <?php if ($video && $embedUrl) : ?>
         <?php if ($showLiveBadge) : ?>
             <?php
-            $statusToken = YoutubeHelper::generateStatusToken($serverId, $video['videoId'] ?? '');
+            $statusToken = ProclaimYoutubeHelper::generateStatusToken($serverId, $video['videoId'] ?? '');
             $ajaxUrl     = Uri::base() . 'index.php?option=com_ajax&module=proclaim_youtube&method=getStatus&format=json'
                 . '&server_id=' . $serverId
                 . '&video_id=' . urlencode($video['videoId'] ?? '')

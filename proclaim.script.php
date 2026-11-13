@@ -285,6 +285,8 @@ class com_proclaimInstallerScript extends InstallerScript
         '/plugins/finder/proclaim/language/de-DE/de-DE.plg_finder_biblestudy.sys.ini',
         // Module files removed in 10.1.0
         '/modules/mod_proclaim_youtube/helper.php',
+        // Renamed ProclaimYoutubeHelper, the name com_ajax asks the module for
+        '/modules/mod_proclaim_youtube/src/Helper/YoutubeHelper.php',
         // Dead helper classes removed in 10.1.0
         '/administrator/components/com_proclaim/src/Helper/Cwmsearchfilters.php',
         // Dead site server picker removed in 10.1.0

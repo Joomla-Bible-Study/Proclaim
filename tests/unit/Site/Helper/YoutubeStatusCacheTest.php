@@ -11,7 +11,7 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use CWM\Module\ProclaimYoutube\Site\Helper\YoutubeHelper;
+use CWM\Module\ProclaimYoutube\Site\Helper\ProclaimYoutubeHelper;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\Input\Input;
@@ -71,10 +71,10 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
         CwmyoutubeFileCache::storeVideoCache(
             'mod_proclaim_youtube_verify_' . self::SERVER_ID . '_' . self::VIDEO_ID,
             ['isLive' => true, 'isUpcoming' => false, 'scheduledStartTime' => '2026-11-15T15:00:00Z'],
-            YoutubeHelper::STATUS_CACHE_TTL
+            ProclaimYoutubeHelper::STATUS_CACHE_TTL
         );
 
-        $video = (new YoutubeHelper())->verifyLiveStatus(
+        $video = (new ProclaimYoutubeHelper())->verifyLiveStatus(
             ['videoId' => self::VIDEO_ID, 'isLive' => false, 'isUpcoming' => true],
             self::SERVER_ID
         );
@@ -97,7 +97,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
         CwmyoutubeFileCache::storeVideoCache(
             'mod_proclaim_youtube_status_' . self::SERVER_ID . '_' . self::VIDEO_ID,
             $cached,
-            YoutubeHelper::STATUS_CACHE_TTL
+            ProclaimYoutubeHelper::STATUS_CACHE_TTL
         );
 
         $this->assertSame($cached, $this->poll(self::VIDEO_ID));
@@ -156,10 +156,10 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
             $app->method('getInput')->willReturn(new Input([
                 'server_id' => self::SERVER_ID,
                 'video_id'  => $videoId,
-                'token'     => YoutubeHelper::generateStatusToken(self::SERVER_ID, $tokenFor ?? $videoId),
+                'token'     => ProclaimYoutubeHelper::generateStatusToken(self::SERVER_ID, $tokenFor ?? $videoId),
             ]));
 
-            return YoutubeHelper::getStatusAjax();
+            return (new ProclaimYoutubeHelper())->getStatusAjax();
         } finally {
             Factory::$application = $saved;
         }
