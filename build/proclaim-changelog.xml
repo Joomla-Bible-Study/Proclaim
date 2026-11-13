@@ -26,37 +26,20 @@
         <type>package</type>
         <version>10.7.4</version>
         <date>2026-11-13</date>
-        <note>
-            <item>Where records share an alias, the one the address already showed keeps it:</item>
-            <item>Each of the others gets a numbered alias, such as christmas-program-2, and</item>
-            <item>A message or series with no alias gets one made from its title.</item>
-            <item>Proclaim lists every record it renamed, with a link to edit each one. The</item>
-            <item>A message can&#x27;t be saved with an alias another message already has, and the</item>
-            <item>An alias made from the title takes the next free number, with a warning, as</item>
-            <item>Save as Copy gives the copy a numbered title and a matching alias: &quot;The Road</item>
-            <item>The setup wizard, the CSV import, and the PreachIt and SermonSpeaker</item>
-            <item>Restoring an older backup repairs shared aliases the same way, and lists its</item>
-            <item>The email to the template&#x27;s Moderation Notification Email address when a</item>
-            <item>The email for each new comment when the template&#x27;s **Email when comments</item>
-            <item>The checks run every Status Poll Interval (two minutes by default),</item>
-            <item>Every visitor&#x27;s checks share one answer for two minutes, so a busy page costs</item>
-            <item>A check only answers about the video the page is showing, so it can&#x27;t be</item>
-            <item>chore: build-tools 1.39.0 so ARS items get past ModSecurity; clear the 10.7.3 notes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2282</item>
-            <item>fix: give every message and series its own alias by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2283</item>
-            <item>fix: number a copied message as the next episode in its series by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2285</item>
-            <item>feat: list renamed messages and series so administrators can tidy them by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2286</item>
-            <item>fix: send comment emails through Joomla&#x27;s mailer factory by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2288</item>
-            <item>fix: keep the YouTube module&#x27;s status cache in its file cache by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2290</item>
-            <item>fix: let com_ajax answer the YouTube module&#x27;s status poll by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2292</item>
-            <item>ci: bump github/codeql-action from 4.39.1 to 4.39.3 in the actions-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2272</item>
-            <item>chore(deps): bump the composer-minor-and-patch group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2273</item>
-            <item>chore(deps-dev): bump the npm-minor-and-patch group across 1 directory with 7 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2274</item>
-            <item>fix: render the YouTube module&#x27;s video with the status its poll found by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2294</item>
-            <item>docs: write the 10.7.4 release notes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2295</item>
-            <item>chore(deps): move glob and minimatch to their fixed releases by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2296</item>
-            <item>chore: open the 10.7.4 release cycle by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2297</item>
-            <item>fix: let a fresh install&#x27;s postflight load Proclaim&#x27;s own classes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2299</item>
-        </note>
+        <fix>
+            <item>Two messages, or two series, could share an alias, and then only one of them could be reached at their address. The update gives each its own alias, and saving an alias that is already in use is now refused.</item>
+            <item>Save as Copy on a message with an episode number in a series was refused. The copy now becomes the next episode in the series.</item>
+            <item>Comment notification emails had not been sent on Joomla 5 and 6 since 10.1.0. The moderation email and the new-comment email are sent again.</item>
+            <item>The YouTube module's live badge never updated without a reload, and "Notify me when live" never notified anyone. When the stream starts, the badge now switches to LIVE NOW, visitors who asked are notified, and the page reloads once to show the stream.</item>
+            <item>A fresh install no longer reports that two of its setup steps did not complete.</item>
+        </fix>
+        <addition>
+            <item>After the update, Proclaim lists every message and series whose alias it renamed, with a link to edit each, in a notice and in an email to the Super Users who receive system emails.</item>
+            <item>Save as Copy gives the copy a numbered title and a matching alias, such as "The Road to Emmaus (2)".</item>
+        </addition>
+        <change>
+            <item>YouTube live-status checks are cached for two minutes, shared by every visitor, and answer only about the video the page shows, so a busy page uses one unit of YouTube quota every two minutes.</item>
+        </change>
     </changelog>
 
     <!-- ============================================================ -->
@@ -67,61 +50,30 @@
         <type>package</type>
         <version>10.7.3</version>
         <date>2026-11-13</date>
+        <security>
+            <item>A podcast feed rebuilt while an administrator was logged in could list messages meant only for registered users or other restricted groups. Feeds are now always built as a guest would see them; rebuild each feed once after updating.</item>
+            <item>The YouTube server addon's bundled Guzzle HTTP library is updated to 7.15.2, which fixes GHSA-v5mv-p594-2x33 and GHSA-f7vp-7xgx-4w4r.</item>
+        </security>
+        <fix>
+            <item>The scheduled podcast task crashed whenever it ran from the command line, such as from cron.</item>
+            <item>A message whose alias starts with a number, such as "911 Rescue" or "1 John", no longer redirects to a page that does not exist.</item>
+            <item>When two messages shared an alias and one of them was trashed or unpublished, its link could open the hidden one and show "Message Not Found".</item>
+            <item>Older message links that include the message number now forward to the message's current address. Teacher and series links do the same.</item>
+            <item>With caching turned on, a "Message Not Found" page now always tells search engines the page does not exist.</item>
+            <item>Message and series images whose filename contains a space no longer fail validation on save, and show on the site again.</item>
+            <item>Migrating legacy servers no longer drops a file's remote host, and migrated servers get their permission records.</item>
+            <item>The single message page no longer returns an error for a message with no teacher.</item>
+            <item>The Proclaim module's simple layout no longer shows blank scripture and media, and its teacher filter no longer returns other teachers' messages.</item>
+            <item>Structured data (Schema.org) for a message is no longer printed twice, and agrees between the edit form and the front end.</item>
+            <item>The REST API answers "not found" rather than a server error for a media file or server that does not exist.</item>
+            <item>Admin forms: multi-select filters use the searchable picker again, numeric settings are numeric again, closing the series picker no longer leaves a series locked, and stored location and icon choices show as selected.</item>
+        </fix>
+        <change>
+            <item>Legacy-type servers can no longer be chosen for new media. Media already on one keeps working and can still be edited.</item>
+            <item>The custom series list layouts are retired in favor of the standard ones, which every template already supports.</item>
+        </change>
         <note>
-            <item>Under a menu item whose alias is a word like sermons or teachers, a</item>
-            <item>When two messages shared an alias and one of them was trashed or unpublished,</item>
-            <item>Older links that include the message number, such as</item>
-            <item>Migrating legacy servers could drop a file&#x27;s remote host, so a migrated</item>
-            <item>Legacy-type servers can no longer be chosen for new media. Media already</item>
-            <item>The single message page returned an error for a message with no teacher.</item>
-            <item>The custom series list layout returned an error; the custom series</item>
-            <item>The Proclaim module, in its simple layout, showed blank scripture and</item>
-            <item>Structured data (Schema.org) for a message could be printed twice, or</item>
-            <item>The REST API now answers &quot;not found&quot; rather than a server error for a</item>
-            <item>Multi-select filters use the searchable chip picker again instead of a plain</item>
-            <item>Numeric settings were silently accepting any text; they are numeric fields</item>
-            <item>Closing the series picker popup without choosing no longer leaves the series</item>
-            <item>The multi-campus location default, and older stored icon choices, now show as</item>
-            <item>Two fields that displayed a raw language key, and the YouTube module&#x27;s Yes/No</item>
-            <item>Fix PSR-4 namespace drift on 8 test classes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2186</item>
-            <item>fix: legacy migration keeps the remote host of plain files by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2228</item>
-            <item>E2E: give the API media round-trip a supported server to attach to (#2224) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2225</item>
-            <item>chore(deps-dev): bump cwm/build-tools from v1.37.0 to v1.38.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2226</item>
-            <item>Replace seed-testsite-menus with a menus seed layer; the gate renders ten views (#2220) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2221</item>
-            <item>Fix 500 on the sermon page for a message with no teacher (#2222) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2223</item>
-            <item>fix(build): seed-dev-data creates its own media server by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2229</item>
-            <item>feat(build): seed one server per addon type by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2230</item>
-            <item>feat(build): seed awkward content, and check it as a guest by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2231</item>
-            <item>fix: mod_proclaim simple layout shows scripture and media, and a null button no longer 500s by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2234</item>
-            <item>feat(build): seed module instances, and check them as a guest by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2235</item>
-            <item>ci: bump github/codeql-action from 4.38.1 to 4.38.2 in the actions-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2194</item>
-            <item>chore(deps-dev): bump the npm-minor-and-patch group with 3 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2192</item>
-            <item>chore(deps-dev): bump brace-expansion from 5.0.9 to 5.0.12 by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2199</item>
-            <item>feat(build): seed the Proclaim plugins, and check what a guest sees of them by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2237</item>
-            <item>feat(build): seed test accounts, and check the access rules as each one by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2238</item>
-            <item>feat(build): seed the Smart Search index, and search as each role by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2239</item>
-            <item>fix(podcast): build the feed for the guest, not for whoever runs the build by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2241</item>
-            <item>feat(build): seed scheduled tasks, run for real by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2242</item>
-            <item>fix(modules): filter by the chosen teacher, not by the access levels (#2233) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2250</item>
-            <item>fix(schemaorg): print a saved schema row once, whichever context it is stored under (#2236) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2251</item>
-            <item>feat(build): seed a template for each shipped layout, and check each one renders by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2254</item>
-            <item>fix(site): finish retiring expert mode for the series pages (#2253) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2255</item>
-            <item>fix(build): seed the teacher cards and list through Show Teacher Studies by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2256</item>
-            <item>docs: trim the parts of CLAUDE.md a session can read from the code by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2257</item>
-            <item>fix(api): answer 404, not 500, for a media file or server that does not exist (#2165) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2258</item>
-            <item>ci: bump github/codeql-action from 4.38.2 to 4.39.1 in the actions-minor-and-patch group across 1 directory by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2246</item>
-            <item>chore(deps): bump the composer-minor-and-patch group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2259</item>
-            <item>chore(deps): bump the npm-minor-and-patch group across 1 directory with 10 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2260</item>
-            <item>chore(deps-dev): bump source-map-js from 1.2.1 to 1.2.2 by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2247</item>
-            <item>fix(youtube): ship the patched Guzzle 7.15.2 the lock file already names by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2262</item>
-            <item>fix(build): fetch the scripturelinks submodule over HTTPS like its sibling by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2263</item>
-            <item>chore(deps-dev): bump serialize-javascript from 7.0.5 to 7.1.4 by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2261</item>
-            <item>fix(images): decode a media-field image path before using it as a file by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2267</item>
-            <item>docs: write the 10.7.3 release notes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2268</item>
-            <item>chore: open the 10.7.3 release cycle by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2269</item>
-            <item>fix(router): resolve message aliases that look like ids or legacy URLs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2276</item>
-            <item>docs: add the message-link fixes to the 10.7.3 release notes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2279</item>
-            <item>test(a11y): exclude third-party embeds from site scans, assert their titles by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2280</item>
+            <item>Updated scripture library (lib_cwmscripture 1.1.24, ScriptureLinks 1.2.17), API-originated action-log entries are now filterable, and dependency updates across the board.</item>
         </note>
     </changelog>
 
