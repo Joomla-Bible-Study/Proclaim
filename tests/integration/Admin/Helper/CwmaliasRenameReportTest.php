@@ -13,7 +13,6 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Mail\Mail;
 use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
@@ -152,7 +151,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
         $mail = $this->recordingMailer(true);
         $sent = Cwmalias::emailRenames($this->db, Cwmalias::sharedRenames($this->db, [
             '#__bsms_studies' => [['id' => $id, 'from' => 'zz-christmas-program', 'to' => 'zz-christmas-program-2']],
-        ]), $this->factoryFor($mail));
+        ]), $this->mailerFactoryFor($mail));
 
         $bcc = array_column($mail->getBccAddresses(), 0);
 
@@ -193,12 +192,12 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
             $config->set('live_site', '');
             Uri::reset();
             $unknown = $this->recordingMailer(true);
-            Cwmalias::emailRenames($this->db, $renames, $this->factoryFor($unknown));
+            Cwmalias::emailRenames($this->db, $renames, $this->mailerFactoryFor($unknown));
 
             $config->set('live_site', 'https://example.test');
             Uri::reset();
             $known = $this->recordingMailer(true);
-            Cwmalias::emailRenames($this->db, $renames, $this->factoryFor($known));
+            Cwmalias::emailRenames($this->db, $renames, $this->mailerFactoryFor($known));
         } finally {
             $config->set('live_site', $saved);
             Uri::reset();
@@ -241,7 +240,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
 
         Cwmalias::emailRenames($this->db, Cwmalias::sharedRenames($this->db, [
             '#__bsms_studies' => [['id' => $id, 'from' => 'zz-christmas-program', 'to' => 'zz-christmas-program-2']],
-        ]), $this->factoryFor($this->recordingMailer(false)));
+        ]), $this->mailerFactoryFor($this->recordingMailer(false)));
     }
 
     /**
@@ -259,57 +258,9 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
 
         Cwmalias::reportRenames($this->db, [
             '#__bsms_studies' => [['id' => $id, 'from' => 'zz-christmas-program', 'to' => 'zz-christmas-program-2']],
-        ], $this->factoryFor($mail));
+        ], $this->mailerFactoryFor($mail));
 
         $this->assertSame(1, $mail->sends);
-    }
-
-    /**
-     * A real Mail whose send() records the call instead of connecting, or
-     * fails as an unreachable SMTP server does.
-     *
-     * @param   bool  $succeed  Whether send() succeeds
-     *
-     * @return  Mail
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    private function recordingMailer(bool $succeed): Mail
-    {
-        return new class ($succeed) extends Mail {
-            public int $sends = 0;
-
-            public function __construct(private readonly bool $succeed)
-            {
-                parent::__construct(true);
-            }
-
-            public function Send()
-            {
-                $this->sends++;
-
-                if (!$this->succeed) {
-                    throw new \RuntimeException('SMTP Error: Could not connect to SMTP host.');
-                }
-
-                return true;
-            }
-        };
-    }
-
-    /**
-     * @param   Mail  $mail  The mailer the factory hands out
-     *
-     * @return  MailerFactoryInterface
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    private function factoryFor(Mail $mail): MailerFactoryInterface
-    {
-        $factory = $this->createStub(MailerFactoryInterface::class);
-        $factory->method('createMailer')->willReturn($mail);
-
-        return $factory;
     }
 
     /**
