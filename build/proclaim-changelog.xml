@@ -88,11 +88,11 @@
         <note>
             <item>Accept jpeg and webp uploads on sites carrying an old policy (#2146) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2148</item>
             <item>Gate template import/export on the template-code section permission (#2149) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2150</item>
-            <item>Show each server&#x27;s type in the Servers list, and flag the legacy ones (#2152) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2153</item>
+            <item>Show each server's type in the Servers list, and flag the legacy ones (#2152) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2153</item>
             <item>Legacy-server deprecation runway: migrate button, edit-screen banner, health deadline (#2152) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2154</item>
             <item>Media write API: fix PATCH 500, unreachable delete, write-only podcast_id, createdate drift (#2135) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2166</item>
             <item>Fix the servertype dialog flake at its actual root cause (#2122) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2168</item>
-            <item>Scope CwmmessageModel::save()&#x27;s a_id override to the site client by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2185</item>
+            <item>Scope CwmmessageModel::save()'s a_id override to the site client by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2185</item>
         </note>
     </changelog>
 
@@ -118,10 +118,10 @@
             <item>chore(deps): cwm/build-tools 1.32.1 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2039</item>
             <item>chore(deps-dev): bump the npm-minor-and-patch group with 5 updates by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2024</item>
             <item>ci: bump github/codeql-action from 4.37.8 to 4.37.9 in the actions-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2027</item>
-            <item>chore(deps): allow @parcel/watcher&#x27;s install script by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2040</item>
+            <item>chore(deps): allow @parcel/watcher's install script by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2040</item>
             <item>fix(media): serve a file from protected storage instead of linking to it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2042</item>
             <item>fix(wiki): derive the requirement columns instead of carrying them through by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2048</item>
-            <item>fix(media): stop repeating the site&#x27;s base path when a URL is mapped to disk by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2049</item>
+            <item>fix(media): stop repeating the site's base path when a URL is mapped to disk by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2049</item>
             <item>fix(health): look inside the protected folder, not just at its top level by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2051</item>
             <item>fix(analytics): count a play or download only when the visitor may have it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2052</item>
             <item>build: verify a site on the previous release is actually offered this one by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2053</item>
@@ -134,29 +134,29 @@
             <item>fix(podcast): leave protected files out of the feed, and say so in System Health by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2060</item>
             <item>feat(admin): make the restricted-media list explain why each file is on it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2062</item>
             <item>refactor(query): build OR groups with the builder instead of typing brackets by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2063</item>
-            <item>refactor(query): phase 1 of the bind conversion — the four heaviest files by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2064</item>
-            <item>fix(admin): give the menu preset&#x27;s quicktasks their missing strings by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2065</item>
-            <item>chore(language): sync the six locales with this cycle&#x27;s new strings by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2066</item>
+            <item>refactor(query): phase 1 of the bind conversion - the four heaviest files by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2064</item>
+            <item>fix(admin): give the menu preset's quicktasks their missing strings by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2065</item>
+            <item>chore(language): sync the six locales with this cycle's new strings by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2066</item>
             <item>feat(admin): swap server-type fields in place instead of reloading (#2037) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2067</item>
             <item>refactor(query): whitelist ORDER BY columns instead of a no-op escape (#1994 phase 3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2069</item>
-            <item>refactor(query): bind the schema.org helper&#x27;s context/schema values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2070</item>
-            <item>refactor(query): bind the asset-lib&#x27;s convertible values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2071</item>
-            <item>refactor(query): bind the setup wizard&#x27;s params/type/menu values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2072</item>
+            <item>refactor(query): bind the schema.org helper's context/schema values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2070</item>
+            <item>refactor(query): bind the asset-lib's convertible values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2071</item>
+            <item>refactor(query): bind the setup wizard's params/type/menu values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2072</item>
             <item>fix(stats): date-range filter used a non-existent column, + bind Cwmstats values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2073</item>
-            <item>refactor(query): bind the platform-stats sync&#x27;s values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2074</item>
-            <item>refactor(query): bind the location wizard&#x27;s params/rules values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2081</item>
-            <item>refactor(query): bind the guided-tour helper&#x27;s uid/title_key lookups (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2082</item>
-            <item>refactor(query): bind the YouTube addon&#x27;s params/tag values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2083</item>
-            <item>refactor(query): finish the Phase-1 builder value binds — the convertible tail (#1994) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2084</item>
+            <item>refactor(query): bind the platform-stats sync's values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2074</item>
+            <item>refactor(query): bind the location wizard's params/rules values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2081</item>
+            <item>refactor(query): bind the guided-tour helper's uid/title_key lookups (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2082</item>
+            <item>refactor(query): bind the YouTube addon's params/tag values (#1994 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2083</item>
+            <item>refactor(query): finish the Phase-1 builder value binds - the convertible tail (#1994) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2084</item>
             <item>fix(admin,site): two runtime fatals from symbols that never resolve (#2075, #2076) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2085</item>
             <item>fix(podcast): verify TLS on the enclosure probe (#2078) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2086</item>
             <item>fix(admin): keep UTF-8 intact when trimming dangling separators (#2077) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2087</item>
             <item>chore: clear the safe half of the Qodana housekeeping list (#2079) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2088</item>
-            <item>docs(claude-md): state the Joomla 5.4 floor instead of &#x27;Joomla 4+&#x27; by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2080</item>
+            <item>docs(claude-md): state the Joomla 5.4 floor instead of 'Joomla 4+' by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2080</item>
             <item>fix(site): drop the series dropdown that reads data the view never builds (#2079) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2090</item>
             <item>chore: pin the scripture submodules to lib 1.1.21 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2091</item>
             <item>chore: pin scripturelinks to the released 1.2.14 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2092</item>
-            <item>refactor(admin): send CwmadminController&#x27;s JSON through the shared trait (#2089) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2093</item>
+            <item>refactor(admin): send CwmadminController's JSON through the shared trait (#2089) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2093</item>
             <item>ci: run the PR checks on pull requests into main by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2095</item>
             <item>chore(deps-dev): bump friendsofphp/php-cs-fixer from 3.95.24 to 3.95.25 in the composer-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2102</item>
             <item>ci: bump github/codeql-action from 4.37.9 to 4.38.0 in the actions-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/2104</item>
@@ -177,8 +177,8 @@
             <item>Keep the params the settings form does not define (#2134) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2136</item>
             <item>Read saved form data under the key the controller writes (#2127) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2137</item>
             <item>Report Schema.org records the edit form cannot see (#2138) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2140</item>
-            <item>Take the teacher form&#x27;s fallback from getItem(), not the property it fills (#2139) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2141</item>
-            <item>Keep the evidence when an E2E test is flaky, and wait for the dialog&#x27;s document (#2122) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2142</item>
+            <item>Take the teacher form's fallback from getItem(), not the property it fills (#2139) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2141</item>
+            <item>Keep the evidence when an E2E test is flaky, and wait for the dialog's document (#2122) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2142</item>
             <item>Say what granting template-code edit actually grants (#2099) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2143</item>
             <item>Let the System Health summary chips filter the report by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2144</item>
         </note>
@@ -193,23 +193,23 @@
         <version>10.7.0</version>
         <date>2026-09-15</date>
         <note>
-            <item>files are served from protected storage rather than linked to (#2042), and the site&#x27;s base path is no longer repeated when a URL is mapped to disk (#2045/#2049);</item>
+            <item>files are served from protected storage rather than linked to (#2042), and the site's base path is no longer repeated when a URL is mapped to disk (#2045/#2049);</item>
             <item>Proclaim can move a file in itself, instead of telling you to do it by hand (#2041/#2059);</item>
             <item>the podcast feed no longer emits an enclosure for a protected file, and System Health says so (#2044/#2060);</item>
             <item>System Health looks inside the folder rather than at its top level, so the count is right (#2046/#2051);</item>
             <item>the restricted-media list explains why each file is on it and what state it is in (#2061/#2062).</item>
-            <item>Setup wizard fatal creating the podcast — Factory::getUri() is a Joomla 3 method (#2075). While testing it, a second defect surfaced: the insert omitted podcastlink, which is NOT NULL on sites upgraded through the era it was added, and a swallowing catch turned that into *&quot;wizard silently creates no podcast&quot;*. Both dev databases are in that state, so it likely affects most upgraded installs.</item>
-            <item>500 for a guest viewing an unpublished sermon — Text was never imported (#2076).</item>
-            <item>UTF-8 titles corrupted by the description cleanup: a dash-class regex without /u ate the trailing byte of À, Ô, œ, Cyrillic Г/Д (#2077).</item>
-            <item>TLS verification was disabled on the podcast enclosure probe (#2078) — an on-path attacker could dictate the enclosure length and type written into the feed. Now uses Joomla&#x27;s HTTP client, so verification follows core config.</item>
+            <item>Setup wizard fatal creating the podcast - Factory::getUri() is a Joomla 3 method (#2075). While testing it, a second defect surfaced: the insert omitted podcastlink, which is NOT NULL on sites upgraded through the era it was added, and a swallowing catch turned that into *"wizard silently creates no podcast"*. Both dev databases are in that state, so it likely affects most upgraded installs.</item>
+            <item>500 for a guest viewing an unpublished sermon - Text was never imported (#2076).</item>
+            <item>UTF-8 titles corrupted by the description cleanup: a dash-class regex without /u ate the trailing byte of accented Latin and Cyrillic letters (#2077).</item>
+            <item>TLS verification was disabled on the podcast enclosure probe (#2078) - an on-path attacker could dictate the enclosure length and type written into the feed. Now uses Joomla's HTTP client, so verification follows core config.</item>
             <item>Play/download events were logged before the access check, counting views the visitor could not have (#2047).</item>
             <item>Choosing a server type no longer submits the form and reloads the page, losing typed work (#2037).</item>
             <item>Cross-chapter passages (Genesis 1:26-2:3 and every reference of that shape) threw instead of returning verses on locally-stored translations.</item>
             <item>*Remove all translations* and the provider clean-up fatalled on methods that were never written; both now work, and that screen reports failures instead of hanging.</item>
-            <item>Query modernisation (#1994) completed — every quote($var) on a builder query is bound; ORDER BY is whitelisted rather than wrapped in a no-op escape(); OR groups use the builder. Phase 4 was retired with the MySQL-only decision (#1857).</item>
-            <item>#2089 — CwmadminController&#x27;s 155 hand-rolled JSON responses now go through the shared trait. ⚠️ Payloads were verified byte-identical programmatically (155 before, 155 after, zero differing), so no JavaScript consumer is affected.</item>
+            <item>Query modernisation (#1994) completed - every quote($var) on a builder query is bound; ORDER BY is whitelisted rather than wrapped in a no-op escape(); OR groups use the builder. Phase 4 was retired with the MySQL-only decision (#1857).</item>
+            <item>#2089 - CwmadminController's 155 hand-rolled JSON responses now go through the shared trait. Note: Payloads were verified byte-identical programmatically (155 before, 155 after, zero differing), so no JavaScript consumer is affected.</item>
             <item>Six locales synced; menu preset quicktask strings added.</item>
-            <item>Dependency bumps — github/codeql-action v4.37.9 → v4.38.0 and friendsofphp/php-cs-fixer v3.95.24 → v3.95.25. Workflow file and composer.lock only; neither reaches the shipped payload.</item>
+            <item>Dependency bumps - github/codeql-action v4.37.9 to v4.38.0 and friendsofphp/php-cs-fixer v3.95.24 to v3.95.25. Workflow file and composer.lock only; neither reaches the shipped payload.</item>
             <item>Release review: v10.7.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2094</item>
             <item>release: merge development into main for 10.7.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2107</item>
         </note>
@@ -225,12 +225,12 @@
         <date>2026-09-01</date>
         <note>
             <item>The site-wide Custom CSS tab showed a description and no editor. It never worked, no site could have saved anything in it, and it has been removed. Custom CSS on a template is unaffected and is where styling belongs.</item>
-            <item>The Comments screen offered an Access field that could not appear. Comments take their visibility from the message they belong to, which is now also how the moderation list decides what to show you — previously it could hide comments left by visitors from anyone who was not a Super User.</item>
+            <item>The Comments screen offered an Access field that could not appear. Comments take their visibility from the message they belong to, which is now also how the moderation list decides what to show you - previously it could hide comments left by visitors from anyone who was not a Super User.</item>
             <item>fix(health): stop reporting trashed content as work to do by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2021</item>
             <item>fix(health): say what to do about a finding, and link where it can be seen by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2022</item>
             <item>refactor(admin): drop the site-wide Custom CSS tab, which never worked by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2026</item>
             <item>fix(admin): render the fields the templates ask for, and guard the whole class by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2030</item>
-            <item>fix(site): a custom CSS sheet of &quot;0&quot; no longer fatals every front-end page by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2034</item>
+            <item>fix(site): a custom CSS sheet of "0" no longer fatals every front-end page by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2034</item>
             <item>fix(servers): three live bugs on the servers screens by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2036</item>
             <item>feat(media): filter the list to restricted files, and point the findings at it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2032</item>
             <item>chore(release): open the 10.6.3 cycle, with notes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/2038</item>
@@ -278,10 +278,10 @@
         <version>10.6.0</version>
         <date>2026-08-29</date>
         <fix>
-            <item>Playlists are now included in Proclaim&#x27;s permission maintenance. Their permission records were invisible to the Assets screen and to the clean-up tools, and a backup could not reattach them.</item>
-            <item>The layout editor&#x27;s element controls no longer run off the edge of a narrow card. They collapse into a menu instead, so every control stays reachable — including by keyboard.</item>
+            <item>Playlists are now included in Proclaim's permission maintenance. Their permission records were invisible to the Assets screen and to the clean-up tools, and a backup could not reattach them.</item>
+            <item>The layout editor's element controls no longer run off the edge of a narrow card. They collapse into a menu instead, so every control stays reachable - including by keyboard.</item>
             <item>The permissions Clean Up screen now shows the section rows it would remove, instead of reporting fewer than it was about to act on.</item>
-            <item>Simple Mode no longer discards a message&#x27;s description, scripture references or teachers when saving.</item>
+            <item>Simple Mode no longer discards a message's description, scripture references or teachers when saving.</item>
             <item>One copy of each translation is shipped, rather than two that could disagree.</item>
         </fix>
     </changelog>
@@ -302,7 +302,7 @@
             <item>fix: stop the installer pointing sites at the 9.x update stream by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1852</item>
             <item>feat: time the rest of postflight, not just the migrations by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1853</item>
             <item>fix: a failed postflight step no longer rolls back the install by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1855</item>
-            <item>fix: retire the component&#x27;s update sites only against a working package one by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1856</item>
+            <item>fix: retire the component's update sites only against a working package one by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1856</item>
             <item>fix: let a replayed migration skip work already applied instead of aborting by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1858</item>
             <item>docs: record that issues are tracked on the project board, not a milestone by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1859</item>
             <item>fix: restore the scripture stack after clearing consumers, instead of guarding it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1861</item>
@@ -326,7 +326,7 @@
             <item>refactor(build): migrate verify-migrations to TestSite, fixing a second-install fatal by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1891</item>
             <item>refactor(build): migrate verify-frontend to TestSite, fixing the same second-install fatal by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1892</item>
             <item>refactor(build): migrate seed-testsite-menus to TestSite, retiring esc() by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1893</item>
-            <item>fix(build): make the scripture upgrade probe&#x27;s diagnostics reachable again by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1894</item>
+            <item>fix(build): make the scripture upgrade probe's diagnostics reachable again by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1894</item>
             <item>fix(build): revive 22 dead guards in the scripture uninstall probe by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1895</item>
             <item>chore(ci): stop writing database keys nothing reads into build.properties by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1897</item>
             <item>chore: drop the database keys from the committed properties template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1898</item>
@@ -398,7 +398,7 @@
             <item>chore: put the scripturelinks pin back on the v1.2.2 tag by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1704</item>
             <item>feat: give the test site a front end, and check that it renders (#1701) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1705</item>
             <item>fix: stop Database Maintenance reporting an index we removed on purpose (#1706) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1707</item>
-            <item>chore(deps): intl-tel-input 29.1.2 → 29.2.2 (#1696) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1710</item>
+            <item>chore(deps): intl-tel-input 29.1.2 to 29.2.2 (#1696) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1710</item>
             <item>chore: pin cwm/build-tools v1.15.1 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1711</item>
             <item>chore(deps): eslint 10.8.1, terser 5.49.2 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1713</item>
             <item>chore(deps): retire @babel/cli and @rollup/plugin-babel, which nothing calls by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1715</item>
@@ -410,19 +410,19 @@
             <item>feat: make the admin toolbars ask the section, not the component (#1653 phase 1.5b) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1716</item>
             <item>feat: give section permissions their own screen, so they can be saved (#1653 phase 2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1717</item>
             <item>feat: gate create and edit on the section, not the component (#1653 phase 3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1718</item>
-            <item>fix: drop share, cssedit and style — three sections that govern nothing (#1653) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1720</item>
+            <item>fix: drop share, cssedit and style - three sections that govern nothing (#1653) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1720</item>
             <item>feat: parent item assets to their section, so section rules reach them (#1653) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1721</item>
             <item>fix: correct the three asset names that disagreed with access.xml (#1653) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1722</item>
             <item>feat: custom CSS for Proclaim, site-wide and per template (#1719) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1725</item>
-            <item>fix: strip a failed save&#x27;s asset, and close the gap when removing one (#1723, #1724) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1726</item>
+            <item>fix: strip a failed save's asset, and close the gap when removing one (#1723, #1724) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1726</item>
             <item>fix: drop seven columns on #__bsms_studies that nothing reads or writes (#1690) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1727</item>
             <item>chore: bump the scripture submodule pins for the shared book-code table (#1688) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1728</item>
             <item>fix: retire #__bsms_books, whose rows are language keys the library already holds (#1687) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1729</item>
             <item>fix: make the scripture migration repeatable so stranded studies can be repaired (#1623) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1732</item>
             <item>feat: drive the book facets from the junction (#1623 step 2, tier 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1733</item>
             <item>feat: match the Book cross-filter against the junction (#1623 step 2, tier 2a) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1734</item>
-            <item>fix: bracket the Book filter&#x27;s disjunction so it cannot escape the query&#x27;s scope by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1735</item>
-            <item>fix: stop relying on where()&#x27;s glue argument, and pin both where() traps in a test by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1736</item>
+            <item>fix: bracket the Book filter's disjunction so it cannot escape the query's scope by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1735</item>
+            <item>fix: stop relying on where()'s glue argument, and pin both where() traps in a test by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1736</item>
             <item>feat: match the sermons book filter against the junction (#1623 step 2, tier 2b) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1737</item>
             <item>feat: score and index every scripture reference, not just the first (#1623 step 2, tier 3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1738</item>
             <item>feat: read scriptures from the junction in the last three views (#1623 step 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1730</item>
@@ -439,7 +439,7 @@
             <item>fix: empty phone links, and a11y detail tests that were not running by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1751</item>
             <item>fix(api): stop views declaring fields the responses never contain (#1749) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1752</item>
             <item>fix(api): apply the five list filters that were accepted and discarded (#1753) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1754</item>
-            <item>ci: run the API acceptance job when the API&#x27;s models and tables change (#1755) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1756</item>
+            <item>ci: run the API acceptance job when the API's models and tables change (#1755) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1756</item>
             <item>fix: build the bundled scripture package from the pinned submodule, not the newest zip by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1758</item>
             <item>chore: pin the scripture stack to lib 1.1.11 / pkg 1.2.3 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1759</item>
             <item>chore: pin the scripture stack to lib 1.1.12 / pkg 1.2.4 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1762</item>
@@ -469,17 +469,17 @@
             <item>chore: pin the scripture stack to lib 1.1.16 / pkg 1.2.8 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1790</item>
             <item>chore: pin the scripture stack to lib 1.1.17 / pkg 1.2.9 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1792</item>
             <item>fix: stop reading and writing the retired teacher_id column by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1791</item>
-            <item>fix: let Batch → Teacher add rather than replace by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1794</item>
+            <item>fix: let the Batch dialog's Teacher option add rather than replace by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1794</item>
             <item>fix: repair the media popup, and name every embedded player frame by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1795</item>
             <item>fix: derive comment moderation state server-side by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1797</item>
             <item>fix: serve the landing page for a request with no view by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1798</item>
-            <item>fix: keep Proclaim&#x27;s buttons readable under a site template&#x27;s link colour by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1799</item>
+            <item>fix: keep Proclaim's buttons readable under a site template's link colour by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1799</item>
             <item>test: run the site views under a Gantry template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1800</item>
             <item>test: remove the media dirs the YouTube cache tests create by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1801</item>
             <item>chore(deps): bump cwm/build-tools to 1.20.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1802</item>
-            <item>fix: keep Proclaim&#x27;s landing page legible under a site template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1805</item>
+            <item>fix: keep Proclaim's landing page legible under a site template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1805</item>
             <item>fix: load cwmcore on the landing page and drop its duplicate skip link by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1809</item>
-            <item>fix: load Proclaim&#x27;s core stylesheet on every site view by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1810</item>
+            <item>fix: load Proclaim's core stylesheet on every site view by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1810</item>
             <item>chore(deps): bump cwm/build-tools to 1.21.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1811</item>
             <item>fix: keep outline buttons legible under a site template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1812</item>
             <item>fix: give the series podcast view a not-found page, and deliver the 404 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1816</item>
@@ -499,8 +499,8 @@
         <version>10.5.7</version>
         <date>2026-08-10</date>
         <fix>
-            <item>Uninstalling Proclaim no longer removes the scripture library, the Scripture Links plugin, or your downloaded Bible translations. Those are shared — Scripture Links and Living Word can use the same library — and removing Proclaim was taking them away from those extensions too, along with translations that can run to hundreds of megabytes. They are now left in place, and a message after the uninstall names what remains so you can remove it yourself if you want to</item>
-            <item>Uninstalling Proclaim now removes its own modules and plugins. Nine extensions — the four Proclaim modules and the finder, Schema.org, system, task and web services plugins — stayed registered after every uninstall, along with any module positions you had set. Reinstalling then inherited them. This has been the case since 10.3.0</item>
+            <item>Uninstalling Proclaim no longer removes the scripture library, the Scripture Links plugin, or your downloaded Bible translations. Those are shared - Scripture Links and Living Word can use the same library - and removing Proclaim was taking them away from those extensions too, along with translations that can run to hundreds of megabytes. They are now left in place, and a message after the uninstall names what remains so you can remove it yourself if you want to</item>
+            <item>Uninstalling Proclaim now removes its own modules and plugins. Nine extensions - the four Proclaim modules and the finder, Schema.org, system, task and web services plugins - stayed registered after every uninstall, along with any module positions you had set. Reinstalling then inherited them. This has been the case since 10.3.0</item>
             <item>Uninstalling no longer reinstalls parts of Proclaim on its way out, or shows the "installation complete" page when you are removing it</item>
             <item>Proclaim's own database tables are still kept on uninstall unless you set Drop Tables on Uninstall to Yes, which remains the default. Nothing about that has changed</item>
             <item>Sites that installed Proclaim before 10.4.0 were checking for updates twice. The leftover update site is removed, so the duplicate entry disappears. Some of those sites carried an update address that only ever served 9.2.x and could never offer them anything. Extensions - Update still lists Proclaim as a Component rather than a Package; that is expected, it is the same update either way, and changing it is separate work</item>
@@ -538,14 +538,14 @@
         </security>
         <fix>
             <item>Admin list columns sort again. Clicking a column header submitted a name the list model did not recognise, and the click did nothing</item>
-            <item>Episode numbers are unique within a series. Two concurrent saves could allocate the same number, which podcast directories treat as one episode. Please note: where duplicates already exist, the update keeps the number on the earliest message and clears it on the others, returning them to the unnumbered state — renumber them from the episode audit screen, which reports every gap and collision</item>
+            <item>Episode numbers are unique within a series. Two concurrent saves could allocate the same number, which podcast directories treat as one episode. Please note: where duplicates already exist, the update keeps the number on the earliest message and clears it on the others, returning them to the unnumbered state - renumber them from the episode audit screen, which reports every gap and collision</item>
             <item>A remote playlist can only be linked once per server. Existing duplicate links are merged during the update, carrying their items and any manual media-file assignments onto the surviving playlist rather than discarding them</item>
             <item>Teacher, topic and scripture associations are saved atomically. A failure part-way through a save could leave a message with some of its topics or references written and the rest missing</item>
             <item>Guided tours edited in the admin are no longer overwritten on every update</item>
-            <item>Genesis verse counts are corrected. The built-in table listed 51 chapters for a 50-chapter book and held wrong counts from chapter 18 on — Genesis 24 was recorded as having 13 verses rather than 67. These figures drive the hints shown while typing a scripture reference ("Chapter 24 has 67 verses"), so those hints were wrong for most of Genesis. References were never rejected on this basis. The counts follow KJV numbering, which NKJV shares; translations that omit verses will differ, which is why the hint names KJV</item>
+            <item>Genesis verse counts are corrected. The built-in table listed 51 chapters for a 50-chapter book and held wrong counts from chapter 18 on - Genesis 24 was recorded as having 13 verses rather than 67. These figures drive the hints shown while typing a scripture reference ("Chapter 24 has 67 verses"), so those hints were wrong for most of Genesis. References were never rejected on this basis. The counts follow KJV numbering, which NKJV shares; translations that omit verses will differ, which is why the hint names KJV</item>
             <item>Aliases generated for existing records are unique. The backfill could assign one alias to several records, and the wrong one was then served</item>
             <item>One unreadable thumbnail no longer takes down the public podcast list</item>
-            <item>The Getting Started checklist reads the settings it is checking, so completed steps stay ticked — and the podcast step, which could never appear at all, now does</item>
+            <item>The Getting Started checklist reads the settings it is checking, so completed steps stay ticked - and the podcast step, which could never appear at all, now does</item>
             <item>Each admin list applies its own filters. Several pages were reading the Sermons list's filter state, so filtering one screen changed the results on another</item>
             <item>Uploaded caption files are validated in full rather than by their first lines, and files whose names contain # or ? keep their extension</item>
             <item>The Bible version picker offers only versions the selected provider can actually serve</item>
@@ -558,13 +558,13 @@
             <item>Podcast feeds are regenerated when podcast settings are saved</item>
             <item>The media player switches correctly when the media type changes on the edit form</item>
             <item>Proclaim reports its installed version from the extension manifest, so the version shown in the admin matches what is installed</item>
-            <item>JSON read and write failures are reported instead of being discarded. Corrupt stored settings previously produced empty values with no indication anything had gone wrong — including a campus mapping failure that quietly made every location unrestricted</item>
+            <item>JSON read and write failures are reported instead of being discarded. Corrupt stored settings previously produced empty values with no indication anything had gone wrong - including a campus mapping failure that quietly made every location unrestricted</item>
             <item>Control panel tiles are hidden when the permission behind them is not held, and the awaiting-review count counts only content actually submitted for review</item>
             <item>Proclaim no longer produces a fatal error when a record carries empty or corrupt saved settings, or when the component's own settings row is missing</item>
             <item>The 9.x upgrade cleanup no longer drops a table that is still in use, and no longer runs after a failed upgrade</item>
-            <item>Updating no longer stops with a database error on a site whose sermon-topic table is missing an index the update expected to remove. Retiring that index is now cleanup that runs after the migration rather than a step that can abort it — which matters most on a database restored from a backup, where the tables and the recorded schema version can disagree</item>
+            <item>Updating no longer stops with a database error on a site whose sermon-topic table is missing an index the update expected to remove. Retiring that index is now cleanup that runs after the migration rather than a step that can abort it - which matters most on a database restored from a backup, where the tables and the recorded schema version can disagree</item>
             <item>Admin form fields: corrected an inverted media-file label, stopped a template list caching one form's options into another's, escaped values in the colour picker and server-type and filter fields, and replaced classes that were unreadable in dark mode</item>
-            <item>Addon language files are spellchecked — "Protocl" had been on screen since 2022</item>
+            <item>Addon language files are spellchecked - "Protocl" had been on screen since 2022</item>
             <item>The backup screen shows the current version rather than a stale one, and an alert type misspelled as "worning" now renders</item>
         </fix>
         <addition>
@@ -574,8 +574,8 @@
         <change>
             <item>Analytics keeps only the scheme, host and path of a referring address. The query string is written by the referring site and routinely carries search terms, session tokens and newsletter recipient identifiers. Addresses already stored are trimmed during the update. UTM campaign tags are unaffected, being stored in their own columns. A retention setting that governed nothing has been removed</item>
             <item>Analytics opt-out is honoured on every write. Opt-out is detected from a Sec-GPC (Global Privacy Control) header, a DNT header, or a proclaim_analytics_optout cookie your consent extension sets. Outbound link clicks recorded the destination address and time outside that check, so a visitor who had opted out was still logged; they no longer are. Proclaim ships no consent banner of its own</item>
-            <item>The analytics session identifier is a keyed digest that rotates daily, so one visitor cannot be traced across days. History written before this release held a plain unsalted hash, stable forever, and is re-keyed during the update — session counts are unchanged</item>
-            <item>Schema.org bulk sync runs in batches, and database backups stream to disk in chunks rather than being assembled in memory — both were liable to exhaust memory on large sites</item>
+            <item>The analytics session identifier is a keyed digest that rotates daily, so one visitor cannot be traced across days. History written before this release held a plain unsalted hash, stable forever, and is re-keyed during the update - session counts are unchanged</item>
+            <item>Schema.org bulk sync runs in batches, and database backups stream to disk in chunks rather than being assembled in memory - both were liable to exhaust memory on large sites</item>
             <item>Building Proclaim from source now requires Node 24; Node 20 has reached end of life. This affects contributors only, not sites running Proclaim</item>
         </change>
     </changelog>
@@ -603,7 +603,7 @@
         <date>2026-08-02</date>
         <note>
             <item>Tracked episode links now carry a real file extension (e.g. .mp3),</item>
-            <item>The tracking link itself now correctly answers Range and HEAD requests —</item>
+            <item>The tracking link itself now correctly answers Range and HEAD requests  - </item>
             <item>fix(podcast): give tracked enclosure URLs a real file extension (#1424) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1425</item>
         </note>
     </changelog>
@@ -647,7 +647,7 @@
             <item>The notice naming a cache Proclaim cannot clear no longer repeats the same plugin twice</item>
         </fix>
         <addition>
-            <item>Podcasts have a Copyright Holder, shown as the copyright line on podcast directories. Left empty it uses the site name, so existing feeds gain a real owner in place of the previous "© (2026) All rights reserved."</item>
+            <item>Podcasts have a Copyright Holder, shown as the copyright line on podcast directories. Left empty it uses the site name, so existing feeds gain a real owner in place of the previous "(c) (2026) All rights reserved."</item>
             <item>Podcasts have a Feed Language covering the codes directories act on, no longer limited to the languages installed in Joomla. A US church on an en-GB Joomla install can now declare English (United States), which Apple and Spotify use for language and territory targeting</item>
         </addition>
     </changelog>
@@ -661,7 +661,7 @@
         <version>10.5.0</version>
         <date>2026-08-01</date>
         <addition>
-            <item>Re-detect Metadata button on the media file edit form, re-reading size, MIME type and duration from the file — for files replaced on disk under the same name, where the stored values are stale rather than missing</item>
+            <item>Re-detect Metadata button on the media file edit form, re-reading size, MIME type and duration from the file - for files replaced on disk under the same name, where the stored values are stale rather than missing</item>
             <item>Re-read every file option on the Fix Missing Metadata tool, applying the same re-read in bulk. Opt-in per run: it reads every file, and on hosted platforms costs one API call per video</item>
             <item>Clearing a detected field and saving now re-runs detection for it, so emptying the file size is enough to have it worked out again</item>
         </addition>
@@ -677,7 +677,7 @@
             <item>Media file edit: Choose Playlist(s) is hidden for server types that cannot host playlists, where it could only ever be empty</item>
         </fix>
         <change>
-            <item>Queries are built with createQuery() throughout — 666 call sites — with a CI check to keep it that way</item>
+            <item>Queries are built with createQuery() throughout - 666 call sites - with a CI check to keep it that way</item>
             <item>Caches are cleared after an update, and third-party caches Proclaim cannot clear are named so they can be cleared by hand</item>
         </change>
     </changelog>
@@ -691,12 +691,12 @@
         <version>10.4.1</version>
         <date>2026-07-30</date>
         <note>
-            <item>The two translations Proclaim ships with — King James Version and World English</item>
+            <item>The two translations Proclaim ships with - King James Version and World English</item>
             <item>Anything else you had downloaded needs downloading again, from</item>
             <item>Release packages are now checked against their sources, so a file left behind</item>
             <item>The upgrade test suite now plants a downloaded translation, cached passages and</item>
             <item>fix(release): pin ars.environments so published items carry real requirements by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1360</item>
-            <item>chore(deps): cwm/build-tools 1.9.1 — ARS publish refuses null environments by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1361</item>
+            <item>chore(deps): cwm/build-tools 1.9.1 - ARS publish refuses null environments by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1361</item>
             <item>feat(youtube): disable Direct streaming until the account is connected by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1362</item>
             <item>chore(language): sync the stream-mode OAuth notice to all locales by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1363</item>
             <item>chore(language): translate the live-broadcast strings in all six locales by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1364</item>
@@ -708,7 +708,7 @@
             <item>chore(submodule): bump lib_cwmscripture to main (#27) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1373</item>
             <item>fix(submodule): point scripturelinks at main, not the deleted branch by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1374</item>
             <item>fix(a11y): give the schema-fix button enough contrast to pass WCAG AA by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1375</item>
-            <item>fix(a11y): stop buttons inside alerts inheriting the alert&#x27;s text colour by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1376</item>
+            <item>fix(a11y): stop buttons inside alerts inheriting the alert's text colour by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1376</item>
             <item>chore(install): drop the dead $release property by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1377</item>
         </note>
     </changelog>
@@ -738,7 +738,7 @@
         <version>10.3.6</version>
         <date>2026-07-26</date>
         <note>
-            <item>fix(api): make the API switchable — drop api_access for the plugin&#x27;s own state by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1331</item>
+            <item>fix(api): make the API switchable - drop api_access for the plugin's own state by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1331</item>
             <item>chore: bump active_development to 10.3.6 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1332</item>
         </note>
     </changelog>
@@ -768,9 +768,9 @@
         <note>
             <item>fix(api): install webservices plugin and ship API files to the api app by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1311</item>
             <item>chore(deps): bump cwm/build-tools to ^1.6.1 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1312</item>
-            <item>fix(build): don&#x27;t fail the release gate on migration-free versions by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1313</item>
+            <item>fix(build): don't fail the release gate on migration-free versions by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1313</item>
             <item>feat(api): expose 7 more resources, read-only where writes are unsafe by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1314</item>
-            <item>feat(logging): record API activity, and make Proclaim&#x27;s logging actually work by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1315</item>
+            <item>feat(logging): record API activity, and make Proclaim's logging actually work by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1315</item>
             <item>feat(api): log authenticated callers refused an action by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1316</item>
             <item>chore(composer): exclude YouTube addon vendor from classmap scan by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1317</item>
             <item>chore(deps): refresh composer.lock by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1318</item>
@@ -793,8 +793,8 @@
         <date>2026-07-18</date>
         <note>
             <item>chore: migrate to cwm-build-tools v0.5.x by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1220</item>
-            <item>chore(js): ESLint cleanup — auto-fix + globals + ignore minified vendor by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1234</item>
-            <item>chore(js): migrate Joomla.editors.instances → JoomlaEditor.get by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1235</item>
+            <item>chore(js): ESLint cleanup - auto-fix + globals + ignore minified vendor by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1234</item>
+            <item>chore(js): migrate Joomla.editors.instances to JoomlaEditor.get by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1235</item>
             <item>fix(js): replace Joomla.Text._() truthy-key trap with safe helper by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1236</item>
             <item>chore(build): delete orphan build/cwm-article.sh by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1239</item>
             <item>chore(build): migrate build:assets to cwm-build-tools template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1238</item>
@@ -804,7 +804,7 @@
             <item>Epic #1210 integration: caption format support + YouTube Captions API by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1232</item>
             <item>chore: gitignore media/captions/ runtime upload directory by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1242</item>
             <item>chore(version): sync versions.json + package.json with shipped 10.3.2 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1243</item>
-            <item>fix(version): retag today&#x27;s captions epic work as @since 10.3.3 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1244</item>
+            <item>fix(version): retag today's captions epic work as @since 10.3.3 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1244</item>
             <item>chore(submodule): bump lib_cwmscripture + scripturelinks for CSS fix by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1245</item>
             <item>style(css): drop redundant % unit from zero-width progress bars by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1246</item>
             <item>test(site): expand CwmsermonsModel filter regression coverage by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1247</item>
@@ -818,14 +818,14 @@
             <item>feat(debug): instrument podcast HTTP calls with CwmDebug::logApi by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1255</item>
             <item>feat(debug): shared addon apiRequest() + instrument Vimeo HTTP calls by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1256</item>
             <item>feat(debug): instrument Wistia and Resi HTTP calls via apiRequest by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1257</item>
-            <item>chore(deps): dependency maintenance — patch bumps, unused dep removal, phan v6, intl-tel-input v29 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1258</item>
+            <item>chore(deps): dependency maintenance - patch bumps, unused dep removal, phan v6, intl-tel-input v29 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1258</item>
             <item>chore(deps): bump google/apiclient v2.19.3 in YouTube addon by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1259</item>
             <item>build: add composer release:wiki to sync wiki Home.md version table by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1260</item>
             <item>refactor: remove dead code flagged by stale TODOs (cluster A) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1261</item>
             <item>refactor: resolve cluster-B TODOs (slug routing + stale-comment cleanup) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1262</item>
             <item>refactor: consolidate duplicated MIME detection into Cwmmime helper (B2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1263</item>
             <item>refactor: resolve cluster-C TODOs (dead code + stale-comment cleanup) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1264</item>
-            <item>refactor: remove stale &#x27;deprecate this override&#x27; TODO on CwmtopicTable::bind() (cluster D) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1265</item>
+            <item>refactor: remove stale 'deprecate this override' TODO on CwmtopicTable::bind() (cluster D) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1265</item>
             <item>chore: gitignore local .claude/settings.json by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1266</item>
             <item>test: remove orphaned legacy files from tests/ root by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1267</item>
             <item>chore(deps-dev): bump @babel/core from 7.29.0 to 7.29.6 by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1269</item>
@@ -833,21 +833,21 @@
             <item>chore(deps): bump guzzlehttp/psr7 from 2.11.0 to 2.12.1 in /admin/src/Addons/Servers/Youtube by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1271</item>
             <item>chore(deps): patch all npm audit vulnerabilities via overrides by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1274</item>
             <item>chore(deps): refresh dev-only composer dependencies by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1275</item>
-            <item>chore(deps): bump intl-tel-input 29.0.5 -&gt; 29.1.1 (closes #1268) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1276</item>
-            <item>fix(images): sanitize &amp; length-cap generated message image filenames (closes #1272) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1277</item>
-            <item>feat(media): polish the General Items tab — Podcast fancy-select, inline Browse, layout (closes #1278) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1279</item>
+            <item>chore(deps): bump intl-tel-input 29.0.5 to 29.1.1 (closes #1268) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1276</item>
+            <item>fix(images): sanitize and length-cap generated message image filenames (closes #1272) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1277</item>
+            <item>feat(media): polish the General Items tab - Podcast fancy-select, inline Browse, layout (closes #1278) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1279</item>
             <item>chore(lang): sync translations after podcast hint change by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1280</item>
             <item>feat(playlist): scaffold Playlist entity (#1273 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1282</item>
             <item>feat(playlist): bulk import + reconcile YouTube playlists (#1273 phase 2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1283</item>
             <item>feat(playlist): scheduled YouTube playlist sync task + conflict gate (#1273 phase 3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1284</item>
             <item>feat(playlist): Browse Playlists picker + capability registry (#1273 phase 4) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1285</item>
             <item>feat(playlist): platform-neutral contract + Vimeo, remote_* columns (#1273 phase 5) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1286</item>
-            <item>feat: YouTube/Vimeo Playlist system — import, sync, picker (#1273 phases 1-5) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1287</item>
-            <item>feat(playlist): OAuth title write-back — completes the conflict gate (#1273 phase 6.1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1288</item>
-            <item>feat(playlist): membership write-back — series videos into playlists (#1273 phase 6.2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1290</item>
+            <item>feat: YouTube/Vimeo Playlist system - import, sync, picker (#1273 phases 1-5) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1287</item>
+            <item>feat(playlist): OAuth title write-back - completes the conflict gate (#1273 phase 6.1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1288</item>
+            <item>feat(playlist): membership write-back - series videos into playlists (#1273 phase 6.2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1290</item>
             <item>feat(playlist): description write-back (#1273 phase 6.3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1291</item>
             <item>feat(playlist): per-media playlist assignment field (#1273 phase 6.2b, PR A) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1292</item>
-            <item>feat(playlist): bidirectional removal — de-select removes video from platform (#1273 phase 6.2b, PR B) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1293</item>
+            <item>feat(playlist): bidirectional removal - de-select removes video from platform (#1273 phase 6.2b, PR B) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1293</item>
             <item>feat(actionlog): cover all content entities + cpanel link to Proclaim logs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1294</item>
             <item>fix(sql): CREATE TABLE ( on table-name line so Database-fix parses playlist tables by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1296</item>
             <item>feat(actionlog): log delete + publish-state changes across list views (PR 2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1295</item>
@@ -901,18 +901,18 @@
             <item>fix: add missing org_name migration for teacher table by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1201</item>
             <item>feat: expand debug mode with CwmDebug helper (#1194) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1202</item>
             <item>feat: REST API with full CRUD, changelog wiring, npm updates by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1204</item>
-            <item>feat: Setup Wizard — guided first-run configuration (#1196) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1205</item>
+            <item>feat: Setup Wizard - guided first-run configuration (#1196) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1205</item>
             <item>chore(deps-dev): bump phpunit/phpunit from 11.5.55 to 12.5.22 by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1207</item>
             <item>style: align match arms after php-cs-fixer 3.95 update by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1208</item>
             <item>refactor: replace deprecated Joomla APIs with J6-native equivalents by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1209</item>
             <item>fix(teacher): biography editors, social_links column, asset cleanup crash by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1212</item>
-            <item>Release 10.3.0: development → main by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1213</item>
-            <item>build(deps): upgrade intl-tel-input 26.x → 28.x by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1214</item>
+            <item>Release 10.3.0: development to main by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1213</item>
+            <item>build(deps): upgrade intl-tel-input 26.x to 28.x by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1214</item>
             <item>feat: first-time adoption of cwm-build-tools v0.4 dev-environment commands by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1216</item>
             <item>chore(deps): bump phpseclib/phpseclib from 3.0.51 to 3.0.52 in /admin/src/Addons/Servers/Youtube by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1215</item>
             <item>chore: adopt cwm/build-tools v0.4.0-alpha and remove local duplicates by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1218</item>
             <item>test: decouple Joomla app setup from DB and use real services when available by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1217</item>
-            <item>Release 10.3.2 — scripture provider fix, build infrastructure, and dependency upgrades by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1219</item>
+            <item>Release 10.3.2 - scripture provider fix, build infrastructure, and dependency upgrades by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1219</item>
         </note>
     </changelog>
 
@@ -925,7 +925,7 @@
         <version>10.3.1</version>
         <date>2026-05-01</date>
         <fix>
-            <item>Install failure on fresh sites — register lib_cwmscripture namespace with the autoloader before the install script's class_exists check, so the bundled scripture library is detected on first install.</item>
+            <item>Install failure on fresh sites - register lib_cwmscripture namespace with the autoloader before the install script's class_exists check, so the bundled scripture library is detected on first install.</item>
         </fix>
         <note>
             <item>Patch release for 10.3.0. Safe to install over 10.3.0; no data migration required.</item>
@@ -941,45 +941,45 @@
         <version>10.3.0</version>
         <date>2026-05-01</date>
         <addition>
-            <item>Setup Wizard — guided first-run configuration covering podcast, comments, social sharing, and core display options.</item>
-            <item>New Message Wizard — step-by-step guided sermon creation with topics, message type, access, language, and image fields.</item>
-            <item>Landing Page Redesign — three selectable layout styles (cards, hero, dashboard) with batch landing_show/list_show controls and standard Joomla ordering.</item>
-            <item>RESTful API — JSON:API endpoints with full CRUD for sermons, teachers, series, media, and podcasts; configurable access control (disabled / public / API key).</item>
-            <item>AI Writing Voice — configurable AI tone/voice options for content generation, with study text improvements.</item>
-            <item>Bible Brain Provider — new scripture/audio source integration alongside existing providers.</item>
-            <item>Interactive Transcript Panel — VTT parsing with seek-on-click and in-transcript search.</item>
-            <item>Modal Edit Support — inline edit modals for Teachers, Locations, Messages, and Servers with Quick Create toolbar.</item>
-            <item>pkg_proclaim Package Installer — bundles the component, modules, plugins, and lib_cwmscripture into a single Joomla package.</item>
-            <item>Expanded Debug Mode — new CwmDebug helper for richer troubleshooting output.</item>
-            <item>ACL Backup &amp; Restore — component-level and per-record Proclaim ACL rules now included in backup archives.</item>
-            <item>Assets Admin Tool Rework — aligned with the new inherit-from-parent ACL model.</item>
-            <item>Edit View Polish — Publishing tabs harmonized across edit views; ID and hits visible; media Options tab renders fieldsets as labeled sections; teacher edit lazy-loads and gains an analytics time-scope.</item>
+            <item>Setup Wizard - guided first-run configuration covering podcast, comments, social sharing, and core display options.</item>
+            <item>New Message Wizard - step-by-step guided sermon creation with topics, message type, access, language, and image fields.</item>
+            <item>Landing Page Redesign - three selectable layout styles (cards, hero, dashboard) with batch landing_show/list_show controls and standard Joomla ordering.</item>
+            <item>RESTful API - JSON:API endpoints with full CRUD for sermons, teachers, series, media, and podcasts; configurable access control (disabled / public / API key).</item>
+            <item>AI Writing Voice - configurable AI tone/voice options for content generation, with study text improvements.</item>
+            <item>Bible Brain Provider - new scripture/audio source integration alongside existing providers.</item>
+            <item>Interactive Transcript Panel - VTT parsing with seek-on-click and in-transcript search.</item>
+            <item>Modal Edit Support - inline edit modals for Teachers, Locations, Messages, and Servers with Quick Create toolbar.</item>
+            <item>pkg_proclaim Package Installer - bundles the component, modules, plugins, and lib_cwmscripture into a single Joomla package.</item>
+            <item>Expanded Debug Mode - new CwmDebug helper for richer troubleshooting output.</item>
+            <item>ACL Backup and Restore - component-level and per-record Proclaim ACL rules now included in backup archives.</item>
+            <item>Assets Admin Tool Rework - aligned with the new inherit-from-parent ACL model.</item>
+            <item>Edit View Polish - Publishing tabs harmonized across edit views; ID and hits visible; media Options tab renders fieldsets as labeled sections; teacher edit lazy-loads and gains an analytics time-scope.</item>
         </addition>
         <change>
             <item>Font Awesome upgraded to FA6 canonical syntax with FA7 forward compatibility.</item>
             <item>AJAX filter UX improved for slow server responses; Joomla searchtools JS disabled when AJAX filters are active.</item>
             <item>Deprecated Joomla APIs replaced with J6-native equivalents.</item>
-            <item>Popup view modernized — Flash-era dead code removed, player layout extracted.</item>
+            <item>Popup view modernized - Flash-era dead code removed, player layout extracted.</item>
             <item>Inline JS/CSS extracted to external files for CSP compliance; reusable layouts extracted from duplicated template blocks.</item>
             <item>Test infrastructure now boots a real Joomla CMS framework for every test run; stubs removed.</item>
-            <item>Performance — N+1 elimination via batch loading of media files, topics, and book names; database LIMIT applied to landing page queries; loading="lazy" on embedded iframes; assets table no longer accumulates empty-rules rows; fixAllAssets skipped when nothing drifted; admin asset-fix tool batches operations.</item>
+            <item>Performance - N+1 elimination via batch loading of media files, topics, and book names; database LIMIT applied to landing page queries; loading="lazy" on embedded iframes; assets table no longer accumulates empty-rules rows; fixAllAssets skipped when nothing drifted; admin asset-fix tool batches operations.</item>
         </change>
         <fix>
-            <item>Teacher view — show sermons with NULL series_id and tolerate junction drift; biography editors, social_links column, and asset cleanup crash all fixed.</item>
-            <item>Teacher batch operations — accept '0' values; batch reordering no longer shuffles positions randomly.</item>
-            <item>YouTube — OAuth disconnect routed through ProclaimFetch; module cache cleared on content save; quota exhaustion from aggressive search.list polling resolved.</item>
-            <item>Analytics — KPI cards respond to date preset; platform stats task auto-registered.</item>
-            <item>Backup — virtual-table exports always emit section headers.</item>
-            <item>Install — don't clobber user-placed modules on upgrade; pkg_proclaim installer and module default params corrected.</item>
-            <item>Landing page — hero card text overflow and default image fallbacks; landing_show above/below fold respected in all layout styles; series description stripped of HTML and truncated in card meta.</item>
-            <item>Filters — series filter now clears properly when session state is stale.</item>
-            <item>Thumbnails — preserve aspect ratio and increase default sizes.</item>
+            <item>Teacher view - show sermons with NULL series_id and tolerate junction drift; biography editors, social_links column, and asset cleanup crash all fixed.</item>
+            <item>Teacher batch operations - accept '0' values; batch reordering no longer shuffles positions randomly.</item>
+            <item>YouTube - OAuth disconnect routed through ProclaimFetch; module cache cleared on content save; quota exhaustion from aggressive search.list polling resolved.</item>
+            <item>Analytics - KPI cards respond to date preset; platform stats task auto-registered.</item>
+            <item>Backup - virtual-table exports always emit section headers.</item>
+            <item>Install - don't clobber user-placed modules on upgrade; pkg_proclaim installer and module default params corrected.</item>
+            <item>Landing page - hero card text overflow and default image fallbacks; landing_show above/below fold respected in all layout styles; series description stripped of HTML and truncated in card meta.</item>
+            <item>Filters - series filter now clears properly when session state is stale.</item>
+            <item>Thumbnails - preserve aspect ratio and increase default sizes.</item>
             <item>Dark mode support for the scripture autocomplete dropdown.</item>
-            <item>Calendar field — remove seconds-stripping JS that caused a flash; reset non-zero seconds to :00 on save.</item>
+            <item>Calendar field - remove seconds-stripping JS that caused a flash; reset non-zero seconds to :00 on save.</item>
         </fix>
         <security>
             <item>Setup wizard review summary now escapes user input.</item>
-            <item>phpseclib/phpseclib upgraded 3.0.50 → 3.0.51 (CVE-2026-40194).</item>
+            <item>phpseclib/phpseclib upgraded 3.0.50 to 3.0.51 (CVE-2026-40194).</item>
             <item>Joomla 9.x dropped from the supported-versions list.</item>
         </security>
         <note>
@@ -996,7 +996,7 @@
         <version>10.2.2</version>
         <date>2026-03-19</date>
         <fix>
-            <item>Missing podcast platform_links column — added in migration 10.1.0-20260303b but absent from install.mysql.utf8.sql; now included in install SQL and preflight schema check.</item>
+            <item>Missing podcast platform_links column - added in migration 10.1.0-20260303b but absent from install.mysql.utf8.sql; now included in install SQL and preflight schema check.</item>
             <item>Preflight required-fixes pass now catches columns that should exist but were missed due to install SQL gaps, regardless of schema version.</item>
         </fix>
         <note>
@@ -1013,11 +1013,11 @@
         <version>10.2.1</version>
         <date>2026-03-19</date>
         <fix>
-            <item>Upgrade failure from duplicate column errors — fixes installation failure when upgrading between versions (e.g., 10.0.1 to 10.2.0) caused by MySQL ALTER TABLE ADD COLUMN failing on columns already added by a previous partial upgrade attempt.</item>
+            <item>Upgrade failure from duplicate column errors - fixes installation failure when upgrading between versions (e.g., 10.0.1 to 10.2.0) caused by MySQL ALTER TABLE ADD COLUMN failing on columns already added by a previous partial upgrade attempt.</item>
             <item>New preflight schema check reads install.mysql.utf8.sql to determine expected columns, compares against the live database, and drops leftover columns from failed upgrades before Joomla runs migration SQL.</item>
         </fix>
         <note>
-            <item>Safe to install over a failed 10.2.0 upgrade — preflight cleans up automatically. Also fixes database import/restore scenarios where schema does not match expectations. No data migration required.</item>
+            <item>Safe to install over a failed 10.2.0 upgrade - preflight cleans up automatically. Also fixes database import/restore scenarios where schema does not match expectations. No data migration required.</item>
         </note>
     </changelog>
 
@@ -1030,31 +1030,31 @@
         <version>10.2.0</version>
         <date>2026-03-15</date>
         <addition>
-            <item>Media Chapters and Subtitles — VTT/SRT caption file upload, per-media chapter timestamps, clickable chapter lists on frontend players (YouTube iframe and HTML5 video/audio).</item>
-            <item>YouTube OAuth Integration — OAuth status field, import chapters and download captions directly from YouTube, addon-aware capability flags across 7 platforms.</item>
-            <item>Per-Media Copy Description — server-configurable description format templates with placeholder replacement ({title}, {series}, {teachers}, {chapters}, etc.).</item>
-            <item>AI Assist Enhancements — chapter generation, topic saving fixes, editor API updates for Joomla 6, toggle checkboxes for selective generation.</item>
-            <item>Google Drive Server Addon — document sharing and embedding for Google Drive links.</item>
-            <item>Chunked Export/Import — async post-restore steps for large databases.</item>
-            <item>YouTube Module Improvements — countdown timer, notify button, mini-player, smart quota optimization.</item>
-            <item>Podcast Enhancements — multi-platform links with Podcast Index API, configurable iTunes settings, artwork validation.</item>
-            <item>Schema-Driven Layout Editor — settings modal driven by XML schema, media icon sizing.</item>
-            <item>Analytics Improvements — archived indicators, status filtering, drill-down views, printable reports.</item>
-            <item>Social Sharing — dual-mode sharing with GDPR-compliant local option.</item>
-            <item>Legacy URL Support — redirect old com_biblestudy URLs to com_proclaim.</item>
-            <item>Playwright E2E Tests — browser-based smoke tests for Joomla 5 and 6.</item>
+            <item>Media Chapters and Subtitles - VTT/SRT caption file upload, per-media chapter timestamps, clickable chapter lists on frontend players (YouTube iframe and HTML5 video/audio).</item>
+            <item>YouTube OAuth Integration - OAuth status field, import chapters and download captions directly from YouTube, addon-aware capability flags across 7 platforms.</item>
+            <item>Per-Media Copy Description - server-configurable description format templates with placeholder replacement ({title}, {series}, {teachers}, {chapters}, etc.).</item>
+            <item>AI Assist Enhancements - chapter generation, topic saving fixes, editor API updates for Joomla 6, toggle checkboxes for selective generation.</item>
+            <item>Google Drive Server Addon - document sharing and embedding for Google Drive links.</item>
+            <item>Chunked Export/Import - async post-restore steps for large databases.</item>
+            <item>YouTube Module Improvements - countdown timer, notify button, mini-player, smart quota optimization.</item>
+            <item>Podcast Enhancements - multi-platform links with Podcast Index API, configurable iTunes settings, artwork validation.</item>
+            <item>Schema-Driven Layout Editor - settings modal driven by XML schema, media icon sizing.</item>
+            <item>Analytics Improvements - archived indicators, status filtering, drill-down views, printable reports.</item>
+            <item>Social Sharing - dual-mode sharing with GDPR-compliant local option.</item>
+            <item>Legacy URL Support - redirect old com_biblestudy URLs to com_proclaim.</item>
+            <item>Playwright E2E Tests - browser-based smoke tests for Joomla 5 and 6.</item>
         </addition>
         <fix>
-            <item>YouTube API Quota — prevent quota exhaustion from search.list overuse; centralized file cache for throttle and scheduled start times; 15-minute search throttle saves ~200 units per hit.</item>
-            <item>AI Assist — fix topic saving (only one topic saved instead of multiple), chapter generation not displaying, deprecated Joomla editor API warnings.</item>
-            <item>Image Handling — protect source image from deletion during thumbnail cleanup; prevent File::copy error when source image is missing.</item>
-            <item>Frontend Filters — series filter not clearing due to stale session state; AJAX pagination page numbers and CSS; clear button disabled; CSRF gate removed from read-only endpoint.</item>
-            <item>SEF URLs — landing page URL fixes, session state bleeding, page caching; handle legacy 9.x SEF URLs and download redirects.</item>
-            <item>Dark Mode — theme-aware colors throughout (tables, cards, buttons, YouTube integration, analytics); WCAG AA contrast compliance.</item>
-            <item>Sermon Views — handle NULL series_id, custom not-found page with cached recent messages.</item>
-            <item>Database — correct AUTO_INCREMENT counters after backup restore; cast integer properties in Table bind() for PHP 8.3; add missing primary keys for sites upgraded from v7/v8/v9.</item>
-            <item>Analytics — correct series thumbnail column, fix Cartesian product in getSeriesList, CSV export headers.</item>
-            <item>Play Tracking — re-init YouTube players after AJAX filter, track inline mp3/Fancybox audio, use Joomla base href for multilingual sites.</item>
+            <item>YouTube API Quota - prevent quota exhaustion from search.list overuse; centralized file cache for throttle and scheduled start times; 15-minute search throttle saves ~200 units per hit.</item>
+            <item>AI Assist - fix topic saving (only one topic saved instead of multiple), chapter generation not displaying, deprecated Joomla editor API warnings.</item>
+            <item>Image Handling - protect source image from deletion during thumbnail cleanup; prevent File::copy error when source image is missing.</item>
+            <item>Frontend Filters - series filter not clearing due to stale session state; AJAX pagination page numbers and CSS; clear button disabled; CSRF gate removed from read-only endpoint.</item>
+            <item>SEF URLs - landing page URL fixes, session state bleeding, page caching; handle legacy 9.x SEF URLs and download redirects.</item>
+            <item>Dark Mode - theme-aware colors throughout (tables, cards, buttons, YouTube integration, analytics); WCAG AA contrast compliance.</item>
+            <item>Sermon Views - handle NULL series_id, custom not-found page with cached recent messages.</item>
+            <item>Database - correct AUTO_INCREMENT counters after backup restore; cast integer properties in Table bind() for PHP 8.3; add missing primary keys for sites upgraded from v7/v8/v9.</item>
+            <item>Analytics - correct series thumbnail column, fix Cartesian product in getSeriesList, CSV export headers.</item>
+            <item>Play Tracking - re-init YouTube players after AJAX filter, track inline mp3/Fancybox audio, use Joomla base href for multilingual sites.</item>
         </fix>
         <security>
             <item>Escape exception text in innerHTML to prevent XSS (CodeQL #47).</item>
@@ -1074,10 +1074,10 @@
         <version>10.1.1</version>
         <date>2026-03-13</date>
         <fix>
-            <item>YouTube module quota exhaustion — fixed aggressive API polling burning ~200 quota units/minute when no live stream is active. Added 15-minute search throttle, full cache TTL for null results, removed expensive search.list fallback from AJAX polling (now 1 unit per poll instead of 200).</item>
-            <item>Series filter not clearing — fixed frontend sermons page filter reverting to old selections after clearing; session state was not being reset alongside model state.</item>
-            <item>Menu item SQL error — fixed "Unknown column 'text' in order clause" when editing menu items for 8 Proclaim views; template picker SQL referenced non-existent column.</item>
-            <item>Defensive params fallback — added try/catch around menu item parameter loading so corrupted XML degrades gracefully instead of breaking the sermons page.</item>
+            <item>YouTube module quota exhaustion - fixed aggressive API polling burning ~200 quota units/minute when no live stream is active. Added 15-minute search throttle, full cache TTL for null results, removed expensive search.list fallback from AJAX polling (now 1 unit per poll instead of 200).</item>
+            <item>Series filter not clearing - fixed frontend sermons page filter reverting to old selections after clearing; session state was not being reset alongside model state.</item>
+            <item>Menu item SQL error - fixed "Unknown column 'text' in order clause" when editing menu items for 8 Proclaim views; template picker SQL referenced non-existent column.</item>
+            <item>Defensive params fallback - added try/catch around menu item parameter loading so corrupted XML degrades gracefully instead of breaking the sermons page.</item>
         </fix>
     </changelog>
 
@@ -1090,17 +1090,17 @@
         <version>10.1.0</version>
         <date>2026-03-10</date>
         <addition>
-            <item>Visual Layout Editor — drag-and-drop template editor with 6 configurable rows; separate layout tabs for Messages, Details, Teachers, and Series views; schema-driven settings modal; works within mod_proclaim.</item>
-            <item>Scripture Entry Redesign — replaced legacy 10-field input with natural-text autocomplete; supports unlimited references per message via new junction table, per-reference Bible versions, and drag-to-reorder.</item>
-            <item>Multi-Campus Location System — single installation serves multiple campuses with content isolation; location records map to Joomla user groups; all 11 admin list models filter by location.</item>
-            <item>Analytics Dashboard and Campus Reports — GDPR-aware event tracking (page views, plays, downloads) with Chart.js dashboard, four-level drill-down, date presets, campus filtering, CSV export, and printable pastor-ready reports.</item>
-            <item>CSV Bulk Import — import messages from CSV or spreadsheet files; client-side parsing with auto-detected delimiters, 15-field column mapping, preview table, auto-creation of teachers/series/locations, AJAX batch processing.</item>
-            <item>Bible API Provider Architecture — three providers: GetBible (free), API.Bible (2,500+ translations), Local (offline/GDPR-safe); two-level configuration with local translation management and frontend AJAX version switcher.</item>
-            <item>Image Optimization Pipeline — WebP generation, picture elements with JPEG fallback, lazy loading; admin Image Tools include batch migration, WebP conversion, orphan cleanup, and broken-reference relinking.</item>
-            <item>9.x to 10.x Migration Wizard — in-place upgrade wizard; automatic legacy schema detection, 6-step AJAX wizard with per-step retry, comprehensive data fixes, and verification.</item>
-            <item>Video platform addons — Vimeo, Wistia, Resi.io, Dailymotion, Rumble, SoundCloud, Facebook video embeds.</item>
+            <item>Visual Layout Editor - drag-and-drop template editor with 6 configurable rows; separate layout tabs for Messages, Details, Teachers, and Series views; schema-driven settings modal; works within mod_proclaim.</item>
+            <item>Scripture Entry Redesign - replaced legacy 10-field input with natural-text autocomplete; supports unlimited references per message via new junction table, per-reference Bible versions, and drag-to-reorder.</item>
+            <item>Multi-Campus Location System - single installation serves multiple campuses with content isolation; location records map to Joomla user groups; all 11 admin list models filter by location.</item>
+            <item>Analytics Dashboard and Campus Reports - GDPR-aware event tracking (page views, plays, downloads) with Chart.js dashboard, four-level drill-down, date presets, campus filtering, CSV export, and printable pastor-ready reports.</item>
+            <item>CSV Bulk Import - import messages from CSV or spreadsheet files; client-side parsing with auto-detected delimiters, 15-field column mapping, preview table, auto-creation of teachers/series/locations, AJAX batch processing.</item>
+            <item>Bible API Provider Architecture - three providers: GetBible (free), API.Bible (2,500+ translations), Local (offline/GDPR-safe); two-level configuration with local translation management and frontend AJAX version switcher.</item>
+            <item>Image Optimization Pipeline - WebP generation, picture elements with JPEG fallback, lazy loading; admin Image Tools include batch migration, WebP conversion, orphan cleanup, and broken-reference relinking.</item>
+            <item>9.x to 10.x Migration Wizard - in-place upgrade wizard; automatic legacy schema detection, 6-step AJAX wizard with per-step retry, comprehensive data fixes, and verification.</item>
+            <item>Video platform addons - Vimeo, Wistia, Resi.io, Dailymotion, Rumble, SoundCloud, Facebook video embeds.</item>
             <item>Schema.org structured data (JSON-LD) for rich search results.</item>
-            <item>Three pagination styles — standard, load more, infinite scroll.</item>
+            <item>Three pagination styles - standard, load more, infinite scroll.</item>
             <item>Record locking (check-in/checkout) across 12 entity types.</item>
         </addition>
         <fix>
@@ -1147,7 +1147,7 @@
         <version>10.0.0</version>
         <date>2025-07-29</date>
         <addition>
-            <item>Major release — Proclaim 10.0.0 with full Joomla 4 and Joomla 5 support.</item>
+            <item>Major release - Proclaim 10.0.0 with full Joomla 4 and Joomla 5 support.</item>
         </addition>
         <note>
             <item>First release in the 10.x series. Upgrade from 9.2.8 via included migration tooling.</item>
