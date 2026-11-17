@@ -57,13 +57,8 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                 <?php echo $this->form->renderField('id'); ?>
                 <?php echo $this->form->renderField('published'); ?>
                 <?php
-                // No access field here on purpose. #__bsms_comments carries an
-                // `access` column and the admin list filters on it, but the front
-                // end selects comments by published and study_id alone -- so a
-                // level set here would change nothing where it would matter. Its
-                // schema default is 0, which is not a view level at all. Offering
-                // the control before the reading side exists would be a setting
-                // that silently does nothing.
+                // No access field: a comment takes its message's access level
+                // and has none of its own.
                 ?>
                 <?php echo $this->form->renderField('language'); ?>
             </div>

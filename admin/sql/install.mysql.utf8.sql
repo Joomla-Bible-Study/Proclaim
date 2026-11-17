@@ -38,13 +38,11 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments`
     `comment_date` DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `comment_text` TEXT             NOT NULL,
     `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-    `access`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
     `language`     CHAR(7)          NOT NULL COMMENT 'The language code for the Comments.',
     `checked_out`      INT(10) UNSIGNED NOT NULL DEFAULT 0,
     `checked_out_time` DATETIME                  DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`),
     KEY `idx_checkout` (`checked_out`),
     KEY `idx_study_published` (`study_id`, `published`, `comment_date`)
 ) ENGINE InnoDB

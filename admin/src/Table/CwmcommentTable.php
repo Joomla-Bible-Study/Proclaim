@@ -102,14 +102,6 @@ class CwmcommentTable extends Table
     public ?int $asset_id = null;
 
     /**
-     * Access Level
-     *
-     * @var int|null
-     * @since 7.0.0
-     */
-    public ?int $access = null;
-
-    /**
      * Language
      *
      * @var string|null
@@ -201,7 +193,7 @@ class CwmcommentTable extends Table
         if (\is_array($array)) {
             // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
             foreach ([
-                'id', 'published', 'study_id', 'user_id', 'asset_id', 'access',
+                'id', 'published', 'study_id', 'user_id', 'asset_id',
                 'created_by', 'modified_by', 'checked_out',
             ] as $field) {
                 if (isset($array[$field])) {

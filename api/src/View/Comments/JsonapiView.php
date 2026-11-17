@@ -41,7 +41,6 @@ class JsonapiView extends BaseApiView
         'comment_date',
         'comment_text',
         'published',
-        'access',
         'language',
     ];
 
@@ -59,7 +58,6 @@ class JsonapiView extends BaseApiView
         'comment_date',
         'comment_text',
         'published',
-        'access',
         'language',
     ];
 }
