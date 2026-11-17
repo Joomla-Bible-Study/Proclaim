@@ -67,6 +67,15 @@ the spec; with no role=test install configured, the project simply doesn't
 exist. The DB-row and on-disk halves of the assertion live in
 `build/verify-api-install.php`, inside `composer test:install` itself.
 
+A clean install leaves Proclaim's licence unaccepted, and the admin
+dispatcher sends every Proclaim view to the licence screen until it is. So
+`composer test:api` and `composer test:release` run
+`composer test:accept-license` between the install and Playwright, as the CI
+job does. It is kept out of `test:install` on purpose: the gate is part of
+what a clean install produces, and accepting it there would hide a
+regression in the gate from the check meant to catch one. After provisioning
+the site any other way, run it yourself before the API project.
+
 ## Authentication
 
 `global-setup.js` logs into the admin of each site **the selected projects
