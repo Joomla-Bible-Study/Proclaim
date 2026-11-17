@@ -676,44 +676,69 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function redirectLegacySefSegments(string $path): void
     {
+        $app    = $this->getApplication();
+        $input  = $app->getInput();
+        $target = $this->legacySefRedirectTarget($path, $input->getCmd('task', ''), $input->getInt('mid', 0));
+
+        if ($target !== null) {
+            $app->redirect($target, 301);
+        }
+    }
+
+    /**
+     * Work out where an old SEF URL under a Proclaim menu item redirects to.
+     *
+     * Old paths redirect to what is left of the request path. That path already
+     * carries the folder a site is installed in, so it is used as it is: a base
+     * path added in front of it would name the folder twice.
+     *
+     * @param   string  $path  The raw URI path
+     * @param   string  $task  The request's task
+     * @param   int     $mid   The request's media file id
+     *
+     * @return  ?string  The URL to redirect to, or null when this is not an old URL
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function legacySefRedirectTarget(string $path, string $task, int $mid): ?string
+    {
         // Build a regex alternation from legacy view names
         $legacyViews = implode('|', array_keys(self::LEGACY_VIEW_MAP));
-
-        $app   = $this->getApplication();
-        $input = $app->getInput();
 
         // Pattern A: /legacyview?task=download&mid=123 (no ID-alias, just query params)
         // The view name must be a standalone segment (preceded by /)
         if (preg_match('#/(' . $legacyViews . ')$#i', $path, $m)) {
-            $oldView = strtolower($m[1]);
-            $task    = strtolower($input->getCmd('task', ''));
-            $mid     = $input->getInt('mid', 0);
+            $task = strtolower($task);
 
-            if ($task !== '' || $mid > 0) {
-                $newView = self::LEGACY_VIEW_MAP[$oldView] ?? 'cwmsermons';
-
-                // For task-based URLs (e.g. download), redirect to non-SEF URL directly.
-                // Route::_() may not work at onAfterInitialise (router not initialised).
-                $query = ['option' => 'com_proclaim', 'task' => $newView . '.' . $task];
-
-                if ($mid > 0) {
-                    $query['mid'] = $mid;
-                }
-
-                $itemId = $this->findMenuItemId($newView);
-
-                if (!$itemId) {
-                    $itemId = $this->findMenuItemId($newView . 's');
-                }
-
-                if ($itemId) {
-                    $query['Itemid'] = $itemId;
-                }
-
-                $app->redirect(Uri::base(true) . '/index.php?' . http_build_query($query), 301);
+            // Only a bare old task is legacy. A current URL under a menu item aliased
+            // like an old view ends the same way, and its task already names a
+            // controller (cwmsermons.filterAjax).
+            if (!\in_array($task, self::LEGACY_ALLOWED_TASKS, true)) {
+                return null;
             }
 
-            return;
+            $newView = self::LEGACY_VIEW_MAP[strtolower($m[1])] ?? 'cwmsermons';
+
+            // For task-based URLs (e.g. download), redirect to non-SEF URL directly.
+            // Route::_() may not work at onAfterInitialise (router not initialised).
+            $query = ['option' => 'com_proclaim', 'task' => $newView . '.' . $task];
+
+            if ($mid > 0) {
+                $query['mid'] = $mid;
+            }
+
+            $itemId = $this->findMenuItemId($newView);
+
+            if (!$itemId) {
+                $itemId = $this->findMenuItemId($newView . 's');
+            }
+
+            if ($itemId) {
+                $query['Itemid'] = $itemId;
+            }
+
+            // Relative, so the redirect resolves it against the site's base URL
+            return 'index.php?' . http_build_query($query);
         }
 
         // Pattern C: /landing/filtertype/id/templateid (old landing page filter URLs)
@@ -724,8 +749,9 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $filterType = strtolower($m[1]);
             $filterId   = (int) $m[2];
 
-            // Strip /landing/... from the path to get the base sermons list URL
-            $cleanPath = preg_replace('#/landing/[a-z]+/\d+(?:/\d+)?$#i', '', $path);
+            // Strip /landing/... from the path to get the base sermons list URL.
+            // Nothing left means the list is the home page.
+            $cleanPath = preg_replace('#/landing/[a-z]+/\d+(?:/\d+)?$#i', '', $path) ?: '/';
 
             // Map old filter type names to current query parameter names
             $filterParamMap = [
@@ -742,21 +768,15 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
             if ($filterParam !== '' && $filterId > 0) {
                 // Redirect with the specific filter applied
-                $app->redirect(Uri::base(true) . $cleanPath . '?' . $filterParam . '=' . $filterId, 301);
-            } else {
-                // Generic landing page (e.g., /landing/sermons/1) — just redirect to sermons list
-                $app->redirect(Uri::base(true) . $cleanPath, 301);
+                return $cleanPath . '?' . $filterParam . '=' . $filterId;
             }
 
-            return;
+            // Generic landing page (e.g., /landing/sermons/1) — just redirect to sermons list
+            return $cleanPath;
         }
 
         // Pattern B: /legacyview/id-alias or /legacyview/id-alias/templateid
-        $target = $this->legacyItemRedirectPath($path);
-
-        if ($target !== null) {
-            $app->redirect(Uri::base(true) . $target, 301);
-        }
+        return $this->legacyItemRedirectPath($path);
     }
 
     /**
