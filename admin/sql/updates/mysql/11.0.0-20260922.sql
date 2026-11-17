@@ -47,3 +47,17 @@ CREATE TABLE IF NOT EXISTS `#__bsms_import_manifest` (
     UNIQUE KEY `idx_tag_row` (`import_tag`, `table_name`, `row_id`),
     KEY `idx_import_tag` (`import_tag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Retire #__bsms_comments.access (#2029).
+--
+-- A comment takes its message's access level: the moderation screen, the site
+-- and the API gate on #__bsms_studies.access, and campus scoping follows the
+-- message's location. Nothing reads or writes this column. Site submissions
+-- never set it, so it held the schema default 0, which is not a view level.
+--
+-- No earlier update statement touches the column, so dropping it leaves no
+-- historical ChangeSet check failing. Its single-column index idx_access goes
+-- with it.
+
+ALTER TABLE `#__bsms_comments`
+    DROP COLUMN `access`;

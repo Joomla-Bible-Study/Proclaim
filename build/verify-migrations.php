@@ -254,6 +254,11 @@ $EXPECTATIONS = [
                 'alternateimage',
                 'alternatewords',
             ],
+            // A comment takes its message's access level; its own was never
+            // read or set (#2029).
+            '#__bsms_comments' => [
+                'access',
+            ],
         ],
         'schemaMin' => '11.0.0',
     ],

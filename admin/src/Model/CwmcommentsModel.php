@@ -242,12 +242,7 @@ class CwmcommentsModel extends ListModel
         // ⚠️ Access comes from the message, not the comment.
         //
         // A comment is only reachable through its sermon, so the sermon's level
-        // is the one that decides who may see it — and #__bsms_comments.access
-        // is not maintained: storecomment() never sets it, so every comment
-        // submitted from the site keeps the schema default of 0. Zero is not a
-        // view level, so filtering on the comment's own value hid every such
-        // comment from every moderator who is not a Super User, which is the
-        // audience the moderation screen exists for.
+        // decides who may see it. A comment has no level of its own.
         $query->select($db->quoteName('ag.title', 'access_level'));
         $query->join(
             'LEFT',
