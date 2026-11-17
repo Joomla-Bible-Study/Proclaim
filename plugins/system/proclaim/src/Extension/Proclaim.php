@@ -122,7 +122,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * view that shows it now.
      *
      * @var array<string, array{0: string, 1: string}>
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.7
      */
     private const array LEGACY_ITEM_VIEWS = [
         'sermon'               => ['#__bsms_studies', 'cwmsermon'],
@@ -141,7 +141,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * no alias. On a list view the number can be a template id instead.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.7
      */
     private const array LEGACY_SINGLE_VIEWS = ['sermon', 'teacher', 'seriesdisplay', 'seriespodcastdisplay'];
 
@@ -819,7 +819,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @return  ?string  The record's internal URL, or null when this is not an old
      *                   item URL or the record is missing, unpublished or trashed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.7
      */
     private function legacyItemRedirectTarget(string $path): ?string
     {
@@ -877,7 +877,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @return  ?object  The menu item's id, path and link, or null when the path
      *                   ends with no menu item's route
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.7
      */
     private function menuItemAtEndOf(string $path): ?object
     {
@@ -915,7 +915,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  int  The menu item id, or 0 when the path ends with no message list
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.7
      */
     private function messageListItemId(string $path): int
     {
@@ -945,7 +945,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.7
      */
     private function sefRoute(string $internal): string
     {
@@ -965,7 +965,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.7
      */
     private function isPublishedOrArchived(string $table, int $id): bool
     {
