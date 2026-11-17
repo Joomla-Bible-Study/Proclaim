@@ -170,7 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ─── Helpers ─────────────────────────────────────────────
 
     /**
-     * Build query string from form data, adding CSRF token and overrides.
+     * Build query string from form data, adding overrides. No CSRF token: the
+     * endpoint is a read-only GET, and a token taken from a cached page would
+     * belong to another visitor.
      *
      * @param {Object} overrides  Extra params to merge (e.g. limitstart)
      * @returns {string}
@@ -192,11 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
             Object.keys(overrides).forEach((key) => {
                 params.set(key, overrides[key]);
             });
-        }
-
-        // Append CSRF token
-        if (opts.csrfToken) {
-            params.set(opts.csrfToken, '1');
         }
 
         return params.toString();
