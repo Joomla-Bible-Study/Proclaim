@@ -29,7 +29,7 @@ Two related fixes:
 ## Also in this release
 
 - The YouTube addon's Google API library is updated to 2.20.1, with its
-  authentication library at 1.55.3. Batch responses are now matched to their
-  requests by ID rather than by position.
+  authentication library at 1.55.3. These are maintenance updates, and nothing
+  changes in how the addon behaves.
 - The bundled CWM Scripture package is updated to 1.2.18, with library 1.1.25.
   Both are maintenance releases, and nothing changes in how scripture behaves.
