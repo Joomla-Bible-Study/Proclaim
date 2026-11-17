@@ -28,11 +28,11 @@ use Google\Auth\IamSignerTrait;
 use Google\Auth\ProjectIdProviderInterface;
 use Google\Auth\SignBlobInterface;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use InvalidArgumentException;
+use Psr\Http\Client\NetworkExceptionInterface;
 
 /**
  * GCECredentials supports authorization on Google Compute Engine.
@@ -109,6 +109,11 @@ class GCECredentials extends CredentialsLoader implements
      * The header whose presence indicates GCE presence.
      */
     const FLAVOR_HEADER = 'Metadata-Flavor';
+
+    /**
+     * Flag used to determine whether to perform the GCE residency check. Used for testing.
+     */
+    private static bool $checkResidency = true;
 
     /**
      * The Linux file which contains the product name.
@@ -396,8 +401,12 @@ class GCECredentials extends CredentialsLoader implements
             } catch (ClientException $e) {
             } catch (ServerException $e) {
             } catch (RequestException $e) {
-            } catch (ConnectException $e) {
+            } catch (NetworkExceptionInterface $e) {
             }
+        }
+
+        if (!self::$checkResidency) {
+            return false;
         }
 
         if (PHP_OS === 'Windows' || PHP_OS === 'WINNT') {
@@ -431,6 +440,7 @@ class GCECredentials extends CredentialsLoader implements
         $productName = null;
 
         try {
+            // @phpstan-ignore method.notFound
             $productName = $shell->regRead($registryProductKey);
         } catch (com_exception) {
             // This means that we tried to read a key that doesn't exist on the registry
@@ -620,7 +630,7 @@ class GCECredentials extends CredentialsLoader implements
             // If the metadata server exists, but returns a 404 for the universe domain, the auth
             // libraries should safely assume this is an older metadata server running in GCU, and
             // should return the default universe domain.
-            if (!$e->hasResponse() || 404 != $e->getResponse()->getStatusCode()) {
+            if (404 !== $e->getResponse()->getStatusCode()) {
                 throw $e;
             }
             $this->universeDomain = self::DEFAULT_UNIVERSE_DOMAIN;
