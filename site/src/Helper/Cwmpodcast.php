@@ -24,6 +24,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
@@ -1545,11 +1546,12 @@ class Cwmpodcast
         $errors   = [];
         $warnings = [];
 
-        // Build full path
-        $fullPath = JPATH_ROOT . '/' . ltrim($imagePath, '/');
+        // The media field stores a URL with a #joomlaImage:// fragment, not a file name
+        $path     = Cwmthumbnail::mediaFieldPath($imagePath);
+        $fullPath = JPATH_ROOT . '/' . ltrim($path, '/');
 
         if (!is_file($fullPath)) {
-            $errors[] = Text::sprintf('JBS_PDC_VALIDATE_IMAGE_NOT_FOUND', $imagePath);
+            $errors[] = Text::sprintf('JBS_PDC_VALIDATE_IMAGE_NOT_FOUND', $path ?: $imagePath);
             return ['valid' => false, 'errors' => $errors, 'warnings' => $warnings];
         }
 
