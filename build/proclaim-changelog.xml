@@ -19,6 +19,24 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.7.5                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.7.5</version>
+        <date>2026-11-17</date>
+        <fix>
+            <item>On sites whose message list menu item has the alias of a page from the old Bible Study component, such as sermons, filtering, searching and paging the list showed "Could not load results" from 10.2.0 on. The list now filters and pages normally, and old Bible Study links still redirect.</item>
+            <item>On a site installed in a subfolder, old Bible Study message and landing-page links redirected to an address that named the folder twice. They now redirect within the folder.</item>
+        </fix>
+        <change>
+            <item>The YouTube addon's Google API library is updated to 2.20.1, which matches batch responses to their requests by ID.</item>
+            <item>The bundled CWM Scripture package is updated to 1.2.18, with library 1.1.25. Both are maintenance releases with no change in behavior.</item>
+        </change>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.7.4                                                   -->
     <!-- ============================================================ -->
     <changelog>
