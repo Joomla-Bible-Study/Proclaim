@@ -698,7 +698,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  ?string  The URL to redirect to, or null when this is not an old URL
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.5
      */
     private function legacySefRedirectTarget(string $path, string $task, int $mid): ?string
     {
