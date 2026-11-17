@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
@@ -588,11 +589,9 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             'alias'       => Cwmalias::makeUniqueAlias($db, '#__bsms_studies', 'welcome-to-proclaim', 0),
             'studydate'   => $now,
             'studyintro'  => '<p>This is a sample message created by the setup wizard to help you see how content appears on your site.</p>',
-            'teacher_id'  => $teacherId,
             'series_id'   => $ids['series_id'],
             'location_id' => $locationId,
             'messagetype' => 1,
-            'booknumber'  => 101,
             'published'   => 1,
             'access'      => 1,
             'language'    => '*',
@@ -607,6 +606,9 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         ];
         $db->insertObject('#__bsms_studies', $message);
         $ids['message_id'] = (int) $db->insertid();
+
+        // A message's teacher is a junction row, written as a real save writes it
+        CwmstudyteacherHelper::saveTeachers($ids['message_id'], [['teacher_id' => $teacherId]]);
 
         return $ids;
     }
