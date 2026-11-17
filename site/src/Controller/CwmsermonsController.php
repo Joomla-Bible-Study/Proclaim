@@ -19,7 +19,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -155,6 +154,11 @@ class CwmsermonsController extends BaseController
      * update without a full reload.  Falls back gracefully — the form
      * still works via normal POST when JavaScript is disabled.
      *
+     * It takes no CSRF token, by design. It is a read-only GET of public
+     * listings, and the page that calls it can come from Joomla's view
+     * cache, which hands every visitor the token of the session that filled
+     * it. A token check here fails for everyone else.
+     *
      * URL: index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw
      *
      * @return  void
@@ -166,13 +170,6 @@ class CwmsermonsController extends BaseController
     {
         $app = Factory::getApplication();
         header('Content-Type: application/json; charset=utf-8');
-
-        if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);
-            $app->close();
-
-            return;
-        }
 
         CwmDebug::startTimer('filterAjax');
 
