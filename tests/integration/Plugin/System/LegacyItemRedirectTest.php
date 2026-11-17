@@ -20,6 +20,9 @@ use PHPUnit\Framework\Attributes\TestDox;
  * old view name such as "sermon" before an <id>-<alias>. A menu item can carry
  * one of those names as its own alias, and a URL under it is not an old one.
  *
+ * Old download and landing URLs redirect too. A current task URL under such a
+ * menu item ends in the old view name as well, and is left alone.
+ *
  * @since  __DEPLOY_VERSION__
  */
 class LegacyItemRedirectTest extends IntegrationTestCase
@@ -142,6 +145,94 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('A current task URL under a menu item aliased "sermons" is left to the router')]
+    public function testCurrentTaskUnderMenuItemIsLeftToTheRouter(): void
+    {
+        // The list's AJAX filter, and the capitalised form Cwmmedia writes for downloads.
+        $this->assertNull($this->sefTargetFor('/' . $this->menuRoute, 'cwmsermons.filterAjax'));
+        $this->assertNull($this->sefTargetFor('/' . $this->menuRoute, 'Cwmsermon.download', 838));
+    }
+
+    /**
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('An old download URL still redirects, naming its controller once')]
+    public function testOldDownloadUrlRedirectsWithOneControllerPrefix(): void
+    {
+        $target = $this->sefTargetFor('/' . $this->menuRoute . '/sermon', 'download', 838);
+
+        $this->assertIsString($target);
+        $this->assertStringStartsWith('index.php?', $target);
+
+        parse_str(substr($target, \strlen('index.php?')), $query);
+
+        $this->assertSame('com_proclaim', $query['option']);
+        $this->assertSame('cwmsermon.download', $query['task']);
+        $this->assertSame('838', $query['mid']);
+    }
+
+    /**
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('A task that is not an old one, or a media id with no task, is left to the router')]
+    public function testOtherTaskUrlsAreLeftToTheRouter(): void
+    {
+        $this->assertNull($this->sefTargetFor('/' . $this->menuRoute . '/sermon', 'playHit'));
+        $this->assertNull($this->sefTargetFor('/' . $this->menuRoute . '/sermon', '', 838));
+    }
+
+    /**
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('On a site in a subfolder, an old item URL redirects into that folder once')]
+    public function testOldItemUrlInSubfolderNamesTheFolderOnce(): void
+    {
+        $alias = $this->uniqueAlias('current');
+        $id    = $this->seedStudy($alias);
+
+        $this->assertSame(
+            '/joomla/' . $this->menuRoute . '/' . $alias,
+            $this->sefTargetFor('/joomla/' . $this->menuRoute . '/sermon/' . $id . '-zz-old-alias/1')
+        );
+    }
+
+    /**
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('On a site in a subfolder, an old landing URL redirects into that folder once, filter applied')]
+    public function testLandingUrlInSubfolderNamesTheFolderOnce(): void
+    {
+        $this->assertSame(
+            '/joomla/' . $this->menuRoute . '?filter_teacher=115',
+            $this->sefTargetFor('/joomla/' . $this->menuRoute . '/landing/teacher/115/1')
+        );
+    }
+
+    /**
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('An old landing URL under the home page redirects to the home page')]
+    public function testLandingUrlUnderTheHomePageRedirectsHome(): void
+    {
+        $this->assertSame('/?filter_teacher=115', $this->sefTargetFor('/landing/teacher/115/1'));
+        $this->assertSame('/', $this->sefTargetFor('/landing/sermons/1'));
+    }
+
+    /**
      * @param   string  $path  The request path
      *
      * @return  ?string  Where the plugin would redirect to, or null
@@ -151,6 +242,20 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     private function redirectPathFor(string $path): ?string
     {
         return (new \ReflectionMethod(Proclaim::class, 'legacyItemRedirectPath'))->invoke($this->plugin, $path);
+    }
+
+    /**
+     * @param   string  $path  The request path
+     * @param   string  $task  The request's task
+     * @param   int     $mid   The request's media file id
+     *
+     * @return  ?string  The URL the plugin would redirect an old SEF URL to, or null
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function sefTargetFor(string $path, string $task = '', int $mid = 0): ?string
+    {
+        return (new \ReflectionMethod(Proclaim::class, 'legacySefRedirectTarget'))->invoke($this->plugin, $path, $task, $mid);
     }
 
     /**
