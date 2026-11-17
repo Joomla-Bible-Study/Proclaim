@@ -920,26 +920,6 @@ class Cwmmedia
     }
 
     /**
-     * Vimeo URL to embed.
-     *
-     * @param   string  $string  Vimeo URL to transform.
-     *
-     * @return string
-     *
-     * @deprecated  10.1.0  Use CWMAddonVimeo::convertVimeo() instead. Will be removed in 11.0.0.
-     *
-     * @since 9.1.3
-     */
-    public function convertVimeo(string $string): string
-    {
-        return (string) preg_replace(
-            "/\s*[a-zA-Z\/\/:\.]*viemo.com\/([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
-            "https://player.vimeo.com/video/$2",
-            $string
-        );
-    }
-
-    /**
      * Return AVMedia Code.
      *
      * @param   string  $mediacode  Media string
