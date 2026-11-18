@@ -202,7 +202,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
-    protected $minimumPhp = '8.3.0';
+    protected $minimumPhp = '8.4.0';
 
     /**
      * Minimum Joomla! Version required to install the extension

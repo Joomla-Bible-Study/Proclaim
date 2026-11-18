@@ -268,8 +268,8 @@
         "endpoint": "https://www.christianwebministries.org",
         "categoryId": 1,
         "updateStreamId": 1,
-        "_environments_comment": "ARS environment ids driving the update XML: 45 = Joomla 5, 46 = Joomla 6, 48 = PHP 8.3, 49 = PHP 8.4, 50 = PHP 8.5. ARS takes the lowest PHP environment as php_minimum, so 48 is the floor. It follows Proclaim's install minimum (8.3), not the 8.4 that the development tooling needs: dropping 48 stops the update feed offering new releases to 8.3 sites. Publishing with NO environments makes ARS emit php_minimum 8.5 / Joomla 6.1+ requirements that block every real site (bit us for 10.3.4-10.4.0).",
-        "environments": ["45", "46", "48", "49", "50"],
+        "_environments_comment": "ARS environment ids driving the update XML: 45 = Joomla 5, 46 = Joomla 6, 49 = PHP 8.4, 50 = PHP 8.5. ARS takes the lowest PHP environment as php_minimum, so 49 is the floor. Publishing with NO environments makes ARS emit php_minimum 8.5 / Joomla 6.1+ requirements that block every real site (bit us for 10.3.4-10.4.0).",
+        "environments": ["45", "46", "49", "50"],
         "tokenItem": "CWM ARS API Token",
         "tokenVault": "CWM",
         "itemDescription": "pkg_proclaim download"

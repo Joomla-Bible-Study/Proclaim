@@ -6,7 +6,7 @@ Thank you for your interest in contributing to Proclaim! This document provides 
 
 Proclaim (CWM Proclaim) is a Joomla 5+ component for managing and displaying Bible studies and sermons. It supports teachers, series, topics, locations, media files, podcasting, and social sharing with customizable templates.
 
-- **Minimum PHP**: 8.3+ to install; 8.4 for development (cwm-build-tools needs it)
+- **Minimum PHP**: 8.4+
 - **Minimum Joomla**: 5+ (must work on Joomla 6 without backward compatibility layer)
 - **Namespace**: `CWM\Component\Proclaim`
 - **License**: GPL-2.0-or-later
@@ -219,7 +219,7 @@ composer version -- -v 10.2.0
 - Code must work natively on **Joomla 5 and 6**
 - Avoid ALL deprecated Joomla APIs
 - Test without backward compatibility layer
-- PHP 8.3+ on sites, 8.4 for development (use modern PHP features, but nothing 8.4-only: sites may run 8.3, and CI tests 8.3, 8.4 and 8.5)
+- PHP 8.4+ required (use modern PHP features, but nothing 8.5-only: development runs on 8.5, sites may run 8.4)
 
 ## Getting Help
 

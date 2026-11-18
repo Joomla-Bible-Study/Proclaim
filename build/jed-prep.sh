@@ -82,7 +82,7 @@ Features:
 
 Requirements:
 - Joomla 5.1.0+ or Joomla 6.x
-- PHP 8.3+
+- PHP 8.4+
 
 Documentation: https://github.com/Joomla-Bible-Study/Proclaim/wiki
 Support: https://github.com/Joomla-Bible-Study/Proclaim/issues

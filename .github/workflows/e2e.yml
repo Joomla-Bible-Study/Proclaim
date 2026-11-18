@@ -121,13 +121,13 @@ jobs:
           submodules: recursive
 
       - name: Setup PHP
-        # 8.4, development's default, not Proclaim's 8.3 install minimum:
-        # building the package needs cwm/build-tools and a Composer install of
-        # plugins/content/scripturelinks, and both require php >=8.4. That is a
-        # build-time requirement only; ci.yml tests the shipped code on 8.3.
+        # 8.5, like the rest of development. Building the package also
+        # composer-installs plugins/content/scripturelinks, whose composer.json
+        # requires php >=8.4. ci.yml's PHP Lint & Tests job is the one on the
+        # 8.4 floor, which composer.json's platform pin also stays at.
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: '8.5'
           extensions: mbstring, json, xml, mysqli, zip, gd, intl, curl
           coverage: none
 

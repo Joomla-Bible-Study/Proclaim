@@ -42,12 +42,12 @@ use Joomla\Event\SubscriberInterface;
 final class Proclaim extends CMSPlugin implements SubscriberInterface
 {
     /**
-     * Minimum PHP version ID required by Proclaim (8.3.0 = 80300).
+     * Minimum PHP version ID required by Proclaim (8.4.0 = 80400).
      *
      * @var int
      * @since 10.1.0
      */
-    private const int MIN_PHP_ID = 80300;
+    private const int MIN_PHP_ID = 80400;
 
     /**
      * Minimum PHP version as a display string for error messages.
@@ -55,7 +55,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var string
      * @since 10.1.0
      */
-    private const string MIN_PHP = '8.3.0';
+    private const string MIN_PHP = '8.4.0';
 
     /**
      * Default maximum POST submissions per window.
