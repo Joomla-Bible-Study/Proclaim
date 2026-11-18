@@ -263,7 +263,9 @@ class Cwmpodcast
                     continue;
                 }
 
-                $episodedate   = $this->formatFeedDate($episode->createdate, $siteTz);
+                // createdate may be NULL (the column allows it); the episode then takes
+                // its message's date.
+                $episodedate   = $this->formatFeedDate($episode->createdate ?? $episode->studydate ?? 'now', $siteTz);
                 $scripture     = $this->getListing()->getScripture($params, $episode, 0, 1);
                 $episode->size = $episode->params->get('size', '30000000');
 
