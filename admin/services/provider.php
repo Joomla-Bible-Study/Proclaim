@@ -50,9 +50,9 @@ return new class () implements ServiceProviderInterface {
         $container->set(
             ComponentInterface::class,
             function (Container $container) {
-                // Gate: Proclaim requires PHP 8.3+. If running on an older version,
+                // Gate: Proclaim requires PHP 8.4+. If running on an older version,
                 // return a minimal stub so the site doesn't crash with a parse error.
-                if (PHP_VERSION_ID < 80300) {
+                if (PHP_VERSION_ID < 80400) {
                     try {
                         $app = Factory::getApplication();
 
@@ -61,7 +61,7 @@ return new class () implements ServiceProviderInterface {
                             $app->enqueueMessage(
                                 Text::sprintf(
                                     'COM_PROCLAIM_ERROR_PHP_VERSION',
-                                    '8.3.0',
+                                    '8.4.0',
                                     PHP_VERSION
                                 ),
                                 'error'
@@ -71,7 +71,7 @@ return new class () implements ServiceProviderInterface {
                         // Silently fail if we can't enqueue the message
                     }
 
-                    // Return a bare MVCComponent that won't trigger PHP 8.3 syntax errors
+                    // Return a bare MVCComponent, which loads none of Proclaim's own code
                     $stub = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
                     $stub->setMVCFactory($container->get(MVCFactoryInterface::class));
 
