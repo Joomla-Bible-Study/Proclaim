@@ -1,6 +1,4 @@
-/**
- * @jest-environment jsdom
- */
+'use strict';
 
 /**
  * The media browsers prefill their search box with the message title, so
@@ -28,6 +26,12 @@
  * @since    __DEPLOY_VERSION__
  */
 
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, it, beforeEach, afterEach } = require('node:test');
+const { fn, resetModules, isolateModules } = require('./helpers/mocks');
+
 /**
  * The markup Joomla 5 emits for a ModalSelectField, per
  * layouts/joomla/form/field/modal-select.php.
@@ -48,7 +52,7 @@ function modalSelectMarkup(fieldId, title) {
 
 describe('Media browsers prefill the search box from the message title', () => {
     beforeEach(() => {
-        jest.resetModules();
+        resetModules();
 
         global.Joomla = {
             Text: { _: (key) => key },
@@ -56,8 +60,8 @@ describe('Media browsers prefill the search box from the message title', () => {
             renderMessages: () => {},
         };
 
-        window.cwmAlert = jest.fn(() => Promise.resolve());
-        global.fetch = jest.fn(() => Promise.resolve({
+        window.cwmAlert = fn(() => Promise.resolve());
+        global.fetch = fn(() => Promise.resolve({
             ok: true,
             json: () => Promise.resolve({ success: true, data: {} }),
         }));
@@ -73,18 +77,22 @@ describe('Media browsers prefill the search box from the message title', () => {
     // searchName where the others call it searchQuery. Parameterised rather
     // than normalised, because asserting a name the module does not use would
     // fail for a reason unrelated to the bug under test.
-    describe.each([
+    const BROWSERS = [
         ['YoutubeBrowser', 'addon-youtube-browser', 'searchQuery'],
         ['VimeoBrowser', 'addon-vimeo-browser', 'searchQuery'],
         ['WistiaBrowser', 'addon-wistia-browser', 'searchName'],
-    ])('%s', (globalName, moduleName, queryProp) => {
+    ];
+
+    // node:test has no describe.each(); each row gets a describe() named by
+    // its first column, as the '%s' title did.
+    BROWSERS.forEach(([globalName, moduleName, queryProp]) => describe(globalName, () => {
         /**
          * Load a browser module against the current DOM.
          *
          * @returns {object|undefined} The browser object, if it registered one.
          */
         function loadBrowser() {
-            jest.isolateModules(() => {
+            isolateModules(() => {
                 require(`../../build/media_source/js/${moduleName}.es6.js`);
             });
 
@@ -107,7 +115,7 @@ describe('Media browsers prefill the search box from the message title', () => {
             browser.serverId = 123;
             await browser.open();
 
-            expect(browser[queryProp]).toBe('The Prodigal Son');
+            assert.strictEqual(browser[queryProp], 'The Prodigal Son');
         });
 
         it('does not prefill from the placeholder text', async () => {
@@ -121,7 +129,7 @@ describe('Media browsers prefill the search box from the message title', () => {
             browser.serverId = 123;
             await browser.open();
 
-            expect(browser[queryProp]).not.toBe('Select a Message');
+            assert.notStrictEqual(browser[queryProp], 'Select a Message');
         });
-    });
+    }));
 });

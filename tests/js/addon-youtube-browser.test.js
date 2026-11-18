@@ -1,7 +1,16 @@
+'use strict';
+
 /**
  * Tests for addon-youtube-browser.es6.js
  * YouTube Video Browser functionality
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach, afterEach } = require('node:test');
+const { resetModules } = require('./helpers/mocks');
+const { calledWith } = require('./helpers/assert');
 
 describe('addon-youtube-browser.es6.js', () => {
     describe('YoutubeBrowser Module', () => {
@@ -27,45 +36,46 @@ describe('addon-youtube-browser.es6.js', () => {
         afterEach(() => {
             // Clean up
             delete window.Proclaim;
-            jest.resetModules();
+            resetModules();
         });
 
         test('should create Proclaim.YoutubeBrowser object', () => {
-            expect(window.Proclaim).toBeDefined();
-            expect(window.Proclaim.YoutubeBrowser).toBeDefined();
+            assert.notStrictEqual(window.Proclaim, undefined);
+            assert.notStrictEqual(window.Proclaim.YoutubeBrowser, undefined);
         });
 
         test('should have required methods', () => {
             const browser = window.Proclaim.YoutubeBrowser;
-            expect(typeof browser.init).toBe('function');
-            expect(typeof browser.createModal).toBe('function');
-            expect(typeof browser.bindEvents).toBe('function');
-            expect(typeof browser.open).toBe('function');
-            expect(typeof browser.loadVideos).toBe('function');
-            expect(typeof browser.selectVideo).toBe('function');
+            assert.strictEqual(typeof browser.init, 'function');
+            assert.strictEqual(typeof browser.createModal, 'function');
+            assert.strictEqual(typeof browser.bindEvents, 'function');
+            assert.strictEqual(typeof browser.open, 'function');
+            assert.strictEqual(typeof browser.loadVideos, 'function');
+            assert.strictEqual(typeof browser.selectVideo, 'function');
         });
 
         test('should escape HTML properly', () => {
             const browser = window.Proclaim.YoutubeBrowser;
-            expect(browser.escapeHtml('<script>alert("xss")</script>')).toBe(
+            assert.strictEqual(
+                browser.escapeHtml('<script>alert("xss")</script>'),
                 '&lt;script&gt;alert("xss")&lt;/script&gt;'
             );
         });
 
         test('should format dates', () => {
             const browser = window.Proclaim.YoutubeBrowser;
-            expect(browser.formatDate('')).toBe('');
-            expect(browser.formatDate(null)).toBe('');
+            assert.strictEqual(browser.formatDate(''), '');
+            assert.strictEqual(browser.formatDate(null), '');
             // Valid date should return formatted string
             const result = browser.formatDate('2024-01-15T10:30:00Z');
-            expect(result).toBeTruthy();
+            assert.ok(result);
         });
 
         test('should alert if no server selected when opening', () => {
             document.querySelector('[name="jform[server_id]"]').value = '';
             const browser = window.Proclaim.YoutubeBrowser;
             browser.open();
-            expect(window.cwmAlert).toHaveBeenCalledWith('Please select a server first.');
+            calledWith(window.cwmAlert, 'Please select a server first.');
         });
     });
 });

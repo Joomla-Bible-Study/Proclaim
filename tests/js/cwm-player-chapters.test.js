@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Tests for cwm-player-chapters.es6.js
  * Player chapters and timestamp seek handler
@@ -6,9 +8,16 @@
  * @since    10.2.0
  */
 
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach } = require('node:test');
+const { fn, resetModules } = require('./helpers/mocks');
+const { calledWith, match } = require('./helpers/assert');
+
 describe('cwm-player-chapters', () => {
     beforeEach(() => {
-        jest.resetModules();
+        resetModules();
         document.body.innerHTML = '';
     });
 
@@ -29,14 +38,14 @@ describe('cwm-player-chapters', () => {
             require('../../build/media_source/js/cwm-player-chapters.es6.js');
 
             const list = document.querySelector('.cwm-chapter-list');
-            expect(list).not.toBeNull();
+            assert.notStrictEqual(list, null);
 
             const items = list.querySelectorAll('.cwm-chapter-item');
-            expect(items.length).toBe(3);
-            expect(items[0].querySelector('.cwm-chapter-time').textContent).toBe('0:00');
-            expect(items[0].querySelector('.cwm-chapter-label').textContent).toBe('Introduction');
-            expect(items[1].querySelector('.cwm-chapter-time').textContent).toBe('3:45');
-            expect(items[2].dataset.seconds).toBe('630');
+            assert.strictEqual(items.length, 3);
+            assert.strictEqual(items[0].querySelector('.cwm-chapter-time').textContent, '0:00');
+            assert.strictEqual(items[0].querySelector('.cwm-chapter-label').textContent, 'Introduction');
+            assert.strictEqual(items[1].querySelector('.cwm-chapter-time').textContent, '3:45');
+            assert.strictEqual(items[2].dataset.seconds, '630');
         });
 
         test('skips rendering when data-chapters is invalid JSON', () => {
@@ -44,7 +53,7 @@ describe('cwm-player-chapters', () => {
 
             require('../../build/media_source/js/cwm-player-chapters.es6.js');
 
-            expect(document.querySelector('.cwm-chapter-list')).toBeNull();
+            assert.strictEqual(document.querySelector('.cwm-chapter-list'), null);
         });
 
         test('skips rendering when chapters array is empty', () => {
@@ -52,7 +61,7 @@ describe('cwm-player-chapters', () => {
 
             require('../../build/media_source/js/cwm-player-chapters.es6.js');
 
-            expect(document.querySelector('.cwm-chapter-list')).toBeNull();
+            assert.strictEqual(document.querySelector('.cwm-chapter-list'), null);
         });
 
         test('does nothing when no data-chapters elements exist', () => {
@@ -60,7 +69,7 @@ describe('cwm-player-chapters', () => {
 
             require('../../build/media_source/js/cwm-player-chapters.es6.js');
 
-            expect(document.querySelector('.cwm-chapter-list')).toBeNull();
+            assert.strictEqual(document.querySelector('.cwm-chapter-list'), null);
         });
     });
 
@@ -83,8 +92,8 @@ describe('cwm-player-chapters', () => {
             const items = document.querySelectorAll('.cwm-chapter-item');
             items[1].click();
 
-            expect(video.currentTime).toBe(300);
-            expect(window.HTMLMediaElement.prototype.play).toHaveBeenCalled();
+            assert.strictEqual(video.currentTime, 300);
+            assert.ok(window.HTMLMediaElement.prototype.play.mock.callCount() > 0);
         });
 
         test('clicking a chapter button sets currentTime on audio element', () => {
@@ -105,7 +114,7 @@ describe('cwm-player-chapters', () => {
             const items = document.querySelectorAll('.cwm-chapter-item');
             items[1].click();
 
-            expect(audio.currentTime).toBe(150);
+            assert.strictEqual(audio.currentTime, 150);
         });
     });
 
@@ -123,7 +132,7 @@ describe('cwm-player-chapters', () => {
             `;
 
             // Mock iframe contentWindow.postMessage
-            const mockPostMessage = jest.fn();
+            const mockPostMessage = fn();
             const iframe = document.querySelector('iframe');
             Object.defineProperty(iframe, 'contentWindow', {
                 value: { postMessage: mockPostMessage },
@@ -134,7 +143,8 @@ describe('cwm-player-chapters', () => {
             const items = document.querySelectorAll('.cwm-chapter-item');
             items[1].click();
 
-            expect(mockPostMessage).toHaveBeenCalledWith(
+            calledWith(
+                mockPostMessage,
                 JSON.stringify({
                     event: 'command',
                     func: 'seekTo',
@@ -168,16 +178,16 @@ describe('cwm-player-chapters', () => {
             Object.defineProperty(video, 'currentTime', { value: 240, writable: true });
             video.dispatchEvent(new Event('timeupdate'));
 
-            expect(items[0].classList.contains('active')).toBe(true);
-            expect(items[1].classList.contains('active')).toBe(false);
+            assert.strictEqual(items[0].classList.contains('active'), true);
+            assert.strictEqual(items[1].classList.contains('active'), false);
 
             // Simulate playback at 7 minutes (should highlight Part 2)
             Object.defineProperty(video, 'currentTime', { value: 420, writable: true });
             video.dispatchEvent(new Event('timeupdate'));
 
-            expect(items[0].classList.contains('active')).toBe(false);
-            expect(items[1].classList.contains('active')).toBe(true);
-            expect(items[2].classList.contains('active')).toBe(false);
+            assert.strictEqual(items[0].classList.contains('active'), false);
+            assert.strictEqual(items[1].classList.contains('active'), true);
+            assert.strictEqual(items[2].classList.contains('active'), false);
         });
     });
 
@@ -200,7 +210,7 @@ describe('cwm-player-chapters', () => {
             link.click();
 
             const audio = document.querySelector('audio');
-            expect(audio.currentTime).toBe(90);
+            assert.strictEqual(audio.currentTime, 90);
         });
 
         test('ignores .cwm-timestamp with non-numeric seconds', () => {
@@ -218,7 +228,7 @@ describe('cwm-player-chapters', () => {
             link.click();
 
             // Should not have changed currentTime
-            expect(audio.currentTime).toBe(0);
+            assert.strictEqual(audio.currentTime, 0);
         });
 
         test('falls back to direct YouTube iframe when no player container', () => {
@@ -227,7 +237,7 @@ describe('cwm-player-chapters', () => {
                 <a class="cwm-timestamp" data-seconds="120" href="#">2:00</a>
             `;
 
-            const mockPostMessage = jest.fn();
+            const mockPostMessage = fn();
             const iframe = document.querySelector('iframe');
             Object.defineProperty(iframe, 'contentWindow', {
                 value: { postMessage: mockPostMessage },
@@ -237,8 +247,9 @@ describe('cwm-player-chapters', () => {
 
             document.querySelector('.cwm-timestamp').click();
 
-            expect(mockPostMessage).toHaveBeenCalledWith(
-                expect.stringContaining('"func":"seekTo"'),
+            calledWith(
+                mockPostMessage,
+                match.stringContaining('"func":"seekTo"'),
                 '*',
             );
         });

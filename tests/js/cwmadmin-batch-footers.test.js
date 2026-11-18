@@ -1,7 +1,16 @@
+'use strict';
+
 /**
  * Tests for cwmadmin-*-batch-footer.es6.js and cwmadmin-*-batch.es6.js files
  * Batch processing functionality for admin views
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach, afterEach } = require('node:test');
+const { fn, resetModules } = require('./helpers/mocks');
+const { calledWith, match } = require('./helpers/assert');
 
 // Entity-specific batch files (legacy, kept for backward compat)
 const LEGACY_BATCH_FILES = [
@@ -23,7 +32,7 @@ describe('Legacy Entity-Specific Batch Files', () => {
 
                 beforeEach(() => {
                     // Mock Joomla.submitform
-                    mockSubmitForm = jest.fn();
+                    mockSubmitForm = fn();
                     global.Joomla = {
                         submitform: mockSubmitForm
                     };
@@ -39,19 +48,19 @@ describe('Legacy Entity-Specific Batch Files', () => {
                         </button>
                     `;
 
-                    jest.resetModules();
+                    resetModules();
                 });
 
                 afterEach(() => {
                     delete global.Joomla;
-                    jest.resetModules();
+                    resetModules();
                 });
 
                 test('should initialize without errors', () => {
-                    expect(() => {
+                    assert.doesNotThrow(() => {
                         require(`../../${file}`);
                         document.dispatchEvent(new Event('DOMContentLoaded'));
-                    }).not.toThrow();
+                    });
                 });
 
                 test('should bind click event to batch submit button', () => {
@@ -59,15 +68,16 @@ describe('Legacy Entity-Specific Batch Files', () => {
                     document.dispatchEvent(new Event('DOMContentLoaded'));
 
                     const button = document.getElementById('batch-submit-button-id');
-                    expect(button).toBeTruthy();
+                    assert.ok(button);
 
                     // Trigger click
                     button.click();
 
                     // Check if submitform was called with correct task
-                    expect(mockSubmitForm).toHaveBeenCalledWith(
+                    calledWith(
+                        mockSubmitForm,
                         task,
-                        expect.any(Object)
+                        match.any(Object),
                     );
                 });
 
@@ -86,16 +96,16 @@ describe('Legacy Entity-Specific Batch Files', () => {
                     button.click();
 
                     // submitform should not be called
-                    expect(mockSubmitForm).not.toHaveBeenCalled();
+                    assert.strictEqual(mockSubmitForm.mock.callCount(), 0);
                 });
 
                 test('should handle missing button gracefully', () => {
                     document.body.innerHTML = '<form id="adminForm"></form>';
 
-                    expect(() => {
+                    assert.doesNotThrow(() => {
                         require(`../../${file}`);
                         document.dispatchEvent(new Event('DOMContentLoaded'));
-                    }).not.toThrow();
+                    });
                 });
             });
         });
@@ -123,25 +133,25 @@ describe('Generic Batch Footer (cwmadmin-batch-footer.es6.js)', () => {
     let mockSubmitForm;
 
     beforeEach(() => {
-        mockSubmitForm = jest.fn();
+        mockSubmitForm = fn();
         global.Joomla = {
             submitform: mockSubmitForm
         };
-        jest.resetModules();
+        resetModules();
     });
 
     afterEach(() => {
         delete global.Joomla;
-        jest.resetModules();
+        resetModules();
     });
 
     test('should initialize without errors', () => {
         document.body.innerHTML = '<form id="adminForm"></form>';
 
-        expect(() => {
+        assert.doesNotThrow(() => {
             require(`../../${GENERIC_FILE}`);
             document.dispatchEvent(new Event('DOMContentLoaded'));
-        }).not.toThrow();
+        });
     });
 
     BATCH_TASKS.forEach((task) => {
@@ -160,7 +170,7 @@ describe('Generic Batch Footer (cwmadmin-batch-footer.es6.js)', () => {
 
             document.getElementById('batch-submit-button-id').click();
 
-            expect(mockSubmitForm).toHaveBeenCalledWith(task, expect.any(Object));
+            calledWith(mockSubmitForm, task, match.any(Object));
         });
     });
 
@@ -179,7 +189,7 @@ describe('Generic Batch Footer (cwmadmin-batch-footer.es6.js)', () => {
 
         document.getElementById('batch-submit-button-id').click();
 
-        expect(mockSubmitForm).not.toHaveBeenCalled();
+        assert.strictEqual(mockSubmitForm.mock.callCount(), 0);
     });
 
     test('should not submit if form is missing', () => {
@@ -194,15 +204,15 @@ describe('Generic Batch Footer (cwmadmin-batch-footer.es6.js)', () => {
 
         document.getElementById('batch-submit-button-id').click();
 
-        expect(mockSubmitForm).not.toHaveBeenCalled();
+        assert.strictEqual(mockSubmitForm.mock.callCount(), 0);
     });
 
     test('should handle missing button gracefully', () => {
         document.body.innerHTML = '<form id="adminForm"></form>';
 
-        expect(() => {
+        assert.doesNotThrow(() => {
             require(`../../${GENERIC_FILE}`);
             document.dispatchEvent(new Event('DOMContentLoaded'));
-        }).not.toThrow();
+        });
     });
 });

@@ -1,6 +1,4 @@
-/**
- * @jest-environment jsdom
- */
+'use strict';
 
 /**
  * #1958: a finished restore reported one line — "Import completed
@@ -17,6 +15,13 @@
  * @package  Proclaim.Tests
  * @since    __DEPLOY_VERSION__
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, it, beforeEach } = require('node:test');
+const { isolateModules } = require('./helpers/mocks');
+const { includes, excludes } = require('./helpers/assert');
 
 /**
  * Load the module and hand back the instance it exposes.
@@ -35,7 +40,7 @@ function loadModule() {
         renderMessages: () => {},
     };
 
-    jest.isolateModules(() => {
+    isolateModules(() => {
         require('../../build/media_source/js/backup-restore.es6.js');
     });
 
@@ -61,14 +66,14 @@ describe('Restore completion summary (#1958)', () => {
                 config_restored: true,
             });
 
-            expect(summary).toContain('JBS_IBM_SUMMARY_RESTORED');
-            expect(summary).toContain('JBS_IBM_SUMMARY_TABLES');
-            expect(summary).toContain('JBS_IBM_SUMMARY_TEMPLATECODES');
-            expect(summary).toContain('JBS_IBM_SUMMARY_CONFIG');
+            includes(summary, 'JBS_IBM_SUMMARY_RESTORED');
+            includes(summary, 'JBS_IBM_SUMMARY_TABLES');
+            includes(summary, 'JBS_IBM_SUMMARY_TEMPLATECODES');
+            includes(summary, 'JBS_IBM_SUMMARY_CONFIG');
 
             // A zero is not an achievement worth a bullet.
-            expect(summary).not.toContain('JBS_IBM_SUMMARY_TASKS');
-            expect(summary).not.toContain('JBS_IBM_SUMMARY_AUTO_INCREMENT');
+            excludes(summary, 'JBS_IBM_SUMMARY_TASKS');
+            excludes(summary, 'JBS_IBM_SUMMARY_AUTO_INCREMENT');
         });
 
         it('omits the section entirely when nothing was restored', () => {
@@ -80,7 +85,7 @@ describe('Restore completion summary (#1958)', () => {
                 config_restored: false,
             });
 
-            expect(summary).not.toContain('JBS_IBM_SUMMARY_RESTORED');
+            excludes(summary, 'JBS_IBM_SUMMARY_RESTORED');
         });
     });
 
@@ -88,8 +93,8 @@ describe('Restore completion summary (#1958)', () => {
         it('says so plainly when nothing does', () => {
             const summary = app.buildRestoreSummary({ tables_restored: 23 });
 
-            expect(summary).toContain('JBS_IBM_SUMMARY_NOTHING_OUTSTANDING');
-            expect(summary).not.toContain('JBS_IBM_SUMMARY_ATTENTION');
+            includes(summary, 'JBS_IBM_SUMMARY_NOTHING_OUTSTANDING');
+            excludes(summary, 'JBS_IBM_SUMMARY_ATTENTION');
         });
 
         it('reports servers left on the legacy type', () => {
@@ -97,9 +102,9 @@ describe('Restore completion summary (#1958)', () => {
                 pending_migration: { servers: 3, media: 2008 },
             });
 
-            expect(summary).toContain('JBS_IBM_SUMMARY_ATTENTION');
-            expect(summary).toContain('JBS_IBM_SERVERS_PENDING');
-            expect(summary).not.toContain('JBS_IBM_SUMMARY_NOTHING_OUTSTANDING');
+            includes(summary, 'JBS_IBM_SUMMARY_ATTENTION');
+            includes(summary, 'JBS_IBM_SERVERS_PENDING');
+            excludes(summary, 'JBS_IBM_SUMMARY_NOTHING_OUTSTANDING');
         });
 
         it('reports a missing media folder when there are records to miss it', () => {
@@ -107,7 +112,7 @@ describe('Restore completion summary (#1958)', () => {
                 media_status: { rows: 2094, dir_exists: false, dir_empty: false },
             });
 
-            expect(summary).toContain('JBS_IBM_MEDIA_DIR_MISSING');
+            includes(summary, 'JBS_IBM_MEDIA_DIR_MISSING');
         });
 
         it('distinguishes an empty media folder from an absent one', () => {
@@ -115,8 +120,8 @@ describe('Restore completion summary (#1958)', () => {
                 media_status: { rows: 2094, dir_exists: true, dir_empty: true },
             });
 
-            expect(summary).toContain('JBS_IBM_MEDIA_DIR_EMPTY');
-            expect(summary).not.toContain('JBS_IBM_MEDIA_DIR_MISSING');
+            includes(summary, 'JBS_IBM_MEDIA_DIR_EMPTY');
+            excludes(summary, 'JBS_IBM_MEDIA_DIR_MISSING');
         });
 
         /**
@@ -129,14 +134,14 @@ describe('Restore completion summary (#1958)', () => {
                 media_status: { rows: 0, dir_exists: false, dir_empty: false },
             });
 
-            expect(summary).not.toContain('JBS_IBM_MEDIA_DIR_MISSING');
-            expect(summary).not.toContain('JBS_IBM_MEDIA_DIR_EMPTY');
-            expect(summary).toContain('JBS_IBM_SUMMARY_NOTHING_OUTSTANDING');
+            excludes(summary, 'JBS_IBM_MEDIA_DIR_MISSING');
+            excludes(summary, 'JBS_IBM_MEDIA_DIR_EMPTY');
+            includes(summary, 'JBS_IBM_SUMMARY_NOTHING_OUTSTANDING');
         });
     });
 
     it('survives a payload with nothing in it', () => {
-        expect(() => app.buildRestoreSummary({})).not.toThrow();
-        expect(app.buildRestoreSummary({})).toContain('JBS_IBM_IMPORT_COMPLETE');
+        assert.doesNotThrow(() => app.buildRestoreSummary({}));
+        includes(app.buildRestoreSummary({}), 'JBS_IBM_IMPORT_COMPLETE');
     });
 });

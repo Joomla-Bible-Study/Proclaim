@@ -1,9 +1,7 @@
-/**
- * @jest-environment jsdom
- */
+'use strict';
 
 /**
- * Jest tests for cwm-fetch.es6.js
+ * Tests for cwm-fetch.es6.js
  *
  * Tests timeout, retry, backoff, abort, gatekeeper detection, and session expiry.
  *
@@ -11,10 +9,17 @@
  * @since    10.1.0
  */
 
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach, afterEach } = require('node:test');
+const { fn, resolving, rejecting, clearAllMocks } = require('./helpers/mocks');
+const { calledWith, match } = require('./helpers/assert');
+
 // Mock Joomla global
 global.Joomla = {
-    renderMessages: jest.fn(),
-    Text: { _: jest.fn((key) => key) },
+    renderMessages: fn(),
+    Text: { _: fn((key) => key) },
 };
 
 // Load the module (IIFE sets window.ProclaimFetch)
@@ -60,8 +65,8 @@ describe('ProclaimFetch', () => {
 
     beforeEach(() => {
         ProclaimFetch = window.ProclaimFetch;
-        jest.clearAllMocks();
-        global.fetch = jest.fn();
+        clearAllMocks();
+        global.fetch = fn();
     });
 
     afterEach(() => {
@@ -74,14 +79,14 @@ describe('ProclaimFetch', () => {
 
     describe('Presets', () => {
         test('exports timeout presets', () => {
-            expect(ProclaimFetch.ADMIN_TIMEOUT).toBe(30000);
-            expect(ProclaimFetch.FRONTEND_TIMEOUT).toBe(15000);
-            expect(ProclaimFetch.LONG_TIMEOUT).toBe(60000);
+            assert.strictEqual(ProclaimFetch.ADMIN_TIMEOUT, 30000);
+            assert.strictEqual(ProclaimFetch.FRONTEND_TIMEOUT, 15000);
+            assert.strictEqual(ProclaimFetch.LONG_TIMEOUT, 60000);
         });
 
         test('exports fetch and fetchJson methods', () => {
-            expect(typeof ProclaimFetch.fetch).toBe('function');
-            expect(typeof ProclaimFetch.fetchJson).toBe('function');
+            assert.strictEqual(typeof ProclaimFetch.fetch, 'function');
+            assert.strictEqual(typeof ProclaimFetch.fetchJson, 'function');
         });
     });
 
@@ -92,27 +97,27 @@ describe('ProclaimFetch', () => {
     describe('fetch()', () => {
         test('returns Response on success', async () => {
             const resp = mockResponse('ok', { status: 200 });
-            global.fetch.mockResolvedValue(resp);
+            global.fetch.mock.mockImplementation(resolving(resp));
 
             const result = await ProclaimFetch.fetch('/api/test');
 
-            expect(result).toBe(resp);
-            expect(global.fetch).toHaveBeenCalledTimes(1);
+            assert.strictEqual(result, resp);
+            assert.strictEqual(global.fetch.mock.callCount(), 1);
         });
 
         test('passes fetch options through', async () => {
             const resp = mockResponse('ok', { status: 200 });
-            global.fetch.mockResolvedValue(resp);
+            global.fetch.mock.mockImplementation(resolving(resp));
 
             await ProclaimFetch.fetch('/api/test', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
             });
 
-            const callArgs = global.fetch.mock.calls[0];
-            expect(callArgs[0]).toBe('/api/test');
-            expect(callArgs[1].method).toBe('POST');
-            expect(callArgs[1].headers['Content-Type']).toBe('application/json');
+            const callArgs = global.fetch.mock.calls[0].arguments;
+            assert.strictEqual(callArgs[0], '/api/test');
+            assert.strictEqual(callArgs[1].method, 'POST');
+            assert.strictEqual(callArgs[1].headers['Content-Type'], 'application/json');
         });
     });
 
@@ -123,7 +128,7 @@ describe('ProclaimFetch', () => {
     describe('Timeout', () => {
         /** Mock fetch that rejects when the signal is aborted (like real fetch) */
         function signalAwareMock() {
-            return jest.fn((_url, opts) => new Promise((_resolve, reject) => {
+            return fn((_url, opts) => new Promise((_resolve, reject) => {
                 if (opts && opts.signal) {
                     const onAbort = () => {
                         reject(new DOMException('The operation was aborted.', 'AbortError'));
@@ -140,9 +145,10 @@ describe('ProclaimFetch', () => {
         test('throws TimeoutError when request exceeds timeout', async () => {
             global.fetch = signalAwareMock();
 
-            await expect(
+            await assert.rejects(
                 ProclaimFetch.fetch('/api/slow', {}, { timeout: 50, retries: 0 }),
-            ).rejects.toThrow(/timed out/i);
+                { message: /timed out/i },
+            );
         });
 
         test('timeout error has TimeoutError name', async () => {
@@ -152,7 +158,7 @@ describe('ProclaimFetch', () => {
                 await ProclaimFetch.fetch('/api/slow', {}, { timeout: 50, retries: 0 });
                 throw new Error('Should have thrown');
             } catch (err) {
-                expect(err.name).toBe('TimeoutError');
+                assert.strictEqual(err.name, 'TimeoutError');
             }
         });
     });
@@ -166,45 +172,47 @@ describe('ProclaimFetch', () => {
             const networkError = new TypeError('Failed to fetch');
             const resp = mockResponse('ok', { status: 200 });
 
-            global.fetch
-                .mockRejectedValueOnce(networkError)
-                .mockResolvedValueOnce(resp);
+            // Unlike Jest's chained ...Once() calls, node:test's
+            // mockImplementationOnce() names the call it applies to.
+            global.fetch.mock.mockImplementationOnce(rejecting(networkError), 0);
+            global.fetch.mock.mockImplementationOnce(resolving(resp), 1);
 
             const result = await ProclaimFetch.fetch(
                 '/api/test', {},
                 { retries: 1, retryDelay: 10, backoffMultiplier: 1 },
             );
 
-            expect(result).toBe(resp);
-            expect(global.fetch).toHaveBeenCalledTimes(2);
+            assert.strictEqual(result, resp);
+            assert.strictEqual(global.fetch.mock.callCount(), 2);
         });
 
         test('does not retry on AbortError', async () => {
             const abortError = new DOMException('Aborted', 'AbortError');
 
-            global.fetch.mockRejectedValue(abortError);
+            global.fetch.mock.mockImplementation(rejecting(abortError));
 
-            await expect(
+            await assert.rejects(
                 ProclaimFetch.fetch('/api/test', {}, { retries: 2, retryDelay: 10 }),
-            ).rejects.toThrow();
+            );
 
-            expect(global.fetch).toHaveBeenCalledTimes(1);
+            assert.strictEqual(global.fetch.mock.callCount(), 1);
         });
 
         test('exhausts retries then throws', async () => {
             const networkError = new TypeError('Failed to fetch');
 
-            global.fetch.mockRejectedValue(networkError);
+            global.fetch.mock.mockImplementation(rejecting(networkError));
 
-            await expect(
+            await assert.rejects(
                 ProclaimFetch.fetch(
                     '/api/test', {},
                     { retries: 2, retryDelay: 10, backoffMultiplier: 1 },
                 ),
-            ).rejects.toThrow('Failed to fetch');
+                { message: /Failed to fetch/ },
+            );
 
             // initial + 2 retries = 3 calls
-            expect(global.fetch).toHaveBeenCalledTimes(3);
+            assert.strictEqual(global.fetch.mock.callCount(), 3);
         });
     });
 
@@ -215,7 +223,7 @@ describe('ProclaimFetch', () => {
     describe('Abort', () => {
         test('respects caller AbortController signal', async () => {
             // Mock that rejects when signal aborts (like real fetch)
-            global.fetch = jest.fn((_url, opts) => new Promise((_resolve, reject) => {
+            global.fetch = fn((_url, opts) => new Promise((_resolve, reject) => {
                 if (opts && opts.signal) {
                     const onAbort = () => {
                         reject(new DOMException('The operation was aborted.', 'AbortError'));
@@ -238,23 +246,23 @@ describe('ProclaimFetch', () => {
             // Abort after a tiny delay
             setTimeout(() => controller.abort(), 10);
 
-            await expect(fetchPromise).rejects.toThrow();
+            await assert.rejects(fetchPromise);
         });
 
         test('does not retry when caller aborts', async () => {
             const controller = new AbortController();
             controller.abort();
 
-            global.fetch.mockRejectedValue(new DOMException('Aborted', 'AbortError'));
+            global.fetch.mock.mockImplementation(rejecting(new DOMException('Aborted', 'AbortError')));
 
-            await expect(
+            await assert.rejects(
                 ProclaimFetch.fetch(
                     '/api/test', {},
                     { retries: 2, retryDelay: 10, signal: controller.signal },
                 ),
-            ).rejects.toThrow();
+            );
 
-            expect(global.fetch).toHaveBeenCalledTimes(1);
+            assert.strictEqual(global.fetch.mock.callCount(), 1);
         });
     });
 
@@ -265,26 +273,27 @@ describe('ProclaimFetch', () => {
     describe('fetchJson()', () => {
         test('returns parsed JSON on success', async () => {
             const payload = { success: true, data: [1, 2, 3] };
-            global.fetch.mockResolvedValue(mockResponse(
+            global.fetch.mock.mockImplementation(resolving(mockResponse(
                 payload,
                 { status: 200, headers: { 'Content-Type': 'application/json' } },
-            ));
+            )));
 
             const result = await ProclaimFetch.fetchJson('/api/data');
 
-            expect(result).toEqual(payload);
+            assert.deepStrictEqual(result, payload);
         });
 
         test('throws on HTTP 4xx', async () => {
-            global.fetch.mockResolvedValue(mockResponse('Not Found', {
+            global.fetch.mock.mockImplementation(resolving(mockResponse('Not Found', {
                 status: 404,
                 statusText: 'Not Found',
                 headers: { 'Content-Type': 'text/plain' },
-            }));
+            })));
 
-            await expect(
+            await assert.rejects(
                 ProclaimFetch.fetchJson('/api/missing', {}, { retries: 0 }),
-            ).rejects.toThrow(/404/);
+                { message: /404/ },
+            );
         });
     });
 
@@ -303,17 +312,16 @@ describe('ProclaimFetch', () => {
                 { status: 200, headers: { 'Content-Type': 'application/json' } },
             );
 
-            global.fetch
-                .mockResolvedValueOnce(htmlResp)
-                .mockResolvedValueOnce(jsonResp);
+            global.fetch.mock.mockImplementationOnce(resolving(htmlResp), 0);
+            global.fetch.mock.mockImplementationOnce(resolving(jsonResp), 1);
 
             const result = await ProclaimFetch.fetchJson(
                 '/api/test', {},
                 { retries: 1, retryDelay: 10, backoffMultiplier: 1 },
             );
 
-            expect(result).toEqual({ success: true });
-            expect(global.fetch).toHaveBeenCalledTimes(2);
+            assert.deepStrictEqual(result, { success: true });
+            assert.strictEqual(global.fetch.mock.callCount(), 2);
         });
 
         test('throws after exhausting retries on gatekeeper', async () => {
@@ -322,17 +330,18 @@ describe('ProclaimFetch', () => {
                 { status: 200, headers: { 'Content-Type': 'text/html' } },
             );
 
-            global.fetch.mockResolvedValue(htmlResp);
+            global.fetch.mock.mockImplementation(resolving(htmlResp));
 
-            await expect(
+            await assert.rejects(
                 ProclaimFetch.fetchJson(
                     '/api/test', {},
                     { retries: 1, retryDelay: 10, backoffMultiplier: 1 },
                 ),
-            ).rejects.toThrow(/HTML/i);
+                { message: /HTML/i },
+            );
 
             // initial + 1 retry = 2 calls
-            expect(global.fetch).toHaveBeenCalledTimes(2);
+            assert.strictEqual(global.fetch.mock.callCount(), 2);
         });
     });
 
@@ -342,35 +351,38 @@ describe('ProclaimFetch', () => {
 
     describe('Session expiry', () => {
         test('shows Joomla message on 401', async () => {
-            global.fetch.mockResolvedValue(mockResponse('Unauthorized', {
+            global.fetch.mock.mockImplementation(resolving(mockResponse('Unauthorized', {
                 status: 401,
                 headers: { 'Content-Type': 'text/plain' },
-            }));
+            })));
 
-            await expect(
+            await assert.rejects(
                 ProclaimFetch.fetchJson('/api/protected', {}, { retries: 2 }),
-            ).rejects.toThrow(/Session expired/);
+                { message: /Session expired/ },
+            );
 
-            expect(Joomla.renderMessages).toHaveBeenCalledWith(
-                expect.objectContaining({ error: expect.any(Array) }),
+            calledWith(
+                Joomla.renderMessages,
+                match.objectContaining({ error: match.any(Array) }),
             );
 
             // Session expiry is NOT retried
-            expect(global.fetch).toHaveBeenCalledTimes(1);
+            assert.strictEqual(global.fetch.mock.callCount(), 1);
         });
 
         test('shows Joomla message on 403', async () => {
-            global.fetch.mockResolvedValue(mockResponse('Forbidden', {
+            global.fetch.mock.mockImplementation(resolving(mockResponse('Forbidden', {
                 status: 403,
                 headers: { 'Content-Type': 'text/plain' },
-            }));
+            })));
 
-            await expect(
+            await assert.rejects(
                 ProclaimFetch.fetchJson('/api/protected', {}, { retries: 2 }),
-            ).rejects.toThrow(/Session expired/);
+                { message: /Session expired/ },
+            );
 
-            expect(Joomla.renderMessages).toHaveBeenCalled();
-            expect(global.fetch).toHaveBeenCalledTimes(1);
+            assert.ok(Joomla.renderMessages.mock.callCount() > 0);
+            assert.strictEqual(global.fetch.mock.callCount(), 1);
         });
     });
 
@@ -390,34 +402,34 @@ describe('ProclaimFetch', () => {
                 { status: 200, headers: { 'Content-Type': 'application/json' } },
             );
 
-            global.fetch
-                .mockResolvedValueOnce(errorResp)
-                .mockResolvedValueOnce(okResp);
+            global.fetch.mock.mockImplementationOnce(resolving(errorResp), 0);
+            global.fetch.mock.mockImplementationOnce(resolving(okResp), 1);
 
             const result = await ProclaimFetch.fetchJson(
                 '/api/test', {},
                 { retries: 1, retryDelay: 10, backoffMultiplier: 1 },
             );
 
-            expect(result).toEqual({ success: true });
-            expect(global.fetch).toHaveBeenCalledTimes(2);
+            assert.deepStrictEqual(result, { success: true });
+            assert.strictEqual(global.fetch.mock.callCount(), 2);
         });
 
         test('does not retry 4xx errors in fetchJson', async () => {
-            global.fetch.mockResolvedValue(mockResponse('Bad Request', {
+            global.fetch.mock.mockImplementation(resolving(mockResponse('Bad Request', {
                 status: 400,
                 statusText: 'Bad Request',
                 headers: { 'Content-Type': 'text/plain' },
-            }));
+            })));
 
-            await expect(
+            await assert.rejects(
                 ProclaimFetch.fetchJson(
                     '/api/test', {},
                     { retries: 2, retryDelay: 10 },
                 ),
-            ).rejects.toThrow(/400/);
+                { message: /400/ },
+            );
 
-            expect(global.fetch).toHaveBeenCalledTimes(1);
+            assert.strictEqual(global.fetch.mock.callCount(), 1);
         });
     });
 
@@ -430,10 +442,9 @@ describe('ProclaimFetch', () => {
             const networkError = new TypeError('Failed to fetch');
             const resp = mockResponse('ok', { status: 200 });
 
-            global.fetch
-                .mockRejectedValueOnce(networkError)
-                .mockRejectedValueOnce(networkError)
-                .mockResolvedValueOnce(resp);
+            global.fetch.mock.mockImplementationOnce(rejecting(networkError), 0);
+            global.fetch.mock.mockImplementationOnce(rejecting(networkError), 1);
+            global.fetch.mock.mockImplementationOnce(resolving(resp), 2);
 
             const start = Date.now();
             await ProclaimFetch.fetch(
@@ -443,8 +454,8 @@ describe('ProclaimFetch', () => {
             const elapsed = Date.now() - start;
 
             // Should have waited ~50ms + ~100ms = ~150ms minimum
-            expect(elapsed).toBeGreaterThanOrEqual(100);
-            expect(global.fetch).toHaveBeenCalledTimes(3);
+            assert.ok(elapsed >= 100);
+            assert.strictEqual(global.fetch.mock.callCount(), 3);
         });
     });
 });
