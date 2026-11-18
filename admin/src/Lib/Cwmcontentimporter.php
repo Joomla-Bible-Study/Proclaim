@@ -1261,9 +1261,10 @@ class Cwmcontentimporter
 
         // The guard against new legacy-server media exempts this caller by design:
         // validate() admits legacy servers only, the one type verified free of
-        // side effects on save and on removal.
+        // side effects on save and on removal. Positional, so a stand-in model
+        // whose save() takes only $data still accepts the call.
         try {
-            $ok = $model->save($data, allowLegacyServer: true);
+            $ok = $model->save($data, true);
         } catch (\Throwable $e) {
             $this->recordOrphanedMediaFiles($tag, $studyId, $recordedMediaFileIds);
 

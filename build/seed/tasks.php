@@ -160,7 +160,8 @@ function runTasks(TestSite $site, array $declared, string $marker, string $note,
         [$code, $output] = runJoomlaCli($path, ['scheduler:run', '--id=' . $id]);
 
         if ($code !== 0) {
-            $tail = trim(implode("\n", \array_slice(explode("\n", trim($output)), -3)));
+            // Enough lines for the console's exception block, not just its synopsis
+            $tail = trim(implode("\n", \array_slice(explode("\n", trim($output)), -15)));
             fwrite(STDERR, "  ! {$task['key']}: scheduler:run exited {$code}\n" . preg_replace('/^/m', '    ', $tail) . "\n");
             $problems++;
 
