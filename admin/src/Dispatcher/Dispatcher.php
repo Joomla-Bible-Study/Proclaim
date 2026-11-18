@@ -45,9 +45,9 @@ class Dispatcher extends ComponentDispatcher
         if (!\defined('CWM_LOADED')) {
             // Guard against running on unsupported PHP versions (system plugin
             // normally catches this earlier, but keep as a safety net here).
-            if (PHP_VERSION_ID < 80300) {
+            if (PHP_VERSION_ID < 80400) {
                 throw new \RuntimeException(
-                    'Proclaim requires PHP 8.3.0 or later.',
+                    'Proclaim requires PHP 8.4.0 or later.',
                     502
                 );
             }
