@@ -36,7 +36,7 @@
     "optimize-autoloader": true,
     "process-timeout": 0,
     "platform": {
-      "php": "8.3.0"
+      "php": "8.4.0"
     },
     "vendor-dir": "libraries/vendor",
     "github-protocols": [
@@ -83,7 +83,6 @@
     "phpunit/phpunit": "^12.5",
     "friendsofphp/php-cs-fixer": "^3.0",
     "phan/phan": "^6.0",
-    "roave/security-advisories": "dev-latest",
     "pdepend/pdepend": "^2.16",
     "phpmd/phpmd": "^2.15",
     "cwm/build-tools": "^1.34",

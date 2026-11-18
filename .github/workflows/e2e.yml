@@ -121,13 +121,10 @@ jobs:
           submodules: recursive
 
       - name: Setup PHP
-        # 8.4, not Proclaim's 8.3 floor: this job builds the package, and that
-        # means composer-installing plugins/content/scripturelinks, whose
-        # composer.json requires php >=8.4. On 8.3 the install fails with "your
-        # lock file does not contain a compatible set of packages".
-        #
-        # This is a build-time requirement only — the shipped extensions still
-        # target 8.3, and ci.yml continues to lint and test on 8.3 and 8.5.
+        # 8.4, development's default, not Proclaim's 8.3 install minimum:
+        # building the package needs cwm/build-tools and a Composer install of
+        # plugins/content/scripturelinks, and both require php >=8.4. That is a
+        # build-time requirement only; ci.yml tests the shipped code on 8.3.
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'

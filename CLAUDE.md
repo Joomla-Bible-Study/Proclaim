@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Proclaim (CWM Proclaim) is a Joomla 5+ component (minimum 5.4.0, Joomla 6 supported) for managing and displaying Bible studies/sermons. It supports teachers, series, topics, locations, media files, podcasting, and social sharing with customizable templates.
 
-**PHP Requirement:** 8.3.0+
+**PHP Requirement:** 8.3.0+ to install Proclaim. Development runs on PHP 8.4, the minimum cwm-build-tools needs, and CI tests 8.3, 8.4 and 8.5. Shipped code must still run on 8.3, so don't use 8.4-only syntax or functions such as property hooks, asymmetric visibility (`public private(set)`), `new Foo()->bar()` without parentheses around the `new`, or `array_find()` / `array_any()`. PhpStorm's "Parentheses around the 'new' call can be omitted" fix produces that last one: decline it.
 **Namespace:** `CWM\Component\Proclaim`
 
 > **Claude Code:** load the `joomla` skill (Skill tool) at the start of any session touching this project's PHP, forms, manifests, or extension structure — it carries the J5/J6 API rules, canonical upstream references, and the gotchas this codebase is built against.
