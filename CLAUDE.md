@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Proclaim (CWM Proclaim) is a Joomla 5+ component (minimum 5.4.0, Joomla 6 supported) for managing and displaying Bible studies/sermons. It supports teachers, series, topics, locations, media files, podcasting, and social sharing with customizable templates.
 
-**PHP Requirement:** 8.3.0+
+**PHP Requirement:** 8.4.0+ for the shipped code. Development runs on PHP 8.5 (CI covers 8.4 and 8.5), so don't use 8.5-only syntax or functions such as the pipe operator (`|>`), `clone()` with properties, or `array_first()` / `array_last()`.
 **Namespace:** `CWM\Component\Proclaim`
 
 > **Claude Code:** load the `joomla` skill (Skill tool) at the start of any session touching this project's PHP, forms, manifests, or extension structure — it carries the J5/J6 API rules, canonical upstream references, and the gotchas this codebase is built against.

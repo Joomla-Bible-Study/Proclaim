@@ -44,7 +44,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: mbstring, json, xml, mysqli
           coverage: none
 
@@ -240,7 +240,7 @@ jobs:
       # own cwmreplay_ prefix, so it shares this service container with the
       # PHPUnit database without touching proclaim_ tables.
       #
-      # Runs once, in the 8.3 job only: what is being checked is SQL the server
+      # Runs once, in the 8.4 job only: what is being checked is SQL the server
       # accepts, which does not vary by PHP version.
       - name: Replay every migration against a scratch schema
         run: composer schema-replay
@@ -466,7 +466,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.5'
           extensions: mbstring, json, xml
           coverage: none
 

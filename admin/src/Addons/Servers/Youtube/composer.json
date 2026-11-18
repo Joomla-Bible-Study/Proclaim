@@ -9,5 +9,10 @@
         "google/apiclient-services": [
             "YouTube"
         ]
+    },
+    "config": {
+        "platform": {
+            "php": "8.4.0"
+        }
     }
 }

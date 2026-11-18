@@ -6,7 +6,7 @@ This file provides guidance to Gemini (Google's AI) when working with the Procla
 
 Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bible studies and sermons. It allows users to organize content by teachers, series, topics, and locations, with support for various media types, podcasting, and social sharing.
 
-- **PHP Requirement:** 8.3.0+
+- **PHP Requirement:** 8.4.0+ for the shipped code. Development runs on PHP 8.5 (CI covers 8.4 and 8.5), so don't use 8.5-only syntax or functions such as the pipe operator (`|>`), `clone()` with properties, or `array_first()` / `array_last()`.
 - **Namespace:** `CWM\Component\Proclaim`
 - **Minimum Joomla Version:** 4.0
 
