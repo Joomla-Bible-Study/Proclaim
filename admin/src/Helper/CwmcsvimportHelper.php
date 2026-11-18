@@ -1065,9 +1065,11 @@ class CwmcsvimportHelper
             'Published',
         ];
 
+        // PHP 8.4 deprecates leaving out fputcsv()'s $escape. '\\' is the value
+        // it defaulted to, so the template comes out exactly as before.
         $output = fopen('php://temp', 'r+');
-        fputcsv($output, $headers);
-        fputcsv($output, $example);
+        fputcsv($output, $headers, ',', '"', '\\');
+        fputcsv($output, $example, ',', '"', '\\');
         rewind($output);
         $csv = stream_get_contents($output);
         fclose($output);
