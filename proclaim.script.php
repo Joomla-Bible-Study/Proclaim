@@ -1553,19 +1553,7 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function backfillWizardSampleManifest(): void
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        // loadColumn(), not loadResult(): the alias carries no unique
-        // constraint on either table, and createSampleContent() has no
-        // guard against being run more than once, so a site could have
-        // more than one row wearing this alias. Backfilling only the first
-        // would leave any other silently excluded from the fix.
-        $studyIds = $db->setQuery(
-            $db->createQuery()
-                ->select($db->quoteName('id'))
-                ->from($db->quoteName('#__bsms_studies'))
-                ->where($db->quoteName('alias') . ' = ' . $db->quote('welcome-to-proclaim'))
-        )->loadColumn();
+        $studyIds = $this->wizardSampleIds('#__bsms_studies', 'studytitle', 'welcome-to-proclaim', 'Welcome to Proclaim');
 
         $manifestStudyIds = Cwmimportmanifest::allRowIds('#__bsms_studies');
 
@@ -1575,12 +1563,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
         }
 
-        $seriesIds = $db->setQuery(
-            $db->createQuery()
-                ->select($db->quoteName('id'))
-                ->from($db->quoteName('#__bsms_series'))
-                ->where($db->quoteName('alias') . ' = ' . $db->quote('sample-series'))
-        )->loadColumn();
+        $seriesIds = $this->wizardSampleIds('#__bsms_series', 'series_text', 'sample-series', 'Sample Series');
 
         $manifestSerieIds = Cwmimportmanifest::allRowIds('#__bsms_series');
 
@@ -1589,6 +1572,47 @@ class com_proclaimInstallerScript extends InstallerScript
                 Cwmimportmanifest::recordRow('wizard-sample', '#__bsms_series', (int) $seriesId);
             }
         }
+    }
+
+    /**
+     * The ids of the setup wizard's sample rows in one table.
+     *
+     * Aliases are unique, so a second wizard run, or the uniqueness pass on an
+     * older site, gives later copies of the sample a numeric suffix
+     * (welcome-to-proclaim-2). The sample's own alias always counts; a suffixed
+     * copy counts only while it still has the sample's title, so real content
+     * that happens to wear such an alias is left alone.
+     *
+     * @param   string  $table        The table
+     * @param   string  $titleColumn  The table's title column
+     * @param   string  $alias        The sample's alias
+     * @param   string  $title        The sample's title
+     *
+     * @return  int[]
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function wizardSampleIds(string $table, string $titleColumn, string $alias, string $title): array
+    {
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
+        $rows = $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName(['id', 'alias', $titleColumn], ['id', 'alias', 'title']))
+                ->from($db->quoteName($table))
+                ->where($db->quoteName('alias') . ' LIKE ' . $db->quote($alias . '%'))
+        )->loadObjectList();
+
+        $ids = [];
+
+        foreach ($rows as $row) {
+            $copy = preg_match('/^' . preg_quote($alias, '/') . '-\\d+$/', $row->alias) && $row->title === $title;
+
+            if ($row->alias === $alias || $copy) {
+                $ids[] = (int) $row->id;
+            }
+        }
+
+        return $ids;
     }
 
     /**

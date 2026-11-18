@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudytopicHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
+use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -1255,10 +1256,14 @@ class Cwmcontentimporter
             'params'     => array_intersect_key((array) $mediafile['params'], array_flip(self::MEDIA_PARAM_ALLOWLIST)),
         ];
 
+        /** @var CwmmediafileModel $model */
         $model = $this->model('Cwmmediafile');
 
+        // The guard against new legacy-server media exempts this caller by design:
+        // validate() admits legacy servers only, the one type verified free of
+        // side effects on save and on removal.
         try {
-            $ok = $model->save($data);
+            $ok = $model->save($data, allowLegacyServer: true);
         } catch (\Throwable $e) {
             $this->recordOrphanedMediaFiles($tag, $studyId, $recordedMediaFileIds);
 

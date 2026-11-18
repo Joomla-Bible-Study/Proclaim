@@ -137,15 +137,19 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
         $this->addToAssertionCount(1);
     }
 
-    #[TestDox('More than one row wearing the alias is backfilled, not just the first')]
-    public function testBackfillsEveryMatchingRowNotJustTheFirst(): void
+    #[TestDox('Renamed copies of the sample, such as welcome-to-proclaim-2, are backfilled too')]
+    public function testBackfillsRenamedCopiesOfTheSample(): void
     {
+        // Aliases are unique, so later copies of the sample carry a numeric suffix.
         $first  = (object) ['studytitle' => 'Welcome to Proclaim', 'alias' => 'welcome-to-proclaim', 'language' => '*'];
-        $second = (object) ['studytitle' => 'Welcome to Proclaim', 'alias' => 'welcome-to-proclaim', 'language' => '*'];
+        $second = (object) ['studytitle' => 'Welcome to Proclaim', 'alias' => 'welcome-to-proclaim-2', 'language' => '*'];
+        $series = (object) ['series_text' => 'Sample Series', 'alias' => 'sample-series-2', 'language' => '*'];
         $this->db->insertObject('#__bsms_studies', $first, 'id');
         $firstId = (int) $this->db->insertid();
         $this->db->insertObject('#__bsms_studies', $second, 'id');
         $secondId = (int) $this->db->insertid();
+        $this->db->insertObject('#__bsms_series', $series, 'id');
+        $seriesId = (int) $this->db->insertid();
 
         $this->backfill();
 
@@ -153,5 +157,22 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
 
         $this->assertContains($firstId, $manifestIds);
         $this->assertContains($secondId, $manifestIds);
+        $this->assertContains($seriesId, Cwmimportmanifest::allRowIds('#__bsms_series'));
+    }
+
+    #[TestDox('A suffixed alias whose title is not the sample\'s is real content, and is left alone')]
+    public function testLeavesSuffixedAliasWithAnotherTitle(): void
+    {
+        $study  = (object) ['studytitle' => 'Welcome Home', 'alias' => 'welcome-to-proclaim-3', 'language' => '*'];
+        $series = (object) ['series_text' => 'Sermons on the Mount', 'alias' => 'sample-series-3', 'language' => '*'];
+        $this->db->insertObject('#__bsms_studies', $study, 'id');
+        $studyId = (int) $this->db->insertid();
+        $this->db->insertObject('#__bsms_series', $series, 'id');
+        $seriesId = (int) $this->db->insertid();
+
+        $this->backfill();
+
+        $this->assertNotContains($studyId, Cwmimportmanifest::allRowIds('#__bsms_studies'));
+        $this->assertNotContains($seriesId, Cwmimportmanifest::allRowIds('#__bsms_series'));
     }
 }
