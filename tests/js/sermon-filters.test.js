@@ -71,6 +71,7 @@ function setupModule(fetchMock, extraOpts) {
         getOptions: jest.fn().mockReturnValue(Object.assign({
             enabled: true,
             ajaxUrl: 'http://localhost/index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw',
+            // A page cached before the endpoint stopped taking a token still carries one.
             csrfToken: 'testtoken',
             paginationStyle: paginationStyle,
             limit: 2,
@@ -260,7 +261,7 @@ describe('sermon-filters.es6.js', () => {
             expect(fetchUrl).toContain('task=cwmsermons.filterAjax');
         });
 
-        test('should include CSRF token in request', async () => {
+        test('should not send a CSRF token, even one left in cached options', async () => {
             const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch);
             mockFetch.mockClear();
@@ -271,7 +272,7 @@ describe('sermon-filters.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
 
             const [fetchUrl] = mockFetch.mock.calls[0];
-            expect(fetchUrl).toContain('testtoken=1');
+            expect(fetchUrl).not.toContain('testtoken');
         });
 
         test('should update listing content after successful fetch', async () => {

@@ -142,6 +142,7 @@ class CwmfilterBookJunctionTest extends IntegrationTestCase
             'published'  => 1,
             'access'     => 1,
             'studytitle' => 'cwm1623 filter fixture',
+            'alias'      => $this->uniqueAlias('cwmfilterbookjunction-study'),
             'language'   => '*',
         ];
 

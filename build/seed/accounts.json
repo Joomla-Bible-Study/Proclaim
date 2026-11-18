@@ -1,0 +1,27 @@
+{
+    "_comment": "Test accounts for developers and CI, one per way a visitor can reach Proclaim: a registered member, an editor, a manager, and an API user. Usernames carry the seed marker, which is how `remove` finds them. Every account has the password below and is therefore only ever created on a disposable site (see build/seed/lib.php, disposable()): a role=test install, or a dev install that cwm-site-create made. The API user is a Super User, because Joomla's token plugin only lets Super Users authenticate with a token unless its `allowedUserGroups` setting is widened; its token is derived from a stored seed and the site secret, and `php build/seed/accounts.php token` prints it. Guests need no account.",
+    "password": "Seed-Proclaim-2026!",
+    "accounts": [
+        {
+            "key": "registered",
+            "name": "Seed Registered",
+            "group": "Registered"
+        },
+        {
+            "key": "editor",
+            "name": "Seed Editor",
+            "group": "Editor"
+        },
+        {
+            "key": "manager",
+            "name": "Seed Manager",
+            "group": "Manager"
+        },
+        {
+            "key": "api",
+            "name": "Seed API",
+            "group": "Super Users",
+            "token": true
+        }
+    ]
+}

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Library\Scripture\Helper\ScriptureReference;
@@ -163,7 +164,7 @@ class Cwmssconvert
                     }
                 }
 
-                $data->alias    = $single->alias;
+                $data->alias    = Cwmalias::aliasForInsert($db, '#__bsms_series', (string) $single->alias, (string) $data->series_text);
                 $data->ordering = $single->ordering;
 
                 if (!$db->insertObject('#__bsms_series', $data, 'id')) {
@@ -257,7 +258,7 @@ class Cwmssconvert
         }
 
         $data->published = $sermon->state;
-        $data->alias     = $sermon->alias;
+        $data->alias     = Cwmalias::aliasForInsert($db, '#__bsms_studies', (string) $sermon->alias, (string) $data->studytitle);
 
         $db->insertObject('#__bsms_studies', $data, 'id');
 

@@ -29,7 +29,6 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -279,10 +278,12 @@ class HtmlView extends BaseHtmlView
                 false
             );
 
+            // No form token: these options are cached with the view, so a token
+            // here would be one visitor's, handed to everyone. The endpoint is a
+            // read-only GET and takes none.
             $mainframe->getDocument()->addScriptOptions('com_proclaim.sermonFilters', [
                 'ajaxUrl'         => $ajaxUrl,
                 'enabled'         => true,
-                'csrfToken'       => Session::getFormToken(),
                 'paginationStyle' => $params->get('pagination_style', 'pagination'),
                 'limit'           => (int) $this->state->get('list.limit', 20),
                 'totalItems'      => (int) $pagination->total,

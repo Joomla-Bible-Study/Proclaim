@@ -21,7 +21,7 @@
  * Both failures rendered a valid page with a 200 status. Checking only the
  * status code would have caught neither.
  *
- * Depends on build/seed-testsite-menus.php having run: it reads the menu items
+ * Depends on the `menus` seed layer (build/seed/menus.php) having run: it reads the menu items
  * back by their seed marker rather than guessing URLs, so the two scripts
  * cannot drift apart.
  *
@@ -42,11 +42,14 @@ use CWM\BuildTools\Dev\TestSite;
 $root = \dirname(__DIR__);
 
 require $root . '/libraries/vendor/autoload.php';
+require $root . '/build/seed/lib.php';
 
 /**
- * Must match build/seed-testsite-menus.php.
+ * Every menu item a seed layer wrote carries a `note` starting with the project's seed marker,
+ * declared once in cwm-build.config.json and shared with build/seed/menus.php.
  */
-const SEED_NOTE = 'proclaim-testsite-seed';
+$projectConfig = json_decode((string) file_get_contents($root . '/cwm-build.config.json'), true);
+$seedMarker    = (string) ($projectConfig['seed']['marker'] ?? 'cwmseed-');
 
 /**
  * Markers that mean the page failed while still returning 200.
@@ -61,6 +64,9 @@ const ERROR_MARKERS = [
     'Parse error',
     'Warning:',
     'Deprecated:',
+    '<b>Warning</b>',
+    '<b>Deprecated</b>',
+    '<b>Notice</b>',
     'SQL=',
     'JDatabaseExceptionExecuting',
     'Error displaying the error page',
@@ -116,9 +122,9 @@ foreach ($installs as $install) {
 
     $statement = $db->prepare(
         'SELECT id, alias, link FROM ' . $site->table('#__menu')
-        . ' WHERE client_id = 0 AND note = ? ORDER BY id'
+        . ' WHERE client_id = 0 AND LEFT(note, ?) = ? ORDER BY id'
     );
-    $statement->execute([SEED_NOTE]);
+    $statement->execute([\strlen($seedMarker), $seedMarker]);
     $items = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     // The book the seeded study cites, read from the stored reference rather
@@ -137,7 +143,7 @@ foreach ($installs as $install) {
     }
 
     if ($items === []) {
-        fwrite(STDERR, "  no seeded menu items — run build/seed-testsite-menus.php first.\n");
+        fwrite(STDERR, "  no seeded menu items — run `php build/seed/menus.php apply` first.\n");
         $failures++;
 
         continue;
@@ -226,6 +232,13 @@ foreach ($installs as $install) {
 
         report(true, $item['alias'], \strlen($body) . ' bytes');
     }
+
+    $failures += checkSeededStudies($site, $install->url, $seedMarker, $root);
+    $failures += checkSeededModules($site, $install->url, $items, $root);
+    $failures += checkSeededPlugins($site, $install->url, $seedMarker, $root);
+    $failures += checkSeededTemplates($site, $install->url, $seedMarker, $root);
+    $failures += checkSeededAccounts($site, $install, $seedMarker, $root);
+    $failures += checkSeededSearch($install, $seedMarker, $root);
 }
 
 echo "\n";
@@ -244,14 +257,15 @@ echo "Front-end OK.\n";
  * TLS verification is off: these are local .local hosts with self-signed
  * certificates, and the thing under test is the page, not the certificate.
  *
- * @param   string    $url     Absolute URL to fetch
- * @param   int|null  $status  Set to the HTTP status, or 0 when there was none
+ * @param   string    $url      Absolute URL to fetch
+ * @param   int|null  $status   Set to the HTTP status, or 0 when there was none
+ * @param   string    $accept   The Accept header; Joomla's API answers 406 to a request that names no JSON type
  *
  * @return  string|null  Body, or null when the request produced nothing
  *
  * @since __DEPLOY_VERSION__
  */
-function fetch(string $url, ?int &$status): ?string
+function fetch(string $url, ?int &$status, string $accept = '*/*'): ?string
 {
     $status  = 0;
     $context = stream_context_create([
@@ -259,6 +273,7 @@ function fetch(string $url, ?int &$status): ?string
             'timeout'       => 30,
             'ignore_errors' => true,
             'user_agent'    => 'proclaim-release-gate',
+            'header'        => 'Accept: ' . $accept,
         ],
         'ssl' => [
             'verify_peer'      => false,
@@ -296,4 +311,681 @@ function report(bool $ok, string $label, string $detail): void
         $label,
         $detail
     );
+}
+
+/**
+ * Fetch the sermon page of every study the `content` layer wrote and compare what a guest gets
+ * with what `content.json` declares.
+ *
+ * The declared status is the point: an unpublished or access-restricted study must not be
+ * served, and every other study, however awkward (no teacher, no scripture, a title full of
+ * markup), must render without an error marker. A study the layer should have written but did
+ * not is a failure, not a skip: a skipped check here would pass a gate that tested nothing.
+ *
+ * @param   TestSite  $site    The site under test
+ * @param   string    $url     The site's base URL
+ * @param   string    $marker  The seed marker (alias prefix)
+ * @param   string    $root    The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededStudies(TestSite $site, string $url, string $marker, string $root): int
+{
+    $file = $root . '/build/seed/content.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $db       = $site->db();
+    $template = $db->query('SELECT id FROM ' . $site->table('#__bsms_templates') . ' WHERE published = 1 ORDER BY id LIMIT 1')->fetchColumn();
+    $find     = $db->prepare('SELECT id FROM ' . $site->table('#__bsms_studies') . ' WHERE alias = ?');
+    $problems = 0;
+
+    echo "\n  -- seeded studies, as a guest\n";
+
+    foreach ($declared['studies'] as $study) {
+        $label = $study['key'];
+        $find->execute([$marker . $study['key']]);
+        $id = $find->fetchColumn();
+
+        if ($id === false) {
+            report(false, $label, 'not seeded — run the content layer');
+            $problems++;
+
+            continue;
+        }
+
+        $want = (int) ($study['guest'] ?? 200);
+        $body = fetch(rtrim($url, '/') . '/index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $template, $status);
+
+        if ($body === null || $status !== $want) {
+            report(false, $label, "HTTP {$status}, expected {$want}");
+            $problems++;
+
+            continue;
+        }
+
+        $found = array_filter(ERROR_MARKERS, static fn (string $m): bool => str_contains($body, $m));
+
+        if ($want === 200 && $found !== []) {
+            report(false, $label, 'error marker in body: ' . implode(', ', $found));
+            $problems++;
+
+            continue;
+        }
+
+        report(true, $label, "HTTP {$status}" . ($want === 200 ? ', ' . \strlen($body) . ' bytes' : ' (not served, as declared)'));
+    }
+
+    return $problems;
+}
+
+/**
+ * Fetch the seeded landing page as a guest and check which seeded module instances it carries.
+ *
+ * Instances are assigned to every page, so one page shows them all. A module with `guest`
+ * "hidden" (unpublished, or a level a guest lacks) must not appear; every other one must, with
+ * the text `modules.json` says its output contains. The admin module is not checked here: it
+ * only renders in the administrator, behind a login.
+ *
+ * @param   TestSite                           $site   The site under test
+ * @param   string                             $url    The site's base URL
+ * @param   list<array<string, string|int>>    $items  The seeded menu items (id, alias, link)
+ * @param   string                             $root   The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededModules(TestSite $site, string $url, array $items, string $root): int
+{
+    $file = $root . '/build/seed/modules.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $landing = null;
+
+    foreach ($items as $item) {
+        if (str_contains((string) $item['link'], 'cwmlandingpage')) {
+            $landing = $item;
+
+            break;
+        }
+    }
+
+    echo "\n  -- seeded modules, as a guest\n";
+
+    if ($landing === null) {
+        report(false, 'modules', 'no seeded landing page to carry them');
+
+        return 1;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $body     = fetch(rtrim($url, '/') . '/index.php?Itemid=' . $landing['id'], $status);
+    $problems = 0;
+
+    if ($body === null || $status !== 200) {
+        report(false, 'modules', "landing page HTTP {$status}");
+
+        return 1;
+    }
+
+    $found = array_filter(ERROR_MARKERS, static fn (string $m): bool => str_contains($body, $m));
+
+    if ($found !== []) {
+        report(false, 'modules', 'error marker in the page: ' . implode(', ', $found));
+        $problems++;
+    }
+
+    foreach ($declared['modules'] as $module) {
+        if (($module['client'] ?? 'site') !== 'site') {
+            continue;
+        }
+
+        $shown = str_contains($body, $module['title']);
+        $want  = ($module['guest'] ?? 'visible') === 'visible';
+
+        if ($shown !== $want) {
+            report(false, $module['key'], $want ? 'not on the page' : 'on the page, but a guest should not see it');
+            $problems++;
+
+            continue;
+        }
+
+        if ($want && isset($module['contains']) && !str_contains($body, $module['contains'])) {
+            report(false, $module['key'], 'rendered without "' . $module['contains'] . '"');
+            $problems++;
+
+            continue;
+        }
+
+        report(true, $module['key'], $want ? 'shown' : 'hidden, as declared');
+    }
+
+    return $problems;
+}
+
+/**
+ * Check what the Proclaim plugins do for a guest.
+ *
+ * The webservices plugin registers its routes in Joomla's API application. Without a token a
+ * registered route answers 401 and an unknown one 404, so route registration is checked without
+ * needing credentials. The schema.org plugin family means a sermon page carries structured data:
+ * the page of the study named in plugins.json must have a JSON-LD CreativeWork node with its title,
+ * and the page of the study given a saved schema row must print that row once and nothing else.
+ *
+ * @param   TestSite  $site    The site under test
+ * @param   string    $url     The site's base URL
+ * @param   string    $marker  The seed marker (alias prefix)
+ * @param   string    $root    The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededPlugins(TestSite $site, string $url, string $marker, string $root): int
+{
+    $file = $root . '/build/seed/plugins.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $problems = 0;
+
+    echo "\n  -- plugins, as a guest\n";
+
+    $api = $declared['api'];
+
+    foreach ([...array_map(static fn (string $r): array => [$r, 401], $api['resources']), [$api['absent'], 404]] as [$resource, $want]) {
+        fetch(rtrim($url, '/') . $api['path'] . '/' . $resource, $status, 'application/vnd.api+json');
+
+        if ($status !== $want) {
+            report(false, 'api ' . $resource, "HTTP {$status}, expected {$want}" . ($want === 401 ? ' (route not registered?)' : ''));
+            $problems++;
+        } else {
+            report(true, 'api ' . $resource, "HTTP {$status}");
+        }
+    }
+
+    $key   = $declared['schemaorg']['study'];
+    $db    = $site->db();
+    $find  = $db->prepare('SELECT id, studytitle FROM ' . $site->table('#__bsms_studies') . ' WHERE alias = ?');
+    $find->execute([$marker . $key]);
+    $study = $find->fetch(PDO::FETCH_ASSOC);
+
+    if ($study === false) {
+        report(false, 'schema.org', "study \"{$key}\" is not seeded — run the content layer");
+
+        return $problems + 1;
+    }
+
+    $template = $db->query('SELECT id FROM ' . $site->table('#__bsms_templates') . ' WHERE published = 1 ORDER BY id LIMIT 1')->fetchColumn();
+    $sermon   = static fn (int $id): array => creativeWorkNames(
+        fetch(rtrim($url, '/') . '/index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $template, $status)
+    );
+
+    if (!\in_array($study['studytitle'], $sermon((int) $study['id']), true)) {
+        report(false, 'schema.org', 'no CreativeWork node named "' . $study['studytitle'] . '" on the sermon page');
+        $problems++;
+    } else {
+        report(true, 'schema.org', 'CreativeWork node present');
+    }
+
+    // The saved row is stored under the form context, not the view context Joomla looks up.
+    $stored = $declared['schemaorg']['stored'];
+    $find->execute([$marker . $stored['study']]);
+    $storedStudy = $find->fetch(PDO::FETCH_ASSOC);
+
+    if ($storedStudy === false) {
+        report(false, 'schema.org stored', "study \"{$stored['study']}\" is not seeded — run the content layer");
+
+        return $problems + 1;
+    }
+
+    $names = $sermon((int) $storedStudy['id']);
+
+    if ($names !== [$stored['name']]) {
+        report(false, 'schema.org stored', 'expected one CreativeWork node, "' . $stored['name'] . '"; found ' . json_encode($names));
+        $problems++;
+    } else {
+        report(true, 'schema.org stored', 'the saved row, printed once');
+    }
+
+    return $problems;
+}
+
+/**
+ * Check that each seeded template's page renders its own layout, not the default one.
+ *
+ * HTTP 200 alone also passes when a layout selector is ignored and the default layout renders,
+ * so each page must carry markup only its layout produces (`expect` in templates.json), and,
+ * unless the entry says otherwise, the same view under the Default template (the menus layer's
+ * item for it) must not.
+ *
+ * @param   TestSite  $site    The site under test
+ * @param   string    $url     The site's base URL
+ * @param   string    $marker  The seed marker
+ * @param   string    $root    The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededTemplates(TestSite $site, string $url, string $marker, string $root): int
+{
+    $file = $root . '/build/seed/templates.json';
+
+    if (!is_file($file)) {
+        return 0;
+    }
+
+    $declared = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+    $db       = $site->db();
+    $find     = $db->prepare('SELECT id FROM ' . $site->table('#__menu') . ' WHERE client_id = 0 AND note = ? AND alias = ?');
+    $base     = $db->prepare('SELECT id FROM ' . $site->table('#__menu') . ' WHERE client_id = 0 AND note = ? AND link LIKE ? ORDER BY id LIMIT 1');
+    $page     = static fn (int $itemId): ?string => fetch(rtrim($url, '/') . '/index.php?Itemid=' . $itemId, $status);
+    $problems = 0;
+
+    echo "\n  -- templates, as a guest\n";
+
+    foreach ($declared['templates'] as $template) {
+        foreach ($template['pages'] as $declaredPage) {
+            $label = 'template ' . $template['key'];
+            $find->execute([$marker . 'templates', $marker . 'tpl-' . $template['key'] . '-' . $declaredPage['view']]);
+            $itemId = $find->fetchColumn();
+
+            if ($itemId === false) {
+                report(false, $label, 'menu item missing — run the templates layer');
+                $problems++;
+
+                continue;
+            }
+
+            if (!str_contains((string) $page((int) $itemId), $declaredPage['expect'])) {
+                report(false, $label, "\"{$declaredPage['expect']}\" not on the page: the layout did not render");
+                $problems++;
+
+                continue;
+            }
+
+            if ($declaredPage['differsFromDefault'] ?? true) {
+                $base->execute([$marker . 'menus', '%view=' . $declaredPage['view'] . '&%']);
+                $baseId = $base->fetchColumn();
+
+                if ($baseId === false || str_contains((string) $page((int) $baseId), $declaredPage['expect'])) {
+                    report(false, $label, "\"{$declaredPage['expect']}\" is also on the Default template's page, so it proves nothing");
+                    $problems++;
+
+                    continue;
+                }
+            }
+
+            report(true, $label, 'its own layout rendered');
+        }
+    }
+
+    return $problems;
+}
+
+/**
+ * The names of the CreativeWork nodes in a page's JSON-LD blocks.
+ *
+ * @param   ?string  $body  The page, or null if it could not be fetched
+ *
+ * @return  list<string>
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function creativeWorkNames(?string $body): array
+{
+    $names = [];
+
+    if ($body === null || preg_match_all('#<script[^>]*ld\+json[^>]*>(.*?)</script>#s', $body, $blocks) === 0) {
+        return $names;
+    }
+
+    foreach ($blocks[1] as $json) {
+        $data = json_decode($json, true);
+
+        foreach (\is_array($data) ? ($data['@graph'] ?? [$data]) : [] as $node) {
+            if (($node['@type'] ?? null) === 'CreativeWork') {
+                $names[] = (string) ($node['name'] ?? $node['headline'] ?? '');
+            }
+        }
+    }
+
+    return $names;
+}
+
+/**
+ * Check the access rules and the API from the inside, as each seeded account.
+ *
+ * Logs in as the registered member, the editor and the manager over the real login form and
+ * compares the status each gets for every study that declares one in content.json: the access
+ * levels and the unpublished state are the rules most worth proving, and a guest check alone only
+ * proves the closed door. Then calls the API with the API user's token: reads answer 200, a write
+ * to the read-only servers resource has no route (404), and a write to sermons reaches validation
+ * (400) without creating anything.
+ *
+ * @param   TestSite      $site     The site under test
+ * @param   InstallConfig $install  The install (url, path)
+ * @param   string        $marker   The seed marker (username prefix)
+ * @param   string        $root     The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededAccounts(TestSite $site, $install, string $marker, string $root): int
+{
+    $accountsFile = $root . '/build/seed/accounts.json';
+    $contentFile  = $root . '/build/seed/content.json';
+
+    if (!is_file($accountsFile) || !is_file($contentFile)) {
+        return 0;
+    }
+
+    echo "\n  -- accounts, logged in\n";
+
+    if (!\function_exists('curl_init')) {
+        report(false, 'accounts', 'the curl extension is needed to log in');
+
+        return 1;
+    }
+
+    $accounts = json_decode((string) file_get_contents($accountsFile), true, 512, JSON_THROW_ON_ERROR);
+    $content  = json_decode((string) file_get_contents($contentFile), true, 512, JSON_THROW_ON_ERROR);
+    $url      = rtrim((string) $install->url, '/');
+    $db       = $site->db();
+    $problems = 0;
+
+    $template = $db->query('SELECT id FROM ' . $site->table('#__bsms_templates') . ' WHERE published = 1 ORDER BY id LIMIT 1')->fetchColumn();
+    $find     = $db->prepare('SELECT id FROM ' . $site->table('#__bsms_studies') . ' WHERE alias = ?');
+
+    foreach (['registered', 'editor', 'manager'] as $role) {
+        $jar = loginAs($url, $marker . $role, (string) $accounts['password']);
+
+        if ($jar === null) {
+            report(false, $role, 'could not log in as ' . $marker . $role . ' — run the accounts layer');
+            $problems++;
+
+            continue;
+        }
+
+        $wrong = [];
+        $count = 0;
+
+        foreach ($content['studies'] as $study) {
+            if (!isset($study[$role])) {
+                continue;
+            }
+
+            $find->execute([$marker . $study['key']]);
+            $id = $find->fetchColumn();
+
+            if ($id === false) {
+                $wrong[] = $study['key'] . ' not seeded';
+
+                continue;
+            }
+
+            $count++;
+            $status = 0;
+            fetchAs($url . '/index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $template, $jar, $status);
+
+            if ($status !== (int) $study[$role]) {
+                $wrong[] = $study['key'] . " HTTP {$status} (expected {$study[$role]})";
+            }
+        }
+
+        @unlink($jar);
+
+        if ($wrong !== []) {
+            report(false, $role, implode('; ', $wrong));
+            $problems++;
+        } else {
+            report(true, $role, "logged in; {$count} studies behave as declared");
+        }
+    }
+
+    $apiUser = null;
+
+    foreach ($accounts['accounts'] as $account) {
+        if ($account['token'] ?? false) {
+            $apiUser = $marker . $account['key'];
+        }
+    }
+
+    $token = $apiUser === null ? null : apiToken($site, $apiUser, (string) $install->path);
+
+    if ($token === null) {
+        report(false, 'api token', 'no API account with a token — run the accounts layer');
+
+        return $problems + 1;
+    }
+
+    $declared = json_decode((string) file_get_contents($root . '/build/seed/plugins.json'), true, 512, JSON_THROW_ON_ERROR);
+    $base     = $url . $declared['api']['path'];
+
+    foreach ([['GET', 'sermons', 200], ['GET', 'servers', 200], ['POST', 'servers', 404], ['POST', 'sermons', 400]] as [$method, $resource, $want]) {
+        $status = apiCall($method, $base . '/' . $resource, $token);
+
+        if ($status !== $want) {
+            report(false, "api {$method} {$resource}", "HTTP {$status}, expected {$want}");
+            $problems++;
+        } else {
+            report(true, "api {$method} {$resource}", "HTTP {$status} with the token");
+        }
+    }
+
+    return $problems;
+}
+
+/**
+ * Log in through the site's own login form, returning the cookie jar file, or null on failure.
+ *
+ * @param   string  $url       The site's base URL
+ * @param   string  $username  The username
+ * @param   string  $password  The password
+ *
+ * @return  string|null
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function loginAs(string $url, string $username, string $password): ?string
+{
+    $jar = (string) tempnam(sys_get_temp_dir(), 'cwmseed');
+
+    $form = fetchAs($url . '/index.php?option=com_users&view=login', $jar, $status);
+
+    if ($form === null || $status !== 200 || preg_match_all('/<input[^>]+type="hidden"[^>]*>/i', $form, $inputs) < 1) {
+        @unlink($jar);
+
+        return null;
+    }
+
+    $post = ['username' => $username, 'password' => $password, 'task' => 'user.login'];
+
+    foreach ($inputs[0] as $input) {
+        if (preg_match('/name="([^"]+)"/', $input, $name) === 1 && preg_match('/value="([^"]*)"/', $input, $value) === 1) {
+            $post[$name[1]] = html_entity_decode($value[1]);
+        }
+    }
+
+    $page = fetchAs($url . '/index.php?option=com_users&task=user.login', $jar, $status, $post);
+
+    if ($page === null || !str_contains($page, 'user.logout')) {
+        @unlink($jar);
+
+        return null;
+    }
+
+    return $jar;
+}
+
+/**
+ * Fetch a URL with a cookie jar, following redirects, optionally as a POST.
+ *
+ * @param   string                    $url     The URL
+ * @param   string                    $jar     The cookie jar file
+ * @param   int|null                  $status  Set to the final HTTP status
+ * @param   array<string, string>|null $post   Form fields, or null for a GET
+ *
+ * @return  string|null
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function fetchAs(string $url, string $jar, ?int &$status, ?array $post = null): ?string
+{
+    $curl = curl_init($url);
+
+    curl_setopt_array($curl, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_TIMEOUT        => 30,
+        CURLOPT_COOKIEJAR      => $jar,
+        CURLOPT_COOKIEFILE     => $jar,
+        CURLOPT_USERAGENT      => 'proclaim-release-gate',
+    ]);
+
+    if ($post !== null) {
+        curl_setopt_array($curl, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => http_build_query($post)]);
+    }
+
+    $body   = curl_exec($curl);
+    $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    return $body === false ? null : (string) $body;
+}
+
+/**
+ * Call the API with a token and return the HTTP status.
+ *
+ * @param   string  $method  GET or POST
+ * @param   string  $url     The URL
+ * @param   string  $token   The bearer token
+ *
+ * @return  int
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function apiCall(string $method, string $url, string $token): int
+{
+    $curl = curl_init($url);
+
+    curl_setopt_array($curl, [
+        CURLOPT_CUSTOMREQUEST  => $method,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_TIMEOUT        => 30,
+        CURLOPT_POSTFIELDS     => $method === 'POST' ? '{}' : null,
+        CURLOPT_HTTPHEADER     => ['Accept: application/vnd.api+json', 'Content-Type: application/json', 'X-Joomla-Token: ' . $token],
+    ]);
+    curl_exec($curl);
+
+    return (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+}
+
+/**
+ * Search the Smart Search index as a guest and as each seeded account.
+ *
+ * The studies in the results must be exactly the published seeded ones that role can open, which is
+ * the access matrix the pages follow: a guest never finds an unpublished or restricted study, a
+ * Registered member finds the Registered-level one, editors and managers find the Special-level one
+ * as well. An unpublished study is in the index but must be in no one's results.
+ *
+ * @param   InstallConfig  $install  The install (url)
+ * @param   string         $marker   The seed marker (username prefix)
+ * @param   string         $root     The project root
+ *
+ * @return  int  Problems found
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function checkSeededSearch($install, string $marker, string $root): int
+{
+    $files = [$root . '/build/seed/finder.json', $root . '/build/seed/content.json', $root . '/build/seed/accounts.json'];
+
+    foreach ($files as $file) {
+        if (!is_file($file)) {
+            return 0;
+        }
+    }
+
+    echo "\n  -- search, as each role\n";
+
+    if (!\function_exists('curl_init')) {
+        report(false, 'search', 'the curl extension is needed to log in');
+
+        return 1;
+    }
+
+    [$finder, $content, $accounts] = array_map(
+        static fn (string $file): array => json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR),
+        $files
+    );
+
+    $url      = rtrim((string) $install->url, '/');
+    $problems = 0;
+
+    foreach (['guest', 'registered', 'editor', 'manager'] as $role) {
+        $jar = tempnam(sys_get_temp_dir(), 'cwmseed');
+
+        if ($role !== 'guest') {
+            $jar = loginAs($url, $marker . $role, (string) $accounts['password']);
+
+            if ($jar === null) {
+                report(false, 'search ' . $role, 'could not log in — run the accounts layer');
+                $problems++;
+
+                continue;
+            }
+        }
+
+        $body = fetchAs($url . '/index.php?option=com_finder&view=search&q=' . rawurlencode((string) $finder['query']), $jar, $status);
+        @unlink($jar);
+
+        if ($body === null || $status !== 200) {
+            report(false, 'search ' . $role, "HTTP {$status}");
+            $problems++;
+
+            continue;
+        }
+
+        $wrong = [];
+        $found = 0;
+
+        foreach ($content['studies'] as $study) {
+            // Search lists published content only, however much the role may open by direct link:
+            // an editor can open an unpublished study, and still must not find it here.
+            $expected = (int) ($study[$role] ?? 200) === 200 && (int) ($study['published'] ?? 1) !== 0;
+            $shown    = str_contains($body, htmlspecialchars(substr((string) $study['title'], 0, 30), ENT_QUOTES | ENT_SUBSTITUTE));
+            $found += $shown ? 1 : 0;
+
+            if ($shown !== $expected) {
+                $wrong[] = $study['key'] . ($expected ? ' missing' : ' should not appear');
+            }
+        }
+
+        if ($wrong !== []) {
+            report(false, 'search ' . $role, implode('; ', $wrong));
+            $problems++;
+        } else {
+            report(true, 'search ' . $role, "{$found} seeded studies found, as declared");
+        }
+    }
+
+    return $problems;
 }

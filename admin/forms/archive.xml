@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset>
-        <field name="timeframe" type="int" default=""
+        <field name="timeframe" type="number" default="" min="1"
                label="JBS_ARCHIVE_TIMEFRAME_LABEL"
-               description="JBS_ARCHIVE_TIMEFRAME_DESC" size="5" class="col-2"
+               description="JBS_ARCHIVE_TIMEFRAME_DESC" class="col-2"
                required="required">
         </field>
         <field name="switch" type="radio" default="year"

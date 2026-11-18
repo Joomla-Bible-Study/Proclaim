@@ -911,13 +911,15 @@ class CwmsermonsModel extends ListModel
         $first    = $paramValues[0] ?? '-1';
         $hasParam = $paramValues !== null && $first !== '-1' && $first !== '' && $first !== null;
 
+        // Inline the ids: a whereIn() on a subquery binds named placeholders the outer
+        // query never receives, and they collide with the outer query's own bindings.
         if ($hasParam && $filterValue < 1) {
             $intValues = array_map('intval', $paramValues);
             $sub       = $db->createQuery()
                 ->select('1')
                 ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                 ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
-                ->whereIn($db->quoteName('stf.teacher_id'), $intValues);
+                ->where($db->quoteName('stf.teacher_id') . ' IN (' . implode(',', $intValues) . ')');
             $query->where('EXISTS (' . $sub . ')');
         } elseif ($hasParam && $filterValue >= 1) {
             $intValues = array_map('intval', $paramValues);
@@ -925,7 +927,7 @@ class CwmsermonsModel extends ListModel
                 ->select('1')
                 ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                 ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
-                ->whereIn($db->quoteName('stf.teacher_id'), $intValues);
+                ->where($db->quoteName('stf.teacher_id') . ' IN (' . implode(',', $intValues) . ')');
             $query->where('EXISTS (' . $sub . ')');
 
             $sub2 = $db->createQuery()

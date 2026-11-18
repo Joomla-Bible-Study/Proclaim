@@ -14,37 +14,71 @@ const NAME = 'zz e2e type-swap fixture';
 
 const FIELD = '.js-modal-content-select-field:has(#jform_type_id)';
 
-// The picker's iframe, once its own document has parsed.
+// The picker's iframe.
 //
-// ⚠️ `expect(page.locator('joomla-dialog iframe')).toBeVisible()` proves the
-// iframe ELEMENT is visible in the parent. It says nothing about the document
-// inside, whose click handler is bound on DOMContentLoaded:
+// ⚠️ Not `page.locator('joomla-dialog iframe').elementHandle()` then
+// `.contentFrame()`. `joomla-dialog.w-c.es6.js` builds this iframe by
+// `document.createElement('iframe')`, sets `.src` on the still-detached node,
+// *then* appends it to the DOM — so the element Playwright can query for
+// exists before the browser has necessarily settled on the frame that will
+// carry the real navigation. `contentFrame()` resolves to a Frame object at
+// that instant; if Chromium recreates the frame's execution context once the
+// navigation actually starts (routine for a fresh iframe going from
+// about:blank to a real document), the captured Frame is now stale and
+// `waitForLoadState()` on it waits for an event that will never fire there.
+//
+// Proven from a CI trace (#2122), not theorised: the failure was
+// `frame.waitForLoadState: Test timeout of 30000ms exceeded`, while the page
+// snapshot taken at that same timeout showed the iframe's content already
+// fully rendered and interactive — the document had loaded; the *handle*
+// pointed at the wrong Frame instance.
+//
+// `frameLocator()` has no equivalent failure mode: it never captures a
+// static Frame reference, so every action re-resolves whichever frame
+// currently matches the selector.
+function dialogFrame(page) {
+    return page.frameLocator('joomla-dialog iframe');
+}
+
+// Click a type card and wait for the dialog to actually close as a result.
+//
+// A second, independent race lives one level up from the Frame-staleness one
+// above: `admin/tmpl/cwmservers/types.php` binds its click handling *inside*
+// `DOMContentLoaded`, delegated on `document` —
 //
 //     document.addEventListener('DOMContentLoaded', function () {
-//         document.addEventListener('click', ...);   // calls dialog.close()
+//         document.addEventListener('click', function (e) { ... choose(...) });
 //     });
 //
-// A click landing before that has nothing listening, so the dialog never
-// closes and the wait for it to go has no cause to wait on. That is the shape
-// of the reported failure: the dialog stays open for the whole window rather
-// than closing slowly.
-async function dialogFrame(page) {
-    const handle = await page.locator('joomla-dialog iframe').elementHandle();
-    const frame  = await handle.contentFrame();
+// — and `useScript('core')` on the same page can still be executing when the
+// cards are already visible and clickable. Playwright's own actionability
+// checks (visible, stable, receives events) are about the target element,
+// not about whether some unrelated document-level listener has been
+// registered yet, so they cannot see this gap. A click that lands first is
+// not slow to be handled — nothing is listening yet, so it is dropped
+// outright, which is why the previous failure mode was a hang for the full
+// timeout rather than an eventual close.
+//
+// Retrying the click itself, against the observable effect (the dialog
+// closing), is safe rather than merely convenient: `choose()` only ever runs
+// from inside that delegated listener, so every click thrown before it is
+// registered is a true no-op, never a double-fire. At most one attempt in
+// the loop ever reaches `choose()`.
+async function clickTypeCard(page, key) {
+    const button = dialogFrame(page).locator(`[data-type-payload="${key}"]`).first();
+    const dialog = page.locator('joomla-dialog');
 
-    await frame.waitForLoadState('domcontentloaded');
-
-    return frame;
+    await expect(async () => {
+        await button.click();
+        await expect(dialog).toHaveCount(0, { timeout: 1000 });
+    }).toPass({ timeout: 10000 });
 }
 
 // Pick a type from the open dialog and wait for its addon fields to actually
 // land in the region — "region visible" alone is the empty shell before the
 // fetch resolves.
 async function pickType(page, key, addonField) {
-    const frame = await dialogFrame(page);
-
-    await frame.locator(`[data-type-payload="${key}"]`).first().click();
-    await expect(page.locator('joomla-dialog')).toHaveCount(0);
+    await clickTypeCard(page, key);
     await expect(page.locator(`#server-tabset-region [name="${addonField}"]`).first()).toBeAttached();
     await expect(page.locator('#jform_type_id')).toHaveValue(key);
 }
@@ -146,10 +180,10 @@ test('a failed swap rolls back and says nothing changed', async ({ page }) => {
     // Make the type fetch fail outright.
     await page.route('**/*cwmserver.typeFields*', (r) => r.fulfill({ status: 500, body: '' }));
 
-    const frame = await dialogFrame(page);
-
-    await frame.locator('[data-type-payload="local"]').first().click();
-    await expect(page.locator('joomla-dialog')).toHaveCount(0);
+    // The dialog closes from choose() itself, before the (here, failing)
+    // fetch even starts — so the same retry-until-closed click is correct
+    // regardless of the route above.
+    await clickTypeCard(page, 'local');
 
     // The message admits nothing changed — and nothing did: the optimistic
     // type is rolled back and no addon fields were injected, so a Save here

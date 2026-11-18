@@ -7,8 +7,7 @@
     </config>
     <fields name="params">
         <fieldset name="Server" label="JBS_ADDON_LEGACY_DETAILS">
-            <field name="path" type="text" label="JBS_MED_PATH" description="JBS_MED_PATH_DESC" class="inputbox"
-                   size="35"/>
+            <field name="path" type="text" label="JBS_MED_PATH" description="JBS_MED_PATH_DESC" class="inputbox"/>
             <field name="protocol" type="list" label="JBS_ADDON_LEGACY_PROTOCOL"
                    description="JBS_ADDON_LEGACY_PROTOCOL_DESC" class="inputbox" default="">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -17,7 +16,7 @@
             </field>
             <field name="uploadpath" type="text" default="/images/biblestudy/media/" label="JBS_ADM_UPLOAD_PATH"
                    description="JBS_ADM_UPLOAD_PATH_DESC"
-                   class="inputbox" size="35"/>
+                   class="inputbox"/>
         </fieldset>
     </fields>
     <fields name="media">

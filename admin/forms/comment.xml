@@ -16,9 +16,8 @@
         <field name="comment_date" type="calendar" label="JBS_CMT_CREATE_DATE"
                description="JBS_CMT_CREATE_DATE_DESC" translateformat="true"
                showtime="true" filter="user_utc" required="true"/>
-        <field name="full_name" type="text" label="JBS_CMT_FULL_NAME"
-               size="30"/>
-        <field name="user_email" type="email" label="JBS_CMT_EMAIL" size="40"
+        <field name="full_name" type="text" label="JBS_CMT_FULL_NAME"/>
+        <field name="user_email" type="email" label="JBS_CMT_EMAIL"
                validate="email"/>
         <field name="comment_text" type="editor" label="JBS_CMN_COMMENT"
                rows="10" cols="50" filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText"
@@ -28,7 +27,7 @@
                section="comment" validate="rules"/>
         <field name="asset_id" type="hidden" filter="unset"/>
         <field name="id" type="text" class="col-12" label="JGLOBAL_FIELD_ID_LABEL"
-               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+               description="JGLOBAL_FIELD_ID_DESC" default="0"
                readonly="true"/>
     </fieldset>
 </form>

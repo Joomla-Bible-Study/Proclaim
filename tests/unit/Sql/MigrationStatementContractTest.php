@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  */
 
-namespace CWM\Component\Proclaim\Tests\Unit\Sql;
+namespace CWM\Component\Proclaim\Tests\Sql;
 
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;

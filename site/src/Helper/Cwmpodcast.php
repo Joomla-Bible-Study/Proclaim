@@ -24,6 +24,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
@@ -32,6 +33,7 @@ use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
@@ -1188,8 +1190,12 @@ class Cwmpodcast
         // Bracketed deliberately — a top-level OR here would escape every
         // preceding condition, published ones included (see
         // tests/unit/Query/WhereClauseContractTest.php).
+        // The feed is a static file read by podcast apps with no session, so its reader is always the
+        // guest, whoever or whatever runs the build: the console application has no identity at all,
+        // and a Super User building it must not widen what it lists. The guest's own levels, not a
+        // fixed Public, keep a site that grants logged-out visitors more than Public correct.
         $levels = ArrayHelper::toInteger(
-            Factory::getApplication()->getIdentity()->getAuthorisedViewLevels()
+            Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0)->getAuthorisedViewLevels()
         );
         $levels = $levels ?: [0];
 
@@ -1540,11 +1546,12 @@ class Cwmpodcast
         $errors   = [];
         $warnings = [];
 
-        // Build full path
-        $fullPath = JPATH_ROOT . '/' . ltrim($imagePath, '/');
+        // The media field stores a URL with a #joomlaImage:// fragment, not a file name
+        $path     = Cwmthumbnail::mediaFieldPath($imagePath);
+        $fullPath = JPATH_ROOT . '/' . ltrim($path, '/');
 
         if (!is_file($fullPath)) {
-            $errors[] = Text::sprintf('JBS_PDC_VALIDATE_IMAGE_NOT_FOUND', $imagePath);
+            $errors[] = Text::sprintf('JBS_PDC_VALIDATE_IMAGE_NOT_FOUND', $path ?: $imagePath);
             return ['valid' => false, 'errors' => $errors, 'warnings' => $warnings];
         }
 

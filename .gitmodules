@@ -3,4 +3,4 @@
 	url = https://github.com/Joomla-Bible-Study/lib_cwmscripture.git
 [submodule "plugins/content/scripturelinks"]
 	path = plugins/content/scripturelinks
-	url = git@github.com:Joomla-Bible-Study/CWMScriptureLinks.git
+	url = https://github.com/Joomla-Bible-Study/CWMScriptureLinks.git

@@ -98,6 +98,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
     {
         $series = (object) [
             'series_text' => 'analytics fixture series',
+            'alias'       => $this->uniqueAlias('analyticsqueriesexecute-series'),
             'published'   => 1,
             'access'      => 1,
             'language'    => '*',
@@ -107,6 +108,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
 
         $study = (object) [
             'studytitle' => 'analytics fixture message',
+            'alias'      => $this->uniqueAlias('analyticsqueriesexecute-study'),
             'series_id'  => $this->seriesId,
             'studydate'  => self::START . ' 09:00:00',
             'published'  => 1,

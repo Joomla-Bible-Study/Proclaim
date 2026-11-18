@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmepisodenumberHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
@@ -35,7 +36,6 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -383,7 +383,6 @@ class CwmmessageModel extends AdminModel
         $app    = Factory::getApplication();
         $params = Cwmparams::getAdmin()->params;
         $input  = $app->getInput();
-        $image  = HTMLHelper::cleanImageURL((string)$data['image']);
 
         // Extract subform data before table binding strips it.
         //
@@ -406,12 +405,17 @@ class CwmmessageModel extends AdminModel
         $studyText  = (string) ($data['studytext'] ?? '');
         $language   = (string) ($data['language'] ?? '*');
 
-        $data['image'] = $image->url;
+        $data['image'] = Cwmthumbnail::mediaFieldPath((string) $data['image']);
         $this->cleanCache();
 
         // The front end calls this model and uses a_id to avoid id clashes,
         // so resolve the real record id before validating its location.
-        if ($input->get('a_id')) {
+        // Site-only: FormController::save() already folds a_id into $data['id']
+        // before this is reached, so this only ever needs to run there — an
+        // admin-side request carrying its own a_id parameter must not be able
+        // to redirect the save to a different row than the one the controller
+        // already authorised.
+        if ($app->isClient('site') && $input->get('a_id')) {
             $data['id'] = $input->get('a_id');
         }
 
@@ -420,6 +424,29 @@ class CwmmessageModel extends AdminModel
             (int) ($data['id'] ?? 0),
             (int) ($data['location_id'] ?? 0)
         );
+
+        // A copy arrives with the original's title, alias and episode number;
+        // give it its own.
+        if ($input->get('task') === 'save2copy') {
+            $original = $this->getTable();
+            $original->load($app->isClient('site') ? $input->getInt('a_id') : $input->getInt('id'));
+
+            [$data['studytitle'], $data['alias']] = Cwmalias::forCopy(
+                $this->getDatabase(),
+                '#__bsms_studies',
+                (string) ($data['studytitle'] ?? ''),
+                (string) ($data['alias'] ?? ''),
+                (string) $original->studytitle,
+                (string) $original->alias
+            );
+
+            $data['studynumber'] = CwmepisodenumberHelper::forCopy(
+                (string) ($data['studynumber'] ?? ''),
+                (int) ($data['series_id'] ?? 0),
+                (string) $original->studynumber,
+                (int) $original->series_id
+            );
+        }
 
         // Correct legacy thumb_ paths submitted from pre-migration records
         $imageBasename = basename($data['image']);
@@ -1429,8 +1456,19 @@ class CwmmessageModel extends AdminModel
         $table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
         $table->alias      = ApplicationHelper::stringURLSafe($table->alias);
 
+        // An alias built from the title takes the next free -2, -3, ... form, as
+        // core does for articles. One the user typed is left for check(), which
+        // refuses a duplicate rather than quietly changing it.
         if (empty($table->alias)) {
-            $table->alias = ApplicationHelper::stringURLSafe($table->studytitle);
+            $base         = ApplicationHelper::stringURLSafe($table->studytitle) ?: $date->format('Y-m-d-H-i-s');
+            $table->alias = Cwmalias::makeUniqueAlias($this->getDatabase(), '#__bsms_studies', $base, (int) $table->id);
+
+            if ($table->alias !== $base) {
+                Factory::getApplication()->enqueueMessage(
+                    Text::sprintf('JBS_STY_ALIAS_NUMBERED', $base, $table->alias),
+                    'warning'
+                );
+            }
         }
 
         // Always ensure created date is set (handles empty string from form)

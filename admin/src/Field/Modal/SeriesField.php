@@ -79,6 +79,18 @@ class SeriesField extends ModalSelectField
         $linkSerie = clone $linkSeries;
         $linkSerie->setVar('view', 'cwmserie');
 
+        // Checked by the picker's own JS whenever the popup chrome is
+        // dismissed (X / Escape), not only on an in-iframe Cancel/Save --
+        // without it a series opened via Edit stays checked out indefinitely.
+        // Mirrors core's own Modal*Field pattern, e.g. com_contact's ContactField.
+        $linkCheckin = (new Uri())->setPath(Uri::base(true) . '/index.php');
+        $linkCheckin->setQuery([
+            'option'                => 'com_proclaim',
+            'task'                  => 'cwmseries.checkin',
+            'format'                => 'json',
+            Session::getFormToken() => 1,
+        ]);
+
         if ($language) {
             $linkSeries->setVar('forcedLanguage', $language);
             $linkSerie->setVar('forcedLanguage', $language);
@@ -98,9 +110,10 @@ class SeriesField extends ModalSelectField
         $urlNew->setVar('layout', 'modal');
         $urlNew->setVar('task', 'cwmserie.add');
 
-        $this->urls['select'] = (string) $urlSelect;
-        $this->urls['new']    = (string) $urlNew;
-        $this->urls['edit']   = (string) $urlEdit;
+        $this->urls['select']  = (string) $urlSelect;
+        $this->urls['new']     = (string) $urlNew;
+        $this->urls['edit']    = (string) $urlEdit;
+        $this->urls['checkin'] = (string) $linkCheckin;
 
         // Modal titles
         $this->modalTitles['select'] = $modalTitle;

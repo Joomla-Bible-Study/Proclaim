@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Api\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
@@ -109,6 +110,29 @@ class MediaController extends AbstractWritableController
         // Model expects podcast_id as an array for implode to CSV
         if (isset($data['podcast_id']) && \is_string($data['podcast_id'])) {
             $data['podcast_id'] = explode(',', $data['podcast_id']);
+        }
+
+        // createdate is declared filter="user_utc" (mediafile.xml): whatever
+        // reaches the form's validate() step is treated as being in the
+        // caller's timezone and converted to UTC for storage. A GET returns
+        // the stored value with no reverse conversion, so a value read back
+        // and written unchanged drifts by the offset on every round trip.
+        //
+        // Pre-shift here, in the opposite direction the filter will apply, so
+        // the two cancel out: what the caller sends is exactly what ends up
+        // stored, and what is read back is exactly what was sent. This is the
+        // API's own convention (store and return literally, no implicit
+        // timezone math) and applies only here — the admin UI's calendar
+        // widget still wants its local-time-in, UTC-stored behaviour
+        // unchanged, and this method runs only on the API path.
+        if (!empty($data['createdate']) && (int) $data['createdate'] > 0) {
+            $offset = $this->app->getIdentity()->getParam('timezone', $this->app->get('offset'));
+
+            if ($offset) {
+                $asUtc = new Date($data['createdate'], 'UTC');
+                $asUtc->setTimeZone(new \DateTimeZone($offset));
+                $data['createdate'] = $asUtc->format('Y-m-d H:i:s', true);
+            }
         }
 
         return $this->stripProtectedFields($data);

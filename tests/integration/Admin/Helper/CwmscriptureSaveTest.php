@@ -56,6 +56,7 @@ class CwmscriptureSaveTest extends IntegrationTestCase
         $study = (object) [
             'published'  => 0,
             'studytitle' => 'cwm1573 fixture',
+            'alias'      => $this->uniqueAlias('cwmscripturesave-study'),
             'language'   => '*',
         ];
         $this->db->insertObject('#__bsms_studies', $study, 'id');

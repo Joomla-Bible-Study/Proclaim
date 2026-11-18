@@ -10,6 +10,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
@@ -17,9 +18,9 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmimportmanifest;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
+use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Event\Cache\AfterPurgeEvent;
 use Joomla\CMS\Event\Model\AfterCleanCacheEvent;
-use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -171,6 +172,15 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  10.5.10
      */
     private array $taskLog = [];
+
+    /**
+     * The messages and series the unique alias task renamed, held for the
+     * email that goes out once every other task has run.
+     *
+     * @var    array<string, list<object>>
+     * @since  10.7.4
+     */
+    private array $aliasRenames = [];
 
     /**
      * When preflight ran, as a float second.
@@ -353,6 +363,11 @@ class com_proclaimInstallerScript extends InstallerScript
         '/administrator/modules/mod_proclaimicon/language/nl-NL/nl-NL.mod_proclaimicon.sys.ini',
         '/administrator/modules/mod_proclaimicon/language/no-NO/no-NO.mod_proclaimicon.ini',
         '/administrator/modules/mod_proclaimicon/language/no-NO/no-NO.mod_proclaimicon.sys.ini',
+
+        // The series "custom" layouts, the last of expert mode (retired for every
+        // other view in 9.0.0). They call render helpers that no longer exist.
+        '/components/com_proclaim/tmpl/cwmseriesdisplays/default_custom.php',
+        '/components/com_proclaim/tmpl/cwmseriesdisplay/default_custom.php',
     ];
 
     /**
@@ -1407,7 +1422,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     private function normaliseUploadMediaTypes(): void
     {
@@ -1623,7 +1638,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     private static function splitCsv(string $csv): array
     {
@@ -1644,7 +1659,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     private static function augmentImageExtensions(array $exts): array
     {
@@ -1678,7 +1693,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     private static function augmentImageMimes(array $mimes): array
     {
@@ -1823,7 +1838,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 // `com_proclaim` and `com_proclaim.<entity>`, and a bare prefix
                 // would take another extension's rows with them. orWhere() so
                 // the builder brackets the two halves rather than this code.
-                $query = $this->dbo->getQuery(true)
+                $query = $this->dbo->createQuery()
                     ->delete($this->dbo->quoteName($table))
                     ->where($this->dbo->quoteName($column) . ' = ' . $this->dbo->quote('com_proclaim'))
                     ->orWhere($this->dbo->quoteName($column) . ' LIKE ' . $this->dbo->quote('com_proclaim.%'));
@@ -1986,7 +2001,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
         try {
             $db    = $this->dbo ?? Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('element'))
                 ->from($db->quoteName('#__extensions'))
                 ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
@@ -2077,7 +2092,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 return;
             }
 
-            $query = $this->dbo->getQuery(true)
+            $query = $this->dbo->createQuery()
                 ->select($this->dbo->quoteName('drop_tables'))
                 ->from($this->dbo->quoteName('#__bsms_admin'))
                 ->where($this->dbo->quoteName('id') . ' = 1');
@@ -2119,7 +2134,7 @@ class com_proclaimInstallerScript extends InstallerScript
             // Remove component assets. Reached whether or not the uninstall SQL
             // was there to run, which the early returns this replaced did not
             // do — a missing file used to skip the asset cleanup entirely.
-            $query = $this->dbo->getQuery(true)
+            $query = $this->dbo->createQuery()
                 ->select($this->dbo->quoteName('id'))
                 ->from($this->dbo->quoteName('#__assets'))
                 ->where($this->dbo->quoteName('name') . ' = ' . $this->dbo->quote('com_proclaim'));
@@ -2127,7 +2142,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $parentId = (int) $this->dbo->loadResult();
 
             if ($parentId > 0) {
-                $query = $this->dbo->getQuery(true)
+                $query = $this->dbo->createQuery()
                     ->delete($this->dbo->quoteName('#__assets'))
                     ->where($this->dbo->quoteName('parent_id') . ' = ' . (int) $parentId)
                     ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'));
@@ -2146,7 +2161,7 @@ class com_proclaimInstallerScript extends InstallerScript
             // emit rather than ours to assemble. ⚠️ It goes through
             // extendWhere(), which needs a WHERE to extend — the root.1 guard
             // has to be the call before it, not after.
-            $query = $this->dbo->getQuery(true)
+            $query = $this->dbo->createQuery()
                 ->delete($this->dbo->quoteName('#__assets'))
                 // Kept even though the group below can no longer reach it.
                 // Deleting the ACL root takes every extension's permissions
@@ -2177,7 +2192,7 @@ class com_proclaimInstallerScript extends InstallerScript
     private function cleanupPostInstallMessages(): void
     {
         try {
-            $query = $this->dbo->getQuery(true)
+            $query = $this->dbo->createQuery()
                 ->delete($this->dbo->quoteName('#__postinstall_messages'))
                 ->where($this->dbo->quoteName('language_extension') . ' = ' . $this->dbo->quote('com_proclaim'));
             $this->dbo->setQuery($query);
@@ -2309,7 +2324,7 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function getExtensionId(string $type, string $element, ?string $folder = null): ?int
     {
-        $query = $this->dbo->getQuery(true)
+        $query = $this->dbo->createQuery()
             ->select($this->dbo->qn('extension_id'))
             ->from($this->dbo->qn('#__extensions'))
             ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($element))
@@ -2540,6 +2555,28 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Make Proclaim's administrator classes loadable for the rest of postflight
+     *
+     * Joomla adds a new extension's namespace to its autoload map only after
+     * the install has finished. On a site that has never had Proclaim, the
+     * postflight steps could not load the component's own classes until this
+     * registers them, as preflight does for the scripture library. An update
+     * already has them in the map, so nothing is registered twice.
+     *
+     * @return  void
+     *
+     * @since   10.7.4
+     */
+    private function registerComponentNamespace(): void
+    {
+        $src = JPATH_ADMINISTRATOR . '/components/com_proclaim/src';
+
+        if (!class_exists(CwmdbHelper::class) && is_dir($src)) {
+            \JLoader::registerNamespace('CWM\\Component\\Proclaim\\Administrator', $src);
+        }
+    }
+
+    /**
      * Post Flight
      *
      * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
@@ -2593,6 +2630,8 @@ class com_proclaimInstallerScript extends InstallerScript
             return;
         }
 
+        $this->registerComponentNamespace();
+
         $this->task('Scripture library check', fn () => $this->checkScriptureLibraryVersion());
 
         // Rename old folders before deletion (must happen before removeFiles is called)
@@ -2611,6 +2650,12 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->task('Upload media types', fn () => $this->normaliseUploadMediaTypes());
         $this->task('JW Player cleanup', fn () => $this->migrateJwplayerParams());
         $this->task('Wizard-sample manifest backfill', fn () => $this->backfillWizardSampleManifest());
+
+        // One alias per message and per series, then the unique index that keeps
+        // it so. Not a gated step, and on install too: a reinstall over tables an
+        // uninstall kept skips their CREATE TABLE, and a restored older backup
+        // has no index either. No-op once the index exists.
+        $this->task('Unique aliases', fn () => $this->ensureUniqueAliases());
 
         // Seeded on update as well as install: access.xml can gain a section in
         // any release, and a section with no asset is a permission the UI can
@@ -2824,7 +2869,7 @@ class com_proclaimInstallerScript extends InstallerScript
             // Set helpURL for wiki-based help if not already configured
             try {
                 $db     = Factory::getContainer()->get(DatabaseInterface::class);
-                $query  = $db->getQuery(true)
+                $query  = $db->createQuery()
                     ->select($db->quoteName('params'))
                     ->from($db->quoteName('#__extensions'))
                     ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
@@ -2833,7 +2878,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
                 if (empty($params->get('helpURL'))) {
                     $params->set('helpURL', 'https://github.com/Joomla-Bible-Study/Proclaim/wiki/Help-{keyref}');
-                    $update = $db->getQuery(true)
+                    $update = $db->createQuery()
                         ->update($db->quoteName('#__extensions'))
                         ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
                         ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
@@ -2866,6 +2911,9 @@ class com_proclaimInstallerScript extends InstallerScript
                 // Silently ignore detection failures during install
             }
         }
+
+        // Last of the tasks, so a slow mail server holds up none of the others.
+        $this->task('Alias rename email', fn () => $this->emailAliasRenames());
 
         // ⚠️ The leading "N step(s) in Ns" is parsed by build/verify-install-log.php,
         // which cross-checks it against the per-step lines. Keep it at the front.
@@ -3040,7 +3088,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 return;
             }
 
-            $check = $this->dbo->getQuery(true)
+            $check = $this->dbo->createQuery()
                 ->select($this->dbo->qn('params'))
                 ->from($this->dbo->qn('#__modules'))
                 ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q($element));
@@ -3052,7 +3100,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
         }
 
-        $query = $this->dbo->getQuery(true)
+        $query = $this->dbo->createQuery()
             ->update($this->dbo->qn('#__modules'))
             ->set($this->dbo->qn('position') . ' = ' . $this->dbo->q($position))
             ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q($element));
@@ -3087,14 +3135,14 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function reorderAdminModule(string $position, string $element): void
     {
-        $query = $this->dbo->getQuery(true)
+        $query = $this->dbo->createQuery()
             ->select('MAX(' . $this->dbo->qn('ordering') . ')')
             ->from($this->dbo->qn('#__modules'))
             ->where($this->dbo->qn('position') . '=' . $this->dbo->q($position));
         $this->dbo->setQuery($query);
         $maxOrder = (int) $this->dbo->loadResult();
 
-        $query = $this->dbo->getQuery(true)
+        $query = $this->dbo->createQuery()
             ->update($this->dbo->qn('#__modules'))
             ->set($this->dbo->qn('ordering') . ' = ' . ($maxOrder + 1))
             ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q($element));
@@ -3112,7 +3160,7 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function assignModuleToAllPages(string $element): void
     {
-        $query = $this->dbo->getQuery(true)
+        $query = $this->dbo->createQuery()
             ->select('id')
             ->from($this->dbo->qn('#__modules'))
             ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q($element));
@@ -3120,7 +3168,7 @@ class com_proclaimInstallerScript extends InstallerScript
         $moduleId = (int) $this->dbo->loadResult();
 
         if ($moduleId) {
-            $query = $this->dbo->getQuery(true)
+            $query = $this->dbo->createQuery()
                 ->select('COUNT(*)')
                 ->from($this->dbo->qn('#__modules_menu'))
                 ->where($this->dbo->qn('moduleid') . ' = ' . $moduleId);
@@ -3153,7 +3201,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
 
             // Check if already installed
-            $query = $this->dbo->getQuery(true)
+            $query = $this->dbo->createQuery()
                 ->select('COUNT(*)')
                 ->from($this->dbo->qn('#__extensions'))
                 ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
@@ -3179,7 +3227,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $isSystemPlugin = ($group === 'system' && $plugin === 'proclaim');
 
             if (($published && !$isInstalled) || $isSystemPlugin) {
-                $query = $this->dbo->getQuery(true)
+                $query = $this->dbo->createQuery()
                     ->update($this->dbo->qn('#__extensions'))
                     ->set($this->dbo->qn('enabled') . ' = 1')
                     ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
@@ -3310,7 +3358,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $this->removeFiles();
 
             // Clean up Admin Menus from old install
-            $query = $this->dbo->getQuery(true)
+            $query = $this->dbo->createQuery()
                 ->delete($this->dbo->qn('#__menu'))
                 ->where($this->dbo->qn('link') . ' LIKE ' . $this->dbo->q('%com_biblestudy%'))
                 ->where($this->dbo->qn('client_id') . ' = 1')
@@ -3328,7 +3376,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
             // Update Site Menus for BibleStudy to Proclaim
             if ($proclaimID) {
-                $query = $this->dbo->getQuery(true)
+                $query = $this->dbo->createQuery()
                     ->update($this->dbo->qn('#__menu'))
                     ->set($this->dbo->qn('component_id') . ' = ' . (int) $proclaimID)
                     ->set($this->dbo->qn('link') . ' = REPLACE(' . $this->dbo->qn('link') . ', ' . $this->dbo->q('com_biblestudy&view=') . ', ' . $this->dbo->q('com_proclaim&view=cwm') . ')')
@@ -3339,7 +3387,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
 
             // Update Site Modules for BibleStudy to Proclaim
-            $query = $this->dbo->getQuery(true)
+            $query = $this->dbo->createQuery()
                 ->update($this->dbo->qn('#__modules'))
                 ->set($this->dbo->qn('module') . ' = REPLACE(' . $this->dbo->qn('module') . ', ' . $this->dbo->q('mod_biblestudy') . ', ' . $this->dbo->q('mod_proclaim') . ')')
                 ->where($this->dbo->qn('module') . ' LIKE ' . $this->dbo->q('%mod_biblestudy%'));
@@ -3425,7 +3473,7 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function deleteExtension(string $type, string $element): void
     {
-        $query = $this->dbo->getQuery(true)
+        $query = $this->dbo->createQuery()
             ->delete($this->dbo->qn('#__extensions'))
             ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($element))
             ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q($type));
@@ -3677,7 +3725,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $columns = ['text', 'pdf', 'tmpl'];
 
             foreach ($columns as $column) {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select('COUNT(*)')
                     ->from('INFORMATION_SCHEMA.COLUMNS')
                     ->where('TABLE_SCHEMA = DATABASE()')
@@ -3812,6 +3860,69 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Give every message and every series its own alias, and add the unique
+     * index that keeps it so.
+     *
+     * A renamed message or series gets a new address, so each rename is written
+     * to the install log, and the administrator is shown the renamed records
+     * with links to give them clearer titles and aliases; the email goes out
+     * last, from emailAliasRenames(). The shared address keeps opening the
+     * record the router already served there. A row that had no alias only
+     * gains one, so it is logged but not reported.
+     *
+     * @return  void
+     *
+     * @since   10.7.4
+     */
+    private function ensureUniqueAliases(): void
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $changed = Cwmalias::ensureAllUniqueAliases($db);
+
+        foreach ($changed as $table => $rows) {
+            foreach ($rows as $row) {
+                $this->logInstall(\sprintf('  alias %s %d: %s -> %s', $table, $row['id'], $row['from'], $row['to']));
+            }
+        }
+
+        $this->aliasRenames = Cwmalias::sharedRenames($db, $changed);
+        Cwmalias::announceRenames($this->aliasRenames);
+    }
+
+    /**
+     * Email the renamed messages and series to the Super Users who receive
+     * system emails, since an update run remotely shows its notices to no one.
+     *
+     * @return  void
+     *
+     * @since   10.7.4
+     */
+    private function emailAliasRenames(): void
+    {
+        if ($this->aliasRenames === []) {
+            return;
+        }
+
+        // A mail failure is logged here, not thrown: the update itself is done.
+        try {
+            $sent = Cwmalias::emailRenames(Factory::getContainer()->get(DatabaseInterface::class), $this->aliasRenames);
+        } catch (\Throwable $e) {
+            $this->logInstall('  alias rename list not emailed: ' . $e->getMessage());
+
+            return;
+        }
+
+        if ($sent === 0) {
+            $this->logInstall('  alias rename list not emailed: no Super User receives system emails');
+
+            return;
+        }
+
+        $this->logInstall(\sprintf('  alias rename list emailed to %d Super User(s)', $sent));
+        Factory::getApplication()->enqueueMessage(Text::plural('JBS_INS_ALIASES_EMAILED', $sent), 'notice');
+    }
+
+    /**
      * Add missing primary keys to Proclaim tables.
      *
      * Legacy sites upgraded from v7/v8/v9 may lack PKs because the original
@@ -3871,7 +3982,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 }
 
                 // Check if a PK already exists
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select('COUNT(*)')
                     ->from($db->quoteName('information_schema.TABLE_CONSTRAINTS'))
                     ->where($db->quoteName('TABLE_SCHEMA') . ' = DATABASE()')
@@ -3920,7 +4031,7 @@ class com_proclaimInstallerScript extends InstallerScript
     private function migrateStudyImageParams(): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->qn(['id', 'params']))
             ->from($db->qn('#__bsms_studies'))
             ->where('(' . $db->qn('thumbnailm') . ' IS NULL OR ' . $db->qn('thumbnailm') . ' = ' . $db->q('') . ')');
@@ -3978,7 +4089,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 continue;
             }
 
-            $update = $db->getQuery(true)
+            $update = $db->createQuery()
                 ->update($db->qn('#__bsms_studies'))
                 ->set($db->qn('thumbnailm') . ' = ' . $db->q($studyImage))
                 ->set($db->qn('params') . ' = ' . $db->q($newParams))
@@ -4015,7 +4126,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Check if the platform_links column exists yet
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from('INFORMATION_SCHEMA.COLUMNS')
                 ->where('TABLE_SCHEMA = DATABASE()')
@@ -4033,7 +4144,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
 
             // Find podcasts with alternate link but no platform_links yet
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName(['id', 'alternatelink', 'alternatewords', 'alternateimage']))
                 ->from($db->quoteName('#__bsms_podcast'))
                 ->where($db->quoteName('alternatelink') . ' IS NOT NULL')
@@ -4098,7 +4209,7 @@ class com_proclaimInstallerScript extends InstallerScript
                     continue;
                 }
 
-                $update = $db->getQuery(true)
+                $update = $db->createQuery()
                     ->update($db->quoteName('#__bsms_podcast'))
                     ->set($db->quoteName('platform_links') . ' = ' . $db->quote($encoded))
                     ->where($db->quoteName('id') . ' = ' . (int) $row->id);
@@ -4139,7 +4250,7 @@ class com_proclaimInstallerScript extends InstallerScript
         try {
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_podcast'))
                 ->set($db->quoteName('podcastimage') . ' = ' . $db->quoteName('image'))
                 ->where($db->quoteName('image') . ' IS NOT NULL')
@@ -4184,7 +4295,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Find podcasts with non-empty, non-numeric podcastlink (legacy URLs)
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName(['id', 'podcastlink']))
                 ->from($db->quoteName('#__bsms_podcast'))
                 ->where($db->quoteName('podcastlink') . ' IS NOT NULL')
@@ -4198,7 +4309,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
 
             // Load all published site menu items
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName(['id', 'link', 'path', 'alias']))
                 ->from($db->quoteName('#__menu'))
                 ->where($db->quoteName('published') . ' = 1')
@@ -4268,7 +4379,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 }
 
                 if ($matchId !== null) {
-                    $update = $db->getQuery(true)
+                    $update = $db->createQuery()
                         ->update($db->quoteName('#__bsms_podcast'))
                         ->set($db->quoteName('podcastlink') . ' = ' . $db->quote((string) $matchId))
                         ->where($db->quoteName('id') . ' = ' . (int) $podcast->id);
@@ -4322,7 +4433,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Load component admin params
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_admin'))
                 ->where($db->quoteName('id') . ' = 1');
@@ -4359,7 +4470,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
 
             // Load plugin params
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__extensions'))
                 ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
@@ -4391,7 +4502,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
 
             // Save plugin params
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__extensions'))
                 ->set($db->quoteName('params') . ' = ' . $db->quote($pluginParams->toString()))
                 ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
@@ -4401,7 +4512,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $db->execute();
 
             // Save cleaned component params
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_admin'))
                 ->set($db->quoteName('params') . ' = ' . $db->quote($adminParams->toString()))
                 ->where($db->quoteName('id') . ' = 1');

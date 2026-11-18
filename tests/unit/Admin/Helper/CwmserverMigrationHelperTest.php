@@ -1222,15 +1222,106 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $db->transactionStart();
+        // Belt-and-suspenders, not redundant: this bare insertObject() does
+        // not touch an asset-tracked table, but a savepoint-protected
+        // transaction here still is not sufficient on its own to guarantee
+        // cleanup in a long-running shared PHPUnit process -- #2218 found
+        // real "ZZTEST" rows left behind in the dev database from exactly
+        // this test despite the transactionStart()/rollback() pair below.
+        // Deleting the row explicitly is what actually guarantees cleanup.
+        $db->transactionStart(true);
+        $id = 0;
 
         try {
             $id = CwmserverMigrationHelper::createServerForType('local', 'ZZTEST Direct Call ' . uniqid());
 
             $this->assertGreaterThan(0, $id, 'must return a valid new server id -- see #1538');
         } finally {
-            $db->transactionRollback();
+            $db->transactionRollback(true);
+
+            if ($id > 0) {
+                $db->setQuery(
+                    'DELETE FROM ' . $db->quoteName('#__bsms_servers')
+                    . ' WHERE ' . $db->quoteName('id') . ' = ' . $id
+                )->execute();
+            }
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // Files a legacy server served from another host
+    // -------------------------------------------------------------------------
+
+    public function testRemoteLegacyHostIsDetected(): void
+    {
+        $legacy = ['path' => '//www.calvarychapelnewberg.net/', 'protocol' => 'http://'];
+
+        $this->assertTrue(CwmserverMigrationHelper::isRemoteLegacyHost($legacy, 'example.org'));
+    }
+
+    public function testTheSitesOwnHostIsNotRemoteEvenWithWww(): void
+    {
+        $legacy = ['path' => '//www.example.org/', 'protocol' => 'https://'];
+
+        $this->assertFalse(CwmserverMigrationHelper::isRemoteLegacyHost($legacy, 'example.org'));
+    }
+
+    public function testALegacyServerWithNoHostIsNotRemote(): void
+    {
+        $this->assertFalse(CwmserverMigrationHelper::isRemoteLegacyHost(['path' => '', 'protocol' => 'http://'], 'example.org'));
+        $this->assertFalse(CwmserverMigrationHelper::isRemoteLegacyHost([], 'example.org'));
+    }
+
+    public function testALocalFileOnARemoteHostGoesToADirectServer(): void
+    {
+        $legacy = ['path' => '//cdn.example.net/', 'protocol' => 'http://'];
+
+        $this->assertSame('direct', CwmserverMigrationHelper::resolveTargetType('local', $legacy, 'example.org'));
+    }
+
+    public function testOnlyLocalFilesAreRerouted(): void
+    {
+        $legacy = ['path' => '//cdn.example.net/', 'protocol' => 'http://'];
+
+        $this->assertSame('youtube', CwmserverMigrationHelper::resolveTargetType('youtube', $legacy, 'example.org'));
+        $this->assertSame('local', CwmserverMigrationHelper::resolveTargetType('local', [], 'example.org'));
+        $this->assertSame(
+            'local',
+            CwmserverMigrationHelper::resolveTargetType('local', ['path' => '//example.org/'], 'example.org')
+        );
+    }
+
+    public function testAMigratedRelativeFileKeepsItsLegacyHost(): void
+    {
+        $legacy = ['path' => '//www.calvarychapelnewberg.net/', 'protocol' => 'http://'];
+
+        $result = CwmserverMigrationHelper::transformParams(
+            ['filename' => '/MediaFiles/2015/2015-008.mp3', 'player' => '7'],
+            'direct',
+            $legacy
+        );
+
+        $this->assertSame('http://www.calvarychapelnewberg.net/MediaFiles/2015/2015-008.mp3', $result['filename']);
+    }
+
+    public function testALegacyPathWithItsOwnProtocolIsNotDoubled(): void
+    {
+        $legacy = ['path' => 'http://calvarynewberg.org/', 'protocol' => 'http://'];
+
+        $this->assertSame(
+            'http://calvarynewberg.org/images/q.pdf',
+            CwmserverMigrationHelper::absoluteLegacyUrl('/images/q.pdf', $legacy)
+        );
+    }
+
+    public function testAnAbsoluteFilenameIsLeftAlone(): void
+    {
+        $legacy = ['path' => '//cdn.example.net/', 'protocol' => 'http://'];
+
+        $this->assertSame(
+            'https://other.example.com/a.mp3',
+            CwmserverMigrationHelper::absoluteLegacyUrl('https://other.example.com/a.mp3', $legacy)
+        );
     }
 
     public function testCreateServerForTypeGuardsAgainstANullIdentity(): void

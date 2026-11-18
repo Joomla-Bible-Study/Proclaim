@@ -72,7 +72,11 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             ->getHelper('ProclaimHelper')
             ->getLatest($data['params'], $this->getApplication());
 
-        if ($data['params']->get('useexpert_module') > 0 || \is_string($data['params']->get('moduletemplate'))) {
+        if (
+            $data['params']->get('useexpert_module') > 0
+            || \is_string($data['params']->get('moduletemplate'))
+            || $data['params']->get('simple_mode') === '1'
+        ) {
             try {
                 $pageBuilder->enrichStudies($data['list'], $data['params'], $data['cwmtemplate']);
             } catch (\Exception $e) {

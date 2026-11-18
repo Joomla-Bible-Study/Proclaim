@@ -108,6 +108,7 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
     {
         $study = (object) array_merge([
             'studytitle' => 'cwm1623 scope fixture',
+            'alias'      => $this->uniqueAlias('cwmsermonsbookfilterscope-study'),
             'published'  => 1,
             'access'     => 1,
             'language'   => '*',

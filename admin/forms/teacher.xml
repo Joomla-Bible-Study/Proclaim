@@ -3,22 +3,21 @@
 
     <fieldset name="details" label="JBS_CMN_DETAILS">
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"/>
-        <field name="teachername" type="text" size="60"
+               description="JGLOBAL_FIELD_ID_DESC" default="0" readonly="true"/>
+        <field name="teachername" type="text"
                label="JBS_CMN_TEACHER" required="true" filter="trim"/>
         <field name="alias"
                type="text"
                label="JFIELD_ALIAS_LABEL"
-               description="JFIELD_ALIAS_DESC"
-               size="30"/>
-        <field name="title" type="text" size="60"
+               description="JFIELD_ALIAS_DESC"/>
+        <field name="title" type="text"
                label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
-        <field name="org_name" type="text" size="60"
+        <field name="org_name" type="text"
                label="JBS_TCH_ORG_NAME" description="JBS_TCH_ORG_NAME_DESC"
                hint="JBS_TCH_ORG_NAME_HINT" filter="string"/>
-        <field name="phone" type="tel" size="60"
+        <field name="phone" type="tel"
                label="JBS_TCH_PHONE"/>
-        <field name="email" type="email" size="50" label="JBS_TCH_EMAIL" description="JBS_TCH_EMAIL_DESC"
+        <field name="email" type="email" label="JBS_TCH_EMAIL" description="JBS_TCH_EMAIL_DESC"
                validate="email"/>
         <field name="address" type="textarea" format="raw" label="JBS_TCH_ADDRESS" description="JBS_TCH_ADDRESS_DESC"
                cols="50" rows="5"/>
@@ -81,7 +80,7 @@
     </fieldset>
 
     <fieldset name="links" label="JBS_TCH_LINKS">
-        <field name="website" type="url" size="60"
+        <field name="website" type="url"
                label="JBS_TCH_WEBSITE" hint="https://" validate="url" filter="url"/>
         <field name="social_links" type="subform"
                label="JBS_TCH_SOCIAL_LINKS"
@@ -91,24 +90,22 @@
                min="0" max="50"
                layout="joomla.form.field.subform.repeatable-table"
                buttons="add,remove,move"/>
-        <field name="facebooklink" type="url" label="JBS_TCH_FACEBOOK" description="JBS_TCH_FACEBOOK_DESC"
-               size="65" hint="https://" validate="url" filter="url"/>
-        <field name="twitterlink" type="url" label="JBS_TCH_TWITTER" description="JBS_TCH_TWITTER_DESC"
-               size="65" hint="https://" validate="url" filter="url"/>
-        <field name="bloglink" type="url" label="JBS_TCH_BLOG" description="JBS_TCH_BLOG_DESC" size="65"
+        <field name="facebooklink" type="url" label="JBS_TCH_FACEBOOK" description="JBS_TCH_FACEBOOK_DESC" hint="https://" validate="url" filter="url"/>
+        <field name="twitterlink" type="url" label="JBS_TCH_TWITTER" description="JBS_TCH_TWITTER_DESC" hint="https://" validate="url" filter="url"/>
+        <field name="bloglink" type="url" label="JBS_TCH_BLOG" description="JBS_TCH_BLOG_DESC"
                hint="https://" validate="url" filter="url"/>
-        <field name="link1" type="url" label="JBS_TCH_LINK1" description="JBS_TCH_LINK1_DESC" size="65"
+        <field name="link1" type="url" label="JBS_TCH_LINK1" description="JBS_TCH_LINK1_DESC"
                hint="https://" validate="url" filter="url"/>
         <field name="linklabel1" type="text" format="raw" label="JBS_TCH_LINK_LABEL1"
-               description="JBS_TCH_LINK_LABEL1_DESC" size="65"/>
-        <field name="link2" type="url" label="JBS_TCH_LINK2" description="JBS_TCH_LINK2_DESC" size="65"
+               description="JBS_TCH_LINK_LABEL1_DESC"/>
+        <field name="link2" type="url" label="JBS_TCH_LINK2" description="JBS_TCH_LINK2_DESC"
                hint="https://" validate="url" filter="url"/>
         <field name="linklabel2" type="text" format="raw" label="JBS_TCH_LINK_LABEL2"
-               description="JBS_TCH_LINK_LABEL2_DESC" size="65"/>
-        <field name="link3" type="url" label="JBS_TCH_LINK3" description="JBS_TCH_LINK3_DESC" size="65"
+               description="JBS_TCH_LINK_LABEL2_DESC"/>
+        <field name="link3" type="url" label="JBS_TCH_LINK3" description="JBS_TCH_LINK3_DESC"
                hint="https://" validate="url" filter="url"/>
         <field name="linklabel3" type="text" format="raw" label="JBS_TCH_LINK_LABEL3"
-               description="JBS_TCH_LINK_LABEL3_DESC" size="65"/>
+               description="JBS_TCH_LINK_LABEL3_DESC"/>
     </fieldset>
 
     <fieldset name="publishing" label="JBS_STY_PUBLISH">
@@ -135,7 +132,6 @@
                 name="modified"
                 type="calendar"
                 label="JGLOBAL_FIELD_MODIFIED_LABEL"
-                class="form-control"
                 translateformat="true"
                 showtime="true"
                 readonly="true"

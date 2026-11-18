@@ -92,4 +92,49 @@ class CwmthumbnailTest extends ProclaimTestCase
         $this->assertSame('gif', Cwmthumbnail::extensionForType(IMAGETYPE_GIF));
         $this->assertSame('webp', Cwmthumbnail::extensionForType(IMAGETYPE_WEBP));
     }
+
+    /**
+     * @return  array<string, array{0: ?string, 1: string}>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function mediaFieldPathProvider(): array
+    {
+        return [
+            'null'                 => [null, ''],
+            'empty'                => ['', ''],
+            'plain path unchanged' => ['images/teacher.jpg', 'images/teacher.jpg'],
+            'joomlaImage fragment' => [
+                'images/teacher.jpg#joomlaImage://local-images/teacher.jpg?width=300&height=200',
+                'images/teacher.jpg',
+            ],
+            'encoded space with fragment' => [
+                'images/Pastor%20John%202024.jpg#joomlaImage://local-images/Pastor John 2024.jpg?width=10&height=10',
+                'images/Pastor John 2024.jpg',
+            ],
+            'encoded space, no fragment'  => ['images/my%20photo.jpg', 'images/my photo.jpg'],
+            'already-decoded space'       => ['images/my photo.jpg', 'images/my photo.jpg'],
+            'plus is kept'                => ['images/a+b.jpg', 'images/a+b.jpg'],
+            'dot-dot segment'             => ['images/../configuration.php', ''],
+            'encoded dot-dot segment'     => ['images/%2e%2e/configuration.php', ''],
+            'backslash dot-dot segment'   => ['images\\..\\configuration.php', ''],
+            'encoded NUL byte'            => ['images/a.jpg%00.php', ''],
+            'dots inside a name are fine' => ['images/sermon..final.jpg', 'images/sermon..final.jpg'],
+        ];
+    }
+
+    /**
+     * @param   ?string  $value     Stored media-field value
+     * @param   string   $expected  Expected relative path
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('mediaFieldPathProvider')]
+    #[\PHPUnit\Framework\Attributes\TestDox('mediaFieldPath() turns a media-field value into a file path: $_dataName')]
+    public function testMediaFieldPath(?string $value, string $expected): void
+    {
+        $this->assertSame($expected, Cwmthumbnail::mediaFieldPath($value));
+    }
 }

@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmdemocontentfetcher;
@@ -642,7 +643,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         // permanently edited and therefore permanently unremovable.
         $series = (object) [
             'series_text'  => 'Sample Series',
-            'alias'        => 'sample-series',
+            'alias'        => Cwmalias::makeUniqueAlias($db, '#__bsms_series', 'sample-series', 0),
             'description'  => '<p>This is a sample series. Edit or replace it with your real series.</p>',
             'published'    => 1,
             'access'       => 1,
@@ -677,7 +678,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $locationId = $defaults['location_id'] ?? 0;
         $message    = (object) [
             'studytitle'  => 'Welcome to Proclaim',
-            'alias'       => 'welcome-to-proclaim',
+            'alias'       => Cwmalias::makeUniqueAlias($db, '#__bsms_studies', 'welcome-to-proclaim', 0),
             'studydate'   => $now,
             'studyintro'  => '<p>This is a sample message created by the setup wizard to help you see how content appears on your site.</p>',
             'series_id'   => $ids['series_id'],

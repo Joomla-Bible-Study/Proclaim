@@ -16,10 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Log\Log;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * The server types actually present, for filtering the servers list.
@@ -48,7 +46,7 @@ class ServerTypeListField extends ListField
      */
     protected function getOptions(): array
     {
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $db      = $this->getDatabase();
         $options = [];
 
         try {

@@ -226,6 +226,19 @@ $EXPECTATIONS = [
         'schemaMin' => '10.5.8',
     ],
     /*
+     * 10.7.4 makes message and series aliases unique. The index is added by
+     * postflight PHP after it renames the duplicates, not by update SQL: the
+     * schema fixer would replay a bare ADD and fail on them. With no SQL
+     * shipped, #__schemas stays at 10.5.8.
+     */
+    '10.7.4' => [
+        'indexes' => [
+            '#__bsms_studies' => ['idx_alias'],
+            '#__bsms_series'  => ['idx_alias'],
+        ],
+        'schemaMin' => '10.5.8',
+    ],
+    /*
      * 11.0.0-20260922.sql retires four dead podcast columns (#2157) — the
      * itunes:subtitle/keywords leftovers Apple deprecated in 2018, read
      * nowhere. The legacy `image` column is deliberately NOT here: it stays,

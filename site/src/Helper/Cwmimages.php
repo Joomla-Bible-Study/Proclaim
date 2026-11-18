@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Uri\Uri;
@@ -98,8 +99,9 @@ class Cwmimages
         }
 
         $imagePath  = HTMLHelper::_('cleanImageURL', $path);
-        $fullPath   = JPATH_ROOT . DIRECTORY_SEPARATOR . $imagePath->url;
-        $fileExists = file_exists($fullPath) && is_file($fullPath);
+        $filePath   = Cwmthumbnail::mediaFieldPath($path);
+        $fullPath   = JPATH_ROOT . DIRECTORY_SEPARATOR . $filePath;
+        $fileExists = $filePath !== '' && is_file($fullPath);
 
         if ($imagePath->attributes['width'] === 0 && $fileExists) {
             $tmp       = Image::getImageFileProperties($fullPath);
@@ -113,10 +115,11 @@ class Cwmimages
 
         // Check for WebP sibling file
         if ($tmp->path !== null) {
-            $ext     = pathinfo($tmp->path, PATHINFO_EXTENSION);
-            $webpUrl = preg_replace('/\.' . preg_quote($ext, '/') . '$/', '.webp', $tmp->path);
+            $ext      = pathinfo($tmp->path, PATHINFO_EXTENSION);
+            $webpUrl  = preg_replace('/\.' . preg_quote($ext, '/') . '$/', '.webp', $tmp->path);
+            $webpFile = preg_replace('/\.' . preg_quote($ext, '/') . '$/', '.webp', $filePath);
 
-            if ($ext !== 'webp' && is_file(JPATH_ROOT . DIRECTORY_SEPARATOR . $webpUrl)) {
+            if ($ext !== 'webp' && is_file(JPATH_ROOT . DIRECTORY_SEPARATOR . $webpFile)) {
                 $tmp->webp_path = $webpUrl;
             }
         }
@@ -127,10 +130,12 @@ class Cwmimages
     /**
      * Render a <picture> element with optional WebP source and lazy loading
      *
-     * @param   object  $image  Image object from getImagePath() / getStudyThumbnail() etc.
-     * @param   string  $alt    Alt text for the image
-     * @param   string  $class  CSS class(es) for the <img> tag
-     * @param   bool    $lazy   Whether to add loading="lazy" (default true)
+     * @param   object       $image  Image object from getImagePath() / getStudyThumbnail() etc.
+     * @param   string|null  $alt    Alt text for the image. Callers pass joined database columns, which are
+     *                               NULL when there is nothing to join to (a message with no teacher), so a
+     *                               missing value renders as an empty alt.
+     * @param   string       $class  CSS class(es) for the <img> tag
+     * @param   bool         $lazy   Whether to add loading="lazy" (default true)
      *
      * @return string HTML <picture> element or empty string if no image
      *
@@ -138,7 +143,7 @@ class Cwmimages
      */
     public static function renderPicture(
         object $image,
-        string $alt = '',
+        ?string $alt = '',
         string $class = '',
         bool $lazy = true
     ): string {
@@ -147,7 +152,7 @@ class Cwmimages
         }
 
         $base     = Uri::base();
-        $altAttr  = htmlspecialchars($alt, ENT_QUOTES, 'UTF-8');
+        $altAttr  = htmlspecialchars($alt ?? '', ENT_QUOTES, 'UTF-8');
         $loading  = $lazy ? ' loading="lazy"' : ' loading="eager"';
         $width    = $image->width > 0 ? ' width="' . (int) $image->width . '"' : '';
         $height   = $image->height > 0 ? ' height="' . (int) $image->height . '"' : '';

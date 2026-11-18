@@ -38,6 +38,11 @@ class JsonapiView extends BaseApiView
         'plays',
         'downloads',
         'params',
+        // The podcast feed selects on this (FIND_IN_SET(<id>, mf.podcast_id) in
+        // Cwmpodcast.php). Without it a caller can set which podcasts a record
+        // belongs to but never read it back -- an unlinked record looks
+        // identical to a linked one over the API.
+        'podcast_id',
         'access',
         'published',
         'language',
@@ -58,6 +63,7 @@ class JsonapiView extends BaseApiView
         'createdate',
         'plays',
         'downloads',
+        'podcast_id',
         'access',
         'published',
     ];

@@ -8,7 +8,7 @@
     <fields name="params">
         <fieldset name="docman_settings" label="JBS_ADDON_DOCMAN_SETTINGS">
             <field name="base_url" type="url" label="JBS_ADDON_DOCMAN_BASE_URL"
-                   description="JBS_ADDON_DOCMAN_BASE_URL_DESC" class="inputbox" size="60" />
+                   description="JBS_ADDON_DOCMAN_BASE_URL_DESC" class="inputbox" />
         </fieldset>
     </fields>
     <fields name="media">

@@ -1,0 +1,4 @@
+{
+    "_comment": "Smart Search over the seeded content. The `finder` layer runs Joomla's own indexer (finder:index) after the content layer, so the finder plugin indexes the seeded studies exactly as it would on a live site. `query` is a word every seeded study title starts with; build/verify-frontend.php searches for it as a guest and as each seeded account, and the studies that appear must be the ones that role can open (the access rules in content.json). An unpublished study is in the index but must never be in anyone's results.",
+    "query": "Scenario"
+}

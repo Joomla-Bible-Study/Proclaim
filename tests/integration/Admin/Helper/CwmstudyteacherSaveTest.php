@@ -58,6 +58,7 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
         $study = (object) [
             'published'  => 0,
             'studytitle' => 'cwm1575 fixture',
+            'alias'      => $this->uniqueAlias('cwmstudyteachersave-study'),
             'language'   => '*',
             'teacher_id' => 0,
         ];

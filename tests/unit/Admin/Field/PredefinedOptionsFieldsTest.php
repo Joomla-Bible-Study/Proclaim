@@ -17,9 +17,7 @@ use CWM\Component\Proclaim\Administrator\Field\FilesizeField;
 use CWM\Component\Proclaim\Administrator\Field\LinkOptionsField;
 use CWM\Component\Proclaim\Administrator\Field\RowOptionsField;
 use CWM\Component\Proclaim\Administrator\Field\ScriptureSeparatorField;
-use CWM\Component\Proclaim\Administrator\Field\SeriesLinkOptionsField;
 use CWM\Component\Proclaim\Administrator\Field\ShowVersesField;
-use CWM\Component\Proclaim\Administrator\Field\TeacherLinkOptionsField;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use Joomla\CMS\Form\Field\PredefinedlistField;
 use Joomla\CMS\Form\FormField;
@@ -49,9 +47,6 @@ class PredefinedOptionsFieldsTest extends ProclaimTestCase
             'RowOptionsField' => [RowOptionsField::class, [
                 '0' => 'JBS_CMN_HIDE', '6' => 'JBS_TPL_ROW6',
             ]],
-            'TeacherLinkOptionsField' => [TeacherLinkOptionsField::class, [
-                '0' => 'JBS_TPL_NO_LINK', '3' => 'JBS_TPL_LINK_TO_TEACHERS_PROFILE',
-            ]],
             'DateFormatField' => [DateFormatField::class, [
                 '0' => 'JBS_TPL_DATE_FORMAT_MMM_D_YYYY', '9' => 'JBS_TPL_DATE_FORMAT_YYYY_MM_DD',
             ]],
@@ -63,9 +58,6 @@ class PredefinedOptionsFieldsTest extends ProclaimTestCase
             ]],
             'ElementOptionsField' => [ElementOptionsField::class, [
                 '0' => 'JBS_CMN_NONE', '8' => 'JBS_TPL_DIV',
-            ]],
-            'SeriesLinkOptionsField' => [SeriesLinkOptionsField::class, [
-                '0' => 'JBS_TPL_NO_LINK', '1' => 'JBS_TPL_LINK_TO_DETAILS',
             ]],
         ];
     }
@@ -109,6 +101,68 @@ class PredefinedOptionsFieldsTest extends ProclaimTestCase
                 $declared[$value] ?? null,
                 "$fieldClass option \"$value\" must keep language key \"$langKey\""
             );
+        }
+    }
+
+    /**
+     * TeacherLinkOptionsField and SeriesLinkOptionsField were exact key-for-key
+     * subsets of LinkOptionsField's own option set, each wired as its own
+     * duplicate field class. Retired in favor of LinkOptionsField's existing
+     * `optionsFilter` attribute (already used elsewhere in Proclaim's XML,
+     * e.g. layout-element-settings.xml), which restricts the rendered
+     * options to an allowlist of keys -- core's PredefinedlistField has
+     * supported it since 4.0.0.
+     *
+     * @return array<string, array{0: array<int, string>, 1: array<string, string>}>
+     */
+    public static function optionsFilterProvider(): array
+    {
+        return [
+            'TeacherLinkOptions subset (0,3)' => [
+                ['0', '3'],
+                ['0' => 'JBS_TPL_NO_LINK', '3' => 'JBS_TPL_LINK_TO_TEACHERS_PROFILE'],
+            ],
+            'SeriesLinkOptions subset (0,1)' => [
+                ['0', '1'],
+                ['0' => 'JBS_TPL_NO_LINK', '1' => 'JBS_TPL_LINK_TO_DETAILS'],
+            ],
+        ];
+    }
+
+    /**
+     * @param   array<int, string>     $filter           The optionsFilter allowlist.
+     * @param   array<string, string>  $expectedOptions  The exact value => language-key set the filter must produce.
+     */
+    #[DataProvider('optionsFilterProvider')]
+    public function testOptionsFilterReproducesTheRetiredFieldsSubsets(array $filter, array $expectedOptions): void
+    {
+        // getOptions() caches by md5($this->element->asXML()) -- the element
+        // must encode the filter too, or this collides with the unfiltered
+        // LinkOptionsField coverage above (both using a bare <field/>) and
+        // silently returns its cached, unfiltered result instead.
+        $field   = (new \ReflectionClass(LinkOptionsField::class))->newInstanceWithoutConstructor();
+        $element = new \SimpleXMLElement('<field optionsFilter="' . implode(',', $filter) . '"/>');
+        (new \ReflectionProperty($field, 'element'))->setValue($field, $element);
+        (new \ReflectionProperty($field, 'fieldname'))->setValue($field, 'test');
+        (new \ReflectionProperty($field, 'optionsFilter'))->setValue($field, $filter);
+
+        $options = (new \ReflectionMethod(LinkOptionsField::class, 'getOptions'))->invoke($field);
+        $byValue = [];
+
+        foreach ($options as $option) {
+            $byValue[(string) $option->value] = $option;
+        }
+
+        $this->assertSame(
+            array_keys($expectedOptions),
+            array_keys($byValue),
+            'optionsFilter must restrict LinkOptionsField to exactly the retired field\'s option set, nothing more'
+        );
+
+        $declared = (new \ReflectionProperty(LinkOptionsField::class, 'predefinedOptions'))->getValue($field);
+
+        foreach ($expectedOptions as $value => $langKey) {
+            $this->assertSame($langKey, $declared[$value] ?? null);
         }
     }
 

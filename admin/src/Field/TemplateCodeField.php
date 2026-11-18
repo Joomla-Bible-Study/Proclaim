@@ -16,10 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Template Code List Form Field class for the Proclaim component
@@ -102,7 +100,7 @@ class TemplateCodeField extends ListField
      */
     protected function loadTemplateCodes(): void
     {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $db    = $this->getDatabase();
         $query = $db->createQuery();
 
         $query->select($db->quoteName(['id', 'type', 'filename']))

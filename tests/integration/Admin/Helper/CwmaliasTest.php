@@ -27,14 +27,16 @@ use PHPUnit\Framework\Attributes\TestDox;
  * teacher name variants) both received the identical alias.
  *
  * Two distinct consequences, one per schema shape:
- *  - #__bsms_studies/_series/_message_type have no unique index on alias, so
- *    the duplicate persisted. site/src/Service/Router.php resolves by alias
- *    alone under "Remove IDs from URLs" (WHERE alias = :alias + loadResult()),
- *    so both records' URLs resolved to one id and a page silently rendered the
- *    other's content.
- *  - #__bsms_teachers carries UNIQUE KEY `idx_alias`, so the duplicate write
- *    threw instead -- and with no try/catch in the loop, the exception aborted
- *    the entire backfill part-way through.
+ *  - A table with no unique index on alias kept the duplicate. For messages
+ *    and series that meant both records' URLs resolved to one id, since the
+ *    site router resolves by alias alone under "Remove IDs from URLs".
+ *  - A table with UNIQUE KEY `idx_alias` threw instead -- and with no
+ *    try/catch in the loop, the exception aborted the entire backfill
+ *    part-way through.
+ *
+ * Messages and series now carry that unique index too, so several alias-less
+ * rows can only be seeded in #__bsms_message_type, which still has none. The
+ * colliding-title tests use it; the backfill treats every table alike.
  *
  * Exercised against the real database because the bug is definitionally about
  * database uniqueness: a mocked driver would happily accept the duplicate.
@@ -96,6 +98,28 @@ class CwmaliasTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a message type with a deliberately empty alias. Its table has no
+     * unique index on alias, so several of these can coexist.
+     *
+     * @param   string  $title  Message type title
+     *
+     * @return  int  Inserted id
+     */
+    private function insertMessageTypeNeedingAlias(string $title): int
+    {
+        $row = (object) [
+            'message_type' => $title,
+            'alias'        => '',
+            'published'    => 1,
+            'access'       => 1,
+        ];
+
+        $this->db->insertObject('#__bsms_message_type', $row);
+
+        return (int) $this->db->insertid();
+    }
+
+    /**
      * Insert a teacher with an empty alias. #__bsms_teachers is the table that
      * carries the unique index.
      *
@@ -137,20 +161,20 @@ class CwmaliasTest extends IntegrationTestCase
         )->loadResult();
     }
 
-    #[TestDox('Two series whose titles slugify identically get distinct aliases')]
+    #[TestDox('Two message types whose titles slugify identically get distinct aliases')]
     public function testCollidingTitlesGetDistinctAliases(): void
     {
         // Same slug from different raw titles -- punctuation and case differ.
-        $first  = $this->insertSeriesNeedingAlias('Faith & Works');
-        $second = $this->insertSeriesNeedingAlias('Faith and Works');
-        $third  = $this->insertSeriesNeedingAlias('faith-and-works');
+        $first  = $this->insertMessageTypeNeedingAlias('Faith & Works');
+        $second = $this->insertMessageTypeNeedingAlias('Faith and Works');
+        $third  = $this->insertMessageTypeNeedingAlias('faith-and-works');
 
         Cwmalias::updateAlias();
 
         $aliases = [
-            $this->aliasOf('#__bsms_series', $first),
-            $this->aliasOf('#__bsms_series', $second),
-            $this->aliasOf('#__bsms_series', $third),
+            $this->aliasOf('#__bsms_message_type', $first),
+            $this->aliasOf('#__bsms_message_type', $second),
+            $this->aliasOf('#__bsms_message_type', $third),
         ];
 
         foreach ($aliases as $alias) {
@@ -168,14 +192,14 @@ class CwmaliasTest extends IntegrationTestCase
     #[TestDox('The disambiguating suffix follows the -2, -3 convention')]
     public function testDuplicateAliasesUseNumericSuffixes(): void
     {
-        $first  = $this->insertSeriesNeedingAlias('Romans Study');
-        $second = $this->insertSeriesNeedingAlias('Romans Study');
+        $first  = $this->insertMessageTypeNeedingAlias('Romans Study');
+        $second = $this->insertMessageTypeNeedingAlias('Romans Study');
 
         Cwmalias::updateAlias();
 
         $aliases = [
-            $this->aliasOf('#__bsms_series', $first),
-            $this->aliasOf('#__bsms_series', $second),
+            $this->aliasOf('#__bsms_message_type', $first),
+            $this->aliasOf('#__bsms_message_type', $second),
         ];
         sort($aliases);
 

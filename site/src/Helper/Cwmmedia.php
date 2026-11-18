@@ -261,7 +261,8 @@ class Cwmmedia
         }
 
         if ($imageparams->get('media_use_button_icon') >= 1 || (int)$params->get('simple_mode') === 1) {
-            $image = $this->mediaButton($imageparams, $params, $media->params);
+            // mediaButton() has nothing to draw for media with no button setting and no recognised filename.
+            $image = $this->mediaButton($imageparams, $params, $media->params) ?? '';
         } else {
             $mediaImage = (string)$imageparams->get('media_image');
             $image      = $this->useJImage(

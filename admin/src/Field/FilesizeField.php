@@ -16,20 +16,20 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Form\Field\TextField;
 use Joomla\CMS\Language\Text;
 
 /**
  * Form Field class for the FileSize
  *
- * Renders a plain text input, never a <select> — extends FormField rather
- * than ListField, which it never actually used (getOptions() was never
- * called; getInput() is fully overridden).
+ * Renders a plain text input plus a converter button. Extends TextField so
+ * the input itself (size/maxlength/class/readonly/disabled/onchange) renders
+ * through core's own layout rather than hand-concatenated attribute strings.
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class FilesizeField extends FormField
+class FilesizeField extends TextField
 {
     /**
      *  Set Naming of type
@@ -50,20 +50,7 @@ class FilesizeField extends FormField
     #[\Override]
     protected function getInput(): string
     {
-        // Initialize some field attributes.
-        $size      = $this->element['size'] ? ' size="' . (int)$this->element['size'] . '"' : 'size="35"';
-        $maxLength = $this->element['maxlength'] ? ' maxlength="' . (int)$this->element['maxlength'] . '"' : '';
-        $class     = $this->element['class'] ? ' class="' . (string)$this->element['class'] . '"' : '';
-        $readonly  = ((string)$this->element['readonly'] === 'true') ? ' readonly="readonly"' : 'class="form-control"';
-        $disabled  = ((string)$this->element['disabled'] === 'true') ? ' disabled="disabled"' : '';
-
-        // Initialize JavaScript field attributes.
-        $onchange = $this->element['onchange'] ? ' onchange="' . (string)$this->element['onchange'] . '"' : '';
-
-        return '<span class="input-group"><input type="text" name="' . $this->name . '" id="' . $this->id . '"' .
-            ' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
-            $class . $size . $disabled . $readonly . $onchange . $maxLength . '/> ' . $this->sizeConverter(
-            ) . '</span>';
+        return '<span class="input-group">' . parent::getInput() . ' ' . $this->sizeConverter() . '</span>';
     }
 
     /**

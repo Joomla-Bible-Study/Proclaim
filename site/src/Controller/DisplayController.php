@@ -15,6 +15,8 @@ namespace CWM\Component\Proclaim\Site\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Cache\Cache;
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
@@ -130,6 +132,65 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 
         parent::display($cachable, $safeurlparams);
 
+        // A not-found page sets its 404 inside the view, which a view-cache hit
+        // never runs, so every later request would get the stored copy as a 200.
+        if ($cachable && $this->isNotFoundResponse()) {
+            $this->forgetCachedView($vName);
+        }
+
         return $this;
+    }
+
+    /**
+     * Whether the view just rendered answered 404.
+     *
+     * @return  bool
+     *
+     * @since   10.7.3
+     */
+    private function isNotFoundResponse(): bool
+    {
+        foreach ($this->app->getHeaders() as $header) {
+            if (strtolower($header['name']) === 'status' && (int) $header['value'] === 404) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove the view-cache entry stored for a view during this request.
+     *
+     * @param   string  $viewName  The view name
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
+    private function forgetCachedView(string $viewName): void
+    {
+        $view = $this->getView($viewName, $this->app->getDocument()->getType());
+
+        // From the container: BaseController only gained a cache factory
+        // accessor in Joomla 6.2.
+        Factory::getContainer()->get(CacheControllerFactoryInterface::class)
+            ->createCacheController('view', ['defaultgroup' => $this->input->get('option')])
+            ->remove(self::viewCacheId($view));
+    }
+
+    /**
+     * The key Joomla's view cache stores a view's output under, as built by
+     * the protected ViewController::_makeId() for the display method.
+     *
+     * @param   object  $view  The view
+     *
+     * @return  string
+     *
+     * @since   10.7.3
+     */
+    private static function viewCacheId(object $view): string
+    {
+        return md5(serialize([Cache::makeId(), \get_class($view), 'display']));
     }
 }

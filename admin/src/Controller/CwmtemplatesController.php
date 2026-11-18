@@ -80,7 +80,7 @@ class CwmtemplatesController extends AdminController
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.2
      */
     private function userCanWriteTemplateCode(string $action): bool
     {

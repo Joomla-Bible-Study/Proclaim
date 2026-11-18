@@ -37,7 +37,8 @@ use Joomla\Database\ParameterType;
  * context and suppresses the core plugin's own write. Rows that exist came from
  * older code or an import, and they are not harmless: where one has been seen,
  * it held *more* than the row the form shows, so its extra fields are stored and
- * permanently unreachable.
+ * cannot be edited. A `cwmteacher` row is still printed: it is also the teacher
+ * page's view context, the one Joomla's system plugin reads on the front end.
  *
  * Reported rather than repaired. Which of the two rows is authoritative differs
  * per item, so merging them is a decision, not a rule.

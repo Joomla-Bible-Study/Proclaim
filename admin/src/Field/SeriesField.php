@@ -20,7 +20,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmfilterHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Series List Form Field class for the Proclaim component
@@ -53,7 +52,7 @@ class SeriesField extends ListField
     protected function getOptions(): array
     {
         $app   = Factory::getApplication();
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $db    = $this->getDatabase();
         $query = $db->createQuery();
 
         $query->select('DISTINCT ' . $db->quoteName('se.id') . ', ' . $db->quoteName('se.series_text'))
@@ -62,7 +61,7 @@ class SeriesField extends ListField
 
         if ($app->isClient('site')) {
             // Frontend: only series with published/archived, accessible messages + series access check
-            $user   = $app->getIdentity();
+            $user   = $this->getCurrentUser();
             $groups = $user->getAuthorisedViewLevels();
 
             $query->join(

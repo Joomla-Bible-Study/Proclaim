@@ -25,6 +25,7 @@ use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Event\SubscriberInterface;
 
 /**
@@ -119,6 +120,34 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @since 10.2.0
      */
     private const array LEGACY_CARRY_PARAMS = ['id', 't', 'mid', 'Itemid', 'filter', 'limit', 'start'];
+
+    /**
+     * Old view names that address one record, with the record's table and the
+     * view that shows it now.
+     *
+     * @var array<string, array{0: string, 1: string}>
+     * @since 10.7.7
+     */
+    private const array LEGACY_ITEM_VIEWS = [
+        'sermon'               => ['#__bsms_studies', 'cwmsermon'],
+        'sermons'              => ['#__bsms_studies', 'cwmsermon'],
+        'latest'               => ['#__bsms_studies', 'cwmsermon'],
+        'teacher'              => ['#__bsms_teachers', 'cwmteacher'],
+        'teachers'             => ['#__bsms_teachers', 'cwmteacher'],
+        'seriesdisplay'        => ['#__bsms_series', 'cwmseriesdisplay'],
+        'seriesdisplays'       => ['#__bsms_series', 'cwmseriesdisplay'],
+        'seriespodcastdisplay' => ['#__bsms_series', 'cwmseriespodcastdisplay'],
+        'seriespodcastlist'    => ['#__bsms_series', 'cwmseriespodcastdisplay'],
+    ];
+
+    /**
+     * The old single-record view names, whose links may carry the record id with
+     * no alias. On a list view the number can be a template id instead.
+     *
+     * @var string[]
+     * @since 10.7.7
+     */
+    private const array LEGACY_SINGLE_VIEWS = ['sermon', 'teacher', 'seriesdisplay', 'seriespodcastdisplay'];
 
     /**
      * Task names allowed to carry over from old com_biblestudy URLs.
@@ -625,16 +654,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             }
         }
 
-        $nonSef = 'index.php?' . http_build_query($query);
-
-        // Try to build a SEF URL; fall back to non-SEF if router isn't ready
-        try {
-            $sef = Route::_($nonSef, false);
-        } catch (\Exception $e) {
-            $sef = $nonSef;
-        }
-
-        $app->redirect($sef, 301);
+        $app->redirect($this->sefRoute('index.php?' . http_build_query($query)), 301);
     }
 
     /**
@@ -689,8 +709,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * Matches patterns like /resources/sermons/sermon/671-alias/1 where
      * "sermon" is a Proclaim 9.x / com_biblestudy view name embedded in
-     * the SEF path. Extracts the numeric ID, looks up the current alias,
-     * and 301-redirects to the correct modern URL.
+     * the SEF path, and 301-redirects to the address the site's router
+     * gives what it refers to.
      *
      * @param   string  $path  The raw URI path
      *
@@ -700,44 +720,68 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function redirectLegacySefSegments(string $path): void
     {
+        $app    = $this->getApplication();
+        $input  = $app->getInput();
+        $target = $this->legacySefRedirectTarget($path, $input->getCmd('task', ''), $input->getInt('mid', 0));
+
+        if ($target !== null) {
+            $app->redirect($this->sefRoute($target), 301);
+        }
+    }
+
+    /**
+     * Work out what an old SEF URL refers to.
+     *
+     * The answer is an internal URL (index.php?option=com_proclaim&...) for the
+     * caller to route. The address is left to the router, so it follows the
+     * site's SEF settings and menus wherever the old link pointed.
+     *
+     * @param   string  $path  The raw URI path
+     * @param   string  $task  The request's task
+     * @param   int     $mid   The request's media file id
+     *
+     * @return  ?string  The internal URL, or null when this is not an old URL
+     *
+     * @since   10.7.5
+     */
+    private function legacySefRedirectTarget(string $path, string $task, int $mid): ?string
+    {
         // Build a regex alternation from legacy view names
         $legacyViews = implode('|', array_keys(self::LEGACY_VIEW_MAP));
-
-        $app   = $this->getApplication();
-        $input = $app->getInput();
 
         // Pattern A: /legacyview?task=download&mid=123 (no ID-alias, just query params)
         // The view name must be a standalone segment (preceded by /)
         if (preg_match('#/(' . $legacyViews . ')$#i', $path, $m)) {
-            $oldView = strtolower($m[1]);
-            $task    = strtolower($input->getCmd('task', ''));
-            $mid     = $input->getInt('mid', 0);
+            $task = strtolower($task);
 
-            if ($task !== '' || $mid > 0) {
-                $newView = self::LEGACY_VIEW_MAP[$oldView] ?? 'cwmsermons';
-
-                // For task-based URLs (e.g. download), redirect to non-SEF URL directly.
-                // Route::_() may not work at onAfterInitialise (router not initialised).
-                $query = ['option' => 'com_proclaim', 'task' => $newView . '.' . $task];
-
-                if ($mid > 0) {
-                    $query['mid'] = $mid;
-                }
-
-                $itemId = $this->findMenuItemId($newView);
-
-                if (!$itemId) {
-                    $itemId = $this->findMenuItemId($newView . 's');
-                }
-
-                if ($itemId) {
-                    $query['Itemid'] = $itemId;
-                }
-
-                $app->redirect(Uri::base(true) . '/index.php?' . http_build_query($query), 301);
+            // Only a bare old task is legacy. A current URL under a menu item aliased
+            // like an old view ends the same way, and its task already names a
+            // controller (cwmsermons.filterAjax).
+            if (!\in_array($task, self::LEGACY_ALLOWED_TASKS, true)) {
+                return null;
             }
 
-            return;
+            $newView = self::LEGACY_VIEW_MAP[strtolower($m[1])] ?? 'cwmsermons';
+
+            // A task names no view for the router to find a menu item by, so the
+            // Itemid is chosen here.
+            $query = ['option' => 'com_proclaim', 'task' => $newView . '.' . $task];
+
+            if ($mid > 0) {
+                $query['mid'] = $mid;
+            }
+
+            $itemId = $this->findMenuItemId($newView);
+
+            if (!$itemId) {
+                $itemId = $this->findMenuItemId($newView . 's');
+            }
+
+            if ($itemId) {
+                $query['Itemid'] = $itemId;
+            }
+
+            return 'index.php?' . http_build_query($query);
         }
 
         // Pattern C: /landing/filtertype/id/templateid (old landing page filter URLs)
@@ -747,9 +791,6 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         if (preg_match('#/landing/([a-z]+)/(\d+)(?:/(\d+))?$#i', $path, $m)) {
             $filterType = strtolower($m[1]);
             $filterId   = (int) $m[2];
-
-            // Strip /landing/... from the path to get the base sermons list URL
-            $cleanPath = preg_replace('#/landing/[a-z]+/\d+(?:/\d+)?$#i', '', $path);
 
             // Map old filter type names to current query parameter names
             $filterParamMap = [
@@ -763,74 +804,209 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             ];
 
             $filterParam = $filterParamMap[$filterType] ?? '';
+            $query       = ['option' => 'com_proclaim', 'view' => 'cwmsermons'];
 
+            // A generic landing page (e.g., /landing/sermons/1) is just the list
             if ($filterParam !== '' && $filterId > 0) {
-                // Redirect with the specific filter applied
-                $app->redirect(Uri::base(true) . $cleanPath . '?' . $filterParam . '=' . $filterId, 301);
-            } else {
-                // Generic landing page (e.g., /landing/sermons/1) — just redirect to sermons list
-                $app->redirect(Uri::base(true) . $cleanPath, 301);
+                $query[$filterParam] = $filterId;
             }
 
-            return;
+            // A filtered list belongs to its menu item, so the message list the old
+            // link sat under keeps it. Anything else there is left to the router.
+            $itemId = $this->messageListItemId(substr($path, 0, -\strlen($m[0])));
+
+            if ($itemId) {
+                $query['Itemid'] = $itemId;
+            }
+
+            return 'index.php?' . http_build_query($query);
         }
 
-        // Pattern B: /legacyview/id-alias or /legacyview/id-alias/templateid
-        if (!preg_match('#/(' . $legacyViews . ')/(\d+)[-:]([^/]+?)(?:/(\d+))?$#i', $path, $m)) {
-            return;
+        // Pattern B: /legacyview/id-alias, or /singleview/id, either with /templateid
+        return $this->legacyItemRedirectTarget($path);
+    }
+
+    /**
+     * Work out which record an old item URL refers to.
+     *
+     * An old item URL is /<view>/<id>-<alias>, or /<view>/<id> for a view that
+     * shows one record, either with an optional /<template id> after it. The
+     * answer is the record's current view and id, for the router to address.
+     *
+     * A view name that is really the last segment of a menu item's route is not
+     * an old view segment. Under a menu item aliased "sermons",
+     * /resources/sermons/911-rescue is a current message URL for the router to
+     * resolve, not record 911 of the old "sermons" view.
+     *
+     * @param   string  $path  The raw URI path
+     *
+     * @return  ?string  The record's internal URL, or null when this is not an old
+     *                   item URL or the record is missing, unpublished or trashed
+     *
+     * @since   10.7.7
+     */
+    private function legacyItemRedirectTarget(string $path): ?string
+    {
+        $views  = implode('|', array_keys(self::LEGACY_ITEM_VIEWS));
+        $single = implode('|', self::LEGACY_SINGLE_VIEWS);
+
+        if (
+            !preg_match('#/(' . $views . ')/(\d+)[-:][^/]+?(?:/\d+)?$#i', $path, $m, PREG_OFFSET_CAPTURE)
+            && !preg_match('#/(' . $single . ')/(\d+)(?:/\d+)?$#i', $path, $m, PREG_OFFSET_CAPTURE)
+        ) {
+            return null;
         }
 
-        $oldView = strtolower($m[1]);
-        $id      = (int) $m[2];
-        $alias   = $m[3];
+        if ($this->endsWithMenuRoute(substr($path, 0, $m[1][1] + \strlen($m[1][0])))) {
+            return null;
+        }
 
-        // Determine the database table for this view type
-        $tableMap = [
-            'sermon'               => '#__bsms_studies',
-            'sermons'              => '#__bsms_studies',
-            'latest'               => '#__bsms_studies',
-            'teacher'              => '#__bsms_teachers',
-            'teachers'             => '#__bsms_teachers',
-            'seriesdisplay'        => '#__bsms_series',
-            'seriesdisplays'       => '#__bsms_series',
-            'seriespodcastdisplay' => '#__bsms_series',
-            'seriespodcastlist'    => '#__bsms_series',
-        ];
+        [$table, $view] = self::LEGACY_ITEM_VIEWS[strtolower($m[1][0])];
+        $id             = (int) $m[2][0];
 
-        $table = $tableMap[$oldView] ?? '';
+        if ($id < 1 || !$this->isPublishedOrArchived($table, $id)) {
+            return null;
+        }
 
-        // Look up the current alias from the database
-        $currentAlias = $alias;
+        // No Itemid: the router finds the menu item through the view's parent, so
+        // this lands on the address the site gives the record everywhere else.
+        return 'index.php?' . http_build_query(['option' => 'com_proclaim', 'view' => $view, 'id' => $id]);
+    }
 
-        if ($table !== '' && $id > 0) {
-            try {
-                $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                $query = $db->createQuery();
-                $query->select($db->quoteName('alias'))
-                    ->from($db->quoteName($table))
-                    ->where($db->quoteName('id') . ' = ' . $id);
-                $db->setQuery($query);
-                $result = $db->loadResult();
+    /**
+     * Whether a path ends with the route of a published site menu item.
+     *
+     * Matched as a suffix, so a base path, index.php or a language prefix in
+     * front of the route makes no difference.
+     *
+     * @param   string  $path  The path to test
+     *
+     * @return  bool
+     *
+     * @since   10.7.3
+     */
+    private function endsWithMenuRoute(string $path): bool
+    {
+        return $this->menuItemAtEndOf($path) !== null;
+    }
 
-                if ($result) {
-                    $currentAlias = $result;
-                }
-            } catch (\Exception $e) {
-                // Fall through with original alias
+    /**
+     * The published site menu item whose route a path ends with.
+     *
+     * Matched as a suffix, so a base path, index.php or a language prefix in
+     * front of the route makes no difference.
+     *
+     * @param   string  $path  The path to test
+     *
+     * @return  ?object  The menu item's id, path and link, or null when the path
+     *                   ends with no menu item's route
+     *
+     * @since   10.7.7
+     */
+    private function menuItemAtEndOf(string $path): ?object
+    {
+        $path  = strtolower($path);
+        $alias = substr($path, strrpos($path, '/') + 1);
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()
+                ->select($db->quoteName(['id', 'path', 'link']))
+                ->from($db->quoteName('#__menu'))
+                ->where($db->quoteName('client_id') . ' = 0')
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('alias') . ' = :alias')
+                ->bind(':alias', $alias);
+
+            $items = $db->setQuery($query)->loadObjectList();
+        } catch (\Exception) {
+            return null;
+        }
+
+        foreach ($items as $item) {
+            if (str_ends_with($path, '/' . strtolower($item->path))) {
+                return $item;
             }
         }
 
-        // Build the redirect URL by replacing the legacy segments in the path.
-        // e.g., /resources/sermons/sermon/671-broken-but-not-destroyed/1
-        //     → /resources/sermons/broken-but-not-destroyed
-        // This avoids Route::_() which may not work before routing is initialised.
-        $cleanPath = preg_replace(
-            '#/(' . $legacyViews . ')/\d+[-:][^/]+?(?:/\d+)?$#i',
-            '/' . $currentAlias,
-            $path
-        );
+        return null;
+    }
 
-        $app->redirect(Uri::base(true) . $cleanPath, 301);
+    /**
+     * The id of the message list menu item whose route a path ends with.
+     *
+     * @param   string  $path  The path to test
+     *
+     * @return  int  The menu item id, or 0 when the path ends with no message list
+     *
+     * @since   10.7.7
+     */
+    private function messageListItemId(string $path): int
+    {
+        $item = $path === '' ? null : $this->menuItemAtEndOf($path);
+
+        if ($item === null) {
+            return 0;
+        }
+
+        parse_str((string) parse_url($item->link, PHP_URL_QUERY), $link);
+
+        if (($link['option'] ?? '') !== 'com_proclaim' || ($link['view'] ?? '') !== 'cwmsermons') {
+            return 0;
+        }
+
+        return (int) $item->id;
+    }
+
+    /**
+     * The address an internal URL has under the site's SEF settings.
+     *
+     * Built by Joomla's router, so URL rewriting, the suffix and the menus come
+     * out as the site has them. When the router cannot build it, the internal URL
+     * is returned, which still resolves.
+     *
+     * @param   string  $internal  An index.php?option=... URL
+     *
+     * @return  string
+     *
+     * @since   10.7.7
+     */
+    private function sefRoute(string $internal): string
+    {
+        try {
+            return Route::_($internal, false);
+        } catch (\Exception) {
+            return $internal;
+        }
+    }
+
+    /**
+     * Whether a record is published or archived: the states the router serves
+     * an old id-based URL segment for.
+     *
+     * @param   string  $table  The table, with its #__ prefix
+     * @param   int     $id     The record id
+     *
+     * @return  bool
+     *
+     * @since   10.7.7
+     */
+    private function isPublishedOrArchived(string $table, int $id): bool
+    {
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()
+                ->select('1')
+                ->from($db->quoteName($table))
+                ->where($db->quoteName('id') . ' = :id')
+                ->whereIn($db->quoteName('published'), [1, 2])
+                ->bind(':id', $id, ParameterType::INTEGER)
+                ->setLimit(1);
+
+            return (bool) $db->setQuery($query)->loadResult();
+        } catch (\Exception) {
+            return false;
+        }
     }
 
     /**

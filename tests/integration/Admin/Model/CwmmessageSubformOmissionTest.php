@@ -60,6 +60,7 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
         $study = (object) [
             'published'  => 0,
             'studytitle' => 'simple-mode omission fixture',
+            'alias'      => $this->uniqueAlias('cwmmessagesubformomission-study'),
             'language'   => '*',
         ];
         $this->db->insertObject('#__bsms_studies', $study, 'id');

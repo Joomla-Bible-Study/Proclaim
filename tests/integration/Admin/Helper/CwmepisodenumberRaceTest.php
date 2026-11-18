@@ -126,6 +126,7 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
         $row = (object) [
             'published'   => 0,
             'studytitle'  => 'cwm1579 fixture',
+            'alias'       => $this->uniqueAlias('cwmepisodenumberrace-study'),
             'language'    => '*',
             'series_id'   => $seriesId,
             'studynumber' => $number,

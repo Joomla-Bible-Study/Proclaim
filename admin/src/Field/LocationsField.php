@@ -16,10 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Location List Form Field class for the Proclaim component
@@ -48,7 +46,7 @@ class LocationsField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $db    = $this->getDatabase();
         $query = $db->createQuery();
         $query->select($db->quoteName('id') . ', ' . $db->quoteName('location_text'));
         $query->from($db->quoteName('#__bsms_locations'));

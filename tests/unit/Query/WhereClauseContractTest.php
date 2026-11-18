@@ -11,7 +11,7 @@
  * @since __DEPLOY_VERSION__
  */
 
-namespace CWM\Component\Proclaim\Tests\Unit\Query;
+namespace CWM\Component\Proclaim\Tests\Query;
 
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;

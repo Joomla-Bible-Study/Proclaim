@@ -127,6 +127,110 @@ abstract class IntegrationTestCase extends ProclaimTestCase
     }
 
     /**
+     * An alias no other row will have, for seeding #__bsms_studies and
+     * #__bsms_series.
+     *
+     * Both tables carry a unique index on alias, and the column defaults to
+     * '', so two seeded rows without an alias collide. Seed every row with one
+     * of these: a row left behind by a test whose writes were committed (a
+     * Table::store() that creates an asset commits the transaction) would
+     * otherwise make every later alias-less insert fail, depending on order.
+     *
+     * @param   string  $label  A readable part, to tell rows apart
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function uniqueAlias(string $label = 'row'): string
+    {
+        return 'zz-' . $label . '-' . str_replace('.', '-', uniqid('', true));
+    }
+
+    /**
+     * Run code under a stand-in application, putting the real one back after.
+     *
+     * The suite runs under the console application, which is never the
+     * administrator and never clears its message queue; a stub can be both.
+     * Factory::$language is pinned to the real application's language first:
+     * with none set, Text builds one from the application's config, which a
+     * stub does not have.
+     *
+     * @param   \Joomla\CMS\Application\CMSApplicationInterface  $app  The stand-in
+     * @param   callable                                         $run  The code to run under it
+     *
+     * @return  mixed  What $run returned
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function withApplication(\Joomla\CMS\Application\CMSApplicationInterface $app, callable $run): mixed
+    {
+        $savedApp      = \Joomla\CMS\Factory::$application;
+        $savedLanguage = \Joomla\CMS\Factory::$language;
+
+        \Joomla\CMS\Factory::$language    = $savedApp->getLanguage();
+        \Joomla\CMS\Factory::$application = $app;
+
+        try {
+            return $run();
+        } finally {
+            \Joomla\CMS\Factory::$application = $savedApp;
+            \Joomla\CMS\Factory::$language    = $savedLanguage;
+        }
+    }
+
+    /**
+     * A real Mail whose send() records the call instead of connecting, or
+     * fails as an unreachable SMTP server does, so a test can read what would
+     * have gone out without sending anything.
+     *
+     * @param   bool  $succeed  Whether send() succeeds
+     *
+     * @return  \Joomla\CMS\Mail\Mail  With a public $sends count
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function recordingMailer(bool $succeed = true): \Joomla\CMS\Mail\Mail
+    {
+        return new class ($succeed) extends \Joomla\CMS\Mail\Mail {
+            public int $sends = 0;
+
+            public function __construct(private readonly bool $succeed)
+            {
+                parent::__construct(true);
+            }
+
+            public function Send()
+            {
+                $this->sends++;
+
+                if (!$this->succeed) {
+                    throw new \RuntimeException('SMTP Error: Could not connect to SMTP host.');
+                }
+
+                return true;
+            }
+        };
+    }
+
+    /**
+     * A mailer factory that hands out the given mailer.
+     *
+     * @param   \Joomla\CMS\Mail\Mail  $mail  The mailer to hand out
+     *
+     * @return  \Joomla\CMS\Mail\MailerFactoryInterface
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function mailerFactoryFor(\Joomla\CMS\Mail\Mail $mail): \Joomla\CMS\Mail\MailerFactoryInterface
+    {
+        $factory = $this->createStub(\Joomla\CMS\Mail\MailerFactoryInterface::class);
+        $factory->method('createMailer')->willReturn($mail);
+
+        return $factory;
+    }
+
+    /**
      * Reset a static property on a class to its default value.
      *
      * Useful for clearing static caches (e.g., Cwmstats::$cache) between tests.

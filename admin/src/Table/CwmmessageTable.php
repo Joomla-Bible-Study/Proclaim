@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmepisodenumberHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
@@ -398,6 +399,22 @@ class CwmmessageTable extends Table
     {
         if (trim($this->studytitle ?? '') === '') {
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_TITLE_REQUIRED'));
+        }
+
+        // Two messages sharing an alias share one address, and the router can
+        // serve only one of them. Checked only when the alias is new or changed,
+        // so a pair from before the unique index stays editable until the update
+        // gives one of them its own alias.
+        $alias = (string) $this->alias;
+
+        if ($alias !== '' && Cwmalias::isNewAlias($this->getDatabase(), '#__bsms_studies', $alias, (int) $this->id)) {
+            $owner = Cwmalias::findAliasOwner($this->getDatabase(), '#__bsms_studies', $alias, (int) $this->id);
+
+            if ($owner !== null) {
+                throw new \UnexpectedValueException(
+                    Cwmalias::takenAliasMessage($this->getDatabase(), '#__bsms_studies', $alias, $owner)
+                );
+            }
         }
 
         // Normalise "Select Location" sentinel (-1) to NULL for DB storage

@@ -190,8 +190,8 @@ class CwmtemplatecodeTable extends Table
         2 => ['commentsform', 'footer', 'footerlink', 'header', 'main', 'simple'],
         3 => ['main'],
         4 => ['cards', 'list', 'main'],
-        5 => ['custom', 'main'],
-        6 => ['custom', 'main'],
+        5 => ['main'],
+        6 => ['main'],
         7 => ['main', 'simple'],
     ];
 

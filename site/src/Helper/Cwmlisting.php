@@ -2651,67 +2651,6 @@ class Cwmlisting
     }
 
     /**
-     * Get Listing Exp
-     *
-     * @param   object            $row       Item Info
-     * @param   Registry          $params    Item Params
-     * @param   object  $template  Template object from Cwmparams::getTemplateparams()
-     *
-     * @return string
-     *
-     * @throws \Exception
-     * @since 7.0
-     */
-    public function getListingExp($row, $params, $template): string
-    {
-        $label = $params->get('templatecode');
-
-        if (empty($label)) {
-            return '';
-        }
-
-        $image     = Cwmimages::getStudyThumbnail($row->thumbnailm ?? '');
-        $thumbnail = $image ? $this->useJImage(
-            $image->path,
-            "",
-            "bsms_studyThumbnail" . $row->id,
-            $image->width,
-            $image->height
-        ) : '';
-
-        // Build replacements array for single str_replace call
-        $replacements = [
-            '{{teacher}}'        => $row->teachername ?? '',
-            '{{title}}'          => $row->studytitle ?? '',
-            '{{date}}'           => isset($row->studydate) ? $this->getStudyDate($params, $row->studydate) : '',
-            '{{studyintro}}'     => $row->studyintro ?? '',
-            '{{scripture}}'      => $this->getScripture($params, $row, 0, 1),
-            '{{topics}}'         => $row->topic_text ?? '',
-            '{{url}}'            => Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
-            '{{thumbnail}}'      => $thumbnail,
-            '{{seriestext}}'     => $row->series_text ?? '',
-            '{{messagetype}}'    => $row->message_type ?? '',
-            '{{bookname}}'       => $row->bookname ?? '',
-            '{{hits}}'           => $row->hits ?? '',
-            '{{location}}'       => $row->location_text ?? '',
-            '{{plays}}'          => $row->totalplays ?? '',
-            '{{downloads}}'      => $row->totaldownloads ?? '',
-            '{{teacherorgname}}' => $row->teacherorgname ?? $row->org_name ?? '',
-        ];
-
-        $label = str_replace(array_keys($replacements), array_values($replacements), $label);
-
-        // Only process media if the placeholder exists in the template
-        if (str_contains($label, '{{media}}')) {
-            $media      = new Cwmmedia();
-            $mediaTable = $media->getFluidMedia($row, $params, $template);
-            $label      = str_replace('{{media}}', $mediaTable, $label);
-        }
-
-        return $label;
-    }
-
-    /**
      * Share Helper — dispatches to local privacy-safe or AddToAny renderer.
      *
      * Modes: 0 = hide, 1 = local/privacy (no external requests), 2 = AddToAny.

@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * That moved strategy 3 ahead of the reversed reading meant to be tried first.
  *
  * The issue filed this as dormant. It is not: mod_proclaim_youtube's dispatcher
- * calls it through YoutubeHelper::findMatchingMessage() whenever the module's
+ * calls it through ProclaimYoutubeHelper::findMatchingMessage() whenever the module's
  * auto_link_message param is on, and that defaults to 1.
  *
  * @since  __DEPLOY_VERSION__

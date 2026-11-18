@@ -64,13 +64,36 @@ class CwmpodcastFeedAccessTest extends TestCase
         }
     }
 
+    /**
+     * The feed is a static file, so its reader is the guest, not whoever runs the build.
+     *
+     * Reading the current identity crashed the scheduled podcast task under the command line, where
+     * the console application has no identity, and let a Super User building the feed list items
+     * that a podcast app is refused.
+     */
+    public function testTheFeedIsBuiltForTheGuestNotWhoeverRunsTheBuild(): void
+    {
+        $source = self::episodeQuerySource();
+
+        $this->assertStringNotContainsString(
+            'getIdentity',
+            $source,
+            'getEpisodes() must not read the current identity: the feed is a static file whose reader is always the guest.'
+        );
+        $this->assertStringContainsString(
+            'loadUserById(0)',
+            $source,
+            'getEpisodes() must take its view levels from the guest user.'
+        );
+    }
+
     /** The levels must come from the reader, not be hardcoded to Public. */
     public function testItFiltersAgainstTheReadersOwnViewLevels(): void
     {
         $this->assertStringContainsString(
             'getAuthorisedViewLevels',
             self::episodeQuerySource(),
-            'The feed must filter against the fetching user\'s view levels rather than assuming a fixed level, '
+            'The feed must filter against the guest\'s view levels rather than assuming a fixed level, '
             . 'so a site whose guests hold more than Public still gets a correct feed.'
         );
     }

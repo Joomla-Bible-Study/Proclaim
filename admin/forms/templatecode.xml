@@ -15,8 +15,7 @@
         <option value="6">JBS_TPLCODE_SERIESDISPLAY</option>
         <option value="7">JBS_TPLCODE_MODULE</option>
     </field>
-    <field name="filename" type="text" label="JBS_TPLCODE_FILENAME" description="JBS_TPLCODE_FILENAME_DESC"
-           size="75" required="true"/>
+    <field name="filename" type="text" label="JBS_TPLCODE_FILENAME" description="JBS_TPLCODE_FILENAME_DESC" required="true"/>
     <field name="templatecode" type="editor" editor="codemirror|none" buttons="no" rows="100" cols="500"
            label="JBS_TPLCODE_CODE" description="JBS_TPLCODE_CODE_DESC"
            required="true" filter="raw"/>
@@ -29,7 +28,7 @@
            translate_label="false" filter="rules" component="com_proclaim"
            section="style" validate="rules"/>
     <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-           description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+           description="JGLOBAL_FIELD_ID_DESC" default="0" readonly="true"
            class="col-12"/>
 
     <field
@@ -55,7 +54,6 @@
             name="modified"
             type="calendar"
             label="JGLOBAL_FIELD_MODIFIED_LABEL"
-            class="form-control"
             translateformat="true"
             showtime="true"
             readonly="true"

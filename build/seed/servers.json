@@ -1,0 +1,52 @@
+{
+    "_comment": "One seeded server per addon type under admin/src/Addons/Servers, so every supported type has a row to attach media to. Servers carry no credentials: params and media stay empty and the addon's own defaults apply, so nothing here can reach an outside account. `requires` names a component the site must already have (Docman and Virtuemart are other vendors' extensions); without it the server is skipped and reported, never an error. The legacy type is deliberately absent: it is deprecated, a fresh install already seeds legacy servers, and new use is refused.",
+    "servers": [
+        {
+            "type": "article"
+        },
+        {
+            "type": "dailymotion"
+        },
+        {
+            "type": "direct"
+        },
+        {
+            "type": "docman",
+            "requires": "com_docman"
+        },
+        {
+            "type": "embed"
+        },
+        {
+            "type": "facebook"
+        },
+        {
+            "type": "googledrive"
+        },
+        {
+            "type": "local"
+        },
+        {
+            "type": "resi"
+        },
+        {
+            "type": "rumble"
+        },
+        {
+            "type": "soundcloud"
+        },
+        {
+            "type": "vimeo"
+        },
+        {
+            "type": "virtuemart",
+            "requires": "com_virtuemart"
+        },
+        {
+            "type": "wistia"
+        },
+        {
+            "type": "youtube"
+        }
+    ]
+}

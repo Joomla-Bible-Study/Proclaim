@@ -17,6 +17,10 @@
  *     admin sets it — through the plugin's own edit form. #1328's lesson:
  *     writing the value straight to the database would pass while the UI
  *     path is broken, so the UI path is the one exercised.
+ *   - the media resource's full write lifecycle round-trips (#2135): create,
+ *     read back, amend a field via PATCH, confirm the amendment is visible,
+ *     trash, delete. Every prior test here only ever created — nothing
+ *     exercised PATCH or DELETE, which is exactly how #2135 shipped invisible.
  *
  * Serial: the token test feeds the authenticated request, and the
  * public_reads test must restore the shipped default for the 401 assertion
@@ -24,14 +28,47 @@
  */
 
 const { test, expect } = require('@playwright/test');
+const { pickType } = require('../helpers/server-picker');
 
 const API_SERMONS = '/api/index.php/v1/proclaim/sermons';
 const API_INFO = '/api/index.php/v1/proclaim/info';
 const API_SERIES = '/api/index.php/v1/proclaim/series';
+const API_MEDIA = '/api/index.php/v1/proclaim/media';
+const API_SERVERS = '/api/index.php/v1/proclaim/servers';
+
+const ADD_SERVER = '/administrator/index.php?option=com_proclaim&task=cwmserver.add';
+const SERVER_LIST = '/administrator/index.php?option=com_proclaim&view=cwmservers';
+
+// The supported server the media tests attach their records to.
+//
+// A fresh install seeds only legacy-type servers, and a legacy server refuses
+// new media (the deprecation runway). The servers resource is read-only over the
+// API on purpose, since a server row carries credentials, so the fixture is made
+// the way an administrator makes one: through the admin form. It is found again
+// by name, so a copy left behind by an interrupted run is reused, not duplicated.
+const FIXTURE_SERVER = 'zz e2e api media fixture';
+let fixtureServerId = 0;
 
 // Set by the token test, consumed by the later ones. Safe because the describe
 // is serial.
 let apiToken = '';
+
+/**
+ * Every server the API lists, as { id, name, type }.
+ */
+async function listServers(request, headers) {
+    const response = await request.get(`${API_SERVERS}?page[limit]=100`, { headers });
+
+    expect(response.status(), await response.text()).toBe(200);
+
+    const body = await response.json();
+
+    return (body.data ?? []).map((row) => ({
+        id: Number(row.id),
+        name: row.attributes?.server_name,
+        type: row.attributes?.type,
+    }));
+}
 
 test.describe.serial('REST API acceptance (package install) @api', () => {
     test('Proclaim and its webservices plugin are installed and enabled', async ({ page }) => {
@@ -218,5 +255,261 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
             response.status(),
             'public_reads=No saved through the UI, but anonymous reads stayed open',
         ).toBe(401);
+    });
+
+    test('a supported (non-legacy) server exists to attach media to', async ({ page, request }) => {
+        expect(apiToken, 'The token test did not run, so this proves nothing').not.toBe('');
+
+        const headers = { 'X-Joomla-Token': apiToken };
+
+        let fixture = (await listServers(request, headers)).find((server) => server.name === FIXTURE_SERVER);
+
+        if (!fixture) {
+            await page.goto(ADD_SERVER, { waitUntil: 'domcontentloaded' });
+
+            // A new record opens the type picker on top of the form. `direct` has no remote calls
+            // to make, so saving it touches nothing outside the database.
+            await expect(page.locator('joomla-dialog iframe')).toBeVisible();
+            await pickType(page, 'direct', 'jform[params][path]');
+            await page.fill('#jform_server_name', FIXTURE_SERVER);
+
+            await page.evaluate(() => Joomla.submitbutton('cwmserver.save'));
+            await page.waitForLoadState('networkidle');
+            await expect(page.locator('#system-message-container')).toContainText(/saved/i);
+
+            fixture = (await listServers(request, headers)).find((server) => server.name === FIXTURE_SERVER);
+        }
+
+        expect(fixture, `"${FIXTURE_SERVER}" was saved but the servers API does not list it`).toBeTruthy();
+        expect(
+            fixture.type,
+            'the fixture must be a supported type, or the media tests would be refused for the same reason as before',
+        ).not.toBe('legacy');
+
+        fixtureServerId = fixture.id;
+    });
+
+    test('media: create, read, amend, confirm, trash and delete round-trip (#2135)', async ({ request }) => {
+        expect(apiToken, 'The token test did not run, so this proves nothing').not.toBe('');
+
+        expect(fixtureServerId, 'The fixture-server test did not run, so there is nothing to attach media to').toBeGreaterThan(0);
+
+        const headers = { 'X-Joomla-Token': apiToken };
+
+        // Study 1 is seeded by install.mysql.utf8.sql, present on any site this
+        // harness provisions. The server is the fixture made above: the install
+        // seeds only legacy servers, and those refuse new media.
+        //
+        // createdate is chosen to prove the write/read round-trip is now
+        // symmetric: what is sent here must come back unchanged (#2135
+        // Defect 4). Before the fix, POST converted it as local-to-UTC and
+        // GET returned the stored value unconverted, so a value written and
+        // read back drifted by the site's UTC offset.
+        const createdate = '2025-12-06 17:05:00';
+
+        const createResponse = await request.post(API_MEDIA, {
+            headers,
+            data: {
+                study_id: 1,
+                server_id: fixtureServerId,
+                language: '*',
+                createdate,
+                params: { filename: 'zz-2135-roundtrip.mp3' },
+            },
+        });
+
+        // Joomla's ApiController::add() never sets a 201 -- displayItem()
+        // leaves the application's default 200 in place. Matching that
+        // rather than the "correct" REST convention, since that is what
+        // every other resource on this API actually returns.
+        expect(createResponse.status(), await createResponse.text()).toBe(200);
+
+        const created = await createResponse.json();
+        const mediaId = created.data?.id;
+
+        expect(mediaId, 'POST did not return a resource id').toBeTruthy();
+
+        try {
+            // Read it back — confirms the record exists and createdate
+            // survived the write path unchanged.
+            let getResponse = await request.get(`${API_MEDIA}/${mediaId}`, { headers });
+            expect(getResponse.status()).toBe(200);
+
+            let body = await getResponse.json();
+            expect(
+                body.data?.attributes?.createdate,
+                'createdate drifted on the round trip — the write and read conventions disagree (#2135 Defect 4)',
+            ).toBe(createdate);
+            expect(
+                body.data?.attributes?.podcast_id ?? '',
+                'A freshly created record should carry no podcast link yet',
+            ).toBe('');
+
+            // PATCH omitting every field but podcast_id — this is the exact
+            // shape that 500'd before the fix (#2135 Defect 1): the core
+            // ApiController backfills every other column from the raw table
+            // row, including params as a JSON string, which the model's old
+            // Registry::loadArray() call could not accept.
+            const patchResponse = await request.patch(`${API_MEDIA}/${mediaId}`, {
+                headers,
+                data: { podcast_id: '1' },
+            });
+            expect(patchResponse.status(), await patchResponse.text()).toBe(200);
+
+            // Confirm the amendment is actually visible — podcast_id was
+            // write-only before the fix (#2135 Defect 3): a caller could set
+            // it and never read it back, so a record could look completely
+            // healthy while being silently absent from the podcast feed.
+            //
+            // getItem() explodes a non-empty podcast_id into an array for
+            // display (pre-existing model behaviour, not part of this fix) —
+            // an empty one stays the plain string asserted above.
+            getResponse = await request.get(`${API_MEDIA}/${mediaId}`, { headers });
+            body = await getResponse.json();
+            expect(
+                body.data?.attributes?.podcast_id,
+                'podcast_id was set via PATCH but is not visible in a subsequent GET',
+            ).toEqual(['1']);
+
+            // Trash before delete — reachable only because PATCH now works
+            // (#2135 Defect 2: trashing is itself a PATCH of published=-2, so
+            // it inherited Defect 1's failure and made every API-created
+            // record permanently undeletable through the API).
+            const trashResponse = await request.patch(`${API_MEDIA}/${mediaId}`, {
+                headers,
+                data: { published: '-2' },
+            });
+            expect(trashResponse.status(), await trashResponse.text()).toBe(200);
+
+            // Core's own response cycle renders and echoes a body
+            // unconditionally (CMSApplication::doExecute() always calls
+            // render() then respond(), and AbstractWebApplication::respond()
+            // always does `echo $this->getBody()`) — nothing suppresses that
+            // for a 204, which by HTTP/1.1 must carry no body at all. Every
+            // resource's successful delete() sends this, framework-wide; it
+            // was never reachable for media before this fix (Defect 2), so
+            // nothing had ever exercised it here.
+            //
+            // A tolerant server (Apache, used for local verification) glosses
+            // over the extra bytes; PHP's built-in dev server plus a strict
+            // HTTP/1.1 client (Playwright's Node parser, used in CI) does
+            // not, and throws before a response object even exists to read a
+            // status from. That is a core framing defect, not this fix's to
+            // carry — confirmed by tracing the framework, not guessed. Filed
+            // as its own issue (#2167).
+            let deleteOk = false;
+
+            try {
+                const deleteResponse = await request.delete(`${API_MEDIA}/${mediaId}`, { headers });
+                expect(deleteResponse.status(), await deleteResponse.text()).toBe(204);
+                deleteOk = true;
+            } catch (deleteError) {
+                if (!/Parse Error/.test(String(deleteError?.message))) {
+                    throw deleteError;
+                }
+            }
+
+            // The parse failure happens after the server has already written
+            // its status line, so a clean HTTP client proves the delete
+            // itself succeeded independently of whether THIS client could
+            // read the malformed response: the record no longer answers as a
+            // live item. GET on a missing id is its own separate, pre-existing
+            // gap (500 instead of 404), so this checks for "not 200" rather
+            // than a specific code.
+            if (!deleteOk) {
+                const verify = await request.get(`${API_MEDIA}/${mediaId}`, { headers });
+                expect(
+                    verify.status(),
+                    'DELETE\'s response could not be parsed, and a follow-up GET still returned 200 — '
+                    + 'the record was not actually removed',
+                ).not.toBe(200);
+            }
+        } catch (error) {
+            // The record must not survive a failed assertion — leaving it
+            // behind would poison every later run of this suite with a
+            // duplicate that was never meant to persist. Trash first: a
+            // failure before the trash step above leaves the record
+            // published, and delete on a published record is refused.
+            await request.patch(`${API_MEDIA}/${mediaId}`, { headers, data: { published: '-2' } }).catch(() => {});
+            await request.delete(`${API_MEDIA}/${mediaId}`, { headers }).catch(() => {});
+            throw error;
+        }
+
+        // Not re-reading the deleted record here on purpose: a GET for an id
+        // that no longer exists is a separate, pre-existing defect (500
+        // instead of 404 — confirmed present before this fix too), out of
+        // #2135's scope. 204 from the DELETE above is the round trip's own
+        // confirmation that removal worked.
+    });
+
+    test('media: a legacy-type server is refused with a 400 that says why', async ({ request }) => {
+        expect(apiToken, 'The token test did not run, so this proves nothing').not.toBe('');
+
+        const headers = { 'X-Joomla-Token': apiToken };
+
+        const legacy = (await listServers(request, headers)).find((server) => server.type === 'legacy');
+
+        expect(legacy, 'the install seeds legacy servers and none is listed, so this proves nothing').toBeTruthy();
+
+        const response = await request.post(API_MEDIA, {
+            headers,
+            data: {
+                study_id: 1,
+                server_id: legacy.id,
+                language: '*',
+                params: { filename: 'zz-legacy-guard.mp3' },
+            },
+        });
+        const body = await response.text();
+
+        if (response.status() === 200) {
+            // The guard let it through, so a record exists that this test did not mean to leave.
+            const id = (JSON.parse(body).data ?? {}).id;
+
+            await request.patch(`${API_MEDIA}/${id}`, { headers, data: { published: '-2' } }).catch(() => {});
+            await request.delete(`${API_MEDIA}/${id}`, { headers }).catch(() => {});
+        }
+
+        expect(response.status(), body).toBe(400);
+        expect(body, 'the refusal should say the server type is the reason').toMatch(/legacy type/i);
+    });
+
+    test('the fixture server is removed', async ({ page }) => {
+        const find = encodeURIComponent(FIXTURE_SERVER);
+
+        // A form POST (trash, delete) navigates on its own, and a goto fired into that in-flight
+        // navigation aborts, so each goto is retried until it settles.
+        const gotoList = async (published) => {
+            for (let attempt = 0; attempt < 3; attempt++) {
+                try {
+                    await page.goto(`${SERVER_LIST}&filter[published]=${published}&filter[search]=${find}`, { waitUntil: 'domcontentloaded' });
+
+                    return;
+                } catch (error) {
+                    if (attempt === 2) {
+                        throw error;
+                    }
+
+                    await page.waitForTimeout(500);
+                }
+            }
+        };
+
+        await gotoList('');
+        await page.locator('tbody tr', { hasText: FIXTURE_SERVER }).locator('input[name="cid[]"]').check();
+        await page.evaluate(() => Joomla.submitform('cwmservers.trash', document.getElementById('adminForm')));
+        await page.waitForLoadState('networkidle');
+
+        await gotoList('-2');
+        await page.locator('tbody tr', { hasText: FIXTURE_SERVER }).locator('input[name="cid[]"]').check();
+        page.once('dialog', (dialog) => dialog.accept());
+        await page.evaluate(() => Joomla.submitform('cwmservers.delete', document.getElementById('adminForm')));
+        await page.waitForLoadState('networkidle');
+
+        await gotoList('-2');
+        await expect(
+            page.locator('tbody tr', { hasText: FIXTURE_SERVER }),
+            'the fixture server must not outlive the suite',
+        ).toHaveCount(0);
     });
 });
