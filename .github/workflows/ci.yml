@@ -44,7 +44,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: mbstring, json, xml, mysqli
           coverage: none
 
@@ -240,7 +240,7 @@ jobs:
       # own cwmreplay_ prefix, so it shares this service container with the
       # PHPUnit database without touching proclaim_ tables.
       #
-      # Runs once, in the 8.3 job only: what is being checked is SQL the server
+      # Runs once, in the 8.4 job only: what is being checked is SQL the server
       # accepts, which does not vary by PHP version.
       - name: Replay every migration against a scratch schema
         run: composer schema-replay
@@ -249,13 +249,19 @@ jobs:
           CWM_TEST_MYSQL_USER: proclaim_test
           CWM_TEST_MYSQL_PASSWORD: proclaim_test
 
-  # Forward-compatibility coverage for the next PHP release. Blocking since
-  # 2026-08-05: the suite is verified clean on 8.5, so a failure here means a
-  # real forward-compat regression (e.g. a newly-deprecated API) and must be
-  # fixed before merge, not discovered at the 8.5 support cutover.
-  php-checks-85:
-    name: PHP Lint & Tests (8.5)
+  # The supported versions either side of the 8.4 default. 8.3 is Proclaim's
+  # install minimum. 8.5 has been blocking since 2026-08-05: the suite is clean
+  # on it, so a failure there is a real forward-compat regression to fix before
+  # merge, not at the 8.5 support cutover.
+  # ⚠️ "PHP Lint & Tests (8.5)" is a required check: keep that name.
+  php-checks-range:
+    name: PHP Lint & Tests (${{ matrix.php }})
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.5']
 
     services:
       mysql:
@@ -282,7 +288,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.5'
+          php-version: ${{ matrix.php }}
           extensions: mbstring, json, xml, mysqli
           coverage: none
 
@@ -294,8 +300,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-php85-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-php85-composer-
+          key: ${{ runner.os }}-php${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-php${{ matrix.php }}-composer-
 
       - name: Clone joomla-cms for test framework
         run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
@@ -305,7 +311,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/../joomla-cms/libraries/vendor
-          key: joomla-cms-vendor-5.4.3-${{ runner.os }}-php85
+          key: joomla-cms-vendor-5.4.3-${{ runner.os }}-php${{ matrix.php }}
 
       - name: Install joomla-cms composer dependencies
         if: steps.joomla-cms-cache.outputs.cache-hit != 'true'
@@ -367,6 +373,14 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --dev --no-interaction --prefer-dist
+
+      # composer.json pins the platform to 8.4 for the development tooling, so a
+      # lock that resolves proves nothing about 8.3. check-platform-reqs reads the
+      # real PHP, for the root and for the YouTube addon, whose vendor ships.
+      - name: Check platform requirements on this PHP
+        run: |
+          composer check-platform-reqs --lock --no-dev
+          composer -d admin/src/Addons/Servers/Youtube check-platform-reqs --lock --no-dev
 
       - name: Import Joomla core database schema
         run: |
@@ -466,7 +480,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: mbstring, json, xml
           coverage: none
 

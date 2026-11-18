@@ -390,7 +390,11 @@ class CwmmediaStreamer
 
         curl_exec($ch);
         $failed = curl_errno($ch) !== 0;
-        curl_close($ch);
+
+        // Dropping the last reference is what frees the handle and closes the
+        // connection: curl_close() has had no effect since PHP 8.0, and PHP 8.5
+        // deprecates it.
+        unset($ch);
 
         // redirect() always terminates the script itself on success, so this
         // only actually returns when curl succeeded (nothing left to do but
