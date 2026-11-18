@@ -40,7 +40,6 @@ export default [
     {
         files: ['tests/**/*.js', 'tests/**/*.mjs'],
         rules: {
-            'no-undef': 'off',
             'prefer-destructuring': 'off',
         },
     },
