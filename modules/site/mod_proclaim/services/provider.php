@@ -33,6 +33,13 @@ return new class () implements ServiceProviderInterface {
      */
     public function register(Container $container): void
     {
+        // CWM Proclaim needs PHP 8.4. Below it, register nothing: Joomla then renders nothing for this module,
+        // so none of CWM Proclaim's code loads and the site keeps working. Keep 8.4-only
+        // syntax out of this file, or the guard itself cannot run.
+        if (PHP_VERSION_ID < 80400) {
+            return;
+        }
+
         $container->registerServiceProvider(new ModuleDispatcherFactory('\\CWM\\Module\\Proclaim'));
         $container->registerServiceProvider(new HelperFactory('\\CWM\\Module\\Proclaim\\Site\\Helper'));
 
