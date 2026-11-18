@@ -56,6 +56,8 @@ Full documentation is maintained in the [Proclaim Wiki](https://github.com/Jooml
 - Joomla 5.4.0+ installation
 - Git
 
+PHP 8.3 is supported until Proclaim 11 is released. Proclaim 11, and the other CWM extensions from then on, require PHP 8.4 or later.
+
 ### Installation for Development
 
 ```bash
