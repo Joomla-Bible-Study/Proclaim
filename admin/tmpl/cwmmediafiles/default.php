@@ -266,7 +266,11 @@ if ($saveOrder && !empty($this->items)) {
                                     <?php endif; ?>
                                 </td>
                                 <td class="small d-none d-md-table-cell text-center">
-                                    <?php echo HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')); ?>
+                                    <?php if ($item->createdate) : ?>
+                                        <?php echo HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')); ?>
+                                    <?php else : ?>
+                                        <span class="text-muted fst-italic"><?php echo Text::_('JNONE'); ?></span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="d-none d-md-table-cell text-center">
                                     <button type="button" class="btn btn-sm btn-info px-2"

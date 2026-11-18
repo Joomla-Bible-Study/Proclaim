@@ -244,7 +244,7 @@ echo Route::_(
                                     endif; ?>
                                 </td>
                                 <td class="text-center d-none d-md-table-cell">
-                                    <?php echo HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')); ?>
+                                    <?php echo $item->createdate ? HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')) : '&mdash;'; ?>
                                 </td>
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php echo (int) $item->id; ?>
