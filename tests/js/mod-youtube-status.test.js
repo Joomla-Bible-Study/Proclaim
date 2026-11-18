@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Tests for mod-youtube-status.es6.js
  * The YouTube module's live-status poll, as com_ajax answers it: the helper's
@@ -7,15 +9,22 @@
  * @since    __DEPLOY_VERSION__
  */
 
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach, afterEach, mock } = require('node:test');
+const { fn, resolving, spyOn, resetModules, advanceTimersByTimeAsync } = require('./helpers/mocks');
+const { includes } = require('./helpers/assert');
+
 describe('mod-youtube-status', () => {
     const pollInterval = 1000;
 
     beforeEach(() => {
-        jest.resetModules();
-        jest.useFakeTimers();
+        resetModules();
+        mock.timers.enable({ apis: ['setTimeout', 'setInterval', 'Date'], now: Date.now() });
 
         global.Joomla = {
-            getOptions: jest.fn((key) => (key === 'mod_proclaim_youtube'
+            getOptions: fn((key) => (key === 'mod_proclaim_youtube'
                 ? [{
                     moduleId: 7,
                     pollInterval,
@@ -40,11 +49,11 @@ describe('mod-youtube-status', () => {
                  data-label-live="Live now"
                  data-label-upcoming="Upcoming"><span>Upcoming</span></div>`;
 
-        global.fetch = jest.fn();
+        global.fetch = fn();
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        mock.timers.reset();
     });
 
     /**
@@ -53,23 +62,23 @@ describe('mod-youtube-status', () => {
      * run the handlers earlier tests loaded and start a poller for each.
      */
     function load() {
-        const addListener = jest.spyOn(document, 'addEventListener');
+        const addListener = spyOn(document, 'addEventListener');
 
         require('../../build/media_source/js/mod-youtube-status.es6.js');
 
-        const ready = addListener.mock.calls.find(([type]) => type === 'DOMContentLoaded')[1];
+        const ready = addListener.mock.calls.find(({ arguments: [type] }) => type === 'DOMContentLoaded').arguments[1];
 
-        addListener.mockRestore();
+        addListener.mock.restore();
         ready();
     }
 
     function respondWith(body) {
-        global.fetch.mockResolvedValue({ json: () => Promise.resolve(body) });
+        global.fetch.mock.mockImplementation(resolving({ json: () => Promise.resolve(body) }));
     }
 
     // Wait out one poll interval and let the request's promises settle.
     async function poll() {
-        await jest.advanceTimersByTimeAsync(pollInterval);
+        await advanceTimersByTimeAsync(pollInterval);
     }
 
     function badge() {
@@ -87,8 +96,8 @@ describe('mod-youtube-status', () => {
         load();
         await poll();
 
-        expect(global.fetch).toHaveBeenCalledTimes(1);
-        expect(badge().innerHTML).toContain('Live now');
+        assert.strictEqual(global.fetch.mock.callCount(), 1);
+        includes(badge().innerHTML, 'Live now');
     });
 
     test('keeps polling while the status has not changed', async () => {
@@ -103,8 +112,8 @@ describe('mod-youtube-status', () => {
         await poll();
         await poll();
 
-        expect(global.fetch).toHaveBeenCalledTimes(2);
-        expect(badge().innerHTML).toContain('Upcoming');
+        assert.strictEqual(global.fetch.mock.callCount(), 2);
+        includes(badge().innerHTML, 'Upcoming');
     });
 
     test('stops when com_ajax could not run the helper', async () => {
@@ -117,10 +126,10 @@ describe('mod-youtube-status', () => {
 
         load();
         await poll();
-        await jest.advanceTimersByTimeAsync(20000);
+        await advanceTimersByTimeAsync(20000);
 
-        expect(global.fetch).toHaveBeenCalledTimes(1);
-        expect(badge().innerHTML).toContain('Upcoming');
+        assert.strictEqual(global.fetch.mock.callCount(), 1);
+        includes(badge().innerHTML, 'Upcoming');
     });
 
     test('stops when the helper refuses the request', async () => {
@@ -133,9 +142,9 @@ describe('mod-youtube-status', () => {
 
         load();
         await poll();
-        await jest.advanceTimersByTimeAsync(20000);
+        await advanceTimersByTimeAsync(20000);
 
-        expect(global.fetch).toHaveBeenCalledTimes(1);
-        expect(badge().innerHTML).toContain('Upcoming');
+        assert.strictEqual(global.fetch.mock.callCount(), 1);
+        includes(badge().innerHTML, 'Upcoming');
     });
 });

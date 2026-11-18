@@ -1,7 +1,16 @@
+'use strict';
+
 /**
  * Tests for fancybox.es6.js
  * Fancybox media player integration
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach, afterEach } = require('node:test');
+const { fn, resetModules } = require('./helpers/mocks');
+const { includes, calledWith, match } = require('./helpers/assert');
 
 describe('fancybox.es6.js', () => {
     describe('Fancybox Player', () => {
@@ -10,8 +19,8 @@ describe('fancybox.es6.js', () => {
         beforeEach(() => {
             // Mock Fancybox
             mockFancybox = {
-                show: jest.fn(),
-                bind: jest.fn()
+                show: fn(),
+                bind: fn()
             };
             global.Fancybox = mockFancybox;
 
@@ -36,7 +45,7 @@ describe('fancybox.es6.js', () => {
             `;
 
             // Load the module (triggers DOMContentLoaded setup)
-            jest.resetModules();
+            resetModules();
             require('../../build/media_source/js/fancybox.es6.js');
 
             // Manually trigger DOMContentLoaded since it already fired
@@ -45,22 +54,23 @@ describe('fancybox.es6.js', () => {
 
         afterEach(() => {
             delete global.Fancybox;
-            jest.resetModules();
+            resetModules();
         });
 
         test('should call Fancybox.bind for fancybox_player elements', () => {
-            expect(mockFancybox.bind).toHaveBeenCalledWith(
+            calledWith(
+                mockFancybox.bind,
                 '.fancybox_player',
-                expect.objectContaining({
+                match.objectContaining({
                     backdropClick: 'close'
-                })
+                }),
             );
         });
 
         test('should bind with Carousel and Toolbar options', () => {
-            const [, bindOptions] = mockFancybox.bind.mock.calls[0];
-            expect(bindOptions.Carousel).toEqual({ infinite: false });
-            expect(bindOptions.Toolbar.display.right).toContain('close');
+            const [, bindOptions] = mockFancybox.bind.mock.calls[0].arguments;
+            assert.deepStrictEqual(bindOptions.Carousel, { infinite: false });
+            includes(bindOptions.Toolbar.display.right, 'close');
         });
 
         test('should open audio overlay on audio element click', () => {
@@ -69,8 +79,8 @@ describe('fancybox.es6.js', () => {
 
             // Audio handler creates a custom overlay, not Fancybox
             const overlay = document.querySelector('.proclaim-audio-overlay');
-            expect(overlay).not.toBeNull();
-            expect(overlay.querySelector('audio')).not.toBeNull();
+            assert.notStrictEqual(overlay, null);
+            assert.notStrictEqual(overlay.querySelector('audio'), null);
         });
 
         test('should close audio overlay on Escape key', () => {
@@ -78,12 +88,12 @@ describe('fancybox.es6.js', () => {
             audioPlayer.click();
 
             const overlay = document.querySelector('.proclaim-audio-overlay');
-            expect(overlay).not.toBeNull();
+            assert.notStrictEqual(overlay, null);
 
             // Simulate Escape key
             document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 
-            expect(document.querySelector('.proclaim-audio-overlay')).toBeNull();
+            assert.strictEqual(document.querySelector('.proclaim-audio-overlay'), null);
         });
 
         test('should not open audio overlay for non-audio elements', () => {
@@ -91,7 +101,7 @@ describe('fancybox.es6.js', () => {
             videoPlayer.click();
 
             // No custom audio overlay should exist
-            expect(document.querySelector('.proclaim-audio-overlay')).toBeNull();
+            assert.strictEqual(document.querySelector('.proclaim-audio-overlay'), null);
         });
     });
 });

@@ -456,7 +456,7 @@ jobs:
           node-version: '24'
           cache: 'npm'
 
-      # ESLint, not Jest, is what needs PHP here: eslint.config.mjs extends
+      # ESLint, not the tests, is what needs PHP here: eslint.config.mjs extends
       # libraries/vendor/cwm/build-tools/templates/eslint.config.base.mjs, and
       # Composer is what puts that file on disk. Without this the lint step dies
       # with ERR_MODULE_NOT_FOUND before reading a single source file — which is
@@ -490,7 +490,8 @@ jobs:
       - name: Run ESLint
         run: npm run lint:js
 
-      - name: Run Jest tests
+      # Node's built-in test runner (node:test) with jsdom; see tests/js/setup.js.
+      - name: Run JS unit tests
         run: npm test
 
   spellcheck:
