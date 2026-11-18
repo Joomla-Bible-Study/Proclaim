@@ -111,16 +111,20 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     #[TestDox('With no date on the media file or its message, the episode is dated when the feed is written')]
     public function testUndatedMessageIsDatedWhenTheFeedIsWritten(): void
     {
-        $before = time();
-        $dates  = $this->pubDates($this->buildFeed(null, null));
+        $feed  = $this->buildFeed(null, null);
+        $dates = $this->pubDates($feed);
 
         $this->assertCount(1, $dates);
+        $this->assertSame(1, preg_match('#<lastBuildDate>([^<]+)</lastBuildDate>#', $feed, $built));
 
-        $written = \DateTimeImmutable::createFromFormat(\DateTimeInterface::RFC2822, $dates[0]);
+        // Against the feed's own build time, not the clock: Factory::getDate()
+        // caches 'now' per process, so in a long run it predates the test.
+        $episode = \DateTimeImmutable::createFromFormat(\DateTimeInterface::RFC2822, $dates[0]);
+        $written = \DateTimeImmutable::createFromFormat(\DateTimeInterface::RFC2822, $built[1]);
 
-        $this->assertNotFalse($written, 'The pubDate should be an RFC 2822 date');
-        $this->assertGreaterThanOrEqual($before - 1, $written->getTimestamp());
-        $this->assertLessThanOrEqual(time() + 1, $written->getTimestamp());
+        $this->assertNotFalse($episode, 'The pubDate should be an RFC 2822 date');
+        $this->assertNotFalse($written, 'The lastBuildDate should be an RFC 2822 date');
+        $this->assertLessThanOrEqual(5, abs($episode->getTimestamp() - $written->getTimestamp()));
     }
 
     /**
