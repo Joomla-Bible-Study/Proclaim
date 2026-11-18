@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Tests for cwm-transcript.es6.js
  * Interactive transcript panel — VTT parsing, rendering, seek, search
@@ -6,19 +8,26 @@
  * @since    10.3.0
  */
 
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach } = require('node:test');
+const { fn, resetModules } = require('./helpers/mocks');
+const { includes } = require('./helpers/assert');
+
 describe('cwm-transcript', () => {
     beforeEach(() => {
-        jest.resetModules();
+        resetModules();
         document.body.innerHTML = '';
 
         // Ensure Joomla.Text._ is available (setup.js only defines JText)
         global.Joomla = {
             ...global.Joomla,
-            Text: { _: jest.fn((key) => key) },
+            Text: { _: fn((key) => key) },
         };
 
         // jsdom doesn't implement scrollIntoView
-        Element.prototype.scrollIntoView = jest.fn();
+        Element.prototype.scrollIntoView = fn();
     });
 
     // Sample VTT content for testing
@@ -53,7 +62,7 @@ This is one of the most encouraging passages in all of Scripture.`;
 
     function setupWithVtt(vttContent) {
         // Mock fetch to return the VTT content
-        global.fetch = jest.fn(() =>
+        global.fetch = fn(() =>
             Promise.resolve({
                 ok: true,
                 text: () => Promise.resolve(vttContent),
@@ -76,10 +85,10 @@ This is one of the most encouraging passages in all of Scripture.`;
             await flush();
 
             const panel = document.querySelector('.cwm-transcript-panel');
-            expect(panel).not.toBeNull();
+            assert.notStrictEqual(panel, null);
 
             const cues = panel.querySelectorAll('.cwm-transcript-cue');
-            expect(cues.length).toBe(3);
+            assert.strictEqual(cues.length, 3);
         });
 
         test('renders timestamps in MM:SS format', async () => {
@@ -87,9 +96,9 @@ This is one of the most encouraging passages in all of Scripture.`;
             await flush();
 
             const times = document.querySelectorAll('.cwm-transcript-time');
-            expect(times[0].textContent).toBe('0:00');
-            expect(times[1].textContent).toBe('0:05');
-            expect(times[2].textContent).toBe('0:12');
+            assert.strictEqual(times[0].textContent, '0:00');
+            assert.strictEqual(times[1].textContent, '0:05');
+            assert.strictEqual(times[2].textContent, '0:12');
         });
 
         test('renders cue text content', async () => {
@@ -97,12 +106,12 @@ This is one of the most encouraging passages in all of Scripture.`;
             await flush();
 
             const texts = document.querySelectorAll('.cwm-transcript-text');
-            expect(texts[0].textContent).toContain('Welcome');
-            expect(texts[1].textContent).toContain('Romans chapter 8');
+            includes(texts[0].textContent, 'Welcome');
+            includes(texts[1].textContent, 'Romans chapter 8');
         });
 
         test('does not render panel when VTT fetch fails', async () => {
-            global.fetch = jest.fn(() => Promise.resolve({ ok: false, text: () => Promise.resolve('') }));
+            global.fetch = fn(() => Promise.resolve({ ok: false, text: () => Promise.resolve('') }));
 
             document.body.innerHTML = `
                 <div class="media playhit" data-id="1"><audio src="t.mp3"></audio></div>
@@ -112,11 +121,11 @@ This is one of the most encouraging passages in all of Scripture.`;
             require('../../build/media_source/js/cwm-transcript.es6.js');
             await flush();
 
-            expect(document.querySelector('.cwm-transcript-panel')).toBeNull();
+            assert.strictEqual(document.querySelector('.cwm-transcript-panel'), null);
         });
 
         test('does not render panel for non-VTT content', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({ ok: true, text: () => Promise.resolve('Not a VTT file') }),
             );
 
@@ -128,7 +137,7 @@ This is one of the most encouraging passages in all of Scripture.`;
             require('../../build/media_source/js/cwm-transcript.es6.js');
             await flush();
 
-            expect(document.querySelector('.cwm-transcript-panel')).toBeNull();
+            assert.strictEqual(document.querySelector('.cwm-transcript-panel'), null);
         });
 
         test('handles VTT with hour timestamps', async () => {
@@ -142,7 +151,7 @@ Late in the sermon.`;
             await flush();
 
             const time = document.querySelector('.cwm-transcript-time');
-            expect(time.textContent).toBe('75:30');
+            assert.strictEqual(time.textContent, '75:30');
         });
 
         test('strips VTT formatting tags from text', async () => {
@@ -156,7 +165,7 @@ This has <b>bold</b> and <i>italic</i> tags.`;
             await flush();
 
             const text = document.querySelector('.cwm-transcript-text');
-            expect(text.textContent).toBe('This has bold and italic tags.');
+            assert.strictEqual(text.textContent, 'This has bold and italic tags.');
         });
     });
 
@@ -169,8 +178,8 @@ This has <b>bold</b> and <i>italic</i> tags.`;
             cues[1].click();
 
             const audio = document.querySelector('audio');
-            expect(audio.currentTime).toBe(5);
-            expect(window.HTMLMediaElement.prototype.play).toHaveBeenCalled();
+            assert.strictEqual(audio.currentTime, 5);
+            assert.ok(window.HTMLMediaElement.prototype.play.mock.callCount() > 0);
         });
     });
 
@@ -186,9 +195,9 @@ This has <b>bold</b> and <i>italic</i> tags.`;
             Object.defineProperty(audio, 'currentTime', { value: 7, writable: true });
             audio.dispatchEvent(new Event('timeupdate'));
 
-            expect(cues[0].classList.contains('active')).toBe(false);
-            expect(cues[1].classList.contains('active')).toBe(true);
-            expect(cues[2].classList.contains('active')).toBe(false);
+            assert.strictEqual(cues[0].classList.contains('active'), false);
+            assert.strictEqual(cues[1].classList.contains('active'), true);
+            assert.strictEqual(cues[2].classList.contains('active'), false);
         });
     });
 
@@ -206,10 +215,10 @@ This has <b>bold</b> and <i>italic</i> tags.`;
 
             const cues = document.querySelectorAll('.cwm-transcript-cue');
             // Cue 2 contains "Romans" — should be visible
-            expect(cues[1].style.display).toBe('');
+            assert.strictEqual(cues[1].style.display, '');
             // Others should be hidden
-            expect(cues[0].style.display).toBe('none');
-            expect(cues[2].style.display).toBe('none');
+            assert.strictEqual(cues[0].style.display, 'none');
+            assert.strictEqual(cues[2].style.display, 'none');
         });
 
         test('highlights matching text with <mark> tags', async () => {
@@ -222,8 +231,8 @@ This has <b>bold</b> and <i>italic</i> tags.`;
             await new Promise((r) => setTimeout(r, 300));
 
             const text = document.querySelectorAll('.cwm-transcript-text')[1];
-            expect(text.innerHTML).toContain('<mark>');
-            expect(text.innerHTML).toContain('Romans');
+            includes(text.innerHTML, '<mark>');
+            includes(text.innerHTML, 'Romans');
         });
 
         test('clears filter when search is emptied', async () => {
@@ -244,14 +253,14 @@ This has <b>bold</b> and <i>italic</i> tags.`;
 
             const cues = document.querySelectorAll('.cwm-transcript-cue');
             cues.forEach((cue) => {
-                expect(cue.style.display).toBe('');
+                assert.strictEqual(cue.style.display, '');
             });
         });
     });
 
     describe('no player found', () => {
         test('does not render when no sibling player exists', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({ ok: true, text: () => Promise.resolve(sampleVtt) }),
             );
 
@@ -260,7 +269,7 @@ This has <b>bold</b> and <i>italic</i> tags.`;
             require('../../build/media_source/js/cwm-transcript.es6.js');
             await flush();
 
-            expect(document.querySelector('.cwm-transcript-panel')).toBeNull();
+            assert.strictEqual(document.querySelector('.cwm-transcript-panel'), null);
         });
     });
 
@@ -269,9 +278,9 @@ This has <b>bold</b> and <i>italic</i> tags.`;
             setupWithVtt(sampleVtt);
             await flush();
 
-            expect(document.querySelector('.cwm-transcript-cues').getAttribute('role')).toBe('list');
+            assert.strictEqual(document.querySelector('.cwm-transcript-cues').getAttribute('role'), 'list');
             document.querySelectorAll('.cwm-transcript-cue').forEach((cue) => {
-                expect(cue.getAttribute('role')).toBe('listitem');
+                assert.strictEqual(cue.getAttribute('role'), 'listitem');
             });
         });
 
@@ -280,7 +289,7 @@ This has <b>bold</b> and <i>italic</i> tags.`;
             await flush();
 
             const input = document.querySelector('.cwm-transcript-search input');
-            expect(input.getAttribute('aria-label')).toBeTruthy();
+            assert.ok(input.getAttribute('aria-label'));
         });
     });
 });

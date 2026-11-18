@@ -1,7 +1,16 @@
+'use strict';
+
 /**
  * Tests for cwmadmin-*-modal.es6.js files
  * Modal selection functionality for admin views
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach, afterEach } = require('node:test');
+const { fn, spyOn, resetModules } = require('./helpers/mocks');
+const { calledWith } = require('./helpers/assert');
 
 // List of modal files to test
 // `args` is each script's own call signature. Servers deliberately differs:
@@ -32,14 +41,14 @@ describe('Admin Modal Files', () => {
                     // modal's link is also bound by every earlier modal's script.
                     boundListeners = [];
                     const realAdd = document.addEventListener.bind(document);
-                    jest.spyOn(document, 'addEventListener').mockImplementation((type, fn, opts) => {
-                        boundListeners.push([type, fn, opts]);
-                        realAdd(type, fn, opts);
+                    spyOn(document, 'addEventListener', (type, listener, opts) => {
+                        boundListeners.push([type, listener, opts]);
+                        realAdd(type, listener, opts);
                     });
 
                     // Mock Joomla
                     global.Joomla = {
-                        getOptions: jest.fn((key) => {
+                        getOptions: fn((key) => {
                             if (key === `xtd-${name}`) {
                                 return { editor: 'test-editor' };
                             }
@@ -48,18 +57,18 @@ describe('Admin Modal Files', () => {
                     };
 
                     // Mock parent window
-                    closeSpy = jest.fn();
+                    closeSpy = fn();
                     global.window.parent = {
                         Joomla: {
                             Modal: {
-                                getCurrent: jest.fn(() => ({
+                                getCurrent: fn(() => ({
                                     close: closeSpy
                                 }))
                             },
                             editors: {
                                 instances: {
                                     'test-editor': {
-                                        replaceSelection: jest.fn()
+                                        replaceSelection: fn()
                                     }
                                 }
                             }
@@ -67,11 +76,11 @@ describe('Admin Modal Files', () => {
                     };
 
                     // The servers modal drives the opener's form after selecting.
-                    submitSpy = jest.fn();
+                    submitSpy = fn();
                     taskInputs = [{ value: '' }];
                     global.window.parent.document = {
-                        getElementById: jest.fn(() => ({ submit: submitSpy })),
-                        getElementsByName: jest.fn(() => taskInputs)
+                        getElementById: fn(() => ({ submit: submitSpy })),
+                        getElementsByName: fn(() => taskInputs)
                     };
 
                     // Set up DOM
@@ -87,20 +96,20 @@ describe('Admin Modal Files', () => {
                         </a>
                     `;
 
-                    jest.resetModules();
+                    resetModules();
                 });
 
                 afterEach(() => {
-                    boundListeners.forEach(([type, fn, opts]) => document.removeEventListener(type, fn, opts));
-                    document.addEventListener.mockRestore();
+                    boundListeners.forEach(([type, listener, opts]) => document.removeEventListener(type, listener, opts));
+                    document.addEventListener.mock.restore();
                     delete global.Joomla;
                     delete window[selectFn];
-                    jest.resetModules();
+                    resetModules();
                 });
 
                 test(`should define ${selectFn} function`, () => {
                     require(`../../${file}`);
-                    expect(typeof window[selectFn]).toBe('function');
+                    assert.strictEqual(typeof window[selectFn], 'function');
                 });
 
                 test('clicking a select-link calls the select function with its data attributes', () => {
@@ -109,37 +118,37 @@ describe('Admin Modal Files', () => {
 
                     // Replace the real function after binding: the handler resolves
                     // window[functionName] at click time, so the spy is what it finds.
-                    const selectSpy = jest.fn();
+                    const selectSpy = fn();
                     window[selectFn] = selectSpy;
 
                     document.querySelector('.select-link').dispatchEvent(
                         new MouseEvent('click', { bubbles: true, cancelable: true })
                     );
 
-                    expect(selectSpy).toHaveBeenCalledWith(...args);
+                    calledWith(selectSpy, ...args);
                 });
 
                 test('clicking a select-link closes the modal', () => {
                     require(`../../${file}`);
                     document.dispatchEvent(new Event('DOMContentLoaded'));
-                    window[selectFn] = jest.fn();
+                    window[selectFn] = fn();
 
                     document.querySelector('.select-link').dispatchEvent(
                         new MouseEvent('click', { bubbles: true, cancelable: true })
                     );
 
-                    expect(closeSpy).toHaveBeenCalled();
+                    assert.ok(closeSpy.mock.callCount() > 0);
                 });
 
                 test('clicking a select-link suppresses the placeholder href', () => {
                     require(`../../${file}`);
                     document.dispatchEvent(new Event('DOMContentLoaded'));
-                    window[selectFn] = jest.fn();
+                    window[selectFn] = fn();
 
                     const event = new MouseEvent('click', { bubbles: true, cancelable: true });
                     document.querySelector('.select-link').dispatchEvent(event);
 
-                    expect(event.defaultPrevented).toBe(true);
+                    assert.strictEqual(event.defaultPrevented, true);
                 });
 
                 // Only the servers modal reloads the opener, so that the media file
@@ -149,22 +158,22 @@ describe('Admin Modal Files', () => {
                 maybe('selecting a server sets the opener task and submits it', () => {
                     require(`../../${file}`);
                     document.dispatchEvent(new Event('DOMContentLoaded'));
-                    window[selectFn] = jest.fn();
+                    window[selectFn] = fn();
 
                     document.querySelector('.select-link').dispatchEvent(
                         new MouseEvent('click', { bubbles: true, cancelable: true })
                     );
 
-                    expect(taskInputs[0].value).toBe(parentTask);
-                    expect(submitSpy).toHaveBeenCalled();
+                    assert.strictEqual(taskInputs[0].value, parentTask);
+                    assert.ok(submitSpy.mock.callCount() > 0);
                 });
 
                 test(`${selectFn} should return false when options not found`, () => {
-                    global.Joomla.getOptions = jest.fn(() => null);
+                    global.Joomla.getOptions = fn(() => null);
                     require(`../../${file}`);
 
                     const result = window[selectFn](1, 'Title', 2, null, '/link', 'en');
-                    expect(result).toBe(false);
+                    assert.strictEqual(result, false);
                 });
             });
         });
