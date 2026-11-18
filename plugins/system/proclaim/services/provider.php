@@ -29,11 +29,11 @@ return new class () implements ServiceProviderInterface {
      */
     public function register(Container $container): void
     {
-        // CWM Proclaim needs PHP 8.4. Below it, register nothing, so none of its code
+        // CWM Proclaim needs PHP 8.3. Below it, register nothing, so none of its code
         // loads and the site keeps working. This plugin boots on every request,
-        // which makes it the one that tells administrators why. Keep 8.4-only
+        // which makes it the one that tells administrators why. Keep 8.3-only
         // syntax out of this file, or the guard itself cannot run.
-        if (PHP_VERSION_ID < 80400) {
+        if (PHP_VERSION_ID < 80300) {
             $this->postPhpBanner();
 
             return;
@@ -85,7 +85,7 @@ return new class () implements ServiceProviderInterface {
             $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim');
         }
 
-        $message = \Joomla\CMS\Language\Text::sprintf('COM_PROCLAIM_ERROR_PHP_VERSION', '8.4.0', PHP_VERSION);
+        $message = \Joomla\CMS\Language\Text::sprintf('COM_PROCLAIM_ERROR_PHP_VERSION', '8.3.0', PHP_VERSION);
 
         foreach ($app->getMessageQueue() as $queued) {
             if (($queued['message'] ?? null) === $message) {

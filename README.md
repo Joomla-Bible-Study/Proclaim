@@ -6,7 +6,7 @@ A Joomla 5+ component for managing and displaying Bible studies and sermons, dev
 
 | CI                                                                                                                                                                  | CodeQL                                                                                                                                                                                 | PHP                                                                            | Node                                                                                  | npm                                                                               |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| [![CI](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/ci.yml/badge.svg?branch=development)](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/ci.yml) | [![CodeQL](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/codeql.yml/badge.svg?branch=development)](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/codeql.yml) | [![PHP](https://img.shields.io/badge/PHP-V8.4.0-green)](https://www.php.net/) | [![Node](https://img.shields.io/badge/Node-V20.0-green)](https://nodejs.org/en/) | [![npm](https://img.shields.io/badge/npm-V10.1.0-green)](https://nodejs.org/en/) |
+| [![CI](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/ci.yml/badge.svg?branch=development)](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/ci.yml) | [![CodeQL](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/codeql.yml/badge.svg?branch=development)](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/codeql.yml) | [![PHP](https://img.shields.io/badge/PHP-V8.3.0-green)](https://www.php.net/) | [![Node](https://img.shields.io/badge/Node-V20.0-green)](https://nodejs.org/en/) | [![npm](https://img.shields.io/badge/npm-V10.1.0-green)](https://nodejs.org/en/) |
 
 | Latest Release                                                                                                                                                    | License                                                                                                                          | Joomla                                                                                    |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
@@ -50,7 +50,7 @@ Full documentation is maintained in the [Proclaim Wiki](https://github.com/Jooml
 
 ### Prerequisites
 
-- PHP 8.4.0+
+- PHP 8.3.0+
 - Composer
 - Node.js 20.0.0+ and npm 10.1.0+
 - Joomla 5.4.0+ installation
