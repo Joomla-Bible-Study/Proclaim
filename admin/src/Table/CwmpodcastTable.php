@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Factory;
@@ -485,9 +486,10 @@ class CwmpodcastTable extends Table
             );
         }
 
-        // Validate podcast artwork image on save
+        // Validate podcast artwork image on save. The media field stores a URL
+        // with a #joomlaImage:// fragment, not a file name.
         if (!empty($this->podcastimage)) {
-            $fullPath = JPATH_ROOT . '/' . ltrim($this->podcastimage, '/');
+            $fullPath = JPATH_ROOT . '/' . ltrim(Cwmthumbnail::mediaFieldPath($this->podcastimage), '/');
 
             if (is_file($fullPath)) {
                 $imageInfo = @getimagesize($fullPath);
