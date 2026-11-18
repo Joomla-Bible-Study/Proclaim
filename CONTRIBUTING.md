@@ -87,7 +87,7 @@ composer check:all
 ### Test Requirements
 
 - **PHP**: PHPUnit tests in `tests/unit/`
-- **JavaScript**: Jest tests in `tests/js/`
+- **JavaScript**: `node:test` tests in `tests/js/`, run by Node's built-in test runner against jsdom
 - All tests must pass before PR approval
 - Add tests for new features and bug fixes
 

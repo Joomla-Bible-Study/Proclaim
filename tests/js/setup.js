@@ -1,26 +1,34 @@
+'use strict';
+
 /**
- * Jest setup file for Proclaim
- * Configures the test environment with Joomla mocks and browser globals
+ * Setup for the JS unit tests: a browser window (helpers/dom.js), the Joomla
+ * and fetch mocks, and the reset between tests. Every test file requires this
+ * first; Jest's config used to run it before each file (setupFilesAfterEnv).
  */
+
+require('./helpers/dom');
+
+const { beforeEach, afterEach } = require('node:test');
+const { fn, resolving, clearAllMocks, restoreAllMocks } = require('./helpers/mocks');
 
 // Mock Joomla global object
 global.Joomla = {
-    getOptions: jest.fn((key, defaultValue) => {
+    getOptions: fn((key, defaultValue) => {
         const options = {
             'csrf.token': 'test_csrf_token'
         };
         return options[key] !== undefined ? options[key] : defaultValue;
     }),
-    initCustomSelect: jest.fn(),
+    initCustomSelect: fn(),
     JText: {
-        _: jest.fn((key) => key)
+        _: fn((key) => key)
     },
-    renderMessages: jest.fn(),
-    removeMessages: jest.fn()
+    renderMessages: fn(),
+    removeMessages: fn()
 };
 
 // Mock fetch API
-global.fetch = jest.fn(() =>
+global.fetch = fn(() =>
     Promise.resolve({
         ok: true,
         json: () => Promise.resolve({ success: true, data: {} }),
@@ -39,22 +47,22 @@ window.ProclaimFetch = {
 };
 
 // Mock window.alert and window.confirm
-global.alert = jest.fn();
-global.confirm = jest.fn(() => true);
+global.alert = fn();
+global.confirm = fn(() => true);
 
 // Mock the JoomlaDialog bridge (cwm-dialog.es6.mjs) — Promise-based, like the
 // real JoomlaDialog.confirm()/alert(). The bridge module is not loaded in unit
 // tests, so provide the globals the migrated handlers call. cwmConfirm defaults
 // to resolving true (the "OK/Yes" path); override per-test for the cancel path.
-window.cwmConfirm = jest.fn(() => Promise.resolve(true));
-window.cwmAlert = jest.fn(() => Promise.resolve());
+window.cwmConfirm = fn(() => Promise.resolve(true));
+window.cwmAlert = fn(() => Promise.resolve());
 
 // Mock console methods to reduce noise (but keep errors visible)
 const originalError = console.error;
 global.console = {
     ...console,
-    log: jest.fn(),
-    warn: jest.fn(),
+    log: fn(),
+    warn: fn(),
     error: originalError
 };
 
@@ -74,17 +82,18 @@ global.triggerBsEvent = (element, eventName) => {
 };
 
 // Mock HTMLMediaElement methods not implemented in jsdom
-window.HTMLMediaElement.prototype.pause = jest.fn();
-window.HTMLMediaElement.prototype.play = jest.fn().mockResolvedValue(undefined);
-window.HTMLMediaElement.prototype.load = jest.fn();
+window.HTMLMediaElement.prototype.pause = fn();
+window.HTMLMediaElement.prototype.play = fn(resolving(undefined));
+window.HTMLMediaElement.prototype.load = fn();
 
-// Reset DOM before each test
+// Reset DOM before each test, and clear every mock's calls, as Jest's
+// `clearMocks: true` config did
 beforeEach(() => {
     document.body.innerHTML = '';
-    jest.clearAllMocks();
+    clearAllMocks();
 });
 
-// Clean up after each test
+// Clean up after each test: put back every method a test spied on
 afterEach(() => {
-    jest.restoreAllMocks();
+    restoreAllMocks();
 });

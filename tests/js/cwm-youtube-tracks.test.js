@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Tests for cwm-youtube-tracks.es6.js
  * YouTube tracks import — chapters and captions
@@ -6,12 +8,19 @@
  * @since    10.2.0
  */
 
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach } = require('node:test');
+const { fn, resetModules } = require('./helpers/mocks');
+const { includes } = require('./helpers/assert');
+
 describe('cwm-youtube-tracks', () => {
     beforeEach(() => {
-        jest.resetModules();
+        resetModules();
 
         global.Joomla = {
-            getOptions: jest.fn((key) => {
+            getOptions: fn((key) => {
                 if (key === 'com_proclaim.youtubeTracks') {
                     return {
                         mediaId: 42,
@@ -38,9 +47,9 @@ describe('cwm-youtube-tracks', () => {
                 }
                 return undefined;
             }),
-            Text: { _: jest.fn((key) => key) },
-            renderMessages: jest.fn(),
-            sanitizeHtml: jest.fn((s) => String(s)),
+            Text: { _: fn((key) => key) },
+            renderMessages: fn(),
+            sanitizeHtml: fn((s) => String(s)),
         };
 
         document.body.innerHTML = `
@@ -60,30 +69,30 @@ describe('cwm-youtube-tracks', () => {
         test('renders import chapters and list captions buttons', () => {
             loadModule();
 
-            expect(document.getElementById('cwm-import-chapters-btn')).not.toBeNull();
-            expect(document.getElementById('cwm-list-captions-btn')).not.toBeNull();
+            assert.notStrictEqual(document.getElementById('cwm-import-chapters-btn'), null);
+            assert.notStrictEqual(document.getElementById('cwm-list-captions-btn'), null);
         });
 
         test('toolbar shows YouTube icon for YouTube addon', () => {
             loadModule();
 
             const toolbar = document.querySelector('.card');
-            expect(toolbar.innerHTML).toContain('icon-youtube');
+            includes(toolbar.innerHTML, 'icon-youtube');
         });
 
         test('does not render toolbar when no mediaId', () => {
-            global.Joomla.getOptions = jest.fn(() => ({
+            global.Joomla.getOptions = fn(() => ({
                 mediaId: 0,
                 supportsChapters: true,
             }));
 
             loadModule();
 
-            expect(document.getElementById('cwm-import-chapters-btn')).toBeNull();
+            assert.strictEqual(document.getElementById('cwm-import-chapters-btn'), null);
         });
 
         test('does not render toolbar when no capabilities', () => {
-            global.Joomla.getOptions = jest.fn(() => ({
+            global.Joomla.getOptions = fn(() => ({
                 mediaId: 42,
                 baseUrl: '/',
                 token: 'x',
@@ -93,11 +102,11 @@ describe('cwm-youtube-tracks', () => {
 
             loadModule();
 
-            expect(document.getElementById('cwm-import-chapters-btn')).toBeNull();
+            assert.strictEqual(document.getElementById('cwm-import-chapters-btn'), null);
         });
 
         test('only renders chapters button when captions not supported', () => {
-            global.Joomla.getOptions = jest.fn(() => ({
+            global.Joomla.getOptions = fn(() => ({
                 mediaId: 42,
                 baseUrl: '/',
                 token: 'x',
@@ -109,12 +118,12 @@ describe('cwm-youtube-tracks', () => {
 
             loadModule();
 
-            expect(document.getElementById('cwm-import-chapters-btn')).not.toBeNull();
-            expect(document.getElementById('cwm-list-captions-btn')).toBeNull();
+            assert.notStrictEqual(document.getElementById('cwm-import-chapters-btn'), null);
+            assert.strictEqual(document.getElementById('cwm-list-captions-btn'), null);
         });
 
         test('disables captions button when OAuth not connected', () => {
-            global.Joomla.getOptions = jest.fn((key) => {
+            global.Joomla.getOptions = fn((key) => {
                 if (key === 'com_proclaim.youtubeTracks') {
                     return {
                         mediaId: 42,
@@ -134,15 +143,15 @@ describe('cwm-youtube-tracks', () => {
             loadModule();
 
             const btn = document.getElementById('cwm-list-captions-btn');
-            expect(btn).not.toBeNull();
-            expect(btn.classList.contains('disabled')).toBe(true);
-            expect(btn.getAttribute('aria-disabled')).toBe('true');
+            assert.notStrictEqual(btn, null);
+            assert.strictEqual(btn.classList.contains('disabled'), true);
+            assert.strictEqual(btn.getAttribute('aria-disabled'), 'true');
         });
     });
 
     describe('import chapters', () => {
         test('fetches and displays chapters on success', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -163,12 +172,12 @@ describe('cwm-youtube-tracks', () => {
             await new Promise((r) => setTimeout(r, 50));
 
             const result = document.getElementById('cwm-youtube-tracks-result');
-            expect(result.innerHTML).toContain('alert-success');
-            expect(result.innerHTML).toContain('3');
+            includes(result.innerHTML, 'alert-success');
+            includes(result.innerHTML, '3');
         });
 
         test('shows error when no chapters found', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -185,11 +194,11 @@ describe('cwm-youtube-tracks', () => {
             await new Promise((r) => setTimeout(r, 50));
 
             const result = document.getElementById('cwm-youtube-tracks-result');
-            expect(result.innerHTML).toContain('alert-danger');
+            includes(result.innerHTML, 'alert-danger');
         });
 
         test('shows error on network failure', async () => {
-            global.fetch = jest.fn(() => Promise.reject(new Error('Network error')));
+            global.fetch = fn(() => Promise.reject(new Error('Network error')));
 
             loadModule();
 
@@ -197,12 +206,12 @@ describe('cwm-youtube-tracks', () => {
             await new Promise((r) => setTimeout(r, 50));
 
             const result = document.getElementById('cwm-youtube-tracks-result');
-            expect(result.innerHTML).toContain('alert-danger');
-            expect(result.innerHTML).toContain('Error importing chapters');
+            includes(result.innerHTML, 'alert-danger');
+            includes(result.innerHTML, 'Error importing chapters');
         });
 
         test('builds correct AJAX URL for import chapters', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () => Promise.resolve({ success: true, chapters: [] }),
@@ -214,18 +223,18 @@ describe('cwm-youtube-tracks', () => {
             document.getElementById('cwm-import-chapters-btn').click();
             await new Promise((r) => setTimeout(r, 50));
 
-            const url = global.fetch.mock.calls[0][0];
-            expect(url).toContain('task=cwmserver.addonAjax');
-            expect(url).toContain('addon=youtube');
-            expect(url).toContain('action=importChapters');
-            expect(url).toContain('media_id=42');
-            expect(url).toContain('csrf123=1');
+            const url = global.fetch.mock.calls[0].arguments[0];
+            includes(url, 'task=cwmserver.addonAjax');
+            includes(url, 'addon=youtube');
+            includes(url, 'action=importChapters');
+            includes(url, 'media_id=42');
+            includes(url, 'csrf123=1');
         });
     });
 
     describe('list captions', () => {
         test('fetches and renders caption track list', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -245,13 +254,13 @@ describe('cwm-youtube-tracks', () => {
             await new Promise((r) => setTimeout(r, 50));
 
             const result = document.getElementById('cwm-youtube-tracks-result');
-            expect(result.querySelectorAll('.cwm-download-caption').length).toBe(2);
-            expect(result.innerHTML).toContain('English');
-            expect(result.innerHTML).toContain('(Auto-generated)');
+            assert.strictEqual(result.querySelectorAll('.cwm-download-caption').length, 2);
+            includes(result.innerHTML, 'English');
+            includes(result.innerHTML, '(Auto-generated)');
         });
 
         test('shows message when no captions found', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -268,14 +277,14 @@ describe('cwm-youtube-tracks', () => {
             await new Promise((r) => setTimeout(r, 50));
 
             const result = document.getElementById('cwm-youtube-tracks-result');
-            expect(result.innerHTML).toContain('No caption tracks found');
+            includes(result.innerHTML, 'No caption tracks found');
         });
     });
 
     describe('download caption', () => {
         test('downloads caption and updates button state', async () => {
             // Mock the list captions response
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -307,14 +316,14 @@ describe('cwm-youtube-tracks', () => {
 
             if (!downloadBtn) {
                 // If dynamic rendering didn't work, verify at least the fetch was correct
-                expect(global.fetch).toHaveBeenCalled();
-                const listUrl = global.fetch.mock.calls[0][0];
-                expect(listUrl).toContain('action=listCaptions');
+                assert.ok(global.fetch.mock.callCount() > 0);
+                const listUrl = global.fetch.mock.calls[0].arguments[0];
+                includes(listUrl, 'action=listCaptions');
                 return;
             }
 
             // Now mock the download response
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -335,13 +344,13 @@ describe('cwm-youtube-tracks', () => {
             await new Promise((r) => setTimeout(r, 50));
 
             // Button should change to "Added"
-            expect(downloadBtn.innerHTML).toContain('Added');
-            expect(downloadBtn.classList.contains('btn-secondary')).toBe(true);
+            includes(downloadBtn.innerHTML, 'Added');
+            assert.strictEqual(downloadBtn.classList.contains('btn-secondary'), true);
 
             // Verify download URL
-            const downloadUrl = global.fetch.mock.calls[0][0];
-            expect(downloadUrl).toContain('action=downloadCaption');
-            expect(downloadUrl).toContain('caption_id=tr1');
+            const downloadUrl = global.fetch.mock.calls[0].arguments[0];
+            includes(downloadUrl, 'action=downloadCaption');
+            includes(downloadUrl, 'caption_id=tr1');
         });
     });
 });

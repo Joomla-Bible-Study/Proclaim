@@ -1,6 +1,4 @@
-/**
- * @jest-environment jsdom
- */
+'use strict';
 
 /**
  * The Assets screen renders its status table from the `checklists` session
@@ -16,6 +14,12 @@
  * @package  Proclaim.Tests
  * @since    __DEPLOY_VERSION__
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, it, beforeEach, afterEach } = require('node:test');
+const { fn, resetModules, isolateModules } = require('./helpers/mocks');
 
 /**
  * The markup the PHP template emits when it has no cached rows: a spinner,
@@ -53,7 +57,7 @@ function loadModule() {
         renderMessages: () => {},
     };
 
-    jest.isolateModules(() => {
+    isolateModules(() => {
         require('../../build/media_source/js/asset-fix.es6.js');
     });
 
@@ -62,9 +66,9 @@ function loadModule() {
 
 describe('Assets screen initial load', () => {
     beforeEach(() => {
-        jest.resetModules();
+        resetModules();
 
-        global.fetch = jest.fn(() => Promise.resolve({
+        global.fetch = fn(() => Promise.resolve({
             ok: true,
             json: () => Promise.resolve({
                 success: true,
@@ -87,13 +91,13 @@ describe('Assets screen initial load', () => {
 
         // Nothing pressed Refresh. If no request went out, the spinner the
         // template rendered would still be spinning — which is the bug.
-        expect(global.fetch).toHaveBeenCalled();
+        assert.ok(global.fetch.mock.callCount() > 0);
     });
 
     it('replaces the spinner rather than leaving it on screen', async () => {
         renderEmptyAssetsScreen();
 
-        expect(document.querySelector('#asset-status-body .spinner-border')).not.toBeNull();
+        assert.notStrictEqual(document.querySelector('#asset-status-body .spinner-border'), null);
 
         loadModule();
 
@@ -104,7 +108,7 @@ describe('Assets screen initial load', () => {
 
         // The spinner must be replaced by a result. An empty result is still
         // a result; a spinner left on screen is not.
-        expect(document.querySelector('#asset-status-body .spinner-border')).toBeNull();
+        assert.strictEqual(document.querySelector('#asset-status-body .spinner-border'), null);
     });
 
     /**
@@ -118,6 +122,6 @@ describe('Assets screen initial load', () => {
 
         await Promise.resolve();
 
-        expect(global.fetch).not.toHaveBeenCalled();
+        assert.strictEqual(global.fetch.mock.callCount(), 0);
     });
 });

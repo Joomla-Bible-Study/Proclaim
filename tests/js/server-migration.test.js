@@ -1,11 +1,18 @@
+'use strict';
+
 /**
- * Jest tests for server-migration.es6.js
+ * Tests for server-migration.es6.js
  *
  * Tests the migration plan building logic and progress calculations.
  *
  * @package  Proclaim.Tests
  * @since    10.1.0
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test } = require('node:test');
 
 describe('Server Migration Tool', () => {
     // =========================================================================
@@ -69,7 +76,7 @@ describe('Server Migration Tool', () => {
             };
 
             const plan = buildPlan(selections);
-            expect(plan).toHaveLength(0);
+            assert.strictEqual(plan.length, 0);
         });
 
         test('create_new groups are included', () => {
@@ -80,10 +87,10 @@ describe('Server Migration Tool', () => {
             };
 
             const plan = buildPlan(selections);
-            expect(plan).toHaveLength(1);
-            expect(plan[0].detectedType).toBe('youtube');
-            expect(plan[0].targetValue).toBe('create_new');
-            expect(plan[0].count).toBe(5);
+            assert.strictEqual(plan.length, 1);
+            assert.strictEqual(plan[0].detectedType, 'youtube');
+            assert.strictEqual(plan[0].targetValue, 'create_new');
+            assert.strictEqual(plan[0].count, 5);
         });
 
         test('existing server groups are included', () => {
@@ -94,9 +101,9 @@ describe('Server Migration Tool', () => {
             };
 
             const plan = buildPlan(selections);
-            expect(plan).toHaveLength(2);
-            expect(plan[0].targetValue).toBe('existing_10');
-            expect(plan[1].targetValue).toBe('existing_20');
+            assert.strictEqual(plan.length, 2);
+            assert.strictEqual(plan[0].targetValue, 'existing_10');
+            assert.strictEqual(plan[1].targetValue, 'existing_20');
         });
 
         test('unknown type maps to embed target type', () => {
@@ -106,9 +113,9 @@ describe('Server Migration Tool', () => {
             };
 
             const plan = buildPlan(selections);
-            expect(plan).toHaveLength(1);
-            expect(plan[0].detectedType).toBe('unknown');
-            expect(plan[0].targetType).toBe('embed');
+            assert.strictEqual(plan.length, 1);
+            assert.strictEqual(plan[0].detectedType, 'unknown');
+            assert.strictEqual(plan[0].targetType, 'embed');
         });
 
         test('plan preserves legacy server params', () => {
@@ -117,7 +124,7 @@ describe('Server Migration Tool', () => {
             };
 
             const plan = buildPlan(selections);
-            expect(plan[0].legacyServerParams).toEqual({
+            assert.deepStrictEqual(plan[0].legacyServerParams, {
                 path: '//example.com/media',
                 protocol: '',
             });
@@ -133,10 +140,10 @@ describe('Server Migration Tool', () => {
             };
 
             const plan = buildPlan(selections);
-            expect(plan).toHaveLength(3);
+            assert.strictEqual(plan.length, 3);
 
             const totalFiles = plan.reduce((sum, g) => sum + g.count, 0);
-            expect(totalFiles).toBe(5 + 3 + 4); // youtube + vimeo + soundcloud
+            assert.strictEqual(totalFiles, 5 + 3 + 4); // youtube + vimeo + soundcloud
         });
     });
 
@@ -150,40 +157,40 @@ describe('Server Migration Tool', () => {
         }
 
         test('0 of 100 is 0%', () => {
-            expect(calculateProgress(0, 100)).toBe(0);
+            assert.strictEqual(calculateProgress(0, 100), 0);
         });
 
         test('50 of 100 is 50%', () => {
-            expect(calculateProgress(50, 100)).toBe(50);
+            assert.strictEqual(calculateProgress(50, 100), 50);
         });
 
         test('100 of 100 is 100%', () => {
-            expect(calculateProgress(100, 100)).toBe(100);
+            assert.strictEqual(calculateProgress(100, 100), 100);
         });
 
         test('1 of 3 rounds to 33%', () => {
-            expect(calculateProgress(1, 3)).toBe(33);
+            assert.strictEqual(calculateProgress(1, 3), 33);
         });
 
         test('2 of 3 rounds to 67%', () => {
-            expect(calculateProgress(2, 3)).toBe(67);
+            assert.strictEqual(calculateProgress(2, 3), 67);
         });
 
         test('0 total files returns 100%', () => {
-            expect(calculateProgress(0, 0)).toBe(100);
+            assert.strictEqual(calculateProgress(0, 0), 100);
         });
 
         test('partial batch progress', () => {
             // After migrating 25 of 75 total files
-            expect(calculateProgress(25, 75)).toBe(33);
+            assert.strictEqual(calculateProgress(25, 75), 33);
         });
 
         test('multi-group cumulative progress', () => {
             // Group 1: 5 youtube files, Group 2: 3 vimeo files = 8 total
             // After group 1 complete (5/8)
-            expect(calculateProgress(5, 8)).toBe(63);
+            assert.strictEqual(calculateProgress(5, 8), 63);
             // After group 2 complete (8/8)
-            expect(calculateProgress(8, 8)).toBe(100);
+            assert.strictEqual(calculateProgress(8, 8), 100);
         });
     });
 
@@ -216,14 +223,14 @@ describe('Server Migration Tool', () => {
             ];
 
             for (const type of expectedTypes) {
-                expect(TYPE_BADGES[type]).toBeDefined();
-                expect(typeof TYPE_BADGES[type]).toBe('string');
+                assert.notStrictEqual(TYPE_BADGES[type], undefined);
+                assert.strictEqual(typeof TYPE_BADGES[type], 'string');
             }
         });
 
         test('unknown types fall back gracefully', () => {
             const badge = TYPE_BADGES['nonexistent'] || 'secondary';
-            expect(badge).toBe('secondary');
+            assert.strictEqual(badge, 'secondary');
         });
     });
 });

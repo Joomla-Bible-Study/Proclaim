@@ -1,15 +1,24 @@
+'use strict';
+
 /**
  * Tests for template-lazyload.es6.js
  * Template form lazy-loading functionality
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach, afterEach } = require('node:test');
+const { fn, resetModules } = require('./helpers/mocks');
+const { includes } = require('./helpers/assert');
 
 describe('template-lazyload.es6.js', () => {
     describe('Lazy Loading Functionality', () => {
         beforeEach(() => {
             // Mock Joomla
             global.Joomla = {
-                getOptions: jest.fn(() => 'csrf_token'),
-                initCustomSelect: jest.fn()
+                getOptions: fn(() => 'csrf_token'),
+                initCustomSelect: fn()
             };
 
             // Set up DOM with accordion and tab structures
@@ -37,7 +46,7 @@ describe('template-lazyload.es6.js', () => {
             `;
 
             // Mock fetch
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     json: () => Promise.resolve({
                         success: true,
@@ -46,19 +55,19 @@ describe('template-lazyload.es6.js', () => {
                 })
             );
 
-            jest.resetModules();
+            resetModules();
         });
 
         afterEach(() => {
-            jest.resetModules();
+            resetModules();
             delete global.Joomla;
         });
 
         test('should initialize without errors', () => {
-            expect(() => {
+            assert.doesNotThrow(() => {
                 require('../../build/media_source/js/template-lazyload.es6.js');
                 document.dispatchEvent(new Event('DOMContentLoaded'));
-            }).not.toThrow();
+            });
         });
 
         test('should load fieldset that is already shown', async () => {
@@ -69,10 +78,10 @@ describe('template-lazyload.es6.js', () => {
             await new Promise(resolve => setTimeout(resolve, 0));
 
             // The "show" accordion should trigger a fetch
-            expect(global.fetch).toHaveBeenCalled();
-            const [fetchUrl] = global.fetch.mock.calls[0];
-            expect(fetchUrl).toContain('fieldset=study_details');
-            expect(fetchUrl).toContain('id=42');
+            assert.ok(global.fetch.mock.callCount() > 0);
+            const [fetchUrl] = global.fetch.mock.calls[0].arguments;
+            includes(fetchUrl, 'fieldset=study_details');
+            includes(fetchUrl, 'id=42');
         });
 
         test('should load fieldset on accordion show event', async () => {
@@ -80,7 +89,7 @@ describe('template-lazyload.es6.js', () => {
             document.dispatchEvent(new Event('DOMContentLoaded'));
 
             // Clear previous calls
-            global.fetch.mockClear();
+            global.fetch.mock.resetCalls();
 
             // Trigger show.bs.collapse on the first accordion
             const accordion = document.querySelector('[data-lazy-fieldset="messages_list"]');
@@ -89,9 +98,9 @@ describe('template-lazyload.es6.js', () => {
 
             await new Promise(resolve => setTimeout(resolve, 0));
 
-            expect(global.fetch).toHaveBeenCalled();
-            const [fetchUrl] = global.fetch.mock.calls[0];
-            expect(fetchUrl).toContain('fieldset=messages_list');
+            assert.ok(global.fetch.mock.callCount() > 0);
+            const [fetchUrl] = global.fetch.mock.calls[0].arguments;
+            includes(fetchUrl, 'fieldset=messages_list');
         });
 
         test('should not reload already loaded fieldsets', async () => {
@@ -110,7 +119,7 @@ describe('template-lazyload.es6.js', () => {
             await new Promise(resolve => setTimeout(resolve, 0));
 
             // Should not have made additional calls
-            expect(global.fetch.mock.calls.length).toBe(callCount);
+            assert.strictEqual(global.fetch.mock.calls.length, callCount);
         });
 
         test('should handle server errors gracefully', async () => {
@@ -125,7 +134,7 @@ describe('template-lazyload.es6.js', () => {
             `;
 
             // Mock fetch to return an error response (not a rejection)
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     json: () => Promise.resolve({
                         success: false,
@@ -146,7 +155,7 @@ describe('template-lazyload.es6.js', () => {
             await new Promise(resolve => setTimeout(resolve, 10));
 
             const container = document.querySelector('[data-lazy-fieldset="error_test"] .accordion-body');
-            expect(container.innerHTML).toContain('Server error occurred');
+            includes(container.innerHTML, 'Server error occurred');
         });
     });
 });

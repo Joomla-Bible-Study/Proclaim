@@ -96,7 +96,7 @@ composer symlink
 | `composer clean` | Remove symbolic links (clean dev state) |
 | `npm run build` | Build all frontend assets (JS + CSS + images) |
 | `composer test` | Run PHPUnit tests |
-| `npm test` | Run Jest tests |
+| `npm test` | Run JavaScript unit tests (Node's built-in test runner) |
 | `composer check:all` | Run all checks + all tests (PHP + JS) |
 | `composer lint:fix` | Fix PHP code style issues |
 | `npm run lint:js` | Lint JavaScript with ESLint |
