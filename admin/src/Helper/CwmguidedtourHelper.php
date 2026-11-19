@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
@@ -552,6 +553,22 @@ class CwmguidedtourHelper
         $prefix = $this->db->getPrefix();
 
         return \in_array($prefix . 'guidedtours', $tables, true);
+    }
+
+    /**
+     * Check whether a guided tour can be started on this site.
+     *
+     * Joomla's System - Guided Tours plugin loads the tour script and serves
+     * each tour, so while it is disabled a Start Tour control does nothing.
+     * Registration does not depend on this; see supportsGuidedTours().
+     *
+     * @return  bool  True when the tours table exists and the plugin is enabled
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function canStartTours(): bool
+    {
+        return $this->supportsGuidedTours() && PluginHelper::isEnabled('system', 'guidedtours');
     }
 
     /**
