@@ -19,6 +19,29 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.7.8                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.7.8</version>
+        <date>2026-11-18</date>
+        <security>
+            <item>Bundles CWM Scripture 1.2.21, up from 1.2.18. It includes the fix from CWM Scripture 1.2.20 for translation tools that any site visitor could use without logging in, to delete downloaded translations or start downloads (GHSA-g2v4-h5q3-xcwh).</item>
+        </security>
+        <fix>
+            <item>The media files list, the message edit form and the message picker no longer print a PHP deprecation warning for a media file or message without a date.</item>
+            <item>No PHP deprecation notices from the CSV import template on PHP 8.4 and 8.5, or from streamed downloads on PHP 8.5.</item>
+            <item>The Validate Podcasts report finds artwork chosen with the media field. It said "Podcast image not found".</item>
+            <item>The setup wizard's sample message shows its teacher.</item>
+            <item>On a PHP version older than 8.3, Proclaim switches itself off instead of breaking the site, and the administrator explains why.</item>
+        </fix>
+        <note>
+            <item>PHP 8.3 is supported until Proclaim 11 is released. From then on, Proclaim and the other CWM extensions require PHP 8.4 or later.</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.7.7                                                   -->
     <!-- ============================================================ -->
     <changelog>

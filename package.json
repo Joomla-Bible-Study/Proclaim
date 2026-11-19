@@ -1,6 +1,6 @@
 {
   "name": "com_proclaim",
-  "version": "10.7.7",
+  "version": "10.7.8",
   "description": "CWM Proclaim - A Joomla! Extension for Church Media Management",
   "license": "GPL-2.0-or-later",
   "repository": {
@@ -13,43 +13,28 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
-    "@babel/core": "^8.1.2",
-    "@babel/preset-env": "^8.0.7",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.65.0",
-    "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.2",
-    "@types/jest": "^30.0.0",
     "csso": "^5.0.5",
     "eslint": "^10.14.0",
     "globals": "^17.14.0",
     "intl-tel-input": "^29.5.11",
-    "jest": "^30.5.2",
-    "jest-environment-jsdom": "^30.5.2",
+    "jsdom": "^26.1.0",
     "rollup": "^4.68.3",
     "rollup-plugin-gzip": "^4.2.1",
     "sortablejs": "^1.15.7",
     "terser": "^5.51.2"
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ],
-    "comments": false,
-    "ignore": []
-  },
-  "browserslist": [
-    "last 2 major versions"
-  ],
   "scripts": {
     "build": "npm run build:js && npm run build:css && npm run build:assets",
     "build:js": "SOURCE_DIR=build/media_source/js OUTPUT_DIR=media/js rollup -c libraries/vendor/cwm/build-tools/templates/rollup.config.js",
     "build:css": "SOURCE_DIR=build/media_source/css OUTPUT_DIR=media/css node libraries/vendor/cwm/build-tools/templates/build-css.js",
     "build:assets": "node libraries/vendor/cwm/build-tools/templates/build-assets.js",
     "watch": "SOURCE_DIR=build/media_source/js OUTPUT_DIR=media/js rollup -c libraries/vendor/cwm/build-tools/templates/rollup.config.js -w",
-    "test": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js",
-    "test:watch": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js --watch",
-    "test:coverage": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js --coverage",
+    "test": "node --test --test-timeout=10000 \"tests/js/**/*.test.js\" \"tests/js/**/*.spec.js\"",
+    "test:watch": "node --test --watch --test-timeout=10000 \"tests/js/**/*.test.js\" \"tests/js/**/*.spec.js\"",
+    "test:coverage": "mkdir -p build/reports/coverage-js && node --test --test-timeout=10000 --experimental-test-coverage --test-coverage-include=\"build/media_source/js/**\" --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=build/reports/coverage-js/lcov.info \"tests/js/**/*.test.js\" \"tests/js/**/*.spec.js\"",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
@@ -64,15 +49,10 @@
     "serialize-javascript": "^7.0.3",
     "brace-expansion": "^5.0.6",
     "ws": "^8.21.0",
-    "js-yaml": "^4.3.1",
-    "test-exclude": "^8.0.0",
-    "glob": "^14.0.6",
     "minimatch": "^11.0.8"
   },
   "allowScripts": {
     "core-js@3.50.0": true,
-    "unrs-resolver@1.12.2": true,
-    "fsevents@2.3.3": true,
-    "@parcel/watcher@2.6.0": true
+    "fsevents@2.3.3": true
   }
 }

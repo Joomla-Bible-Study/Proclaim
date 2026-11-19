@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Tests for cwm-vtt-upload.es6.js
  * VTT/SRT caption file upload handler
@@ -6,10 +8,17 @@
  * @since    10.2.0
  */
 
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach } = require('node:test');
+const { fn, spyOn, resetModules } = require('./helpers/mocks');
+const { calledWith, match } = require('./helpers/assert');
+
 // Override Joomla.getOptions for this module
 global.Joomla = {
     ...global.Joomla,
-    getOptions: jest.fn((key) => {
+    getOptions: fn((key) => {
         if (key === 'com_proclaim.vttUpload') {
             return {
                 uploadUrl: '/index.php?task=cwmmediafile.uploadVtt',
@@ -17,14 +26,14 @@ global.Joomla = {
         }
         return undefined;
     }),
-    Text: { _: jest.fn((key) => key) },
-    renderMessages: jest.fn(),
+    Text: { _: fn((key) => key) },
+    renderMessages: fn(),
 };
 
 describe('cwm-vtt-upload', () => {
     beforeEach(() => {
-        jest.resetModules();
-        global.Joomla.renderMessages.mockClear();
+        resetModules();
+        global.Joomla.renderMessages.mock.resetCalls();
 
         document.body.innerHTML = `
             <div class="cwm-vtt-field">
@@ -41,16 +50,16 @@ describe('cwm-vtt-upload', () => {
         require('../../build/media_source/js/cwm-vtt-upload.es6.js');
 
         const fileInput = document.querySelector('.cwm-vtt-file-input');
-        const clickSpy = jest.spyOn(fileInput, 'click');
+        const clickSpy = spyOn(fileInput, 'click');
 
         document.querySelector('.cwm-vtt-upload-btn').click();
 
-        expect(clickSpy).toHaveBeenCalled();
+        assert.ok(clickSpy.mock.callCount() > 0);
     });
 
     test('uploading a file sends FormData to uploadUrl', async () => {
         const mockUrl = '/media/vtt/test-en.vtt';
-        global.fetch = jest.fn(() =>
+        global.fetch = fn(() =>
             Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve({ success: true, url: mockUrl }),
@@ -74,17 +83,18 @@ describe('cwm-vtt-upload', () => {
         // Wait for async fetch
         await new Promise((r) => setTimeout(r, 0));
 
-        expect(global.fetch).toHaveBeenCalledWith(
+        calledWith(
+            global.fetch,
             '/index.php?task=cwmmediafile.uploadVtt',
-            expect.objectContaining({ method: 'POST' }),
+            match.objectContaining({ method: 'POST' }),
         );
 
         // URL input should be updated with the returned URL
-        expect(urlInput.value).toBe(mockUrl);
+        assert.strictEqual(urlInput.value, mockUrl);
     });
 
     test('shows error message on upload failure', async () => {
-        global.fetch = jest.fn(() =>
+        global.fetch = fn(() =>
             Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve({ success: false, error: 'Invalid file type' }),
@@ -100,13 +110,13 @@ describe('cwm-vtt-upload', () => {
         fileInput.dispatchEvent(new Event('change', { bubbles: true }));
         await new Promise((r) => setTimeout(r, 0));
 
-        expect(global.Joomla.renderMessages).toHaveBeenCalledWith({
+        calledWith(global.Joomla.renderMessages, {
             error: ['Invalid file type'],
         });
     });
 
     test('shows error on network failure', async () => {
-        global.fetch = jest.fn(() => Promise.reject(new Error('Network error')));
+        global.fetch = fn(() => Promise.reject(new Error('Network error')));
 
         require('../../build/media_source/js/cwm-vtt-upload.es6.js');
 
@@ -117,13 +127,13 @@ describe('cwm-vtt-upload', () => {
         fileInput.dispatchEvent(new Event('change', { bubbles: true }));
         await new Promise((r) => setTimeout(r, 0));
 
-        expect(global.Joomla.renderMessages).toHaveBeenCalledWith({
-            error: [expect.any(String)],
+        calledWith(global.Joomla.renderMessages, {
+            error: [match.any(String)],
         });
     });
 
     test('disables button during upload and re-enables after', async () => {
-        global.fetch = jest.fn(
+        global.fetch = fn(
             () => new Promise((resolve) => setTimeout(
                 () => resolve({
                     ok: true,
@@ -143,12 +153,12 @@ describe('cwm-vtt-upload', () => {
         fileInput.dispatchEvent(new Event('change', { bubbles: true }));
 
         // Button should be disabled during upload
-        expect(btn.disabled).toBe(true);
+        assert.strictEqual(btn.disabled, true);
 
         // Wait for upload to complete
         await new Promise((r) => setTimeout(r, 100));
 
-        expect(btn.disabled).toBe(false);
+        assert.strictEqual(btn.disabled, false);
     });
 
     test('does nothing when no file is selected', () => {
@@ -159,11 +169,11 @@ describe('cwm-vtt-upload', () => {
 
         fileInput.dispatchEvent(new Event('change', { bubbles: true }));
 
-        expect(global.fetch).not.toHaveBeenCalled();
+        assert.strictEqual(global.fetch.mock.callCount(), 0);
     });
 
     test('resets file input value after upload', async () => {
-        global.fetch = jest.fn(() =>
+        global.fetch = fn(() =>
             Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve({ success: true, url: '/test.vtt' }),
@@ -179,6 +189,6 @@ describe('cwm-vtt-upload', () => {
         fileInput.dispatchEvent(new Event('change', { bubbles: true }));
         await new Promise((r) => setTimeout(r, 0));
 
-        expect(fileInput.value).toBe('');
+        assert.strictEqual(fileInput.value, '');
     });
 });

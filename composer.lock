@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e3be1b412df2b5a45d41ece604196d3",
+    "content-hash": "c6fdbe27dc654d0a63ac17ad2110e94c",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -548,16 +548,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.42.0",
+            "version": "v1.43.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "ecff04c8972ecb2d115a055876fef8ee9d6fabe4"
+                "reference": "e2d061ec7c9cecab49a8bcf6e86b2e093c0f852c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/ecff04c8972ecb2d115a055876fef8ee9d6fabe4",
-                "reference": "ecff04c8972ecb2d115a055876fef8ee9d6fabe4",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/e2d061ec7c9cecab49a8bcf6e86b2e093c0f852c",
+                "reference": "e2d061ec7c9cecab49a8bcf6e86b2e093c0f852c",
                 "shasum": ""
             },
             "require": {
@@ -669,10 +669,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.42.0",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.43.1",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-11-18T01:22:21+00:00"
+            "time": "2026-11-18T20:08:09+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",
@@ -6484,7 +6484,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.4.0",
+        "php": "^8.3.0",
         "ext-mbstring": "*",
         "ext-json": "*",
         "ext-simplexml": "*",

@@ -30,6 +30,42 @@ class CwmcsvimportHelperTest extends ProclaimTestCase
      * rolls over into a different year/month entirely -- instead of falling
      * through to 'd/m/Y', silently corrupting the imported studydate.
      */
+    /**
+     * PHP 8.4 deprecates calling fputcsv() without $escape, so every template
+     * download raised a deprecation on 8.4 and 8.5 sites. This collects the
+     * deprecations raised while the template is built. PHP 8.3 raises none
+     * either way, so the test only bites on the 8.4 and 8.5 CI jobs. Passing
+     * '\\', the old default, must not change a byte of the template.
+     */
+    public function testGenerateTemplateRaisesNoDeprecationAndIsUnchanged(): void
+    {
+        $deprecations = [];
+
+        set_error_handler(
+            static function (int $errno, string $message) use (&$deprecations): bool {
+                $deprecations[] = $message;
+
+                return true;
+            },
+            E_DEPRECATED | E_USER_DEPRECATED
+        );
+
+        try {
+            $csv = CwmcsvimportHelper::generateTemplate();
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame([], $deprecations);
+        $this->assertSame(
+            "Title,Date,Teacher,Series,Location,Type,Scripture,Topics,Introduction,Body,Number,Published\n"
+            . '"The Good Samaritan",2024-01-15,"Pastor John Smith","Parables of Jesus","Main Sanctuary",Sermon,'
+            . '"Luke 10:25-37; Luke 10:38-42","Parables, Compassion, Love",'
+            . "\"A study of the parable of the Good Samaritan\",,1,Published\n",
+            $csv
+        );
+    }
+
     public function testParseDateFallsThroughToDayMonthYearWhenMonthOverflows(): void
     {
         $this->assertSame(

@@ -1,6 +1,4 @@
-/**
- * @jest-environment jsdom
- */
+'use strict';
 
 /**
  * Tests for series-scroll.es6.js
@@ -9,6 +7,13 @@
  * Note: innerHTML in test helpers builds DOM from static strings for
  * unit testing purposes, not from external input.
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, afterEach } = require('node:test');
+const { fn, returning, resolving, restoreAllMocks, resetModules } = require('./helpers/mocks');
+const { includes } = require('./helpers/assert');
 
 let capturedDclHandler = null;
 const origAddEventListener = document.addEventListener.bind(document);
@@ -31,8 +36,8 @@ describe('series-scroll.es6.js', () => {
         delete global.Joomla;
         delete global.IntersectionObserver;
         document.body.innerHTML = '';
-        jest.restoreAllMocks();
-        jest.resetModules();
+        restoreAllMocks();
+        resetModules();
     });
 
     describe('Initialization', () => {
@@ -40,29 +45,29 @@ describe('series-scroll.es6.js', () => {
             document.body.innerHTML = '<div id="proclaim-series-list"></div>';
 
             global.Joomla = {
-                getOptions: jest.fn().mockReturnValue(null),
-                Text: { _: jest.fn() },
+                getOptions: fn(returning(null)),
+                Text: { _: fn() },
             };
 
             captureAndRequire('../../build/media_source/js/series-scroll.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
 
             // Should not throw and not create any observers
-            expect(true).toBe(true);
+            assert.strictEqual(true, true);
         });
 
         test('should not initialize in pagination mode', () => {
             document.body.innerHTML = '<div id="proclaim-series-list"></div>';
 
             global.Joomla = {
-                getOptions: jest.fn().mockReturnValue({
+                getOptions: fn(returning({
                     enabled: true,
                     ajaxUrl: 'index.php',
                     csrfToken: 'abc123',
                     paginationStyle: 'pagination',
                     limit: 20,
-                }),
-                Text: { _: jest.fn() },
+                })),
+                Text: { _: fn() },
             };
 
             // Mock IntersectionObserver
@@ -76,21 +81,21 @@ describe('series-scroll.es6.js', () => {
             captureAndRequire('../../build/media_source/js/series-scroll.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
 
-            expect(IntersectionObserver._created).toBe(false);
+            assert.strictEqual(IntersectionObserver._created, false);
         });
 
         test('should not initialize without series-list container', () => {
             document.body.innerHTML = '<div id="some-other-element"></div>';
 
             global.Joomla = {
-                getOptions: jest.fn().mockReturnValue({
+                getOptions: fn(returning({
                     enabled: true,
                     ajaxUrl: 'index.php',
                     csrfToken: 'abc123',
                     paginationStyle: 'loadmore',
                     limit: 20,
-                }),
-                Text: { _: jest.fn() },
+                })),
+                Text: { _: fn() },
             };
 
             global.IntersectionObserver = class {
@@ -103,7 +108,7 @@ describe('series-scroll.es6.js', () => {
             captureAndRequire('../../build/media_source/js/series-scroll.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
 
-            expect(IntersectionObserver._created).toBe(false);
+            assert.strictEqual(IntersectionObserver._created, false);
         });
     });
 
@@ -124,15 +129,15 @@ describe('series-scroll.es6.js', () => {
                 '<div class="proclaim-scroll-sentinel" id="proclaim-scroll-sentinel"></div>';
 
             global.Joomla = {
-                getOptions: jest.fn().mockReturnValue(Object.assign({
+                getOptions: fn(returning(Object.assign({
                     enabled: true,
                     ajaxUrl: 'http://localhost/index.php?option=com_proclaim&task=cwmseriesdisplays.paginateAjax&format=raw',
                     csrfToken: 'testtoken',
                     paginationStyle: 'loadmore',
                     limit: 2,
                     totalItems: 10,
-                }, extraOpts || {})),
-                Text: { _: jest.fn(function (key, fallback) { return fallback || key; }) },
+                }, extraOpts || {}))),
+                Text: { _: fn(function (key, fallback) { return fallback || key; }) },
             };
 
             global.AbortController = class {
@@ -153,17 +158,17 @@ describe('series-scroll.es6.js', () => {
         }
 
         test('should show initial counter on page load', () => {
-            const mockFetch = jest.fn();
+            const mockFetch = fn();
             setupLoadMore(mockFetch);
 
             const counter = document.getElementById('proclaim-item-counter');
-            expect(counter.textContent).toContain('Showing');
-            expect(counter.textContent).toContain('2');
-            expect(counter.textContent).toContain('10');
+            includes(counter.textContent, 'Showing');
+            includes(counter.textContent, '2');
+            includes(counter.textContent, '10');
         });
 
         test('should append items on Load More click', async () => {
-            const mockFetch = jest.fn().mockResolvedValue({
+            const mockFetch = fn(resolving({
                 ok: true,
                 json: function () {
                     return Promise.resolve({
@@ -176,14 +181,14 @@ describe('series-scroll.es6.js', () => {
                         pagesTotal: 5,
                     });
                 },
-            });
+            }));
 
             setupLoadMore(mockFetch);
 
             const list = document.getElementById('proclaim-series-list');
             const listing = list.querySelector('.proclaim-listing');
             // 2 proclaim-item divs
-            expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(2);
+            assert.strictEqual(listing.querySelectorAll(':scope > .proclaim-item').length, 2);
 
             const btn = document.querySelector('#proclaim-load-more button');
             btn.click();
@@ -193,12 +198,12 @@ describe('series-scroll.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
 
             // 4 proclaim-item divs
-            expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(4);
-            expect(listing.innerHTML).toContain('Series 3');
+            assert.strictEqual(listing.querySelectorAll(':scope > .proclaim-item').length, 4);
+            includes(listing.innerHTML, 'Series 3');
         });
 
         test('should hide button when all items loaded', async () => {
-            const mockFetch = jest.fn().mockResolvedValue({
+            const mockFetch = fn(resolving({
                 ok: true,
                 json: function () {
                     return Promise.resolve({
@@ -210,7 +215,7 @@ describe('series-scroll.es6.js', () => {
                         pagesTotal: 1,
                     });
                 },
-            });
+            }));
 
             setupLoadMore(mockFetch, { totalItems: 3 });
 
@@ -222,7 +227,7 @@ describe('series-scroll.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
 
             const container = document.getElementById('proclaim-load-more');
-            expect(container.style.display).toBe('none');
+            assert.strictEqual(container.style.display, 'none');
         });
     });
 
@@ -242,7 +247,7 @@ describe('series-scroll.es6.js', () => {
                 '<div class="proclaim-scroll-sentinel" id="proclaim-scroll-sentinel"></div>';
 
             global.Joomla = {
-                getOptions: jest.fn().mockReturnValue(Object.assign({
+                getOptions: fn(returning(Object.assign({
                     enabled: true,
                     ajaxUrl: 'http://localhost/index.php?option=com_proclaim&task=cwmseriesdisplays.paginateAjax&format=raw',
                     csrfToken: 'testtoken',
@@ -250,8 +255,8 @@ describe('series-scroll.es6.js', () => {
                     limit: 2,
                     totalItems: 20,
                     scrollThreshold: 2,
-                }, extraOpts || {})),
-                Text: { _: jest.fn(function (key, fallback) { return fallback || key; }) },
+                }, extraOpts || {}))),
+                Text: { _: fn(function (key, fallback) { return fallback || key; }) },
             };
 
             global.AbortController = class {
@@ -277,7 +282,7 @@ describe('series-scroll.es6.js', () => {
         }
 
         test('should pause after threshold and show Load More', async () => {
-            const mockFetch = jest.fn().mockResolvedValue({
+            const mockFetch = fn(resolving({
                 ok: true,
                 json: function () {
                     return Promise.resolve({
@@ -289,7 +294,7 @@ describe('series-scroll.es6.js', () => {
                         pagesTotal: 10,
                     });
                 },
-            });
+            }));
 
             setupInfinite(mockFetch, { scrollThreshold: 2 });
 
@@ -297,25 +302,25 @@ describe('series-scroll.es6.js', () => {
             const loadMoreContainer = document.getElementById('proclaim-load-more');
 
             // Initially hidden
-            expect(loadMoreContainer.style.display).toBe('none');
+            assert.strictEqual(loadMoreContainer.style.display, 'none');
 
             // First auto-load
             observer.trigger([{ isIntersecting: true }]);
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
-            expect(loadMoreContainer.style.display).toBe('none');
+            assert.strictEqual(loadMoreContainer.style.display, 'none');
 
             // Second auto-load (= threshold)
             observer.trigger([{ isIntersecting: true }]);
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
-            expect(loadMoreContainer.style.display).toBe('');
+            assert.strictEqual(loadMoreContainer.style.display, '');
         });
 
         test('should include credentials in fetch requests', async () => {
-            const mockFetch = jest.fn().mockResolvedValue({
+            const mockFetch = fn(resolving({
                 ok: true,
                 json: function () {
                     return Promise.resolve({
@@ -327,17 +332,17 @@ describe('series-scroll.es6.js', () => {
                         pagesTotal: 10,
                     });
                 },
-            });
+            }));
 
             setupInfinite(mockFetch);
 
             const observer = IntersectionObserver._lastInstance;
-            mockFetch.mockClear();
+            mockFetch.mock.resetCalls();
             observer.trigger([{ isIntersecting: true }]);
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            const [, fetchOpts] = mockFetch.mock.calls[0];
-            expect(fetchOpts.credentials).toBe('same-origin');
+            const [, fetchOpts] = mockFetch.mock.calls[0].arguments;
+            assert.strictEqual(fetchOpts.credentials, 'same-origin');
         });
     });
 });

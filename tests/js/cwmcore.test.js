@@ -1,17 +1,19 @@
-/**
- * @jest-environment jsdom
- */
+'use strict';
 
 /**
  * Tests for media/js/cwmcore.js
  */
 
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, it, before, beforeEach } = require('node:test');
 const { loadCwmCore } = require('./helpers/loadScript');
 
 describe('cwmcore.js', () => {
     let exports;
 
-    beforeAll(() => {
+    before(() => {
         // Load the script and get exports
         exports = loadCwmCore();
     });
@@ -51,7 +53,7 @@ describe('cwmcore.js', () => {
                 const focusable = exports.ProclaimA11y.getFocusableElements(container);
 
                 // Should find: a, button (enabled), input (text), select, textarea, div[tabindex="0"]
-                expect(focusable.length).toBe(6);
+                assert.strictEqual(focusable.length, 6);
             });
 
             it('should exclude hidden elements', () => {
@@ -72,35 +74,35 @@ describe('cwmcore.js', () => {
                 // Hidden button keeps default null offsetParent
 
                 const focusable = exports.ProclaimA11y.getFocusableElements(container);
-                expect(focusable.length).toBe(1);
-                expect(focusable[0].id).toBe('visible');
+                assert.strictEqual(focusable.length, 1);
+                assert.strictEqual(focusable[0].id, 'visible');
             });
         });
 
         describe('announce()', () => {
             it('should create announcer element if not exists', () => {
-                expect(document.getElementById('proclaim-a11y-announcer')).toBeNull();
+                assert.strictEqual(document.getElementById('proclaim-a11y-announcer'), null);
 
                 exports.ProclaimA11y.announce('Test message');
 
                 const announcer = document.getElementById('proclaim-a11y-announcer');
-                expect(announcer).not.toBeNull();
-                expect(announcer.getAttribute('aria-live')).toBe('polite');
+                assert.notStrictEqual(announcer, null);
+                assert.strictEqual(announcer.getAttribute('aria-live'), 'polite');
             });
 
             it('should use assertive priority when specified', () => {
                 exports.ProclaimA11y.announce('Urgent message', 'assertive');
 
                 const announcer = document.getElementById('proclaim-a11y-announcer');
-                expect(announcer.getAttribute('aria-live')).toBe('assertive');
+                assert.strictEqual(announcer.getAttribute('aria-live'), 'assertive');
             });
 
             it('should have visually hidden styles', () => {
                 exports.ProclaimA11y.announce('Hidden message');
 
                 const announcer = document.getElementById('proclaim-a11y-announcer');
-                expect(announcer.style.position).toBe('absolute');
-                expect(announcer.className).toBe('visually-hidden');
+                assert.strictEqual(announcer.style.position, 'absolute');
+                assert.strictEqual(announcer.className, 'visually-hidden');
             });
         });
 
@@ -115,8 +117,8 @@ describe('cwmcore.js', () => {
 
                 exports.ProclaimA11y.trapFocus(modal);
 
-                expect(modal.getAttribute('aria-modal')).toBe('true');
-                expect(modal.getAttribute('role')).toBe('dialog');
+                assert.strictEqual(modal.getAttribute('aria-modal'), 'true');
+                assert.strictEqual(modal.getAttribute('role'), 'dialog');
             });
 
             it('should accept selector string', () => {
@@ -129,7 +131,7 @@ describe('cwmcore.js', () => {
                 exports.ProclaimA11y.trapFocus('#modal');
 
                 const modal = document.getElementById('modal');
-                expect(modal.getAttribute('aria-modal')).toBe('true');
+                assert.strictEqual(modal.getAttribute('aria-modal'), 'true');
             });
 
             it('should store previous active element', () => {
@@ -145,19 +147,19 @@ describe('cwmcore.js', () => {
                 const modal = document.getElementById('modal');
                 exports.ProclaimA11y.trapFocus(modal);
 
-                expect(exports.ProclaimA11y.previousActiveElement).toBe(trigger);
+                assert.strictEqual(exports.ProclaimA11y.previousActiveElement, trigger);
             });
 
             it('should handle null modal gracefully', () => {
-                expect(() => {
+                assert.doesNotThrow(() => {
                     exports.ProclaimA11y.trapFocus(null);
-                }).not.toThrow();
+                });
             });
 
             it('should handle non-existent selector gracefully', () => {
-                expect(() => {
+                assert.doesNotThrow(() => {
                     exports.ProclaimA11y.trapFocus('#non-existent');
-                }).not.toThrow();
+                });
             });
         });
 
@@ -177,14 +179,14 @@ describe('cwmcore.js', () => {
 
                 exports.ProclaimA11y.releaseFocus(modal);
 
-                expect(document.activeElement).toBe(trigger);
-                expect(exports.ProclaimA11y.previousActiveElement).toBeNull();
+                assert.strictEqual(document.activeElement, trigger);
+                assert.strictEqual(exports.ProclaimA11y.previousActiveElement, null);
             });
 
             it('should handle null modal gracefully', () => {
-                expect(() => {
+                assert.doesNotThrow(() => {
                     exports.ProclaimA11y.releaseFocus(null);
-                }).not.toThrow();
+                });
             });
         });
     });

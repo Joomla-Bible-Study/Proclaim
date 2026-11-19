@@ -195,7 +195,7 @@ foreach ($this->items as $i => $item) : ?>
                         </th>
                         <td class="nowrap small d-none d-md-table-cell">
                             <?php
-    echo HTMLHelper::_('date', $item->studydate, Text::_('DATE_FORMAT_LC4')); ?>
+    echo $item->studydate ? HTMLHelper::_('date', $item->studydate, Text::_('DATE_FORMAT_LC4')) : '&mdash;'; ?>
                         </td>
                         <td class="small d-none d-md-table-cell">
                             <?php

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Tests for message-ai-assist.es6.js
  * AI Assist topic suggestion, content generation, and chapter parsing
@@ -6,27 +8,37 @@
  * @since    10.2.0
  */
 
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach, afterEach } = require('node:test');
+const { fn, resetModules } = require('./helpers/mocks');
+const { includes, excludes, calledWith, match } = require('./helpers/assert');
+
 describe('message-ai-assist', () => {
     let originalJoomla;
 
     beforeEach(() => {
-        jest.resetModules();
+        resetModules();
 
         // Save and restore Joomla global between tests
         originalJoomla = global.Joomla;
         global.Joomla = {
-            getOptions: jest.fn(() => ({})),
-            Text: { _: jest.fn((key) => key) },
-            renderMessages: jest.fn(),
-            sanitizeHtml: jest.fn((s) => s),
+            getOptions: fn(() => ({})),
+            Text: { _: fn((key) => key) },
+            renderMessages: fn(),
+            sanitizeHtml: fn((s) => s),
         };
 
-        // Mock bootstrap.Modal
+        // Mock bootstrap.Modal. A function rather than an arrow: the code
+        // calls it with `new`, which node:test's mock passes through to it.
         global.bootstrap = {
-            Modal: jest.fn().mockImplementation(() => ({
-                show: jest.fn(),
-                hide: jest.fn(),
-            })),
+            Modal: fn(function () {
+                return {
+                    show: fn(),
+                    hide: fn(),
+                };
+            }),
         };
     });
 
@@ -100,22 +112,22 @@ describe('message-ai-assist', () => {
         test('does not error when #message-ai-config is missing', () => {
             document.body.innerHTML = '<div>no config</div>';
 
-            expect(() => {
+            assert.doesNotThrow(() => {
                 require('../../build/media_source/js/message-ai-assist.es6.js');
-            }).not.toThrow();
+            });
         });
 
         test('initializes event listeners when config element exists', () => {
             loadModuleWithConfig();
 
-            expect(document.getElementById('btn-suggest-topics')).not.toBeNull();
-            expect(document.getElementById('btn-ai-assist')).not.toBeNull();
+            assert.notStrictEqual(document.getElementById('btn-suggest-topics'), null);
+            assert.notStrictEqual(document.getElementById('btn-ai-assist'), null);
         });
     });
 
     describe('suggest topics', () => {
         test('fetches topic suggestions and renders matched topics', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -135,14 +147,14 @@ describe('message-ai-assist', () => {
             await new Promise((r) => setTimeout(r, 50));
 
             const matchedList = document.getElementById('matched-topics-list');
-            expect(matchedList.querySelectorAll('.matched-topic-cb').length).toBe(2);
+            assert.strictEqual(matchedList.querySelectorAll('.matched-topic-cb').length, 2);
 
             const keywordsList = document.getElementById('suggested-keywords-list');
-            expect(keywordsList.querySelectorAll('.keyword-cb').length).toBe(1);
+            assert.strictEqual(keywordsList.querySelectorAll('.keyword-cb').length, 1);
         });
 
         test('shows no-suggestions message when empty response', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () => Promise.resolve({ existing: [], suggested: [] }),
@@ -154,13 +166,13 @@ describe('message-ai-assist', () => {
             document.getElementById('btn-suggest-topics').click();
             await new Promise((r) => setTimeout(r, 50));
 
-            expect(document.getElementById('no-suggestions').style.display).toBe('block');
+            assert.strictEqual(document.getElementById('no-suggestions').style.display, 'block');
         });
     });
 
     describe('AI Assist', () => {
         test('sends form data and displays results', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -183,19 +195,19 @@ describe('message-ai-assist', () => {
 
             // Verify topics rendered
             const topicCbs = document.querySelectorAll('.ai-topic-cb');
-            expect(topicCbs.length).toBe(2);
+            assert.strictEqual(topicCbs.length, 2);
 
             // Verify description/text populated
-            expect(document.getElementById('ai-studyintro').value).toBe('AI generated intro');
-            expect(document.getElementById('ai-studytext').value).toBe('AI generated text');
+            assert.strictEqual(document.getElementById('ai-studyintro').value, 'AI generated intro');
+            assert.strictEqual(document.getElementById('ai-studytext').value, 'AI generated text');
 
             // Verify chapters populated
-            expect(document.getElementById('ai-chapters-text').value).toContain('0:00 Opening');
-            expect(document.getElementById('ai-chapters-text').value).toContain('5:30 Teaching');
+            includes(document.getElementById('ai-chapters-text').value, '0:00 Opening');
+            includes(document.getElementById('ai-chapters-text').value, '5:30 Teaching');
         });
 
         test('displays error when API returns error', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () => Promise.resolve({ error: 'API key invalid' }),
@@ -208,12 +220,12 @@ describe('message-ai-assist', () => {
             await new Promise((r) => setTimeout(r, 50));
 
             const errEl = document.getElementById('ai-error');
-            expect(errEl.style.display).toBe('block');
-            expect(errEl.textContent).toBe('API key invalid');
+            assert.strictEqual(errEl.style.display, 'block');
+            assert.strictEqual(errEl.textContent, 'API key invalid');
         });
 
         test('hides sections when toggles are unchecked', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -234,7 +246,7 @@ describe('message-ai-assist', () => {
             document.getElementById('btn-ai-assist').click();
             await new Promise((r) => setTimeout(r, 50));
 
-            expect(document.getElementById('ai-topics-section').style.display).toBe('none');
+            assert.strictEqual(document.getElementById('ai-topics-section').style.display, 'none');
         });
 
         test('requires at least one toggle checked', () => {
@@ -247,14 +259,14 @@ describe('message-ai-assist', () => {
 
             document.getElementById('btn-ai-assist').click();
 
-            expect(window.cwmAlert).toHaveBeenCalled();
-            expect(global.fetch).not.toHaveBeenCalled();
+            assert.ok(window.cwmAlert.mock.callCount() > 0);
+            assert.strictEqual(global.fetch.mock.callCount(), 0);
         });
     });
 
     describe('apply actions', () => {
         test('apply intro button sets editor value', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -276,11 +288,11 @@ describe('message-ai-assist', () => {
             document.getElementById('btn-ai-apply-intro').click();
 
             // The editor textarea should be updated
-            expect(document.getElementById('jform_studyintro').value).toBe('New intro from AI');
+            assert.strictEqual(document.getElementById('jform_studyintro').value, 'New intro from AI');
         });
 
         test('apply text button sets editor value', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -299,14 +311,14 @@ describe('message-ai-assist', () => {
 
             document.getElementById('btn-ai-apply-text').click();
 
-            expect(document.getElementById('jform_studytext').value).toBe('New study text from AI');
+            assert.strictEqual(document.getElementById('jform_studytext').value, 'New study text from AI');
         });
     });
 
     describe('chapter parsing', () => {
         test('apply chapters sends parsed chapters to saveChapters endpoint', async () => {
             // First load the module with AI results
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -329,7 +341,7 @@ describe('message-ai-assist', () => {
             await new Promise((r) => setTimeout(r, 50));
 
             // Now mock fetch for the save call
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () => Promise.resolve({ success: true, count: 2 }),
@@ -340,19 +352,20 @@ describe('message-ai-assist', () => {
             document.getElementById('btn-apply-chapters').click();
             await new Promise((r) => setTimeout(r, 50));
 
-            expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining('task=cwmmediafile.saveChapters'),
-                expect.objectContaining({
+            calledWith(
+                global.fetch,
+                match.stringContaining('task=cwmmediafile.saveChapters'),
+                match.objectContaining({
                     method: 'POST',
-                    headers: expect.objectContaining({
+                    headers: match.objectContaining({
                         'Content-Type': 'application/json',
                     }),
                 }),
             );
 
             // Verify the body contains parsed chapters
-            const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-            expect(body.chapters).toEqual([
+            const body = JSON.parse(global.fetch.mock.calls[0].arguments[1].body);
+            assert.deepStrictEqual(body.chapters, [
                 { time: '0:00', label: 'Intro' },
                 { time: '12:30', label: 'Main' },
             ]);
@@ -361,7 +374,7 @@ describe('message-ai-assist', () => {
 
     describe('copy description modal', () => {
         test('per-media copy description buttons fetch and display description', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -389,16 +402,17 @@ describe('message-ai-assist', () => {
                 + '&task=cwmadmin.getVideoDescriptionXHR&study_id=5&media_id=10';
             await global.fetch(url, { method: 'GET', headers: { 'X-CSRF-Token': '1' } });
 
-            expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining('task=cwmadmin.getVideoDescriptionXHR'),
-                expect.any(Object),
+            calledWith(
+                global.fetch,
+                match.stringContaining('task=cwmadmin.getVideoDescriptionXHR'),
+                match.any(Object),
             );
         });
     });
 
     describe('escAttr helper', () => {
         test('matched topics escape HTML in labels', async () => {
-            global.fetch = jest.fn(() =>
+            global.fetch = fn(() =>
                 Promise.resolve({
                     ok: true,
                     json: () =>
@@ -416,9 +430,9 @@ describe('message-ai-assist', () => {
 
             const label = document.querySelector('.matched-topic-cb + label');
             // The escAttr function should escape & < >
-            expect(label.textContent).toContain('Faith');
+            includes(label.textContent, 'Faith');
             // Verify no raw script tag in innerHTML
-            expect(label.innerHTML).not.toContain('<script>');
+            excludes(label.innerHTML, '<script>');
         });
     });
 
@@ -431,7 +445,7 @@ describe('message-ai-assist', () => {
                 <a class="cwm-timestamp" data-seconds="180" href="#">3:00</a>
             `;
 
-            const mockPostMessage = jest.fn();
+            const mockPostMessage = fn();
             const iframe = document.querySelector('iframe');
             Object.defineProperty(iframe, 'contentWindow', {
                 value: { postMessage: mockPostMessage },
@@ -439,8 +453,9 @@ describe('message-ai-assist', () => {
 
             document.querySelector('.cwm-timestamp').click();
 
-            expect(mockPostMessage).toHaveBeenCalledWith(
-                expect.stringContaining('"seekTo"'),
+            calledWith(
+                mockPostMessage,
+                match.stringContaining('"seekTo"'),
                 '*',
             );
         });

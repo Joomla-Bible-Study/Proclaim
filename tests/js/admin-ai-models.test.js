@@ -1,6 +1,4 @@
-/**
- * @jest-environment jsdom
- */
+'use strict';
 
 /**
  * Tests for admin-ai-models.es6.js — the AI provider model fetcher.
@@ -19,6 +17,13 @@
  * @package  Proclaim.Tests
  * @since    __DEPLOY_VERSION__
  */
+
+require('./setup');
+
+const assert = require('node:assert/strict');
+const { describe, test, beforeEach } = require('node:test');
+const { fn, resolving, resetModules, isolateModules } = require('./helpers/mocks');
+const { includes, excludes } = require('./helpers/assert');
 
 describe('admin-ai-models', () => {
     const API_KEY = 'AIzaSyTESTKEY_must_never_reach_a_url';
@@ -42,13 +47,13 @@ describe('admin-ai-models', () => {
             <span id="ai-models-status"></span>
         `;
 
-        jest.isolateModules(() => {
+        isolateModules(() => {
             require('../../build/media_source/js/admin-ai-models.es6.js');
         });
     }
 
     beforeEach(() => {
-        jest.resetModules();
+        resetModules();
 
         // ⚠️ Cleared, not ignored. The module serves a cached model list from
         // localStorage without making any request, so a leftover entry would
@@ -56,10 +61,10 @@ describe('admin-ai-models', () => {
         // observed nothing.
         localStorage.clear();
 
-        fetchJson = jest.fn().mockResolvedValue({
+        fetchJson = fn(resolving({
             success: true,
             models: [{ id: 'claude-opus-5', name: 'Claude Opus 5' }],
-        });
+        }));
 
         global.window.ProclaimFetch = { fetchJson };
         global.Joomla = { Text: { _: (k) => k } };
@@ -79,25 +84,25 @@ describe('admin-ai-models', () => {
         loadModule();
         await clickFetch();
 
-        expect(fetchJson).toHaveBeenCalled();
+        assert.ok(fetchJson.mock.callCount() > 0);
 
-        const [url] = fetchJson.mock.calls[0];
+        const [url] = fetchJson.mock.calls[0].arguments;
 
-        expect(url).not.toContain(API_KEY);
-        expect(url).not.toContain(encodeURIComponent(API_KEY));
-        expect(url).not.toMatch(/api_key/i);
+        excludes(url, API_KEY);
+        excludes(url, encodeURIComponent(API_KEY));
+        assert.doesNotMatch(url, /api_key/i);
     });
 
     test('the request is a POST carrying the key in its body', async () => {
         loadModule();
         await clickFetch();
 
-        const [, options] = fetchJson.mock.calls[0];
+        const [, options] = fetchJson.mock.calls[0].arguments;
 
-        expect(options.method).toBe('POST');
-        expect(options.body).toBeInstanceOf(URLSearchParams);
-        expect(options.body.get('api_key')).toBe(API_KEY);
-        expect(options.body.get('provider')).toBe('claude');
+        assert.strictEqual(options.method, 'POST');
+        assert.ok(options.body instanceof URLSearchParams);
+        assert.strictEqual(options.body.get('api_key'), API_KEY);
+        assert.strictEqual(options.body.get('provider'), 'claude');
     });
 
     /**
@@ -112,16 +117,16 @@ describe('admin-ai-models', () => {
         const options = Array.from(document.getElementById('jform_params_ai_model').options)
             .map((o) => o.value);
 
-        expect(options).toContain('claude-opus-5');
+        includes(options, 'claude-opus-5');
     });
 
     test('the task is still addressed in the URL, only the secret is not', async () => {
         loadModule();
         await clickFetch();
 
-        const [url] = fetchJson.mock.calls[0];
+        const [url] = fetchJson.mock.calls[0].arguments;
 
-        expect(url).toContain('task=cwmadmin.fetchAiModelsXHR');
-        expect(url).toContain('csrf123=1');
+        includes(url, 'task=cwmadmin.fetchAiModelsXHR');
+        includes(url, 'csrf123=1');
     });
 });
