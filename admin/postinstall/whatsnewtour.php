@@ -21,14 +21,19 @@ if (!\defined('CWM_LOADED')) {
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Plugin\PluginHelper;
+
 /**
  * Condition for the What's New tour message.
  *
- * @return  bool  Always true to show the message until dismissed
+ * The message's Start Tour link needs Joomla's Guided Tours plugin, so the
+ * message shows only while that plugin is enabled.
+ *
+ * @return  bool
  *
  * @since 10.1.0
  */
 function admin_postinstall_whatsnewtour_condition(): bool
 {
-    return true;
+    return PluginHelper::isEnabled('system', 'guidedtours');
 }

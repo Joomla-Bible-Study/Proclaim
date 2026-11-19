@@ -49,27 +49,15 @@ if ($msg) {
 
 $simple = Cwmhelper::getSimpleView();
 
-// Check for guided tours
+// Offer the tour only while Joomla's Guided Tours plugin can run it
 $tourHelper = new CwmguidedtourHelper();
-$hasTour    = false;
-
-$tourId = $tourHelper->getTourId('com_proclaim_whats_new_10_1');
-if ($tourId) {
-    $hasTour = true;
-    // Check if the asset exists before trying to use it
-    if ($wa->getRegistry()->exists('script', 'com_guidedtours.tour')) {
-        $wa->useScript('com_guidedtours.tour');
-        $this->document->addScriptOptions('guidedtours', ['tourId' => $tourId]);
-    }
-}
+$tourId     = $tourHelper->canStartTours() ? $tourHelper->getTourId('com_proclaim_whats_new_10_1') : 0;
+$hasTour    = $tourId > 0;
 
 // Check for startTour parameter
 $startTour = $input->getInt('startTour', 0);
 if ($startTour && $hasTour) {
-    $tourId = $tourHelper->getTourId('com_proclaim_whats_new_10_1');
-    if ($tourId) {
-        $this->document->addScriptOptions('com_proclaim.cpanel', ['startTour' => (int) $tourId]);
-    }
+    $this->getDocument()->addScriptOptions('com_proclaim.cpanel', ['startTour' => $tourId]);
 }
 
 $wa->useScript('com_proclaim.cwmcpanel');
