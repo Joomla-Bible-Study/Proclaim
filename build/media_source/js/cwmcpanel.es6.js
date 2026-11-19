@@ -3,7 +3,7 @@
  *
  * Handles:
  *  - Podcast task notice dismissal with localStorage (7-day snooze)
- *  - Auto-start of guided tour on first visit after upgrade
+ *  - Starting the guided tour a post-install link names (?startTour=...)
  *
  * @package  Proclaim
  * @since    10.1.0
@@ -45,26 +45,29 @@
     };
 
     /**
-   * Auto-start the guided tour when ?startTour=1 is in the URL.
-   * Tour ID is passed via Joomla.getOptions('com_proclaim.cpanel').
+   * Start the tour a post-install link asked for (?startTour=...).
+   * The control panel passes its id via Joomla.getOptions('com_proclaim.cpanel').
    */
     const initGuidedTour = () => {
         const options = Joomla.getOptions('com_proclaim.cpanel', {});
-        const tourId = options.startTour || 0;
+        const tourId = Number.parseInt(options.startTour, 10) || 0;
 
-        if (!tourId) {
+        if (tourId <= 0) {
             return;
         }
 
-        if (typeof Joomla !== 'undefined' && Joomla.guidedTours) {
-            Joomla.guidedTours.startTour(tourId);
-        } else {
-            const btn = document.querySelector(".button-start-guidedtour[data-gt-uid='com_proclaim_whats_new_10_1']");
+        // Core's Guided Tours script has no API to start a tour. It starts one
+        // from a click on any .button-start-guidedtour carrying data-id.
+        const trigger = document.createElement('button');
 
-            if (btn) {
-                btn.click();
-            }
-        }
+        trigger.type = 'button';
+        trigger.className = 'button-start-guidedtour';
+        trigger.dataset.id = String(tourId);
+        trigger.hidden = true;
+
+        document.body.appendChild(trigger);
+        trigger.click();
+        trigger.remove();
     };
 
     if (document.readyState === 'loading') {

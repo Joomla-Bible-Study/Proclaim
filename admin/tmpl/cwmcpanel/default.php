@@ -51,13 +51,12 @@ $simple = Cwmhelper::getSimpleView();
 
 // Offer the tour only while Joomla's Guided Tours plugin can run it
 $tourHelper = new CwmguidedtourHelper();
-$tourId     = $tourHelper->canStartTours() ? $tourHelper->getTourId('com_proclaim_whats_new_10_1') : 0;
-$hasTour    = $tourId > 0;
+$hasTour    = $tourHelper->canStartTours() && $tourHelper->getTourId('com_proclaim_whats_new_10_1') > 0;
 
-// Check for startTour parameter
-$startTour = $input->getInt('startTour', 0);
-if ($startTour && $hasTour) {
-    $this->getDocument()->addScriptOptions('com_proclaim.cpanel', ['startTour' => $tourId]);
+// A post-install link names the tour to start, e.g. startTour=getting_started
+$startTourId = $tourHelper->resolveStartTour($input->getCmd('startTour', ''));
+if ($startTourId > 0) {
+    $this->getDocument()->addScriptOptions('com_proclaim.cpanel', ['startTour' => $startTourId]);
 }
 
 $wa->useScript('com_proclaim.cwmcpanel');
