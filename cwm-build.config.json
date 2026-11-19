@@ -310,7 +310,8 @@
         "command": "cwm-article"
     },
     "release": {
-        "notesFile": "build/release-notes-{version}.md"
+        "notesFile": "build/release-notes-{version}.md",
+        "viaPullRequest": true
     },
     "dev": {
         "deriveLinks": true
