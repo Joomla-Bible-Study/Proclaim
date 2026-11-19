@@ -1176,7 +1176,9 @@ class Cwmpodcast
                 '(' . $db->quoteName('se.published') . ' = 1 OR ' . $db->quoteName('s.series_id') . ' IS NULL OR '
                 . $db->quoteName('s.series_id') . ' <= 0)'
             )
-            ->order($db->quoteName('createdate') . ' DESC');
+            // Newest first by the date the feed prints, so the episode limit
+            // does not cut an undated media file before older dated ones.
+            ->order('COALESCE(' . $db->quoteName('mf.createdate') . ', ' . $db->quoteName('s.studydate') . ') DESC');
 
         // A feed is a published artifact: it hands out the enclosure URL to
         // whoever reads it, and podcast apps read it with no session. An item

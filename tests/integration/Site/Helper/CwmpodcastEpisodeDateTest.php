@@ -128,6 +128,29 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     }
 
     /**
+     * The podcast's episode limit keeps the newest episodes, so an undated one
+     * has to be ordered by the date the feed gives it rather than sorted last.
+     *
+     * @return  void
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('An undated episode is ordered by its message\'s date, so the episode limit does not cut it first')]
+    public function testEpisodeLimitKeepsTheNewestUndatedEpisode(): void
+    {
+        $filename  = $this->uniqueAlias('episode-date') . '.xml';
+        $podcastId = $this->insertPodcast($filename, 1);
+
+        $this->insertMediaFile($this->insertMessage('2026-03-01 15:30:00'), $podcastId, '2026-03-01 15:30:00');
+        $this->insertMediaFile($this->insertMessage('2026-05-01 10:00:00'), $podcastId, null);
+
+        $this->assertSame(
+            [$this->feedDate('2026-05-01 10:00:00')],
+            $this->pubDates($this->captureFeed($filename)),
+            'The newest episode was cut by the episode limit because its media file has no createdate'
+        );
+    }
+
+    /**
      * Seed one podcast with one episode, build every feed, and return this one.
      *
      * @param   string|null  $createdate  The media file's createdate
@@ -144,6 +167,20 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
 
         $this->insertMediaFile($this->insertMessage($studydate), $podcastId, $createdate);
 
+        return $this->captureFeed($filename);
+    }
+
+    /**
+     * Build every feed with writeFile() captured, and return one of them.
+     *
+     * @param   string  $filename  The feed's file name
+     *
+     * @return  string  The feed's XML
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function captureFeed(string $filename): string
+    {
         $helper = new class () extends Cwmpodcast {
             /** @var array<string, string> Feed XML by file name */
             public array $written = [];
@@ -192,13 +229,14 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     }
 
     /**
-     * @param   string  $filename  The feed's file name
+     * @param   string    $filename  The feed's file name
+     * @param   int|null  $limit     The podcast's episode limit; null leaves the column NULL (no limit)
      *
      * @return  int  The new podcast id
      *
      * @since   __DEPLOY_VERSION__
      */
-    private function insertPodcast(string $filename): int
+    private function insertPodcast(string $filename, ?int $limit = null): int
     {
         // The feed passes website and podcastimage to string parameters.
         // podcastlink is set because older dev databases hold it NOT NULL with no default.
@@ -208,6 +246,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
             'filename'     => $filename,
             'podcastimage' => '',
             'podcastlink'  => '',
+            'podcastlimit' => $limit,
             'published'    => 1,
             'access'       => 1,
             'language'     => '*',
