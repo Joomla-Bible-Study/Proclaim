@@ -159,6 +159,24 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     }
 
     /**
+     * A helper holding two synthetic tours under the shipped keys, so startTour
+     * values resolve against rows each test creates.
+     *
+     * @return  CwmguidedtourHelper
+     */
+    private function startTourHelper(): CwmguidedtourHelper
+    {
+        $helper = new CwmguidedtourHelper();
+
+        (new \ReflectionProperty(CwmguidedtourHelper::class, 'tours'))->setValue($helper, [
+            'whats_new_10_1'  => ['uid' => self::UID . '_whats_new'],
+            'getting_started' => ['uid' => self::UID . '_getting_started'],
+        ]);
+
+        return $helper;
+    }
+
+    /**
      * Count a uid's rows straight from the table.
      *
      * The helper's own lookups share supportsGuidedTours() with the code under
@@ -522,5 +540,43 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
             $this->rowsForUid(self::UID),
             'Uninstall left the tour orphaned in core tables because the plugin was off — see #2361'
         );
+    }
+
+    // -------------------------------------------------------------------------
+    // startTour links resolve to the tour they name
+    // -------------------------------------------------------------------------
+
+    #[TestDox('resolveStartTour() maps the legacy "1" and the tour keys to their tour ids')]
+    public function testResolveStartTourMapsAliasAndKeys(): void
+    {
+        $whatsNew = $this->insertRawTour(self::UID . '_whats_new');
+        $started  = $this->insertRawTour(self::UID . '_getting_started');
+        $this->setGuidedToursPlugin(true);
+
+        $helper = $this->startTourHelper();
+
+        $this->assertSame($whatsNew, $helper->resolveStartTour('1'), 'Stored What\'s New links carry startTour=1');
+        $this->assertSame($whatsNew, $helper->resolveStartTour('whats_new_10_1'));
+        $this->assertSame(
+            $started,
+            $helper->resolveStartTour('getting_started'),
+            'The Getting Started link started nothing — see #2362'
+        );
+    }
+
+    #[TestDox('resolveStartTour() starts nothing for an unknown value, a missing tour or a disabled plugin')]
+    public function testResolveStartTourRefuses(): void
+    {
+        $this->insertRawTour(self::UID . '_getting_started');
+        $this->setGuidedToursPlugin(true);
+
+        $helper = $this->startTourHelper();
+
+        $this->assertSame(0, $helper->resolveStartTour(''));
+        $this->assertSame(0, $helper->resolveStartTour('bogus'));
+        $this->assertSame(0, $helper->resolveStartTour('whats_new_10_1'), 'That key has no row in this test');
+
+        $this->setGuidedToursPlugin(false);
+        $this->assertSame(0, $helper->resolveStartTour('getting_started'), 'A tour was started with the plugin disabled');
     }
 }

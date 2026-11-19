@@ -35,6 +35,16 @@ use Joomla\Database\ParameterType;
 class CwmguidedtourHelper
 {
     /**
+     * startTour values that predate tour keys, mapped to the key they stand for.
+     *
+     * What's New post-install messages already stored on sites link with "1".
+     *
+     * @var    array<string, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    private const array START_TOUR_ALIASES = ['1' => 'whats_new_10_1'];
+
+    /**
      * Database driver
      *
      * @var DatabaseInterface
@@ -569,6 +579,44 @@ class CwmguidedtourHelper
     public function canStartTours(): bool
     {
         return $this->supportsGuidedTours() && PluginHelper::isEnabled('system', 'guidedtours');
+    }
+
+    /**
+     * Map a startTour value from a Proclaim link to the uid of the tour it names.
+     *
+     * Accepts a key of the tour definitions, or an alias from START_TOUR_ALIASES.
+     *
+     * @param   string  $value  The startTour request value
+     *
+     * @return  string|null  The tour uid, or null when the value names no tour
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function startTourUid(string $value): ?string
+    {
+        $key = self::START_TOUR_ALIASES[$value] ?? $value;
+
+        return $this->tours[$key]['uid'] ?? null;
+    }
+
+    /**
+     * Find the tour a startTour link should start on this site.
+     *
+     * @param   string  $value  The startTour request value
+     *
+     * @return  int  The tour id, or 0 when there is nothing to start
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function resolveStartTour(string $value): int
+    {
+        $uid = $this->startTourUid($value);
+
+        if ($uid === null || !$this->canStartTours()) {
+            return 0;
+        }
+
+        return $this->getTourId($uid);
     }
 
     /**
