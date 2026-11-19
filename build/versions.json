@@ -1,12 +1,12 @@
 {
     "_comment": "Development version tracking - semantic versioning: major.minor.patch",
-    "_updated": "2026-11-17",
+    "_updated": "2026-11-18",
     "current": {
-        "version": "10.7.7",
+        "version": "10.7.8",
         "description": "Last stable release (from GitHub releases)"
     },
     "next": {
-        "patch": "10.7.8",
+        "patch": "10.7.9",
         "minor": "10.8.0",
         "major": "11.0.0"
     },
