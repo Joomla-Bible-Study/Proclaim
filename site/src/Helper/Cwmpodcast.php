@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
@@ -76,6 +77,14 @@ class Cwmpodcast
     private ?Cwmlisting $listing = null;
 
     /**
+     * How many feeds the last makePodcasts() run could not build.
+     *
+     * @var    int
+     * @since  __DEPLOY_VERSION__
+     */
+    private int $failedFeeds = 0;
+
+    /**
      * Get or create Cwmlisting instance (lazy loading)
      *
      * @return Cwmlisting
@@ -101,8 +110,9 @@ class Cwmpodcast
      */
     public function makePodcasts(): string
     {
-        $msg = [];
-        $db  = Factory::getContainer()->get(DatabaseInterface::class);
+        $msg               = [];
+        $db                = Factory::getContainer()->get(DatabaseInterface::class);
+        $this->failedFeeds = 0;
 
         // Dates are written in the site's configured time zone, not the server's.
         // PHP's default zone is whatever php.ini says — Joomla never sets it
@@ -126,48 +136,51 @@ class Cwmpodcast
 
         // Now iterate through the podcasts, and pick up the mediafiles
         foreach ($podcasts as $podinfo) {
-            $podlanguage = $podinfo->language === '*' ? Factory::getApplication()->getConfig()->get('language') : $podinfo->language;
-            $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
+            // A podcast that fails to build is logged and reported, and the
+            // feeds after it are still written.
+            try {
+                $podlanguage =$podinfo->language === '*' ? Factory::getApplication()->getConfig()->get('language') : $podinfo->language;
+                $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
 
-            // Check if there's any media file associated
-            $query = $db->createQuery();
-            $query->select($db->quoteName('id'))
-                ->from($db->quoteName('#__bsms_mediafiles'))
-                ->where('FIND_IN_SET(' . (int) $podinfo->id . ', ' . $db->quoteName('podcast_id') . ')')
-                ->where($db->quoteName('published') . ' = 1');
-            $db->setQuery($query, 0, 1);
+                // Check if there's any media file associated
+                $query = $db->createQuery();
+                $query->select($db->quoteName('id'))
+                    ->from($db->quoteName('#__bsms_mediafiles'))
+                    ->where('FIND_IN_SET(' . (int) $podinfo->id . ', ' . $db->quoteName('podcast_id') . ')')
+                    ->where($db->quoteName('published') . ' = 1');
+                $db->setQuery($query, 0, 1);
 
-            if (!$db->loadResult()) {
-                $msg[] = Text::_('JBS_CMN_NO_MEDIA_FILES') . ' (' . $podinfo->title . ')';
-                continue;
-            }
+                if (!$db->loadResult()) {
+                    $msg[] = Text::_('JBS_CMN_NO_MEDIA_FILES') . ' (' . $podinfo->title . ')';
+                    continue;
+                }
 
-            $limit    = (int) $podinfo->podcastlimit;
-            $episodes = $this->getEpisodes((int) $podinfo->id, $limit > 0 ? 'LIMIT ' . $limit : '');
+                $limit    = (int) $podinfo->podcastlimit;
+                $episodes = $this->getEpisodes((int) $podinfo->id, $limit > 0 ? 'LIMIT ' . $limit : '');
 
-            if (!$episodes) {
-                continue;
-            }
+                if (!$episodes) {
+                    continue;
+                }
 
-            $registry = new Registry();
-            $registry->loadString(Cwmparams::getAdmin()->params);
-            $registry->merge(Cwmparams::getTemplateparams()->params);
-            $params = $registry;
-            $params->set('show_verses', '1');
-            $protocol          = $params->get('protocol', 'https://');
-            $detailstemplateid = (int) ($podinfo->detailstemplateid ?: 1);
+                $registry = new Registry();
+                $registry->loadString(Cwmparams::getAdmin()->params);
+                $registry->merge(Cwmparams::getTemplateparams()->params);
+                $params = $registry;
+                $params->set('show_verses', '1');
+                $protocol          = $params->get('protocol', 'https://');
+                $detailstemplateid = (int) ($podinfo->detailstemplateid ?: 1);
 
-            if (empty($podinfo->podcastlink)) {
-                $podinfo->podcastlink = $podinfo->website;
-            }
+                if (empty($podinfo->podcastlink)) {
+                    $podinfo->podcastlink = $podinfo->website;
+                }
 
-            $imagePath = $this->resolveUrl($podinfo->website, $protocol) . '/' . Cwmimages::getImagePath($podinfo->podcastimage)->path;
+                $imagePath = $this->resolveUrl($podinfo->website, $protocol) . '/' . Cwmimages::getImagePath($podinfo->podcastimage)->path;
 
-            // Cache sanitized description to avoid processing twice
-            $sanitizedDescription = $this->sanitizeHtmlForPodcast($podinfo->description);
-            $escapedTitle         = $this->escapeHTML($podinfo->title);
+                // Cache sanitized description to avoid processing twice
+                $sanitizedDescription = $this->sanitizeHtmlForPodcast($podinfo->description);
+                $escapedTitle         = $this->escapeHTML($podinfo->title);
 
-            $podhead = '<?xml version="1.0" encoding="utf-8"?>
+                $podhead = '<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
  xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
  xmlns:podcast="https://podcastindex.org/namespace/1.0"
@@ -194,7 +207,7 @@ class Cwmpodcast
 	</itunes:owner>
 	<itunes:image href="' . $imagePath . '" />
 	<itunes:category text="' . $this->escapeHTML($podinfo->itunes_category ?: 'Religion & Spirituality') . '">' .
-            ($podinfo->itunes_subcategory ? '
+                ($podinfo->itunes_subcategory ? '
 		<itunes:category text="' . $this->escapeHTML($podinfo->itunes_subcategory) . '" />' : '') . '
 	</itunes:category>
 	<itunes:explicit>' . $this->escapeHTML($podinfo->itunes_explicit ?: 'false') . '</itunes:explicit>
@@ -205,88 +218,88 @@ class Cwmpodcast
 	<podcast:medium>audio</podcast:medium>
 	<podcast:image url="' . $imagePath . '" />';
 
-            // Podcasting 2.0: optional channel-level tags
-            if (!empty($podinfo->funding_url)) {
-                $fundingText = $this->escapeHTML($podinfo->funding_text ?: 'Support');
-                $podhead .= '
-	<podcast:funding url="' . $podinfo->funding_url . '">' . $fundingText . '</podcast:funding>';
-            }
-
-            if (!empty($podinfo->podcast_license)) {
-                $licUrl   = !empty($podinfo->podcast_license_url) ? ' url="' . $podinfo->podcast_license_url . '"' : '';
-                $podhead .= '
-	<podcast:license' . $licUrl . '>' . $this->escapeHTML($podinfo->podcast_license) . '</podcast:license>';
-            }
-
-            $publisher = $podinfo->podcast_publisher ?: CwmschemaorgHelper::getOrgName() ?: ($podinfo->author ?? '');
-
-            if (!empty($publisher)) {
-                $podhead .= '
-	<podcast:publisher>' . $this->escapeHTML($publisher) . '</podcast:publisher>';
-            }
-
-            if (!empty($podinfo->podcast_txt_verify)) {
-                $podhead .= '
-	<podcast:txt>' . $this->escapeHTML($podinfo->podcast_txt_verify) . '</podcast:txt>';
-            }
-
-            if (!empty($podinfo->update_frequency)) {
-                $podhead .= '
-	<podcast:updateFrequency>' . $this->escapeHTML($podinfo->update_frequency) . '</podcast:updateFrequency>';
-            }
-
-            // Podcasting 2.0: channel-level location from podcast settings
-            if (!empty($podinfo->location_id) && (int) $podinfo->location_id > 0) {
-                $locQuery = $db->createQuery()
-                    ->select($db->quoteName('location_text'))
-                    ->from($db->quoteName('#__bsms_locations'))
-                    ->where($db->quoteName('id') . ' = ' . (int) $podinfo->location_id);
-                $db->setQuery($locQuery);
-                $channelLocation = $db->loadResult();
-
-                if (!empty($channelLocation)) {
+                // Podcasting 2.0: optional channel-level tags
+                if (!empty($podinfo->funding_url)) {
+                    $fundingText = $this->escapeHTML($podinfo->funding_text ?: 'Support');
                     $podhead .= '
+	<podcast:funding url="' . $podinfo->funding_url . '">' . $fundingText . '</podcast:funding>';
+                }
+
+                if (!empty($podinfo->podcast_license)) {
+                    $licUrl   = !empty($podinfo->podcast_license_url) ? ' url="' . $podinfo->podcast_license_url . '"' : '';
+                    $podhead .= '
+	<podcast:license' . $licUrl . '>' . $this->escapeHTML($podinfo->podcast_license) . '</podcast:license>';
+                }
+
+                $publisher = $podinfo->podcast_publisher ?: CwmschemaorgHelper::getOrgName() ?: ($podinfo->author ?? '');
+
+                if (!empty($publisher)) {
+                    $podhead .= '
+	<podcast:publisher>' . $this->escapeHTML($publisher) . '</podcast:publisher>';
+                }
+
+                if (!empty($podinfo->podcast_txt_verify)) {
+                    $podhead .= '
+	<podcast:txt>' . $this->escapeHTML($podinfo->podcast_txt_verify) . '</podcast:txt>';
+                }
+
+                if (!empty($podinfo->update_frequency)) {
+                    $podhead .= '
+	<podcast:updateFrequency>' . $this->escapeHTML($podinfo->update_frequency) . '</podcast:updateFrequency>';
+                }
+
+                // Podcasting 2.0: channel-level location from podcast settings
+                if (!empty($podinfo->location_id) && (int) $podinfo->location_id > 0) {
+                    $locQuery = $db->createQuery()
+                        ->select($db->quoteName('location_text'))
+                        ->from($db->quoteName('#__bsms_locations'))
+                        ->where($db->quoteName('id') . ' = ' . (int) $podinfo->location_id);
+                    $db->setQuery($locQuery);
+                    $channelLocation = $db->loadResult();
+
+                    if (!empty($channelLocation)) {
+                        $podhead .= '
 	<podcast:location>' . $this->escapeHTML($channelLocation) . '</podcast:location>';
-                }
-            }
-
-            $episodedetail = '';
-
-            foreach ($episodes as $episode) {
-                // ⚠️ Refused, not published broken. The move action refuses
-                // podcast-referenced media, so reaching this means the file
-                // was placed by hand or the podcast was assigned afterwards;
-                // either way an enclosure pointing here 403s for every
-                // subscriber. System Health names the affected files, so the
-                // silence in the feed is not the only report.
-                if ($this->isProtectedFile($episode->params->get('filename'))) {
-                    continue;
+                    }
                 }
 
-                // createdate may be NULL (the column allows it); the episode then takes
-                // its message's date.
-                $episodedate   = $this->formatFeedDate($episode->createdate ?? $episode->studydate ?? 'now', $siteTz);
-                $scripture     = $this->getListing()->getScripture($params, $episode, 0, 1);
-                $episode->size = $episode->params->get('size', '30000000');
+                $episodedetail = '';
 
-                $title    = $this->getEpisodeTitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate);
-                $title    = $this->escapeHTML($title);
+                foreach ($episodes as $episode) {
+                    // ⚠️ Refused, not published broken. The move action refuses
+                    // podcast-referenced media, so reaching this means the file
+                    // was placed by hand or the podcast was assigned afterwards;
+                    // either way an enclosure pointing here 403s for every
+                    // subscriber. System Health names the affected files, so the
+                    // silence in the feed is not the only report.
+                    if ($this->isProtectedFile($episode->params->get('filename'))) {
+                        continue;
+                    }
 
-                $file          = str_replace(' ', '%20', $episode->params->get('filename'));
-                $path          = Cwmhelper::mediaBuildUrl($episode->srparams->get('path'), $file, $params, false, false, true);
-                $episode->slug = $episode->alias ? ($episode->sid . ':' . $episode->alias) : $episode->sid;
+                    // createdate may be NULL (the column allows it); the episode then takes
+                    // its message's date.
+                    $episodedate   = $this->formatFeedDate($episode->createdate ?? $episode->studydate ?? 'now', $siteTz);
+                    $scripture     = $this->getListing()->getScripture($params, $episode, 0, 1);
+                    $episode->size = $episode->params->get('size', '30000000');
 
-                $link     = $this->getEpisodeLink($podinfo, $episode, $path, $protocol, $detailstemplateid);
-                $duration = $this->getEpisodeDuration($episode);
+                    $title    = $this->getEpisodeTitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate);
+                    $title    = $this->escapeHTML($title);
 
-                // Cache sanitized content to avoid processing three times
-                $sanitizedIntro = $this->sanitizeHtmlForPodcast($episode->studyintro);
-                $escapedTeacher = $this->escapeHTML($episode->teachername);
+                    $file          = str_replace(' ', '%20', $episode->params->get('filename'));
+                    $path          = Cwmhelper::mediaBuildUrl($episode->srparams->get('path'), $file, $params, false, false, true);
+                    $episode->slug = $episode->alias ? ($episode->sid . ':' . $episode->alias) : $episode->sid;
 
-                // Append chapter timecodes to description for universal platform support
-                $descriptionWithTimecodes = $sanitizedIntro . $this->getChapterTimecodes($episode);
+                    $link     = $this->getEpisodeLink($podinfo, $episode, $path, $protocol, $detailstemplateid);
+                    $duration = $this->getEpisodeDuration($episode);
 
-                $episodedetail .= '
+                    // Cache sanitized content to avoid processing three times
+                    $sanitizedIntro = $this->sanitizeHtmlForPodcast($episode->studyintro);
+                    $escapedTeacher = $this->escapeHTML($episode->teachername);
+
+                    // Append chapter timecodes to description for universal platform support
+                    $descriptionWithTimecodes = $sanitizedIntro . $this->getChapterTimecodes($episode);
+
+                    $episodedetail .= '
 	<item>
 		<itunes:episodeType>full</itunes:episodeType>
 		<title>' . $title . '</title>
@@ -299,84 +312,114 @@ class Cwmpodcast
 		<pubDate>' . $episodedate . '</pubDate>
 		<itunes:duration>' . $duration . '</itunes:duration>';
 
-                $episodedetail .= $this->getEnclosureXml(
-                    $episode,
-                    $protocol,
-                    $path,
-                    (string) $podinfo->website,
-                    (bool) ($podinfo->track_downloads ?? 0)
-                );
+                    $episodedetail .= $this->getEnclosureXml(
+                        $episode,
+                        $protocol,
+                        $path,
+                        (string) $podinfo->website,
+                        (bool) ($podinfo->track_downloads ?? 0)
+                    );
 
-                // Podcasting 2.0: alternate enclosures for additional media formats
-                $episodedetail .= $this->getAlternateEnclosureXml($episode, (int) $podinfo->id, $protocol);
+                    // Podcasting 2.0: alternate enclosures for additional media formats
+                    $episodedetail .= $this->getAlternateEnclosureXml($episode, (int) $podinfo->id, $protocol);
 
-                // Podcasting 2.0: transcript tags from subtitle tracks
-                $episodedetail .= $this->getTranscriptXml($episode, $podinfo->website, $protocol);
+                    // Podcasting 2.0: transcript tags from subtitle tracks
+                    $episodedetail .= $this->getTranscriptXml($episode, $podinfo->website, $protocol);
 
-                // Podcasting 2.0: chapter tags (JSON link + Podlove inline)
-                $episodedetail .= $this->getChapterXml($episode, $podinfo->website, $protocol);
+                    // Podcasting 2.0: chapter tags (JSON link + Podlove inline)
+                    $episodedetail .= $this->getChapterXml($episode, $podinfo->website, $protocol);
 
-                // Podcasting 2.0: person/speaker tags for all teachers
-                $episodedetail .= $this->getPersonXml($episode, $podinfo->website, $protocol);
+                    // Podcasting 2.0: person/speaker tags for all teachers
+                    $episodedetail .= $this->getPersonXml($episode, $podinfo->website, $protocol);
 
-                // Podcasting 2.0: season (from series). Emitted alongside
-                // itunes:season, which Apple reads and the podcast: namespace it
-                // ignores — a feed carrying only the latter groups nowhere in
-                // Apple Podcasts.
-                if (!empty($episode->series_text) && ($episode->series_id ?? -1) > 0) {
-                    $episodedetail .= '
-		<podcast:season name="' . $this->escapeHTML($episode->series_text) . '">'
-                        . (int) $episode->series_id . '</podcast:season>
-		<itunes:season>' . (int) $episode->series_id . '</itunes:season>';
-                }
-
-                // Podcasting 2.0: episode number (from studynumber), likewise
-                // paired with the itunes: tag Apple actually reads.
-                if (!empty($episode->studynumber)) {
-                    $epNum = preg_replace('/[^0-9]/', '', $episode->studynumber);
-
-                    if ($epNum !== '' && (int) $epNum > 0) {
+                    // Podcasting 2.0: season (from series). Emitted alongside
+                    // itunes:season, which Apple reads and the podcast: namespace it
+                    // ignores — a feed carrying only the latter groups nowhere in
+                    // Apple Podcasts.
+                    if (!empty($episode->series_text) && ($episode->series_id ?? -1) > 0) {
                         $episodedetail .= '
-		<podcast:episode display="' . $this->escapeHTML($episode->studynumber) . '">'
-                            . (int) $epNum . '</podcast:episode>
-		<itunes:episode>' . (int) $epNum . '</itunes:episode>';
+		<podcast:season name="' . $this->escapeHTML($episode->series_text) . '">'
+                            . (int) $episode->series_id . '</podcast:season>
+		<itunes:season>' . (int) $episode->series_id . '</itunes:season>';
                     }
-                }
 
-                // Podcasting 2.0: item-level location
-                if (!empty($episode->location_text)) {
-                    $episodedetail .= '
+                    // Podcasting 2.0: episode number (from studynumber), likewise
+                    // paired with the itunes: tag Apple actually reads.
+                    if (!empty($episode->studynumber)) {
+                        $epNum = preg_replace('/[^0-9]/', '', $episode->studynumber);
+
+                        if ($epNum !== '' && (int) $epNum > 0) {
+                            $episodedetail .= '
+		<podcast:episode display="' . $this->escapeHTML($episode->studynumber) . '">'
+                                . (int) $epNum . '</podcast:episode>
+		<itunes:episode>' . (int) $epNum . '</itunes:episode>';
+                        }
+                    }
+
+                    // Podcasting 2.0: item-level location
+                    if (!empty($episode->location_text)) {
+                        $episodedetail .= '
 		<podcast:location>' . $this->escapeHTML($episode->location_text) . '</podcast:location>';
-                }
+                    }
 
-                // Podcasting 2.0: item-level image from media_image param
-                $episodeImage = $episode->params->get('media_image', '');
+                    // Podcasting 2.0: item-level image from media_image param
+                    $episodeImage = $episode->params->get('media_image', '');
 
-                if (!empty($episodeImage)) {
-                    $episodeImageUrl = $this->resolveUrl($podinfo->website, $protocol) . '/' . ltrim($episodeImage, '/');
-                    $episodedetail .= '
+                    if (!empty($episodeImage)) {
+                        $episodeImageUrl = $this->resolveUrl($podinfo->website, $protocol) . '/' . ltrim($episodeImage, '/');
+                        $episodedetail .= '
 		<podcast:image url="' . $episodeImageUrl . '" />';
-                }
+                    }
 
-                $episodedetail .= '
+                    $episodedetail .= '
 		<itunes:explicit>' . $this->escapeHTML($podinfo->itunes_explicit ?: 'false') . '</itunes:explicit>
 	</item>';
-            }
+                }
 
-            $podfoot = '
+                $podfoot = '
 </channel>
 </rss>';
-            $input       = Factory::getApplication()->getInput();
-            $client      = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
-            $file_path   = $client->path . '/' . $podinfo->filename;
-            $filecontent = $podhead . $episodedetail . $podfoot;
-            $filewritten = $this->writeFile($file_path, $filecontent);
+                $input       = Factory::getApplication()->getInput();
+                $client      = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
+                $file_path   = $client->path . '/' . $podinfo->filename;
+                $filecontent = $podhead . $episodedetail . $podfoot;
+                $filewritten = $this->writeFile($file_path, $filecontent);
 
-            $file_url = Uri::root() . $podinfo->filename;
-            $msg[]    = $file_url . ' - ' . ($filewritten ? Text::_('JBS_PDC_XML_FILES_WRITTEN') : Text::_('JBS_PDC_XML_FILES_ERROR'));
+                $file_url = Uri::root() . $podinfo->filename;
+                $msg[]    = $file_url . ' - ' . ($filewritten ? Text::_('JBS_PDC_XML_FILES_WRITTEN') : Text::_('JBS_PDC_XML_FILES_ERROR'));
+            } catch (\Throwable $e) {
+                $this->failedFeeds++;
+
+                // The title column allows NULL too, so fall back to something that names the feed.
+                $feedName = $podinfo->title ?: $podinfo->filename ?: '#' . (int) $podinfo->id;
+
+                CwmlogHelper::error(\sprintf(
+                    'Podcast feed "%s" (id %d) was not rebuilt: %s in %s:%d',
+                    $feedName,
+                    (int) $podinfo->id,
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine()
+                ));
+
+                $msg[] = htmlspecialchars($feedName) . ' - '
+                    . Text::sprintf('JBS_PDC_XML_FILE_NOT_BUILT', htmlspecialchars($e->getMessage()));
+            }
         }
 
         return implode('<br />', $msg) ?: 'No message';
+    }
+
+    /**
+     * How many feeds the last makePodcasts() run could not build.
+     *
+     * @return  int
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getFailedFeedCount(): int
+    {
+        return $this->failedFeeds;
     }
 
     /**

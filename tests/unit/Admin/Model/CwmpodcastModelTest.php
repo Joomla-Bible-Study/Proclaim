@@ -70,11 +70,13 @@ class CwmpodcastModelTest extends ProclaimTestCase
     {
         $body = self::methodBody();
 
+        // \Throwable, not \Exception: an Error from one feed (a TypeError, say)
+        // must not fail the settings save either.
         $this->assertMatchesRegularExpression(
-            '/catch\s*\(\s*\\\\Exception\s+\$e\s*\)\s*\{\s*Log::add/s',
+            '/catch\s*\(\s*\\\\Throwable\s+\$e\s*\)\s*\{\s*Log::add/s',
             $body,
-            'A feed regeneration failure must be caught and logged, not allowed to propagate and fail the ' .
-                'settings save — see #1509'
+            'A feed regeneration failure, an Error included, must be caught and logged, not allowed to propagate ' .
+                'and fail the settings save — see #1509 and #2365'
         );
     }
 

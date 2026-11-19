@@ -140,7 +140,7 @@ class CwmpodcastModel extends AdminModel
 
         try {
             (new Cwmpodcast())->makePodcasts();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::add('Podcast feed regeneration after save failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
 
