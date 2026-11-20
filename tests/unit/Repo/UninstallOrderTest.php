@@ -37,7 +37,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * worth defending meanwhile is that the order is written down deliberately,
  * which is the same bar `HealthContractTest` sets for its ACL guard.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class UninstallOrderTest extends ProclaimTestCase
 {
@@ -46,7 +46,7 @@ class UninstallOrderTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function method(): string
     {
@@ -92,7 +92,7 @@ class UninstallOrderTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('nothing returns between dropping the tables and clearing the permission rows')]
     public function testNoEarlyReturnBetweenTheTwoHalves(): void
@@ -145,7 +145,7 @@ class UninstallOrderTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('the uninstall never matches rows on a bare com_proclaim prefix')]
     public function testDeletesDoNotUseABarePrefix(): void

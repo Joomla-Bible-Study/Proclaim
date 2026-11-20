@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * That work moved into CwmmessageModel::saveTopics() — see CwmmessageModelTest.
  * save() now only checks the CSRF token and delegates to parent::save().
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmmessageControllerTest extends ProclaimTestCase
 {

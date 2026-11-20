@@ -296,7 +296,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('Every health task is gated on core.admin')]
     public function testHealthTasksRequireCoreAdmin(): void
@@ -337,7 +337,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('The health report renders only from the core.admin Administration screen')]
     public function testReportRendersOnlyBehindCoreAdmin(): void
@@ -366,7 +366,7 @@ class HealthContractTest extends ProclaimTestCase
      * makes them leave trashed content out.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const CONTENT_HELPERS = [
         'CwmImageMigration::getMigrationCounts'     => 'getMigrationCounts(true)',
@@ -388,7 +388,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('A check reading content rows constrains their state')]
     public function testContentChecksExcludeTrashedRows(): void
@@ -462,7 +462,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.3
      */
     #[TestDox('A finding that links with a filter uses one the list can show and clear')]
     public function testLinkedFiltersAreVisibleOnTheirList(): void
@@ -523,7 +523,7 @@ class HealthContractTest extends ProclaimTestCase
      * Context the checks may not depend on, directly or through a helper.
      *
      * @var  string[]
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private const CONTEXT_BOUND = ['getIdentity', 'getSession', 'getInput', 'enqueueMessage', 'Route::', 'Uri::'];
 
@@ -532,7 +532,7 @@ class HealthContractTest extends ProclaimTestCase
      * the reason each is safe.
      *
      * @var  array<string, string>
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private const CONTEXT_ALLOWED = [
         'CwmmediaProtectionHelper::canResolveSiteRoot' => 'Exists precisely to answer whether Uri::root() is trustworthy off a request, and returns false when it is not.',
@@ -552,7 +552,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  array<string, string>  Class => method
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function staticCallsIn(string $file): array
     {
@@ -583,7 +583,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  ?string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function sourceOf(string $file, string $class): ?string
     {
@@ -619,7 +619,7 @@ class HealthContractTest extends ProclaimTestCase
      * One level deep, which is where all three sat.
      *
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('No check reaches the identity, the session or the request through a helper')]
     public function testChecksAreContextFreeThroughTheirHelpers(): void

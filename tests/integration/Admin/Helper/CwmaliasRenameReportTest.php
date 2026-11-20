@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  *
  * The mailer is always a stand-in that records instead of sending.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class CwmaliasRenameReportTest extends IntegrationTestCase
 {
@@ -34,7 +34,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function setUp(): void
     {
@@ -55,7 +55,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function tearDown(): void
     {
@@ -73,7 +73,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('Only records that shared an alias are reported, each with its title and a message\'s date')]
     public function testOnlySharedRenamesAreReported(): void
@@ -103,7 +103,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('The notice links each renamed record to its edit form, its title escaped')]
     public function testNoticeLinksEachRecord(): void
@@ -138,7 +138,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('One email goes in Bcc to the Super Users who receive system emails, naming each record, with short SMTP timeouts')]
     public function testEmailGoesToSuperUsersWhoReceiveSystemEmails(): void
@@ -174,7 +174,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('From the command line the email links each record only when the site\'s Live Site is configured')]
     public function testEmailLinksNeedAKnownSiteAddress(): void
@@ -213,7 +213,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('With nothing renamed, no mailer is even created')]
     public function testNothingRenamedSendsNothing(): void
@@ -227,7 +227,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A mail server that fails reaches the caller, for it to log where it logs')]
     public function testFailedSendReachesTheCaller(): void
@@ -246,7 +246,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A report after a restore or Fix survives a failing mail server, so the repair it describes stands')]
     public function testReportSurvivesAFailedSend(): void
@@ -269,7 +269,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
      *
      * @return  int  The new message id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function seedMessage(string $title, string $date): int
     {
@@ -296,7 +296,7 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function seedSuperUser(string $email, int $sendEmail, int $block): void
     {

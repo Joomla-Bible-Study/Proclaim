@@ -20,7 +20,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.6.3
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Model;
@@ -29,13 +29,13 @@ use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.6.3
  */
 class FilterFormFieldTypeTest extends IntegrationTestCase
 {
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.3
      */
     #[TestDox('A form using a custom field type declares where to find it')]
     public function testFilterFormsDeclareTheirFieldPrefix(): void

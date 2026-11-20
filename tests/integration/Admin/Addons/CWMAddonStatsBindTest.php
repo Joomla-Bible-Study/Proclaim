@@ -11,7 +11,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Addons;
@@ -23,25 +23,25 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class CWMAddonStatsBindTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * @var mixed
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function setUp(): void
     {
@@ -61,7 +61,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function tearDown(): void
     {
@@ -86,7 +86,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
      *
      * @return  mixed
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function invoke(string $method, ...$args): mixed
     {
@@ -95,7 +95,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox("updateServerSyncTimestamp()'s bound :now UPDATE executes")]
     public function testUpdateServerSyncTimestampBindExecutes(): void
@@ -109,7 +109,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox("getMediaVideoIds()'s bound :platform LEFT JOIN executes")]
     public function testGetMediaVideoIdsPlatformJoinExecutes(): void

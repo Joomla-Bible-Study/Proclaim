@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\Test;
  * way the live-event suite pins the create refusals — no network is
  * reachable, only the stored server row decides.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.4.1
  */
 #[CoversClass(YoutubeStreamModeField::class)]
 class CwmstreamModeFieldTest extends IntegrationTestCase

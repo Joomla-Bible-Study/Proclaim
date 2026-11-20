@@ -18,14 +18,14 @@ use PHPUnit\Framework\Attributes\TestDox;
  * DisplayController removes a not-found page from the view cache by key, so
  * its key has to be the one Joomla stored the page under.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class DisplayControllerViewCacheIdTest extends ProclaimTestCase
 {
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[TestDox('The view-cache key matches the key ViewController stores a view under')]
     public function testKeyMatchesViewController(): void

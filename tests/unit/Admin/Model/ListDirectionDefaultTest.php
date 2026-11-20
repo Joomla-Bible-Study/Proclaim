@@ -24,7 +24,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * This scans source rather than executing the models because the bug lives in a
  * default argument that only a request-less caller ever reaches.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class ListDirectionDefaultTest extends ProclaimTestCase
 {

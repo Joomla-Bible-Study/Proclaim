@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * empty set must still clear, because collapsing them the other way would
  * break the user's ability to remove the last reference.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class CwmmessageSubformOmissionTest extends IntegrationTestCase
 {
@@ -44,7 +44,7 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     protected function setUp(): void
     {
@@ -73,7 +73,7 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     protected function tearDown(): void
     {
@@ -91,7 +91,7 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function invoke(string $method, array $args): void
     {
@@ -106,7 +106,7 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
 
     /**
      * @return  int  Reference rows owned by the fixture study.
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function countReferences(): int
     {
@@ -120,7 +120,7 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
 
     /**
      * @return  int  Topic rows owned by the fixture study.
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function countTopics(): int
     {
@@ -134,7 +134,7 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
 
     /**
      * @return  object  A reference shaped like ScriptureReference.
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function ref(int $book): object
     {
@@ -216,7 +216,7 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
 
     /**
      * @return  int  Teacher rows owned by the fixture study.
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function countTeachers(): int
     {

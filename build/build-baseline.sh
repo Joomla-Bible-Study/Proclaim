@@ -13,7 +13,7 @@
 # Version resolution: argument > current.version in build/versions.json.
 # Output: build/dist/pkg_proclaim-<version>.zip
 #
-# @since __DEPLOY_VERSION__
+# @since 10.3.3
 
 set -euo pipefail
 

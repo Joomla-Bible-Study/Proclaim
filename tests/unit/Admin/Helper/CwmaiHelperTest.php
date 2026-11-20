@@ -37,7 +37,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *    two independent test batches). Adding responseSchema (constrained
  *    decoding) eliminated the malformation across 4/4 follow-up live calls.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmaiHelperTest extends ProclaimTestCase
 {

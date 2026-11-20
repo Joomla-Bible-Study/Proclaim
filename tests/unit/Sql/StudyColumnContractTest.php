@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Retiring a column is a schema change with no compiler and no failing test to
  * connect it to the templates that read it, which is what this asserts instead.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 #[Group('sql')]
 class StudyColumnContractTest extends ProclaimTestCase

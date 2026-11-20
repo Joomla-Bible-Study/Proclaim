@@ -15,7 +15,7 @@ const { test, expect } = require('@playwright/test');
  * still reachable — including by keyboard.
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.6.0
  */
 
 /**

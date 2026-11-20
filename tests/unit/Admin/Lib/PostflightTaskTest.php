@@ -31,14 +31,14 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.10
  */
 class PostflightTaskTest extends ProclaimTestCase
 {
     /**
      * @return  string  The manifest script's source
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.10
      */
     private static function script(): string
     {
@@ -52,7 +52,7 @@ class PostflightTaskTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.10
      */
     private static function methodBody(string $signature): string
     {

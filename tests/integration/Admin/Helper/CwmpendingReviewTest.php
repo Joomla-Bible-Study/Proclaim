@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  *
  * The API now marks what it force-unpublishes, and only marked records count.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmcountHelper::class)]
 class CwmpendingReviewTest extends IntegrationTestCase

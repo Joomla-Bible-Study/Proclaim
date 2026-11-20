@@ -18,7 +18,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * Tests for the CwmstudytopicHelper class, extracted from
  * CwmmessageController::save() as part of #1444.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmstudytopicHelperTest extends ProclaimTestCase
 {

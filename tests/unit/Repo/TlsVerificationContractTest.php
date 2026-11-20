@@ -18,7 +18,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Repo;
@@ -27,7 +27,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class TlsVerificationContractTest extends ProclaimTestCase
 {
@@ -35,7 +35,7 @@ class TlsVerificationContractTest extends ProclaimTestCase
      * Source trees that ship.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private const ROOTS = ['admin/src', 'site/src', 'api/src', 'plugins', 'modules'];
 
@@ -43,13 +43,13 @@ class TlsVerificationContractTest extends ProclaimTestCase
      * Third-party code we neither wrote nor ship-audit here.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private const SKIP = ['/vendor/', '/node_modules/'];
 
     /**
      * @return  string[]  Absolute paths of every PHP file to inspect.
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private static function sourceFiles(): array
     {
@@ -85,7 +85,7 @@ class TlsVerificationContractTest extends ProclaimTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('No shipped file disables TLS peer or host verification')]
     public function testNothingDisablesTlsVerification(): void
@@ -122,7 +122,7 @@ class TlsVerificationContractTest extends ProclaimTestCase
      * would actually fire.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('The scan reads real files and its pattern matches a disabling line')]
     public function testScanIsNotVacuous(): void

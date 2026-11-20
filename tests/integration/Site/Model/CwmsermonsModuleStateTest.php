@@ -311,7 +311,7 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      *
      * @return  array{teacher: int, title: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function insertTeacherWithStudy(string $label): array
     {

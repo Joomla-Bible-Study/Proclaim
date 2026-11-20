@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * never calling getOptions() or rendering a <select> — it should extend
  * FormField instead.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class PredefinedOptionsFieldsTest extends ProclaimTestCase
 {

@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * COUNT(DISTINCT session_hash) -- the Sessions KPI -- is unaffected; across
  * days the same visitor is unlinkable.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmanalyticsHelper::class)]
 class CwmanalyticsSessionHashTest extends IntegrationTestCase

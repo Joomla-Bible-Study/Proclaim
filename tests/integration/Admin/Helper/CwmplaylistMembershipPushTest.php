@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * quota/auth early-stop. Each test runs inside a transaction that is rolled
  * back, so nothing persists.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.3
  */
 #[CoversClass(CwmplaylistSyncHelper::class)]
 class CwmplaylistMembershipPushTest extends IntegrationTestCase

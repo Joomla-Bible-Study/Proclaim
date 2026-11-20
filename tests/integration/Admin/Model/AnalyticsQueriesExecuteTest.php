@@ -34,7 +34,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * every breakdown column populated. A query that executes must find them; a
  * query that died cannot.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 #[CoversClass(CwmanalyticsModel::class)]
 class AnalyticsQueriesExecuteTest extends IntegrationTestCase

@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * rather than argue it is correct. If a change here is intended, update them
  * knowingly.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(Cwmlisting::class)]
 class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase

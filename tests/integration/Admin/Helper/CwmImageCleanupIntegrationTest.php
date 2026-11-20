@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * re-querying current DB state. Fixed by re-deriving the folder's ID and
  * re-checking it against a fresh getValidIds() call immediately before delete.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmImageCleanup::class)]
 class CwmImageCleanupIntegrationTest extends IntegrationTestCase

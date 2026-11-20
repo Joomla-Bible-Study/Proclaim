@@ -11,7 +11,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Model;
@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 #[CoversClass(CwmmediafileModel::class)]
 #[CoversClass(CwmserverModel::class)]
@@ -39,13 +39,13 @@ class CwmMissingItemTest extends IntegrationTestCase
 {
     /**
      * @var  mixed  The request id before the test changed it
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.3
      */
     private mixed $savedId = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.3
      */
     protected function setUp(): void
     {
@@ -60,7 +60,7 @@ class CwmMissingItemTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.3
      */
     protected function tearDown(): void
     {
@@ -75,7 +75,7 @@ class CwmMissingItemTest extends IntegrationTestCase
      * @param   string  $table  Table name
      *
      * @return  int
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.3
      */
     private function missingId(string $table): int
     {
@@ -88,7 +88,7 @@ class CwmMissingItemTest extends IntegrationTestCase
      * @param   string  $name  Model name
      *
      * @return  object
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.3
      */
     private function model(string $name): object
     {

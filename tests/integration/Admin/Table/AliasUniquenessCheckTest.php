@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * user whose admin list would already show it; anyone else is told only that
  * the alias is taken.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class AliasUniquenessCheckTest extends IntegrationTestCase
 {
@@ -36,7 +36,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function setUp(): void
     {
@@ -57,7 +57,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function tearDown(): void
     {
@@ -78,7 +78,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A new message with an alias another message holds is refused, naming and linking that message')]
     public function testMessageAliasHeldElsewhereIsRefused(): void
@@ -95,7 +95,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('When the holder is trashed, the refusal says so')]
     public function testTrashedHolderIsNamedAsTrashed(): void
@@ -112,7 +112,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A holder the user cannot see in the admin list is not named, only the alias is said to be taken')]
     public function testHolderHiddenFromTheUserIsNotNamed(): void
@@ -130,7 +130,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('Outside the administrator the holder is not named, even to a super user')]
     public function testOutsideTheAdministratorTheHolderIsNotNamed(): void
@@ -148,7 +148,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('Re-saving a message with the alias it already has passes')]
     public function testOwnAliasPasses(): void
@@ -165,7 +165,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A new series with an alias another series holds is refused, naming and linking that series')]
     public function testSeriesAliasHeldElsewhereIsRefused(): void
@@ -192,7 +192,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function refusal(Table $table, CMSApplicationInterface $app): string
     {
@@ -214,7 +214,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
      *
      * @return  CMSApplicationInterface
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function application(string $client, bool $superUser): CMSApplicationInterface
     {
@@ -235,7 +235,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
      *
      * @return  CwmmessageTable
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function messageTable(string $title, string $alias): CwmmessageTable
     {
@@ -253,7 +253,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
      *
      * @return  int  The new row id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function seed(string $table, array $values): int
     {

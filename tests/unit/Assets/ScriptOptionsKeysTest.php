@@ -17,7 +17,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.4.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Assets;

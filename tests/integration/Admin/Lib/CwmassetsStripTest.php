@@ -16,7 +16,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
@@ -30,19 +30,19 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 class CwmassetsStripTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function setUp(): void
     {
@@ -57,7 +57,7 @@ class CwmassetsStripTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function tearDown(): void
     {
@@ -77,7 +77,7 @@ class CwmassetsStripTest extends IntegrationTestCase
      * The highest right-hand bound in the tree.
      *
      * @return  int
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function maxRgt(): int
     {

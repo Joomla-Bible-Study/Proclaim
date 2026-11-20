@@ -41,7 +41,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * CwmImageCleanup (#1563). Reachable only via a crafted stored path rather
  * than directly from a request, but the same class.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(Cwmthumbnail::class)]
 class CwmthumbnailSafetyTest extends IntegrationTestCase

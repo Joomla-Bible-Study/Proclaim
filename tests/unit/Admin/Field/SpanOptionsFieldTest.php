@@ -22,7 +22,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * which downstream consumers (e.g. Cwmlisting.php's colspan handling) treat
  * as a truthy, non-numeric value rather than "no span override".
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class SpanOptionsFieldTest extends ProclaimTestCase
 {

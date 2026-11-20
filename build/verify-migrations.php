@@ -38,7 +38,7 @@
  * a version shipped migrations with no expectations describing them.
  *
  * @package  Proclaim.Build
- * @since    __DEPLOY_VERSION__
+ * @since    10.3.3
  */
 
 declare(strict_types=1);
@@ -471,7 +471,7 @@ exit(1);
  *
  * @return list<string>
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.3.4
  */
 function migrationFilesFor(string $root, string $version): array
 {

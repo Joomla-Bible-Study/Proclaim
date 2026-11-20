@@ -38,7 +38,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * nothing to refuse — it fails open, silently, and every test asserting a
  * refusal would still pass if the refusal came from somewhere else.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 #[CoversClass(Cwmdownload::class)]
 class CwmdownloadReachableTest extends IntegrationTestCase

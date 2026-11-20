@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * that cannot express them and destructive when applied to a file the user
  * authored.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmcaptionValidator::class)]
 class CwmcaptionVttStructureTest extends ProclaimTestCase

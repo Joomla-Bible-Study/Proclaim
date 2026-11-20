@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * reaching `loadFormData()` means a form, a database and a session — while the
  * defect is a shape error that reads perfectly well in the file.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class LoadFormDataShapeTest extends ProclaimTestCase
 {
@@ -41,7 +41,7 @@ class LoadFormDataShapeTest extends ProclaimTestCase
      *
      * @return  array<int, string>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private static function modelFiles(): array
     {
@@ -60,7 +60,7 @@ class LoadFormDataShapeTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('No model wraps its item in a list when loading form data')]
     public function testNoModelWrapsTheItem(): void

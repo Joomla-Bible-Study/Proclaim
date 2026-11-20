@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * Dispatch is now restricted to handlers each addon opts into via
  * getXhrHandlers(), and the task requires core.edit or core.create.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmmediafileXhrDispatchTest extends ProclaimTestCase
 {

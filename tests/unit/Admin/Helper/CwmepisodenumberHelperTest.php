@@ -22,7 +22,7 @@ use Joomla\Database\DatabaseDriver;
  * hardcoded ids from a specific dev database (j5_dev) and failed on CI's
  * empty proclaim_test database; see PR #1506 review.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmepisodenumberHelperTest extends ProclaimTestCase
 {

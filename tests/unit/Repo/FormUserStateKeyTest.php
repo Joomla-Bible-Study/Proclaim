@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * that state needs a session, a controller and a failing validation, while the
  * defect is a string mismatch that reads perfectly well in the file.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class FormUserStateKeyTest extends ProclaimTestCase
 {
@@ -45,7 +45,7 @@ class FormUserStateKeyTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private static function derivedContext(string $class): string
     {
@@ -65,7 +65,7 @@ class FormUserStateKeyTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('Every model reads saved form data under the key its controller writes')]
     public function testUserStateKeyMatchesTheControllerContext(): void

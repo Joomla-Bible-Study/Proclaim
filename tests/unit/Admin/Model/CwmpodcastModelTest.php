@@ -28,7 +28,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * itself — a broken feed write shouldn't block an admin from saving
  * unrelated changes.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmpodcastModelTest extends ProclaimTestCase
 {

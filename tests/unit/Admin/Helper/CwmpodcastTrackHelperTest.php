@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * Pure-logic tests for the podcast download tracking helper (#1281):
  * bot detection and client fingerprinting used by the tracking redirect.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.3
  */
 #[CoversClass(CwmpodcastTrackHelper::class)]
 class CwmpodcastTrackHelperTest extends ProclaimTestCase

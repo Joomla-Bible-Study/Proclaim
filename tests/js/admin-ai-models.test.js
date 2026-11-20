@@ -15,7 +15,7 @@
  * behind a variable, whether or not it still ends up in the URL.
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.7.1
  */
 
 require('./setup');

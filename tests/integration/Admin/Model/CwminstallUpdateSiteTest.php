@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * it a 10.x release, and the package postflight's retirement of component-owned
  * sites was undone moments after it happened.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.10
  */
 #[CoversClass(CwminstallModel::class)]
 class CwminstallUpdateSiteTest extends IntegrationTestCase

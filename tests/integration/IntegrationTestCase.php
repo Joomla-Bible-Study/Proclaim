@@ -140,7 +140,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function uniqueAlias(string $label = 'row'): string
     {
@@ -161,7 +161,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      *
      * @return  mixed  What $run returned
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function withApplication(\Joomla\CMS\Application\CMSApplicationInterface $app, callable $run): mixed
     {
@@ -188,7 +188,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      *
      * @return  \Joomla\CMS\Mail\Mail  With a public $sends count
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function recordingMailer(bool $succeed = true): \Joomla\CMS\Mail\Mail
     {
@@ -220,7 +220,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      *
      * @return  \Joomla\CMS\Mail\MailerFactoryInterface
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function mailerFactoryFor(\Joomla\CMS\Mail\Mail $mail): \Joomla\CMS\Mail\MailerFactoryInterface
     {
@@ -265,7 +265,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      *
      * @return  mixed  The previous Factory::$language.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     protected function silenceDateLanguageWarnings(): mixed
     {

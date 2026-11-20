@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * server, then checks that the status comes back: a cache that stopped
  * working would fall through to the API path and fail the assertion.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class YoutubeStatusCacheTest extends ProclaimTestCase
 {
@@ -41,7 +41,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function setUp(): void
     {
@@ -54,7 +54,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function tearDown(): void
     {
@@ -66,7 +66,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A page reloaded because the poll saw the stream go live renders it live, so the poll does not reload it again')]
     public function testPageRendersThePolledStatus(): void
@@ -88,7 +88,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A status the poll only guessed because the quota ran out does not change the page')]
     public function testQuotaGuessDoesNotChangeThePage(): void
@@ -109,7 +109,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A browser\'s status poll is answered from the cache rather than asking YouTube again')]
     public function testStatusPollUsesTheCachedStatus(): void
@@ -128,7 +128,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A poll\'s answer is cached for the next poll')]
     public function testPollAnswerIsCachedForTheNextPoll(): void
@@ -142,7 +142,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A token for one video cannot ask about another, so a poll cannot fill the cache with videos of its own choosing')]
     public function testTokenIsBoundToItsVideo(): void
@@ -161,7 +161,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function cacheVideo(array $status): void
     {
@@ -176,7 +176,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function render(): array
     {
@@ -196,7 +196,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function poll(string $videoId, ?string $tokenFor = null): array
     {
@@ -228,7 +228,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function removeCacheDir(): void
     {

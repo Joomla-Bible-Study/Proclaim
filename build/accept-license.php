@@ -29,7 +29,7 @@ declare(strict_types=1);
  *   1  a write that did not take, no com_proclaim row, or no usable install
  *
  * @package    Proclaim.Build
- * @since      __DEPLOY_VERSION__
+ * @since      10.7.5
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 

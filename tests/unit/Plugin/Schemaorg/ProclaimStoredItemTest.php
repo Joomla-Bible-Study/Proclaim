@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * The plugin class is outside composer's autoload map, so it is loaded directly
  * and the private static method is reached through reflection.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class ProclaimStoredItemTest extends ProclaimTestCase
 {
@@ -37,7 +37,7 @@ class ProclaimStoredItemTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     protected function setUp(): void
     {
@@ -54,7 +54,7 @@ class ProclaimStoredItemTest extends ProclaimTestCase
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function append(array $graph, ?array $stored): array
     {
@@ -68,7 +68,7 @@ class ProclaimStoredItemTest extends ProclaimTestCase
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function coreGraph(): array
     {

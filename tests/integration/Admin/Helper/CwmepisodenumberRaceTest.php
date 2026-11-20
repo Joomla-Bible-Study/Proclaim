@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * so a plain unique index would have collided across all of them; mapping both
  * cases to NULL through a generated column leaves them unconstrained.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmepisodenumberRaceTest extends IntegrationTestCase
 {

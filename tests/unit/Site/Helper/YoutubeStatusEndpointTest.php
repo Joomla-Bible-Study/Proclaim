@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * up. The poll went unanswered from 10.1.0 because the class name and the
  * name com_ajax derives from the URL did not match, and nothing noticed.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class YoutubeStatusEndpointTest extends ProclaimTestCase
 {
@@ -31,7 +31,7 @@ class YoutubeStatusEndpointTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('The poll URL in the template names a helper and method that com_ajax can call')]
     public function testPollUrlReachesTheHelper(): void
@@ -79,7 +79,7 @@ class YoutubeStatusEndpointTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function helperName(string $module): string
     {

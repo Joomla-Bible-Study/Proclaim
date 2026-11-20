@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * TABLE commits implicitly, so nothing here relies on a rollback: these tests
  * write only to the temporary table, and drop it afterwards.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class CwmaliasUniqueTest extends IntegrationTestCase
 {
@@ -35,7 +35,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function setUp(): void
     {
@@ -56,7 +56,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function tearDown(): void
     {
@@ -74,7 +74,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('The visible row the router serves keeps a shared alias; the others get the next free suffix')]
     public function testVisibleRowKeepsTheSharedAlias(): void
@@ -100,7 +100,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('An archived row is visible, so it keeps an alias it shares with an older trashed one')]
     public function testArchivedRowKeepsTheAlias(): void
@@ -117,7 +117,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A suffix another row already holds is skipped')]
     public function testTakenSuffixIsSkipped(): void
@@ -136,7 +136,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('Rows with no alias get one from their title, even a lone one')]
     public function testEmptyAliasesAreBuiltFromTheTitle(): void
@@ -155,7 +155,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('The unique index is added, a second run changes nothing, and the index refuses a duplicate')]
     public function testIndexIsAddedAndHolds(): void
@@ -176,7 +176,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('An index of the same name that is not unique is replaced by a unique one')]
     public function testNonUniqueIndexOfTheSameNameIsReplaced(): void
@@ -199,7 +199,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  list<array{id: int, from: string, to: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function ensure(): array
     {
@@ -214,7 +214,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function seed(int $id, string $alias, int $published, string $title = 'zz alias unique'): void
     {
@@ -238,7 +238,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function aliasOf(int $id): string
     {
@@ -253,7 +253,7 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     /**
      * @return  string  'unique', 'other' or 'none'
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function indexState(): string
     {

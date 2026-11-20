@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * toolbar needs a booted administrator application to render, and the thing
  * worth pinning is the API each view calls.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class ToolbarSaveGroupTest extends ProclaimTestCase
 {
@@ -33,7 +33,7 @@ class ToolbarSaveGroupTest extends ProclaimTestCase
      * Views with no save variants to group — a single Save is already correct.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const NO_VARIANTS = [
         'Cwmadmin',
@@ -46,7 +46,7 @@ class ToolbarSaveGroupTest extends ProclaimTestCase
 
     /**
      * @return  string
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function repoRoot(): string
     {
@@ -58,7 +58,7 @@ class ToolbarSaveGroupTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function editViewProvider(): array
     {

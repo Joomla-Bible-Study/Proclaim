@@ -46,6 +46,29 @@ Two examples, both of which passed `php -l` and the full suite:
 `native_function_invocation` rule — following the IDE there fights
 `composer lint` on every commit.
 
+### Docblocks: test code too
+
+Tests follow the same docblock layout as shipped code; the `joomla` skill's
+coding-standards reference has it in full. Every class, property, constant and
+method gets one, including `setUp()`, `tearDown()`, data providers, test
+methods and the members of anonymous test doubles:
+
+- a description first
+- `@param` entries aligned, one per parameter
+- a blank line, then `@return` with a description (`void` too)
+- a blank line, then `@since`, then any `@throws`
+
+New code, tests and build scripts included, takes `@since __DEPLOY_VERSION__`.
+A release replaces it everywhere `versionTracking.substituteTokens` in
+`cwm-build.config.json` reaches, and `SincePlaceholderStampingTest` fails when a
+placeholder sits anywhere it doesn't. ⚠️ Never write the literal token as a
+string in a stamped file. The release rewrites every occurrence, so assemble it
+from two halves.
+
+⚠️ Most existing tests use a compact `@return void` / `@since` pair with no
+description, or no docblock at all. Don't copy it from the file next door.
+#2370 tracks bringing the suite up to standard.
+
 ### Naming Conventions
 
 - Class naming: `Cwm` prefix (e.g., `CwmparamsModel`, `CwmteacherTable`)

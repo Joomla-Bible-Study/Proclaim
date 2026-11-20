@@ -10,7 +10,7 @@
  * themselves.
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.7.8
  */
 
 const assert = require('node:assert/strict');

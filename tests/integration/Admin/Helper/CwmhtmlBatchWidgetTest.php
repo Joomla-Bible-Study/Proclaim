@@ -35,7 +35,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * accessibility failure, and makes any getElementById() lookup ambiguous.
  * location(), added later, already used a unique id.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(Cwmhtml::class)]
 class CwmhtmlBatchWidgetTest extends IntegrationTestCase

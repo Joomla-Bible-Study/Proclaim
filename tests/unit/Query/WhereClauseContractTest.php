@@ -8,7 +8,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Query;
@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 class WhereClauseContractTest extends TestCase
 {
@@ -25,20 +25,20 @@ class WhereClauseContractTest extends TestCase
      * Source trees whose queries reach a database.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const ROOTS = ['admin', 'site', 'api', 'components', 'modules', 'plugins', 'libraries/lib_cwmscripture'];
 
     /**
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const SKIP = ['vendor', 'node_modules', 'tests', 'scripturelinks/libraries'];
 
     /**
      * @return  string[]  Absolute paths of every PHP file to inspect
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function sourceFiles(): array
     {
@@ -82,7 +82,7 @@ class WhereClauseContractTest extends TestCase
      *
      * @return  string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function reconstructSql(string $argument): string
     {
@@ -98,7 +98,7 @@ class WhereClauseContractTest extends TestCase
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function hasTopLevelOr(string $sql): bool
     {
@@ -125,7 +125,7 @@ class WhereClauseContractTest extends TestCase
      *
      * @return  array<int, array{0: string, 1: int, 2: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function whereArguments(): array
     {
@@ -241,7 +241,7 @@ class WhereClauseContractTest extends TestCase
      * test.
      *
      * @var array<string, string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const UNVERIFIABLE_WHERE = [
         'CwmarchiveModel.php:105' => 'One-element array holding a single date comparison; no OR to bracket.',
@@ -262,7 +262,7 @@ class WhereClauseContractTest extends TestCase
      * refusing the shape is nearly nothing and the rule is easy to state.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('no where() is handed conditions the OR check cannot read')]
     public function testNoWhereIsGivenAnUnreadableArgument(): void

@@ -22,7 +22,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * field's own form-control/group state — breaking silently outside that
  * one hardcoded form/group.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class LayoutEditorFieldTest extends ProclaimTestCase
 {

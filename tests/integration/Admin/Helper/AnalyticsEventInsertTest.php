@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * columns the old code spelled as "or NULL" ternaries — a null local must
  * arrive as SQL NULL, not the string that PHP would coerce.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 #[CoversClass(CwmanalyticsHelper::class)]
 class AnalyticsEventInsertTest extends IntegrationTestCase

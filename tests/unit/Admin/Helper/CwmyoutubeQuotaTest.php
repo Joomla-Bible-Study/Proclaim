@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  *
  * No test file existed for this class before.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmyoutubeQuotaTest extends ProclaimTestCase
 {

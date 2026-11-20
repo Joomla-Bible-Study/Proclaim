@@ -31,7 +31,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 declare(strict_types=1);
@@ -263,7 +263,7 @@ echo "Front-end OK.\n";
  *
  * @return  string|null  Body, or null when the request produced nothing
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 function fetch(string $url, ?int &$status, string $accept = '*/*'): ?string
 {
@@ -301,7 +301,7 @@ function fetch(string $url, ?int &$status, string $accept = '*/*'): ?string
  *
  * @return  void
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 function report(bool $ok, string $label, string $detail): void
 {
@@ -329,7 +329,7 @@ function report(bool $ok, string $label, string $detail): void
  *
  * @return  int  Problems found
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function checkSeededStudies(TestSite $site, string $url, string $marker, string $root): int
 {
@@ -399,7 +399,7 @@ function checkSeededStudies(TestSite $site, string $url, string $marker, string 
  *
  * @return  int  Problems found
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function checkSeededModules(TestSite $site, string $url, array $items, string $root): int
 {
@@ -488,7 +488,7 @@ function checkSeededModules(TestSite $site, string $url, array $items, string $r
  *
  * @return  int  Problems found
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function checkSeededPlugins(TestSite $site, string $url, string $marker, string $root): int
 {
@@ -578,7 +578,7 @@ function checkSeededPlugins(TestSite $site, string $url, string $marker, string 
  *
  * @return  int  Problems found
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function checkSeededTemplates(TestSite $site, string $url, string $marker, string $root): int
 {
@@ -643,7 +643,7 @@ function checkSeededTemplates(TestSite $site, string $url, string $marker, strin
  *
  * @return  list<string>
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function creativeWorkNames(?string $body): array
 {
@@ -683,7 +683,7 @@ function creativeWorkNames(?string $body): array
  *
  * @return  int  Problems found
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function checkSeededAccounts(TestSite $site, $install, string $marker, string $root): int
 {
@@ -799,7 +799,7 @@ function checkSeededAccounts(TestSite $site, $install, string $marker, string $r
  *
  * @return  string|null
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function loginAs(string $url, string $username, string $password): ?string
 {
@@ -842,7 +842,7 @@ function loginAs(string $url, string $username, string $password): ?string
  *
  * @return  string|null
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function fetchAs(string $url, string $jar, ?int &$status, ?array $post = null): ?string
 {
@@ -878,7 +878,7 @@ function fetchAs(string $url, string $jar, ?int &$status, ?array $post = null): 
  *
  * @return  int
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function apiCall(string $method, string $url, string $token): int
 {
@@ -912,7 +912,7 @@ function apiCall(string $method, string $url, string $token): int
  *
  * @return  int  Problems found
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.3
  */
 function checkSeededSearch($install, string $marker, string $root): int
 {

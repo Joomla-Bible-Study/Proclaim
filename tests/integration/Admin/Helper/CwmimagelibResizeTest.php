@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * huge dimensions could exhaust memory_limit -- a raw fatal that no catch can
  * reach.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(Cwmimagelib::class)]
 class CwmimagelibResizeTest extends IntegrationTestCase

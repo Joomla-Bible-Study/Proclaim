@@ -24,7 +24,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * assertions instead, matching the pattern used for other DB-touching
  * converters in this test suite (e.g. CwmpIconvertTest).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmssconvertTest extends ProclaimTestCase
 {

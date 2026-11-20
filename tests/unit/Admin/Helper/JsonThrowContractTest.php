@@ -34,7 +34,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * unguarded when the flag is simply further down. That exact mistake produced a
  * false finding of "8 encodes destroying data" while #1558 was being scoped.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class JsonThrowContractTest extends ProclaimTestCase
 {

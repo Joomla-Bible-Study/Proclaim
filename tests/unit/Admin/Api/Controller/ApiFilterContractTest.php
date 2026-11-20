@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Sibling of JsonapiViewFieldsTest, which guards the same "declared but never
  * delivered" shape one layer down, in the response fields.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class ApiFilterContractTest extends ProclaimTestCase
 {
@@ -38,7 +38,7 @@ class ApiFilterContractTest extends ProclaimTestCase
      * 'series' to Cwmseries or Cwmserie depending on route.
      *
      * @var array<string, string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const CONTROLLER_MODELS = [
         'Comments'     => 'CwmcommentsModel',
@@ -60,7 +60,7 @@ class ApiFilterContractTest extends ProclaimTestCase
 
     /**
      * @return  string
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function repoRoot(): string
     {
@@ -72,7 +72,7 @@ class ApiFilterContractTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function controllerProvider(): array
     {
@@ -99,7 +99,7 @@ class ApiFilterContractTest extends ProclaimTestCase
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function filtersSetBy(string $controller): array
     {
@@ -124,7 +124,7 @@ class ApiFilterContractTest extends ProclaimTestCase
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function modelReads(string $model, string $filter): bool
     {
