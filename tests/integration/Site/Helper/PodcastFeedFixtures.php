@@ -26,6 +26,27 @@ use Joomla\Database\DatabaseDriver;
 trait PodcastFeedFixtures
 {
     /**
+     * Seed a published podcast with one dated episode, so the build reaches its feed.
+     *
+     * @param   string  $title  The podcast's title
+     *
+     * @return  array{id: int, filename: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function seedPodcast(string $title): array
+    {
+        $filename  = $this->uniqueAlias('feed') . '.xml';
+        $podcastId = $this->insertPodcast($filename, null, $title);
+
+        $this->insertMediaFile($this->insertMessage('2026-03-01 15:30:00'), $podcastId, '2026-03-01 15:30:00');
+
+        return ['id' => $podcastId, 'filename' => $filename];
+    }
+
+    /**
+     * Insert a published podcast with a website and file name, and blank artwork.
+     *
      * @param   string    $filename  The feed's file name
      * @param   int|null  $limit     The podcast's episode limit; null leaves the column NULL (no limit)
      * @param   string    $title     The podcast's title
@@ -56,6 +77,8 @@ trait PodcastFeedFixtures
     }
 
     /**
+     * Insert a published message, which an episode takes its title and date from.
+     *
      * @param   string|null  $studydate  The message's date
      *
      * @return  int  The new message id
@@ -90,6 +113,9 @@ trait PodcastFeedFixtures
     }
 
     /**
+     * Insert a published media file for a message, assigned to a podcast, which
+     * makes it one of that podcast's episodes.
+     *
      * @param   int          $studyId     The owning message
      * @param   int          $podcastId   The podcast, in the CSV podcast_id column
      * @param   string|null  $createdate  The media file's createdate

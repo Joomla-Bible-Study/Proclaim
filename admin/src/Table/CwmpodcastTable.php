@@ -521,19 +521,38 @@ class CwmpodcastTable extends Table
     }
 
     /**
-     * Perform pre-save checks on the table properties.
+     * Refuse a podcast that is missing a required setting or holds an invalid
+     * one, and tidy the rest before it is stored.
      *
-     * @return  bool  True if checks pass.
-     *
-     * @throws  \UnexpectedValueException
+     * @return  bool  True when the podcast can be stored
      *
      * @since   10.1.0
+     * @throws  \UnexpectedValueException
+     * @throws  \Exception
      */
     #[\Override]
     public function check(): bool
     {
-        if (trim($this->title ?? '') === '') {
-            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_TITLE_REQUIRED'));
+        // The form requires these too, but a batch edit, or code that stores the
+        // row itself, reaches only this check. Without a website the feed has no
+        // address, and without a file name nothing to be written to. Artwork is
+        // not refused here: a feed builds without it, and System Health names it.
+        $missing = [];
+
+        foreach (
+            [
+                'title'    => 'JBS_PDC_VALIDATE_TITLE_REQUIRED',
+                'website'  => 'JBS_PDC_VALIDATE_WEBSITE_REQUIRED',
+                'filename' => 'JBS_PDC_VALIDATE_FILENAME_REQUIRED',
+            ] as $column => $key
+        ) {
+            if (trim((string) $this->$column) === '') {
+                $missing[] = Text::_($key);
+            }
+        }
+
+        if ($missing !== []) {
+            throw new \UnexpectedValueException(implode('; ', $missing));
         }
 
         // Normalise "Global (All Campuses)" sentinel to NULL for DB storage
