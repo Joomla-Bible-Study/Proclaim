@@ -59,6 +59,24 @@ class Cwmpodcast
     private const REMOTE_HEADER_TIMEOUT = 30;
 
     /**
+     * The settings a podcast's feed needs, each with the message that names it.
+     *
+     * The same settings validatePodcast() reports as required, in its order.
+     *
+     * @var    array<string, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    public const array FEED_SETTINGS = [
+        'title'        => 'JBS_PDC_VALIDATE_TITLE_REQUIRED',
+        'description'  => 'JBS_PDC_VALIDATE_DESCRIPTION_REQUIRED',
+        'editor_name'  => 'JBS_PDC_VALIDATE_AUTHOR_REQUIRED',
+        'editor_email' => 'JBS_PDC_VALIDATE_EMAIL_REQUIRED',
+        'website'      => 'JBS_PDC_VALIDATE_WEBSITE_REQUIRED',
+        'filename'     => 'JBS_PDC_VALIDATE_FILENAME_REQUIRED',
+        'podcastimage' => 'JBS_PDC_VALIDATE_IMAGE_REQUIRED',
+    ];
+
+    /**
      * @var int
      * @since 7.0.0
      */
@@ -101,12 +119,15 @@ class Cwmpodcast
     }
 
     /**
-     * Make All Podcasts
+     * Build the feed of every published podcast.
      *
-     * @return string
+     * A podcast that can't be built is skipped and counted, and the feeds after
+     * it are still written; getFailedFeedCount() reports how many were skipped.
      *
-     * @throws \Exception
-     * @since 8.0.0
+     * @return  string  A line for each podcast, joined with <br />
+     *
+     * @since   8.0.0
+     * @throws  \Exception
      */
     public function makePodcasts(): string
     {
@@ -159,6 +180,14 @@ class Cwmpodcast
                 $episodes = $this->getEpisodes((int) $podinfo->id, $limit > 0 ? 'LIMIT ' . $limit : '');
 
                 if (!$episodes) {
+                    continue;
+                }
+
+                $unbuildable = self::unbuildableSettings($podinfo);
+
+                if ($unbuildable !== []) {
+                    $msg[] = $this->feedNotBuilt($podinfo, implode('; ', $unbuildable));
+
                     continue;
                 }
 
@@ -388,26 +417,46 @@ class Cwmpodcast
                 $file_url = Uri::root() . $podinfo->filename;
                 $msg[]    = $file_url . ' - ' . ($filewritten ? Text::_('JBS_PDC_XML_FILES_WRITTEN') : Text::_('JBS_PDC_XML_FILES_ERROR'));
             } catch (\Throwable $e) {
-                $this->failedFeeds++;
-
-                // The title column allows NULL too, so fall back to something that names the feed.
-                $feedName = $podinfo->title ?: $podinfo->filename ?: '#' . (int) $podinfo->id;
-
-                CwmlogHelper::error(\sprintf(
-                    'Podcast feed "%s" (id %d) was not rebuilt: %s in %s:%d',
-                    $feedName,
-                    (int) $podinfo->id,
+                $msg[] = $this->feedNotBuilt(
+                    $podinfo,
                     $e->getMessage(),
-                    $e->getFile(),
-                    $e->getLine()
-                ));
-
-                $msg[] = htmlspecialchars($feedName) . ' - '
-                    . Text::sprintf('JBS_PDC_XML_FILE_NOT_BUILT', htmlspecialchars($e->getMessage()));
+                    \sprintf(' in %s:%d', $e->getFile(), $e->getLine())
+                );
             }
         }
 
         return implode('<br />', $msg) ?: 'No message';
+    }
+
+    /**
+     * Count a feed that was not rebuilt, log why, and return the line the
+     * administrator reads.
+     *
+     * @param   object  $podinfo  The podcast row
+     * @param   string  $reason   Why it was not rebuilt
+     * @param   string  $where    Where it failed, for the log only
+     *
+     * @return  string  The podcast's line in the run's report
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function feedNotBuilt(object $podinfo, string $reason, string $where = ''): string
+    {
+        $this->failedFeeds++;
+
+        // The title column allows NULL too, so fall back to something that names the feed.
+        $feedName = $podinfo->title ?: $podinfo->filename ?: '#' . (int) $podinfo->id;
+
+        CwmlogHelper::error(\sprintf(
+            'Podcast feed "%s" (id %d) was not rebuilt: %s%s',
+            $feedName,
+            (int) $podinfo->id,
+            $reason,
+            $where
+        ));
+
+        return htmlspecialchars($feedName) . ' - '
+            . Text::sprintf('JBS_PDC_XML_FILE_NOT_BUILT', htmlspecialchars($reason));
     }
 
     /**
@@ -420,6 +469,62 @@ class Cwmpodcast
     public function getFailedFeedCount(): int
     {
         return $this->failedFeeds;
+    }
+
+    /**
+     * The feed settings a podcast has left empty.
+     *
+     * @param   object  $podcast  A podcast row carrying every FEED_SETTINGS column
+     *
+     * @return  array<string, string>  The message naming each one, by column
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function missingSettings(object $podcast): array
+    {
+        $missing = [];
+
+        foreach (self::FEED_SETTINGS as $column => $key) {
+            if (trim((string) ($podcast->$column ?? '')) === '') {
+                $missing[$column] = Text::_($key);
+            }
+        }
+
+        return $missing;
+    }
+
+    /**
+     * The missing settings that stop a podcast's feed being built at all.
+     *
+     * A NULL website or image can't be passed to the string-typed helpers that
+     * build the feed's addresses. A blank one still builds, as it always has for
+     * podcasts saved before 10.3.0 made these settings required; skipping those
+     * would stop feeds that reach subscribers today. Without a file name there is
+     * nothing to write either way.
+     *
+     * @param   object  $podcast  A podcast row carrying every FEED_SETTINGS column
+     *
+     * @return  array<string, string>  The message naming each one, by column
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function unbuildableSettings(object $podcast): array
+    {
+        $unbuildable = [];
+
+        foreach (self::missingSettings($podcast) as $column => $message) {
+            $stopsTheBuild = match ($column) {
+                'website', 'podcastimage' => ($podcast->$column ?? null) === null,
+                'filename'                => true,
+                default                   => false,
+            };
+
+            if ($stopsTheBuild) {
+                $unbuildable[$column] = $message;
+            }
+        }
+
+        return $unbuildable;
     }
 
     /**

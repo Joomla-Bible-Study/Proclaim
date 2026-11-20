@@ -34,19 +34,27 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
     use PodcastFeedFixtures;
 
     /**
+     * The database, inside a transaction each test rolls back.
+     *
      * @var    DatabaseDriver|null
      * @since  __DEPLOY_VERSION__
      */
     private ?DatabaseDriver $db = null;
 
     /**
+     * Factory::$language as it was before setUp() pinned it, for tearDown() to restore.
+     *
      * @var    mixed
      * @since  __DEPLOY_VERSION__
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
+     * Open the transaction the test seeds into, and give the feed's date code
+     * the language tag it reads.
+     *
      * @return  void
+     *
      * @since   __DEPLOY_VERSION__
      */
     protected function setUp(): void
@@ -64,7 +72,10 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back everything the test seeded, and restore the language.
+     *
      * @return  void
+     *
      * @since   __DEPLOY_VERSION__
      */
     protected function tearDown(): void
@@ -83,8 +94,13 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
     }
 
     /**
+     * One podcast's feed throwing an Error is reported and counted, and the
+     * feeds built around it are still written, with nothing of it in them.
+     *
      * @return  void
+     *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     #[TestDox('A podcast whose feed throws an Error is reported, and the feeds around it are still written')]
     public function testOneFailingPodcastDoesNotStopTheOthers(): void
@@ -96,11 +112,33 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
         $after   = $this->seedPodcast('Isolation after');
 
         $helper = new class () extends Cwmpodcast {
-            /** @var array<string, string> Feed XML by file name */
+            /**
+             * Each feed the build would have written, by file name.
+             *
+             * @var    array<string, string>
+             * @since  __DEPLOY_VERSION__
+             */
             public array $written = [];
 
+            /**
+             * The podcast whose episodes come back unreadable.
+             *
+             * @var    int
+             * @since  __DEPLOY_VERSION__
+             */
             public int $failingId = 0;
 
+            /**
+             * The real episodes, with the failing podcast's params taken away, so
+             * reading them throws an Error partway through its feed.
+             *
+             * @param   int     $id     The podcast
+             * @param   string  $limit  The LIMIT clause, or an empty string
+             *
+             * @return  array  The podcast's episodes
+             *
+             * @since   __DEPLOY_VERSION__
+             */
             public function getEpisodes(int $id, string $limit): array
             {
                 $episodes = parent::getEpisodes($id, $limit);
@@ -114,6 +152,16 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
                 return $episodes;
             }
 
+            /**
+             * Keep the feed instead of writing it to the site.
+             *
+             * @param   string  $file         Where the feed would have been written
+             * @param   string  $filecontent  The feed's XML
+             *
+             * @return  bool  Always true, as a successful write would be
+             *
+             * @since   __DEPLOY_VERSION__
+             */
             public function writeFile(string $file, string $filecontent): bool
             {
                 $this->written[basename($file)] = $filecontent;
@@ -137,24 +185,5 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
             $helper->written[$after['filename']],
             'Nothing from the failing podcast may reach the next feed'
         );
-    }
-
-    /**
-     * Seed a podcast with one dated episode.
-     *
-     * @param   string  $title  The podcast's title
-     *
-     * @return  array{id: int, filename: string}
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    private function seedPodcast(string $title): array
-    {
-        $filename  = $this->uniqueAlias('feed-isolation') . '.xml';
-        $podcastId = $this->insertPodcast($filename, null, $title);
-
-        $this->insertMediaFile($this->insertMessage('2026-03-01 15:30:00'), $podcastId, '2026-03-01 15:30:00');
-
-        return ['id' => $podcastId, 'filename' => $filename];
     }
 }

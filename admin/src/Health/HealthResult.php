@@ -34,7 +34,7 @@ final readonly class HealthResult
      *
      * @param   string        $id           The check id this result answers for.
      * @param   HealthStatus  $status       The state reported.
-     * @param   string        $detail       Translated sentence describing the state.
+     * @param   string        $detail       Translated plain-text sentence describing the state; renderers escape it.
      * @param   string        $fingerprint  The shape of the finding; empty when passing.
      * @param   ?string       $actionLink   Route to the screen that resolves it.
      * @param   ?string       $actionLabel  Translated label for that link.
