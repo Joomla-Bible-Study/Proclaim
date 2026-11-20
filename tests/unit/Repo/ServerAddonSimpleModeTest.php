@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * fieldset carries the same seven styling fields, and all seven have to be
  * hidden one way or the other.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class ServerAddonSimpleModeTest extends ProclaimTestCase
 {
@@ -37,7 +37,7 @@ class ServerAddonSimpleModeTest extends ProclaimTestCase
      * is not the same decision as styling the button.
      *
      * @var  string[]
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const STYLING_FIELDS = [
         'media_image',
@@ -51,7 +51,7 @@ class ServerAddonSimpleModeTest extends ProclaimTestCase
 
     /**
      * @return  array<string, array{0: string}>
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public static function addonXmlProvider(): array
     {
@@ -119,7 +119,7 @@ class ServerAddonSimpleModeTest extends ProclaimTestCase
      *
      * @return  string  Fieldset name, or '' when the field is not inside one
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function owningFieldset(\SimpleXMLElement $node): string
     {

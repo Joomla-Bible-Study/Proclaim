@@ -18,7 +18,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * Test class for CwmplaylistController
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmplaylistControllerTest extends ProclaimTestCase
 {

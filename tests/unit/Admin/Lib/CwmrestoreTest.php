@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * restricts execution to the statement shapes and tables Cwmbackup itself is known
  * to generate.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmrestoreTest extends ProclaimTestCase
 {

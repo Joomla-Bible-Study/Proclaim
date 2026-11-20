@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * pure and is exercised here directly; the surrounding DB read/write is left to
  * the live install path.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.2
  */
 class UploadMediaTypesTest extends ProclaimTestCase
 {

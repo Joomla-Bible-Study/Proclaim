@@ -18,7 +18,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 class CwmrestoreImportTest extends ProclaimTestCase
 {
@@ -28,7 +28,7 @@ class CwmrestoreImportTest extends ProclaimTestCase
      * columns and indexes either side that must survive untouched.
      *
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const string STUDIES = <<<'SQL'
 CREATE TABLE `#__bsms_studies` (
@@ -45,7 +45,7 @@ SQL;
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('A generated column is demoted so the dump\'s own INSERT is accepted')]
     public function testGeneratedColumnIsDemoted(): void
@@ -73,7 +73,7 @@ SQL;
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('An index spanning the generated column stays put for the load')]
     public function testSpanningIndexSurvivesTheLoad(): void
@@ -95,7 +95,7 @@ SQL;
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('The restore statements drop the index before the column and rebuild in reverse')]
     public function testRestoreStatementOrder(): void
@@ -127,7 +127,7 @@ SQL;
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('The rebuilt column carries the original expression')]
     public function testRestoredExpressionMatches(): void
@@ -154,7 +154,7 @@ SQL;
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('A dump without generated columns is returned untouched')]
     public function testDumpWithoutGeneratedColumnsIsUnchanged(): void
@@ -177,7 +177,7 @@ SQL;
      *
      * @return  array<string, array{0: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public static function splitProvider(): array
     {
@@ -203,7 +203,7 @@ SQL;
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('The fast splitter returns exactly what the core splitter returns')]
     #[\PHPUnit\Framework\Attributes\DataProvider('splitProvider')]
@@ -220,7 +220,7 @@ SQL;
     /**
      * @return  array<string, array{0: string, 1: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public static function statementProvider(): array
     {
@@ -266,7 +266,7 @@ SQL;
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Statements are classified for what the restore should do with them')]
     #[\PHPUnit\Framework\Attributes\DataProvider('statementProvider')]

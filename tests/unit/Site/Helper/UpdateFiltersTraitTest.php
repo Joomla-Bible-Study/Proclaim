@@ -24,7 +24,7 @@ use Joomla\Registry\Registry;
  * `empty($view->activeFilters)`, so the shape and contents of that array are the
  * contract under test here.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.0
  */
 class UpdateFiltersTraitTest extends ProclaimTestCase
 {

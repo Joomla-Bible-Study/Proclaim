@@ -17,7 +17,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Admin\Controller;
@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class TemplateExportNamingTest extends ProclaimTestCase
 {
@@ -39,7 +39,7 @@ class TemplateExportNamingTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     public static function hostileTitleProvider(): array
     {
@@ -66,7 +66,7 @@ class TemplateExportNamingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[DataProvider('hostileTitleProvider')]
     #[TestDox('A hostile title yields a download name with no path or header characters')]
@@ -95,7 +95,7 @@ class TemplateExportNamingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('A title that sanitises to nothing falls back to the record id')]
     public function testEmptyTitleFallsBackToTheId(): void
@@ -117,7 +117,7 @@ class TemplateExportNamingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('An ordinary title is still recognisable in the download name')]
     public function testOrdinaryTitleSurvives(): void
@@ -137,7 +137,7 @@ class TemplateExportNamingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('The staging path is inside the configured tmp directory and ends in .sql')]
     public function testTempPathIsContained(): void
@@ -165,7 +165,7 @@ class TemplateExportNamingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('A generated backup filename carries nothing a URL decode would change')]
     public function testGeneratedBackupFilenameNeedsNoDecoding(): void
@@ -207,7 +207,7 @@ class TemplateExportNamingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('Two exports never stage at the same path')]
     public function testTempPathIsUnpredictable(): void
@@ -228,7 +228,7 @@ class TemplateExportNamingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('The staging path builder accepts no caller input')]
     public function testTempPathBuilderTakesNoArguments(): void

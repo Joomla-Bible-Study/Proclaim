@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\Test;
  * network, because each gate fails before an API call is possible
  * (an addon with no OAuth credentials cannot construct a client).
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.4.0
  */
 #[CoversClass(CWMAddonYoutube::class)]
 #[CoversClass(CWMAddon::class)]

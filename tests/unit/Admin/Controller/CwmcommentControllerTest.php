@@ -18,7 +18,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * Test class for CwmcommentController
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmcommentControllerTest extends ProclaimTestCase
 {

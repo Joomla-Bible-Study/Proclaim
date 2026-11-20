@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  * needs a database and an application, and what matters is that the three
  * filters are present in the SQL the method builds.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class CwmpodcastFeedAccessTest extends TestCase
 {

@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * assertion follows the fixture rows by id, so servers already present in the
  * database (including ones the migration reuses) do not affect the result.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 #[CoversClass(CwmmigrationHelper::class)]
 class CwmmigrationHelperLegacyServersTest extends IntegrationTestCase

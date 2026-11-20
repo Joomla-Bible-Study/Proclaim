@@ -31,7 +31,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  *    the ORIGINAL exception; an unwritable log directory made Log::add() throw
  *    from inside those catch blocks, masking the real error.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmDebugExposureTest extends ProclaimTestCase
 {

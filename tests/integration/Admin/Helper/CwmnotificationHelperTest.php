@@ -21,7 +21,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  *
  * The mailer is a stand-in that records instead of sending.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class CwmnotificationHelperTest extends IntegrationTestCase
 {
@@ -30,7 +30,7 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function setUp(): void
     {
@@ -51,7 +51,7 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function tearDown(): void
     {
@@ -69,7 +69,7 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A comment held for approval emails the moderation address, naming the message and the comment')]
     public function testModerationEmailGoesToTheModerator(): void
@@ -97,7 +97,7 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('With no moderation address set, the email goes to the site\'s From address')]
     public function testModerationEmailFallsBackToTheSiteAddress(): void
@@ -127,7 +127,7 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A mail server that fails returns false rather than throwing, so the comment still saves')]
     public function testFailedSendReturnsFalse(): void
@@ -150,7 +150,7 @@ class CwmnotificationHelperTest extends IntegrationTestCase
      *
      * @return  int  The new message id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function seedMessage(string $title): int
     {

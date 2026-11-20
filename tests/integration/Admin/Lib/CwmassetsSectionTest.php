@@ -16,7 +16,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
@@ -30,7 +30,7 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 class CwmassetsSectionTest extends IntegrationTestCase
 {
@@ -38,13 +38,13 @@ class CwmassetsSectionTest extends IntegrationTestCase
      * Actions every non-component section declares.
      *
      * @var list<string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const ACTIONS = ['core.create', 'core.delete', 'core.edit', 'core.edit.state', 'core.edit.own'];
 
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private ?DatabaseInterface $db = null;
 
@@ -52,13 +52,13 @@ class CwmassetsSectionTest extends IntegrationTestCase
      * Section asset ids created by the test, removed again in tearDown.
      *
      * @var list<int>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private array $created = [];
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function setUp(): void
     {
@@ -81,7 +81,7 @@ class CwmassetsSectionTest extends IntegrationTestCase
      * in, so a pre-existing section asset is never removed.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function tearDown(): void
     {
@@ -110,7 +110,7 @@ class CwmassetsSectionTest extends IntegrationTestCase
      * Note which sections this test is responsible for cleaning up.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function rememberCreated(array $before): void
     {
@@ -131,7 +131,7 @@ class CwmassetsSectionTest extends IntegrationTestCase
      * Section assets that already exist, so tearDown leaves them alone.
      *
      * @return  array<string, int>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function existingSections(): array
     {
@@ -374,7 +374,7 @@ class CwmassetsSectionTest extends IntegrationTestCase
      * How many `com_proclaim.<section>` assets exist right now.
      *
      * @return  int
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function countSectionAssets(): int
     {

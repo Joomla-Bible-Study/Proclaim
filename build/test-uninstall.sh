@@ -12,7 +12,7 @@
 #
 # Run via: composer test:uninstall
 #
-# @since __DEPLOY_VERSION__
+# @since 10.6.0
 
 set -euo pipefail
 

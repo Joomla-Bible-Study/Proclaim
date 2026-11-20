@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * Each controller's OWN test file keeps whatever is unique to it
  * (getModel() name mapping, preprocessSaveData() logic, etc.).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class ApiControllerBoilerplateTest extends ProclaimTestCase
 {

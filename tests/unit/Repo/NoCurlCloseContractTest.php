@@ -18,7 +18,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Repo;
@@ -27,7 +27,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.8
  */
 class NoCurlCloseContractTest extends ProclaimTestCase
 {
@@ -35,7 +35,7 @@ class NoCurlCloseContractTest extends ProclaimTestCase
      * Source trees that ship.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     private const ROOTS = ['admin/src', 'site/src', 'api/src', 'plugins', 'modules'];
 
@@ -43,13 +43,13 @@ class NoCurlCloseContractTest extends ProclaimTestCase
      * Third-party code we neither wrote nor ship-audit here.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     private const SKIP = ['/vendor/', '/node_modules/'];
 
     /**
      * @return  string[]  Absolute paths of every PHP file to inspect.
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     private static function sourceFiles(): array
     {
@@ -89,7 +89,7 @@ class NoCurlCloseContractTest extends ProclaimTestCase
      * @param   string  $source  PHP source code.
      *
      * @return  bool
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     private static function callsCurlClose(string $source): bool
     {
@@ -137,7 +137,7 @@ class NoCurlCloseContractTest extends ProclaimTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     #[TestDox('No shipped file calls curl_close(), which PHP 8.5 deprecates')]
     public function testNothingCallsCurlClose(): void
@@ -165,7 +165,7 @@ class NoCurlCloseContractTest extends ProclaimTestCase
      * fires on a call and stays quiet on comments and look-alikes.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     #[TestDox('The scan reads real files and tells a call from a mention')]
     public function testScanIsNotVacuous(): void

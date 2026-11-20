@@ -16,14 +16,14 @@ use PHPUnit\Framework\Attributes\TestDox;
 /**
  * The episode number a Save as Copy of a message stores.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class CwmepisodenumberForCopyTest extends ProclaimTestCase
 {
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A copy that keeps the original\'s series and number has the number cleared, to be numbered next')]
     public function testUnchangedNumberIsCleared(): void
@@ -34,7 +34,7 @@ class CwmepisodenumberForCopyTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('Surrounding spaces do not make an unchanged number look changed')]
     public function testUnchangedNumberIsClearedDespiteSpaces(): void
@@ -45,7 +45,7 @@ class CwmepisodenumberForCopyTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A number the user changed is kept, for check() to refuse if it is taken')]
     public function testChangedNumberIsKept(): void
@@ -56,7 +56,7 @@ class CwmepisodenumberForCopyTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A copy moved to another series keeps its number, which is checked in that series')]
     public function testMovedToAnotherSeriesKeepsTheNumber(): void
@@ -67,7 +67,7 @@ class CwmepisodenumberForCopyTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A message in no series keeps its number, since nothing numbers or checks it there')]
     public function testNumberOutsideASeriesIsKept(): void

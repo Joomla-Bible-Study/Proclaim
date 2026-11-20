@@ -32,7 +32,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * reassignment, matching the equivalent, already-correct line in
  * CwmsermonsModel::populateState().
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmseriesdisplaysModelTest extends ProclaimTestCase
 {

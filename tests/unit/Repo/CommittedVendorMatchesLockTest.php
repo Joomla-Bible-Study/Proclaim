@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * someone runs composer install in that directory and commits the result. This
  * holds each committed vendor to its lock, so CI fails until they agree.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.8
  */
 class CommittedVendorMatchesLockTest extends ProclaimTestCase
 {
@@ -32,13 +32,13 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
      * stopped finding anything, and would pass every project it never checked.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.8
      */
     private const string YOUTUBE_ADDON = 'admin/src/Addons/Servers/Youtube';
 
     /**
      * @return  string
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     private static function repoRoot(): string
     {
@@ -54,7 +54,7 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
      *
      * @return  string[]  Project directories, relative to the repository root
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     private static function projectsWithCommittedVendor(): array
     {
@@ -90,7 +90,7 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
      *
      * @return  array<string, array{version: string, reference: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     private static function packageMap(array $packages): array
     {
@@ -114,7 +114,7 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
      *
      * @return  string[]  One line per difference; none when they agree
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     private static function differences(string $dir, string $vendor): array
     {
@@ -154,7 +154,7 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     #[TestDox('The YouTube addon is among the projects whose committed vendor is checked')]
     public function testTheYoutubeAddonIsChecked(): void
@@ -170,7 +170,7 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     #[TestDox('Every committed vendor installs exactly the packages its composer.lock pins')]
     public function testCommittedVendorMatchesTheLock(): void

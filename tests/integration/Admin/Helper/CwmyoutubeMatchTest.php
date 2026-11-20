@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * calls it through ProclaimYoutubeHelper::findMatchingMessage() whenever the module's
  * auto_link_message param is on, and that defaults to 1.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmyoutubeHelper::class)]
 class CwmyoutubeMatchTest extends IntegrationTestCase

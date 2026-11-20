@@ -36,7 +36,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * `CwmmigrationHelper::createGroupLocationMappings()` was worse in two ways at
  * once, and the second was found only by reading the code around the first.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmlocationHelper::class)]
 #[CoversClass(CwmmigrationHelper::class)]

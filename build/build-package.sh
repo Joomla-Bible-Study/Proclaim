@@ -10,7 +10,7 @@
 #
 # Usage: build/build-package.sh <version>
 #
-# @since __DEPLOY_VERSION__
+# @since 10.3.3
 
 set -euo pipefail
 

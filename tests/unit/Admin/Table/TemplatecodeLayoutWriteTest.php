@@ -18,7 +18,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Admin\Table;
@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class TemplatecodeLayoutWriteTest extends ProclaimTestCase
 {
@@ -37,14 +37,14 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      * Scratch directory for the generated layouts.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private string $tmpDir = '';
 
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function setUp(): void
     {
@@ -57,7 +57,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function tearDown(): void
     {
@@ -78,7 +78,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  string  Everything the file wrote to stdout
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function runPhp(string $contents, bool $jexec): string
     {
@@ -105,7 +105,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     public static function layoutContentProvider(): array
     {
@@ -126,7 +126,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[DataProvider('layoutContentProvider')]
     #[TestDox('Adding the guard leaves the rendered output byte-identical')]
@@ -150,7 +150,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[DataProvider('layoutContentProvider')]
     #[TestDox('Without _JEXEC a generated layout renders nothing')]
@@ -172,7 +172,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('The guard is written as real PHP, not as text')]
     public function testGuardOpensWithAPhpTag(): void
@@ -195,7 +195,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     public static function rejectedFilenameProvider(): array
     {
@@ -220,7 +220,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[DataProvider('rejectedFilenameProvider')]
     #[TestDox('A filename that could leave the layout directory is refused')]
@@ -243,7 +243,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     public static function acceptedFilenameProvider(): array
     {
@@ -263,7 +263,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[DataProvider('acceptedFilenameProvider')]
     #[TestDox('An ordinary layout filename still composes')]
@@ -299,7 +299,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('An unknown template type composes no path')]
     public function testUnknownTypeComposesNoPath(): void
@@ -319,7 +319,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('Nothing outside the table composes a layout filename of its own')]
     public function testCompositionIsNotCopied(): void

@@ -22,7 +22,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * #__bsms_series row checked out indefinitely, recoverable only via a manual
  * Global Check-in.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class SeriesModalCheckinTest extends ProclaimTestCase
 {

@@ -19,7 +19,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 #[CoversClass(CwmscriptureMigration::class)]
 class CwmlegacyColumnRetirementTest extends IntegrationTestCase
@@ -41,7 +41,7 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
      * The columns a 9.x #__bsms_studies carries, as it declared them.
      *
      * @var array<string, string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const LEGACY_COLUMNS = [
         'booknumber'     => "INT(3) DEFAULT '101'",
@@ -60,25 +60,25 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
 
     /**
      * @var DatabaseDriver|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
      * @var int[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private array $studyIds = [];
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private string $sqlMode = '';
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function setUp(): void
     {
@@ -107,7 +107,7 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function tearDown(): void
     {
@@ -133,7 +133,7 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
      * Put the 9.x columns back on the table.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function addLegacyColumns(): void
     {
@@ -151,7 +151,7 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function dropLegacyColumns(): void
     {
@@ -171,7 +171,7 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
      * @param   string  $column  Column name
      *
      * @return  bool
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function columnExists(string $column): bool
     {
@@ -191,7 +191,7 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
      *
      * @return  int  The new study's primary key
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function legacyStudy(array $values): int
     {
@@ -224,7 +224,7 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
      *
      * @return  array<int, array{int, int}>  [booknumber, chapter_begin] by ordering
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function junction(int $studyId): array
     {

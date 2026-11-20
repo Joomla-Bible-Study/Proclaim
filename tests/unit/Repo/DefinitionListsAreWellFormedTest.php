@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * layout that renders only when that module is published. A file-level check
  * does not care what the site is configured to show.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class DefinitionListsAreWellFormedTest extends ProclaimTestCase
 {
@@ -34,7 +34,7 @@ class DefinitionListsAreWellFormedTest extends ProclaimTestCase
      * Trees whose markup reaches a browser.
      *
      * @var    array<int, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private const array ROOTS = ['site', 'admin/tmpl', 'admin/layouts', 'modules', 'build/media_source'];
 
@@ -43,7 +43,7 @@ class DefinitionListsAreWellFormedTest extends ProclaimTestCase
      *
      * @return  array<int, string>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private static function sourceFiles(): array
     {
@@ -79,7 +79,7 @@ class DefinitionListsAreWellFormedTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('Every definition list opens with a term before its descriptions')]
     public function testEveryDefinitionListOpensWithATerm(): void

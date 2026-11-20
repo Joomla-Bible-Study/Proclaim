@@ -21,7 +21,7 @@ use Joomla\Registry\Registry;
  * '"}'), so a media_button_text containing a double quote (or backslash)
  * produced invalid JSON that the client-side consumer can't parse.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class MediaFileImagesFieldTest extends ProclaimTestCase
 {

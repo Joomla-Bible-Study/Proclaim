@@ -34,7 +34,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * The rule is one line and easy to undo by reflex -- someone "tidying" a call
  * back to getObjects() reintroduces the whole defect silently.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.10
  */
 class ScriptureStackOwnershipTest extends ProclaimTestCase
 {

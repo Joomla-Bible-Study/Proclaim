@@ -120,7 +120,7 @@ class CwmimagesTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     public function testGetImagePathFindsFileStoredWithEncodedSpace(): void
     {

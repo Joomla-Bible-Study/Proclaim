@@ -29,7 +29,7 @@ use Joomla\Database\DatabaseInterface;
  * These tests exercise the real (read-only) methods against the real dev database rather
  * than a mock, since the fix depends on CwmdbHelper::getObjects()'s actual table list.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmbackupTest extends ProclaimTestCase
 {

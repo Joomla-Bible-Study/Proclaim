@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * holding the `.htaccess` and `web.config` that keep backups off the web, and
  * on a live site the archives themselves.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class ObsoletePathsTest extends ProclaimTestCase
 {
@@ -31,7 +31,7 @@ class ObsoletePathsTest extends ProclaimTestCase
      * Installed path prefix to its source directory in this repository.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const ROOTS = [
         '/administrator/components/com_proclaim' => 'admin',
@@ -52,7 +52,7 @@ class ObsoletePathsTest extends ProclaimTestCase
      *
      * @return  array<string, string[]>  Keyed by property name
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function lists(): array
     {
@@ -85,7 +85,7 @@ class ObsoletePathsTest extends ProclaimTestCase
      *
      * @return  ?string  Repository-relative source path
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function sourcePath(string $path): ?string
     {
@@ -135,7 +135,7 @@ class ObsoletePathsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('Every scheduled path maps to a known install root')]
     public function testEveryPathMapsToAKnownRoot(): void

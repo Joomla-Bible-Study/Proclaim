@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Nothing caught it for five months: it only runs on uninstall, only with
  * drop_tables set, and the install script is not exercised by the unit suite.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class InstallScriptImportsTest extends ProclaimTestCase
 {
@@ -44,7 +44,7 @@ class InstallScriptImportsTest extends ProclaimTestCase
      * exists — was reported as an offender.
      *
      * @var    string[]
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const KEYWORDS = ['self', 'parent', 'static'];
 
@@ -58,7 +58,7 @@ class InstallScriptImportsTest extends ProclaimTestCase
      *
      * @return  array<int, array{name: string, line: int}>  Static-call targets
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function staticCallTargets(): array
     {
@@ -158,7 +158,7 @@ class InstallScriptImportsTest extends ProclaimTestCase
      *
      * @return  mixed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function previousMeaningful(array $tokens, int $i): mixed
     {
@@ -181,7 +181,7 @@ class InstallScriptImportsTest extends ProclaimTestCase
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function isInsideCatch(array $tokens, int $i): bool
     {
@@ -215,7 +215,7 @@ class InstallScriptImportsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('Every class named in a signature or property type resolves')]
     public function testEverySignatureTypeResolves(): void
@@ -276,7 +276,7 @@ class InstallScriptImportsTest extends ProclaimTestCase
      *
      * @return  array<string, string>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function typeNames(?\ReflectionType $type, string $where): array
     {

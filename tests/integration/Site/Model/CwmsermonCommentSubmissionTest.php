@@ -43,7 +43,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * ⚠️ These tests delete their rows by hand rather than rolling back:
  * Table::store() commits.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 #[CoversClass(CwmsermonModel::class)]
 class CwmsermonCommentSubmissionTest extends IntegrationTestCase

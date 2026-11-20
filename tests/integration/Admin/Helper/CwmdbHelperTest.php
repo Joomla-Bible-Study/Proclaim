@@ -40,7 +40,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * execute() does on a real failure; a stubbed driver would return whatever the
  * stub was told to.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmdbHelper::class)]
 class CwmdbHelperTest extends IntegrationTestCase

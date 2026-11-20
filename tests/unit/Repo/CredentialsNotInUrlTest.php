@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * A grep that looks in one place proves something about that place. This one
  * walks every PHP and JavaScript source the package ships.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class CredentialsNotInUrlTest extends ProclaimTestCase
 {
@@ -41,7 +41,7 @@ class CredentialsNotInUrlTest extends ProclaimTestCase
      * Parameter names that carry a secret.
      *
      * @var    array<int, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private const array CREDENTIAL_PARAMS = [
         'api_key',
@@ -60,7 +60,7 @@ class CredentialsNotInUrlTest extends ProclaimTestCase
      * Source trees the package ships.
      *
      * @var    array<int, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private const array ROOTS = ['admin/src', 'site/src', 'api/src', 'build/media_source'];
 
@@ -69,7 +69,7 @@ class CredentialsNotInUrlTest extends ProclaimTestCase
      *
      * @return  array<int, string>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private static function sourceFiles(): array
     {
@@ -111,7 +111,7 @@ class CredentialsNotInUrlTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('No credential is appended to a request URL anywhere in the shipped sources')]
     public function testNoCredentialIsAppendedToAUrl(): void
@@ -158,7 +158,7 @@ class CredentialsNotInUrlTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('Credential handlers read from the POST body, not the merged request')]
     public function testCredentialsAreReadFromPostOnly(): void

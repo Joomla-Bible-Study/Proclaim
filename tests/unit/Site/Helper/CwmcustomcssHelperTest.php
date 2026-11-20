@@ -8,7 +8,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Site\Helper;
@@ -20,7 +20,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 class CwmcustomcssHelperTest extends ProclaimTestCase
 {
@@ -28,7 +28,7 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
      * Ways a browser's tokeniser will accept the end of a style element.
      *
      * @return  array<string, array{string}>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     public static function breakoutProvider(): array
     {
@@ -96,7 +96,7 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.3
      */
     #[TestDox('A sheet of "0" is treated as no stylesheet, not as content')]
     public function testZeroStringIsNotTreatedAsContent(): void
@@ -129,7 +129,7 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
      *
      * @param  list<array{0: string, 1?: bool}>  $spec
      * @return list<object>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function sections(array $spec): array
     {
@@ -178,7 +178,7 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
 
     /**
      * @return array<string, array{string}>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     public static function unsafeSectionIdProvider(): array
     {
@@ -196,7 +196,7 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
      * interpolated into an attribute selector — so anything that could end the
      * selector has to be refused rather than escaped.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     #[DataProvider('unsafeSectionIdProvider')]
     #[TestDox('a section id that is not a plain slug is refused')]

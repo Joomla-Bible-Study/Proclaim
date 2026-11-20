@@ -24,7 +24,7 @@
 #
 # Run via: composer test:upgrade
 #
-# @since __DEPLOY_VERSION__
+# @since 10.3.3
 
 set -euo pipefail
 

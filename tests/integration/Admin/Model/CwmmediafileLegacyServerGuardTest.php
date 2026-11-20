@@ -35,7 +35,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * everywhere save() is reachable (admin form and API alike), not just the
  * new-server type picker that already hid the type from creation.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 #[CoversClass(CwmmediafileModel::class)]
 class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase

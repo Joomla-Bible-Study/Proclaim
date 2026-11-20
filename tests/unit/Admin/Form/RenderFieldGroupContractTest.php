@@ -35,7 +35,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.6.3
  */
 class RenderFieldGroupContractTest extends ProclaimTestCase
 {
@@ -46,7 +46,7 @@ class RenderFieldGroupContractTest extends ProclaimTestCase
      * this test no longer covers.
      *
      * @var    string[]
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.3
      */
     private const EXEMPT_VIEWS = [];
 
@@ -60,7 +60,7 @@ class RenderFieldGroupContractTest extends ProclaimTestCase
      *
      * @return  array<string, string[]>|null  Null when the file will not parse.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.3
      */
     private function fieldGroups(string $path): ?array
     {
@@ -100,7 +100,7 @@ class RenderFieldGroupContractTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.3
      */
     #[TestDox('Every renderField() call names a field its own form declares')]
     public function testRenderedFieldsExistInTheirForm(): void

@@ -28,7 +28,7 @@ use Joomla\Database\DatabaseInterface;
  * assertions instead, matching the pattern used for other DB-touching
  * converters in this test suite.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmpIconvertTest extends ProclaimTestCase
 {

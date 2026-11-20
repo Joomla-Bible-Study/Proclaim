@@ -280,6 +280,7 @@
             "advanceOnRelease": true,
             "devSuffix": ""
         },
+        "_substituteTokens_comment": "Every place a @since placeholder can sit, because a release dates only what this list reaches and a placeholder anywhere else stays one for good. extensions is set because the default is php alone, which skips the JS tests and the shell scripts. plugins/ is listed group by group because plugins/content/scripturelinks is a submodule, and a submodule must stamp its own version, not Proclaim's. tests/unit/Repo/SincePlaceholderStampingTest fails when a placeholder lands somewhere this list does not reach.",
         "substituteTokens": {
             "paths": [
                 "admin/",
@@ -290,8 +291,11 @@
                 "plugins/schemaorg/",
                 "plugins/system/",
                 "plugins/task/",
-                "plugins/webservices/"
-            ]
+                "plugins/webservices/",
+                "build/",
+                "tests/"
+            ],
+            "extensions": ["php", "js", "sh"]
         }
     },
     "github": {

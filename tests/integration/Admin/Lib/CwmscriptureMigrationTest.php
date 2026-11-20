@@ -14,7 +14,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
@@ -27,20 +27,20 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 #[CoversClass(CwmscriptureMigration::class)]
 class CwmscriptureMigrationTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseDriver|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function setUp(): void
     {
@@ -56,7 +56,7 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function tearDown(): void
     {
@@ -76,7 +76,7 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
      *
      * @return  int  The new reference's primary key
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function referenceWithoutText(int $book = 143): int
     {
@@ -109,7 +109,7 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
      *
      * @return  string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function referenceText(int $id): string
     {

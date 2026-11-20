@@ -21,7 +21,7 @@ use Joomla\CMS\Factory;
  * in the field class. That logic moved to CwmbibleVersionHelper (see
  * CwmbibleVersionHelperTest); this field should now just be a thin adapter.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class BibleVersionFieldTest extends ProclaimTestCase
 {

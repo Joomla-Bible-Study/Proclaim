@@ -25,7 +25,7 @@ use Joomla\Database\DatabaseInterface;
  * a parameter; confirmed byte-for-byte identical before extraction (`diff`
  * on the two original method bodies showed exactly one line differed).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmmediafilesHelperTest extends ProclaimTestCase
 {

@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  *   syncTeachers() field sets (missing genericField / worksFor respectively),
  *   so alternating "Reset Schema" and "Sync All" silently dropped fields.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmschemaorgHelper::class)]
 class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase

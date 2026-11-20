@@ -37,7 +37,7 @@ use PHPUnit\Framework\Attributes\Group;
  * in 10.1.0 — one hiding three podcast columns behind a fourth — which is why the
  * rule is asserted here rather than left to review.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.7
  */
 #[Group('sql')]
 class MigrationStatementContractTest extends ProclaimTestCase

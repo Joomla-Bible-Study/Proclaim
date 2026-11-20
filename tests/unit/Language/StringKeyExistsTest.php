@@ -13,7 +13,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 
 namespace CWM\Component\Proclaim\Tests\Language;
@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 class StringKeyExistsTest extends TestCase
 {
@@ -39,13 +39,13 @@ class StringKeyExistsTest extends TestCase
      * key, not the kind of extension.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const array OWNED_MARKERS = ['PROCLAIM', 'SCRIPTURELINKS'];
 
     /**
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const array ROOTS = ['admin', 'site', 'api', 'components', 'modules', 'plugins'];
 
@@ -58,7 +58,7 @@ class StringKeyExistsTest extends TestCase
      *
      * @return  array<string, string>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private static function englishStrings(): array
     {
@@ -102,7 +102,7 @@ class StringKeyExistsTest extends TestCase
      *
      * @return  array<int, array{0: string, 1: int, 2: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private static function referencedKeys(): array
     {
@@ -150,7 +150,7 @@ class StringKeyExistsTest extends TestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Every Proclaim string key the code asks for is defined in en-GB')]
     public function testOwnedKeysAreDefined(): void

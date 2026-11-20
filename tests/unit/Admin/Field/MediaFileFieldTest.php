@@ -23,7 +23,7 @@ use Joomla\Registry\Registry;
  * existed, the label showed "id - mimetype" (never the filename); when it
  * didn't, the label was blank.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class MediaFileFieldTest extends ProclaimTestCase
 {

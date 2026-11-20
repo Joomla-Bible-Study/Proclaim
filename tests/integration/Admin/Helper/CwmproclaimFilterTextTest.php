@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * edge case. It also overwrote rather than accumulated, contradicting its own
  * "Each list is cumulative" comment.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmproclaimHelper::class)]
 class CwmproclaimFilterTextTest extends IntegrationTestCase

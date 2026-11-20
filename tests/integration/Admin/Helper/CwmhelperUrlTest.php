@@ -37,7 +37,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  *    every media file emitted a warning. The value fed a block whose result was
  *    discarded.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(Cwmhelper::class)]
 class CwmhelperUrlTest extends IntegrationTestCase

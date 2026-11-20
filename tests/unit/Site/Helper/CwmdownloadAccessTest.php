@@ -18,7 +18,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * A media file is only as reachable as the message it belongs to, and the
  * series that message is in.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class CwmdownloadAccessTest extends ProclaimTestCase
 {

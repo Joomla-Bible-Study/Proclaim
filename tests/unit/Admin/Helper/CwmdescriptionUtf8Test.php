@@ -15,7 +15,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class CwmdescriptionUtf8Test extends ProclaimTestCase
 {
@@ -34,7 +34,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      * Characters whose encoding ends in one of the bytes the dash class held.
      *
      * @return  array<string, array{0: string}>
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     public static function trailingByteProvider(): array
     {
@@ -51,7 +51,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      * @param   string  $title  A title ending in a vulnerable character.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[DataProvider('trailingByteProvider')]
     #[TestDox('A title ending in a multibyte character survives the separator cleanup')]
@@ -65,7 +65,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('A genuine trailing separator is still removed')]
     public function testTrailingSeparatorIsStillStripped(): void
@@ -81,7 +81,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      * than blank the description.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('Input that is already invalid UTF-8 is preserved, not blanked')]
     public function testInvalidUtf8InputIsNotBlanked(): void
@@ -100,7 +100,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      * @param   array<string, string> $data    Placeholder values.
      *
      * @return  string
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function applyTemplate(string $format, array $data): string
     {

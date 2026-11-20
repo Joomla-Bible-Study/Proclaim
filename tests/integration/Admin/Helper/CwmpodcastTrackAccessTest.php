@@ -37,7 +37,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * while quietly discarding every condition before it. Each test runs inside a
  * transaction that is rolled back.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 #[CoversClass(CwmpodcastTrackHelper::class)]
 class CwmpodcastTrackAccessTest extends IntegrationTestCase

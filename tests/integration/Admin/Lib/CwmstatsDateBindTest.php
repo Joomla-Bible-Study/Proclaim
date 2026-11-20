@@ -11,7 +11,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
@@ -23,19 +23,19 @@ use Joomla\CMS\User\User;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class CwmstatsDateBindTest extends IntegrationTestCase
 {
     /**
      * @var User|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private ?User $savedIdentity = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function setUp(): void
     {
@@ -54,7 +54,7 @@ class CwmstatsDateBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function tearDown(): void
     {
@@ -70,7 +70,7 @@ class CwmstatsDateBindTest extends IntegrationTestCase
      * instead of returning a memoised count -- which is what reaches the bind.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('getTotalMessages()/getTotalTopics() date-range filter executes with bound values')]
     public function testDateRangeBindsExecute(): void

@@ -38,7 +38,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * enabled, because that plugin loads the tour script and serves the tour
  * (#2361). Registration and removal must keep working with it disabled.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmguidedtourHelper::class)]
 class CwmguidedtourHelperTest extends IntegrationTestCase
@@ -478,7 +478,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * other bound query — the post-install message existence check by title_key.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox("postInstallMessageExists() runs its bound title_key query")]
     public function testPostInstallMessageExistsBindExecutes(): void

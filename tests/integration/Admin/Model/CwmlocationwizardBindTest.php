@@ -10,7 +10,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Model;
@@ -22,19 +22,19 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class CwmlocationwizardBindTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function setUp(): void
     {
@@ -51,7 +51,7 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function tearDown(): void
     {
@@ -72,7 +72,7 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
      *
      * @return  mixed
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function invoke(string $method, ...$args): mixed
     {
@@ -84,7 +84,7 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox("dismiss()'s bound :params UPDATE executes")]
     public function testDismissBindExecutes(): void
@@ -96,7 +96,7 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox("applyWizard()'s bound :params UPDATE executes")]
     public function testApplyWizardBindExecutes(): void
@@ -108,7 +108,7 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox("applyPermissions()'s bound :rules UPDATE executes against the component asset")]
     public function testApplyPermissionsBindExecutes(): void

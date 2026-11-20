@@ -27,7 +27,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * agree, or the dropdown teaches administrators to store something the feed
  * will then override.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.0
  */
 class CwmmediaMimeCatalogueTest extends ProclaimTestCase
 {

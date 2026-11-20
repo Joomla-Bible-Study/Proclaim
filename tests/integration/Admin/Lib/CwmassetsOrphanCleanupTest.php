@@ -14,7 +14,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
@@ -26,19 +26,19 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class CwmassetsOrphanCleanupTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function setUp(): void
     {
@@ -56,7 +56,7 @@ class CwmassetsOrphanCleanupTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function tearDown(): void
     {
@@ -73,7 +73,7 @@ class CwmassetsOrphanCleanupTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('cleanOrphanedAssets() removes an asset whose location record no longer exists')]
     public function testCleanOrphanedAssetsRemovesAnOrphanByBoundLikePattern(): void
@@ -109,7 +109,7 @@ class CwmassetsOrphanCleanupTest extends IntegrationTestCase
      *
      * @return  int  Number of #__assets rows with that name.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function countAssetsNamed(string $name): int
     {

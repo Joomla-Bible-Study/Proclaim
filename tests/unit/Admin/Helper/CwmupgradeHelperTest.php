@@ -20,7 +20,7 @@ use Joomla\Database\DatabaseInterface;
  * Regression tests for #1542, found during a Helper-folder-wide bug-hunting
  * review (sequel to #1521-#1528).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmupgradeHelperTest extends ProclaimTestCase
 {

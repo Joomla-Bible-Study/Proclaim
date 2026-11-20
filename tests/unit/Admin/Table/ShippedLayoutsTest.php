@@ -18,7 +18,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Admin\Table;
@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class ShippedLayoutsTest extends ProclaimTestCase
 {
@@ -44,7 +44,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  string  Absolute path in this repository
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private static function repositoryPath(string $directory): string
     {
@@ -66,7 +66,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  array<int, array<int, string>>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private static function layoutsOnDisk(): array
     {
@@ -94,7 +94,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('The shipped-layout list matches what the package actually ships')]
     public function testShippedLayoutListMatchesDisk(): void
@@ -139,7 +139,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: int, 1: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     public static function shippedNameProvider(): array
     {
@@ -160,7 +160,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[DataProvider('shippedNameProvider')]
     #[TestDox('A shipped layout name is refused for a new record')]
@@ -183,7 +183,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: int, 1: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     public static function previouslyCreatableProvider(): array
     {
@@ -208,7 +208,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[DataProvider('previouslyCreatableProvider')]
     #[TestDox('A name that used to be creatable over a shipped layout is refused')]
@@ -239,7 +239,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('The five long-reserved names stay refused for every type')]
     public function testLongReservedNamesStayReservedForEveryType(): void
@@ -267,7 +267,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('An ordinary layout name is not reserved')]
     public function testOrdinaryNamesAreNotReserved(): void
@@ -288,7 +288,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('An unknown template type ships no layouts')]
     public function testUnknownTypeShipsNothing(): void

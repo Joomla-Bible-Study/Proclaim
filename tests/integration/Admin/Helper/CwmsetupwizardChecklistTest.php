@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * rather than nagging forever -- a multi-campus administrator simply never saw
  * the step.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmsetupwizardHelper::class)]
 class CwmsetupwizardChecklistTest extends IntegrationTestCase

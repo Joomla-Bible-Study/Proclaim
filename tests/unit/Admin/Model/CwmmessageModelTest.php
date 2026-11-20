@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * (matching the existing saveScriptures()/saveTeachers() pattern), so it
  * uses the real post-insert ID via getState() instead.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmmessageModelTest extends ProclaimTestCase
 {

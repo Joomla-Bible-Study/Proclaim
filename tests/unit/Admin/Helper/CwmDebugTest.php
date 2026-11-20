@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 /**
  * Test class for CwmDebug.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.3
  */
 class CwmDebugTest extends ProclaimTestCase
 {

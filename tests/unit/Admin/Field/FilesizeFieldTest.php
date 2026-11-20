@@ -34,7 +34,7 @@ use Joomla\CMS\Form\Field\TextField;
  * layouts/joomla/form/field/text.php unconditionally renders
  * `id="<?php echo $id; ?>"`, so the id the JS selects by is unchanged.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class FilesizeFieldTest extends ProclaimTestCase
 {

@@ -17,7 +17,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * Test class for CwmmediafileController
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmmediafileControllerTest extends ProclaimTestCase
 {

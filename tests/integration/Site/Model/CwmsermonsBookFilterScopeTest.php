@@ -23,7 +23,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Site\Model;
@@ -36,7 +36,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 #[CoversClass(CwmsermonsModel::class)]
 class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
@@ -45,19 +45,19 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
      * A book number the sample content never uses, so only fixtures match it.
      *
      * @var int
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const BOOK = 160;
 
     /**
      * @var DatabaseDriver|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function setUp(): void
     {
@@ -73,7 +73,7 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function tearDown(): void
     {
@@ -102,7 +102,7 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
      *
      * @return  int  The new study's primary key
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function study(array $overrides = [], array $references = [[self::BOOK, 100]]): int
     {
@@ -146,7 +146,7 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
      *
      * @return  int[]  Study ids the filter allows through
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function visibleToGuest(int $minChapt): array
     {

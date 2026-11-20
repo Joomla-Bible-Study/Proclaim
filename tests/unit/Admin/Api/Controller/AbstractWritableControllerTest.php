@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * (Locations' email_to/user_id/contact_id, Media's podcast_id explode,
  * Teachers'/Sermons' image default) on top.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class AbstractWritableControllerTest extends ProclaimTestCase
 {

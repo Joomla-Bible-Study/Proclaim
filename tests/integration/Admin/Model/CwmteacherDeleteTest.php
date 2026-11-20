@@ -35,7 +35,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * overridden delete() that prunes the in-use teachers and reports why, as
  * com_users' LevelModel does for an access level in use.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmteacherModel::class)]
 class CwmteacherDeleteTest extends IntegrationTestCase

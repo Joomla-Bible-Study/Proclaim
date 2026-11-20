@@ -11,7 +11,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Site\Helper;
@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 #[CoversClass(Cwmlisting::class)]
 class CwmlistingScriptureSourceTest extends IntegrationTestCase
@@ -39,7 +39,7 @@ class CwmlistingScriptureSourceTest extends IntegrationTestCase
      *
      * @return  object
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function row(bool $withJunction): object
     {
@@ -79,7 +79,7 @@ class CwmlistingScriptureSourceTest extends IntegrationTestCase
      * either way; asserting on one spelling passes or fails by suite order.
      *
      * @return  Registry  Params asking for chapters only, the default.
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function params(): Registry
     {

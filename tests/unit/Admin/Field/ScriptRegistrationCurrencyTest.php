@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * files since folding them in here would either drop or weaken what they
  * check.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class ScriptRegistrationCurrencyTest extends ProclaimTestCase
 {

@@ -47,7 +47,7 @@ class CwmImageMigrationQueryTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.3
      */
     #[TestDox('Trashed records are excluded on request and included by default')]
     public function testTrashedRecordsAreExcludedOnlyWhenAsked(): void

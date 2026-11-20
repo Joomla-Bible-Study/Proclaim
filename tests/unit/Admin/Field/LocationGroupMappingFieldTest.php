@@ -21,7 +21,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * the per-row loop -- an extra COUNT(*) query per location re-deriving the
  * exact same number the main query already had.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class LocationGroupMappingFieldTest extends ProclaimTestCase
 {

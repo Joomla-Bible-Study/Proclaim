@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  *
  * Each test runs inside a transaction that is rolled back, so nothing persists.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmplaylistSyncHelper::class)]
 class CwmplaylistImportRaceTest extends IntegrationTestCase

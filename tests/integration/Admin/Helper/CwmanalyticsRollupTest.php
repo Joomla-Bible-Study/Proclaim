@@ -37,7 +37,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  *    distinct from NULL in a unique index, so ON DUPLICATE KEY UPDATE never
  *    fired and each run inserted duplicate rows instead of consolidating.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmanalyticsHelper::class)]
 class CwmanalyticsRollupTest extends IntegrationTestCase

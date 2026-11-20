@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * prepareTable() and check() on the new row, inside a transaction that is
  * rolled back. A full save() would create an asset and commit.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class CopyEpisodeNumberTest extends IntegrationTestCase
 {
@@ -39,7 +39,7 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function setUp(): void
     {
@@ -60,7 +60,7 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function tearDown(): void
     {
@@ -78,7 +78,7 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('A copy that keeps its series and episode number is numbered next in the series, and passes check()')]
     public function testUnchangedCopyIsNumberedNext(): void
@@ -96,7 +96,7 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('An episode number the user typed that another message in the series holds is still refused')]
     public function testTypedNumberHeldElsewhereIsRefused(): void
@@ -123,7 +123,7 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
      *
      * @return  CwmmessageTable
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function prepareCopy(int $series, string $number): CwmmessageTable
     {
@@ -158,7 +158,7 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     /**
      * @return  int  The new series id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function seedSeries(): int
     {
@@ -181,7 +181,7 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function seedMessage(int $series, string $number): void
     {

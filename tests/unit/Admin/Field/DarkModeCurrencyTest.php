@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * dark theme (should be a solid `btn-*` variant), and `text-muted` is a fixed
  * gray that doesn't adapt to the theme (should be `text-body-secondary`).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class DarkModeCurrencyTest extends ProclaimTestCase
 {

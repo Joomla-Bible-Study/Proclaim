@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * entirely or double-counted rows; the tests could not fail from the
  * regressions they were written to guard.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.3
  */
 class CwmcountHelperTest extends IntegrationTestCase
 {

@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * CwmmessagesController. Moved into CwmmediafilesHelper::findFilesForDelete();
  * see CwmmediafilesHelperTest.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmmediafilesControllerTest extends ProclaimTestCase
 {

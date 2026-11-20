@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Backup filenames carried Version.php's hardcoded constants, which the release
  * tooling does not touch -- 10.3.1 against a 10.5.5 release.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmproclaimCosmeticTest extends IntegrationTestCase
 {
