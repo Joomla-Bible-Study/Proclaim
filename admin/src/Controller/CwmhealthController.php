@@ -65,9 +65,11 @@ class CwmhealthController extends BaseController
             return;
         }
 
+        // A detail is plain text that can quote what an editor typed, such as a
+        // podcast title, and Joomla renders a message as HTML.
         $this->setRedirect(
             Route::_(self::RETURN_VIEW, false),
-            $result->detail,
+            htmlspecialchars($result->detail, ENT_QUOTES, 'UTF-8'),
             match ($result->status) {
                 HealthStatus::Ok      => 'success',
                 HealthStatus::Warning => 'error',
