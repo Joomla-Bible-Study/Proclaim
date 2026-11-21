@@ -29,7 +29,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * type name that reads like a PHP/SQL type rather than a Joomla field type,
  * which is exactly the shape that silently degrades instead of erroring.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class UnresolvableFieldTypeContractTest extends ProclaimTestCase
 {

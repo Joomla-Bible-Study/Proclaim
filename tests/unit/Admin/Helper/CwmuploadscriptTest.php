@@ -34,7 +34,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *    a key com_proclaim's config.xml does not define, so Registry::get()
  *    always fell through to Joomla's hardcoded default list.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmuploadscriptTest extends ProclaimTestCase
 {

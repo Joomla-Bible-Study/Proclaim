@@ -31,7 +31,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Table;
@@ -52,14 +52,14 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
      * Entries the subject logged during the call.
      *
      * @var    array<int, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.1
      */
     private static array $logged = [];
 
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function setUp(): void
     {
@@ -73,7 +73,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
              * configured loggers — neither of which is wanted here. Widened and
              * deliberately empty; there is no parent state to initialise.
              *
-             * @since __DEPLOY_VERSION__
+             * @since 10.7.1
              */
             public function __construct()
             {
@@ -84,7 +84,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
              *
              * @return  bool
              *
-             * @since __DEPLOY_VERSION__
+             * @since 10.7.1
              */
             #[\Override]
             protected function addLogEntry(LogEntry $entry): bool
@@ -99,7 +99,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function tearDown(): void
     {
@@ -116,7 +116,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     public static function record(string $message): void
     {
@@ -134,7 +134,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
      *
      * @return  CwmtemplatecodeTable
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function tableFor(int $type, string $filename): CwmtemplatecodeTable
     {
@@ -179,7 +179,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
      *
      * @return  int
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function loggedCount(): int
     {
@@ -191,7 +191,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('Deleting a record named after a shipped layout keeps the file and says so')]
     public function testDeleteOfAShippedNameKeepsTheFile(): void
@@ -217,7 +217,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('Deleting an ordinary record does not take the shipped-layout branch')]
     public function testDeleteOfAnOrdinaryNameIsUnaffected(): void
@@ -238,7 +238,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('A shipped name belonging to another type is not protected here')]
     public function testShippedNameOfAnotherTypeIsNotProtected(): void

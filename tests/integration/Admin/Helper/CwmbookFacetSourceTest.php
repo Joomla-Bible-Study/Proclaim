@@ -13,7 +13,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Helper;
@@ -26,20 +26,20 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 #[CoversClass(CwmproclaimHelper::class)]
 class CwmbookFacetSourceTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseDriver|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function setUp(): void
     {
@@ -55,7 +55,7 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function tearDown(): void
     {
@@ -79,7 +79,7 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
      *
      * @return  int  The new study's primary key
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function studyWithReferences(array $books): int
     {
@@ -115,7 +115,7 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
     /**
      * @return  int[]  Book numbers offered by getStudyBooks()
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function offeredBooks(): array
     {
@@ -133,7 +133,7 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
      *
      * @return  int[]
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function unusedBooks(int $count): array
     {

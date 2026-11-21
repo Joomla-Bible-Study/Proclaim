@@ -31,7 +31,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * the pattern is gone and does not come back by copy-paste -- there were seven
  * instances, and each was a plausible model for the next.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.10
  */
 class TableExistenceTest extends ProclaimTestCase
 {

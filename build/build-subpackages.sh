@@ -12,7 +12,7 @@
 # config), non-interactively, at each submodule's own manifest version. Their
 # build/dist output is gitignored, so this leaves the submodules git-clean.
 #
-# @since __DEPLOY_VERSION__
+# @since 10.3.3
 
 set -euo pipefail
 

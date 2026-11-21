@@ -38,7 +38,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * This does not assert what any check concludes — that belongs with the check.
  * It asserts they can be executed at all, and that executing them is safe.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 #[CoversClass(HealthRegistry::class)]
 class HealthCheckExecutionTest extends ProclaimTestCase

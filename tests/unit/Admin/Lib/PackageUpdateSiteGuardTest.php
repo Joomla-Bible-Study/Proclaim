@@ -21,14 +21,14 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.10
  */
 class PackageUpdateSiteGuardTest extends ProclaimTestCase
 {
     /**
      * @return  string  The package manifest script's source
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.10
      */
     private static function script(): string
     {
@@ -38,7 +38,7 @@ class PackageUpdateSiteGuardTest extends ProclaimTestCase
     /**
      * @return  string  Just the retirement method
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.10
      */
     private static function retirementBody(): string
     {

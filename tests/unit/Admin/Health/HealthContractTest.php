@@ -296,7 +296,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('Every health task is gated on core.admin')]
     public function testHealthTasksRequireCoreAdmin(): void
@@ -337,7 +337,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('The health report renders only from the core.admin Administration screen')]
     public function testReportRendersOnlyBehindCoreAdmin(): void
@@ -362,11 +362,52 @@ class HealthContractTest extends ProclaimTestCase
     }
 
     /**
+     * A check's detail is plain text, and every place that shows it escapes it.
+     *
+     * A detail can quote what an editor typed, such as a podcast title or a
+     * file name. The report escapes each detail as it renders it. test() hands
+     * the detail to setRedirect() as the message, which Joomla renders as HTML,
+     * so it is escaped there too. A check never escapes its own detail, or the
+     * report would show the entity instead of the character.
+     *
+     * Asserted at source level, like the core.admin guard above: running test()
+     * needs a booted application, a token and a super admin.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('A check\'s detail is escaped wherever it is shown')]
+    public function testDetailIsEscapedWhereverItIsShown(): void
+    {
+        $root   = \dirname(__DIR__, 4);
+        $source = (string) file_get_contents($root . '/admin/src/Controller/CwmhealthController.php');
+        $start  = strpos($source, 'public function test(');
+
+        $this->assertNotFalse($start, 'CwmhealthController::test() should exist.');
+
+        $next = strpos($source, "\n    public function ", $start + 1);
+        $body = substr($source, $start, $next === false ? null : $next - $start);
+
+        $this->assertStringContainsString(
+            'htmlspecialchars($result->detail',
+            $body,
+            'test() passes the detail to setRedirect(), and Joomla renders a message as HTML, so escape it there.'
+        );
+
+        $this->assertStringContainsString(
+            '$e($result->detail)',
+            (string) file_get_contents($root . '/admin/layouts/health/report.php'),
+            'The health report should escape each detail as it renders it.'
+        );
+    }
+
+    /**
      * Helpers that read content rows on a check's behalf, and the argument that
      * makes them leave trashed content out.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.6.0
      */
     private const CONTENT_HELPERS = [
         'CwmImageMigration::getMigrationCounts'     => 'getMigrationCounts(true)',
@@ -388,7 +429,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('A check reading content rows constrains their state')]
     public function testContentChecksExcludeTrashedRows(): void
@@ -462,7 +503,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.3
      */
     #[TestDox('A finding that links with a filter uses one the list can show and clear')]
     public function testLinkedFiltersAreVisibleOnTheirList(): void
@@ -523,7 +564,7 @@ class HealthContractTest extends ProclaimTestCase
      * Context the checks may not depend on, directly or through a helper.
      *
      * @var  string[]
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private const CONTEXT_BOUND = ['getIdentity', 'getSession', 'getInput', 'enqueueMessage', 'Route::', 'Uri::'];
 
@@ -532,7 +573,7 @@ class HealthContractTest extends ProclaimTestCase
      * the reason each is safe.
      *
      * @var  array<string, string>
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private const CONTEXT_ALLOWED = [
         'CwmmediaProtectionHelper::canResolveSiteRoot' => 'Exists precisely to answer whether Uri::root() is trustworthy off a request, and returns false when it is not.',
@@ -552,7 +593,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  array<string, string>  Class => method
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function staticCallsIn(string $file): array
     {
@@ -583,7 +624,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  ?string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private function sourceOf(string $file, string $class): ?string
     {
@@ -619,7 +660,7 @@ class HealthContractTest extends ProclaimTestCase
      * One level deep, which is where all three sat.
      *
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     #[TestDox('No check reaches the identity, the session or the request through a helper')]
     public function testChecksAreContextFreeThroughTheirHelpers(): void

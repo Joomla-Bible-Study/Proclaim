@@ -227,9 +227,10 @@ class CwmassetsTest extends ProclaimTestCase
      * simultaneously (inherited, custom_rules, needs_cleanup, drifted all
      * exercised on the same table in one pass).
      *
-     * Fabricates 3 throwaway #__assets rows and temporarily repoints 3 real
-     * teacher rows at them, inside a transaction that is always rolled back
-     * in finally -- safe because getAssetStatus() is read-only (SELECT
+     * Fabricates 3 throwaway #__assets rows and temporarily repoints 3
+     * teacher rows at them (adding throwaway teachers when the table has
+     * fewer), inside a transaction that is always rolled back in finally --
+     * safe because getAssetStatus() is read-only (SELECT
      * only), unlike fixSingleRecord()'s moveByReference() path which takes
      * a table lock that would implicitly commit a transaction.
      */
@@ -237,24 +238,18 @@ class CwmassetsTest extends ProclaimTestCase
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $teacherIds = $db->setQuery(
-            $db->createQuery()
-                ->select($db->quoteName('id'))
-                ->from($db->quoteName('#__bsms_teachers'))
-                ->setLimit(3)
-        )->loadColumn();
-
-        if (\count($teacherIds) < 3) {
-            $this->markTestSkipped('Need at least 3 teacher rows on the test DB to exercise this fixture.');
-        }
-
         $parentId        = Cwmassets::parentId();
         $originalAssets  = [];
         $fixtureAssetIds = [];
+        $teachersBefore  = self::countRows($db, '#__bsms_teachers');
 
         $db->transactionStart();
 
         try {
+            // A fresh database, CI's among them, has no teachers. Throwaway
+            // ones are added here and rolled back with the rest of the fixture.
+            $teacherIds = self::teacherIdsForFixture($db, 3);
+
             foreach ($teacherIds as $id) {
                 $originalAssets[$id] = (int) $db->setQuery(
                     $db->createQuery()
@@ -310,6 +305,61 @@ class CwmassetsTest extends ProclaimTestCase
         } finally {
             $db->transactionRollback();
         }
+
+        $this->assertSame(
+            $teachersBefore,
+            self::countRows($db, '#__bsms_teachers'),
+            'Test isolation broke: the fixture teachers were not rolled back'
+        );
+    }
+
+    /**
+     * The first $count teacher ids, adding throwaway teachers inside the
+     * caller's transaction when the table holds fewer.
+     *
+     * @param   DatabaseInterface  $db     Database driver
+     * @param   int                $count  How many ids are needed
+     *
+     * @return  int[]
+     */
+    private static function teacherIdsForFixture(DatabaseInterface $db, int $count): array
+    {
+        $ids = array_map('intval', $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_teachers'))
+                ->setLimit($count)
+        )->loadColumn());
+
+        for ($i = \count($ids); $i < $count; $i++) {
+            $db->setQuery(
+                $db->createQuery()
+                    ->insert($db->quoteName('#__bsms_teachers'))
+                    ->columns($db->quoteName(['teachername', 'alias', 'published', 'language']))
+                    ->values(
+                        $db->quote('Asset status fixture ' . $i) . ', '
+                        . $db->quote('asset-status-fixture-' . $i . '-' . bin2hex(random_bytes(4))) . ', 1, '
+                        . $db->quote('*')
+                    )
+            )->execute();
+
+            $ids[] = (int) $db->insertid();
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @param   DatabaseInterface  $db     Database driver
+     * @param   string             $table  Table to count
+     *
+     * @return  int
+     */
+    private static function countRows(DatabaseInterface $db, string $table): int
+    {
+        return (int) $db->setQuery(
+            $db->createQuery()->select('COUNT(*)')->from($db->quoteName($table))
+        )->loadResult();
     }
 
     /**

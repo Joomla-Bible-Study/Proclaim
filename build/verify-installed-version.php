@@ -29,7 +29,7 @@ declare(strict_types=1);
  *   2  wrong invocation
  *
  * @package    Proclaim.Build
- * @since      __DEPLOY_VERSION__
+ * @since      10.5.10
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 

@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * the same pattern that produced the XSS in ServerTypeField (#1457). Both
  * now extend Joomla core's ModalSelectField, matching Modal/SeriesField.php.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class ModalFieldMigrationTest extends ProclaimTestCase
 {

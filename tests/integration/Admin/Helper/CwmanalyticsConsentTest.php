@@ -36,7 +36,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  *    banner of its own. It must therefore have a stable, discoverable name
  *    rather than a string literal buried in a conditional.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmanalyticsHelper::class)]
 class CwmanalyticsConsentTest extends IntegrationTestCase

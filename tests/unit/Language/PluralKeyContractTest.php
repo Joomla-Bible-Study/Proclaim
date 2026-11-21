@@ -15,7 +15,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 
 namespace CWM\Component\Proclaim\Tests\Language;
@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 class PluralKeyContractTest extends TestCase
 {
@@ -32,13 +32,13 @@ class PluralKeyContractTest extends TestCase
      * The suffixes en-GB's localise.php offers, in the order Joomla tries them.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const array SUFFIXES = ['0', 'ONE', '1', 'OTHER', 'MORE'];
 
     /**
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const array ROOTS = ['admin', 'site', 'api', 'components', 'modules', 'plugins'];
 
@@ -47,7 +47,7 @@ class PluralKeyContractTest extends TestCase
      *
      * @return  array<int, array{0: string, 1: int, 2: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private static function pluralCalls(): array
     {
@@ -93,7 +93,7 @@ class PluralKeyContractTest extends TestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Every Text::plural() key resolves to a declared en-GB string')]
     public function testPluralKeysResolve(): void

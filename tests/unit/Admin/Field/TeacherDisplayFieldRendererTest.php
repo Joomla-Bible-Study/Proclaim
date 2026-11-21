@@ -23,7 +23,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * reused the same way from its own menu-item-type form) avoid this with a
  * getRenderer() override that pins the component explicitly.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class TeacherDisplayFieldRendererTest extends ProclaimTestCase
 {

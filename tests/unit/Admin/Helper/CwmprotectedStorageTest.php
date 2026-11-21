@@ -17,7 +17,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * The directory restricted media lives in, and when its verdict goes stale.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class CwmprotectedStorageTest extends ProclaimTestCase
 {

@@ -34,7 +34,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 declare(strict_types=1);
@@ -73,7 +73,7 @@ $refresh = \in_array('--refresh', \array_slice($argv, 1), true);
  *
  * @return  string
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 function renderPassage(array $verses): string
 {
@@ -94,7 +94,7 @@ function renderPassage(array $verses): string
  *
  * @return  array|null  Decoded response, or null when the call did not succeed
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 function captureReference(string $reference): ?array
 {

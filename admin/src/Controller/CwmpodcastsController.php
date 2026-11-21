@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmActionlogListTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
@@ -72,8 +73,26 @@ class CwmpodcastsController extends AdminController
         }
 
         $podcasts = new Cwmpodcast();
-        $result   = $podcasts->makePodcasts();
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmpodcasts', $result);
+
+        try {
+            $result = $podcasts->makePodcasts();
+        } catch (\Throwable $e) {
+            CwmlogHelper::error('Building the podcast feeds failed: ' . $e->getMessage());
+            $this->setRedirect(
+                'index.php?option=com_proclaim&view=cwmpodcasts',
+                Text::sprintf('JBS_PDC_XML_FILES_NOT_BUILT', htmlspecialchars($e->getMessage())),
+                'error'
+            );
+
+            return;
+        }
+
+        // The result lists any feed that failed, so it must not show as a success.
+        $this->setRedirect(
+            'index.php?option=com_proclaim&view=cwmpodcasts',
+            $result,
+            $podcasts->getFailedFeedCount() > 0 ? 'warning' : 'message'
+        );
     }
 
     /**

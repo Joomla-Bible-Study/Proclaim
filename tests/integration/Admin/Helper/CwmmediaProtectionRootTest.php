@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * reporting all-clear from cron is the failure this guard exists to prevent, and
  * the first version walked straight into it.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class CwmmediaProtectionRootTest extends ProclaimTestCase
 {
@@ -41,7 +41,7 @@ class CwmmediaProtectionRootTest extends ProclaimTestCase
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function liveSiteIsSet(): bool
     {

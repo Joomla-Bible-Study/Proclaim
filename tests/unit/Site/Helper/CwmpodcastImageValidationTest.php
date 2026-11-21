@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * field: a URL with a #joomlaImage:// fragment and percent-escapes, not a bare
  * file name.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.8
  */
 class CwmpodcastImageValidationTest extends ProclaimTestCase
 {
@@ -30,7 +30,7 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
      * A directory under JPATH_ROOT for this test's files.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.8
      */
     private string $dir;
 
@@ -38,13 +38,13 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
      * The language Text used before this test swapped in its own.
      *
      * @var    mixed
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.8
      */
     private mixed $previousLanguage = null;
 
     /**
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     protected function setUp(): void
     {
@@ -64,7 +64,7 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
 
     /**
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     protected function tearDown(): void
     {
@@ -78,7 +78,7 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
 
     /**
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     #[TestDox('Artwork picked with the media field is found and measured')]
     public function testMediaFieldArtworkIsFoundAndMeasured(): void
@@ -100,7 +100,7 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
 
     /**
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     #[TestDox('Missing artwork is reported by its path, without the media field fragment')]
     public function testMissingArtworkIsReportedByItsPath(): void
@@ -120,7 +120,7 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
      *
      * @return  array  The artwork check's result
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.8
      */
     private function validate(string $value): array
     {

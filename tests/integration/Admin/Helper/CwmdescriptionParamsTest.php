@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * AJAX callers' catch(\Exception) did not see them either -- the request died
  * instead of falling back to no format and no chapters.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmdescriptionHelper::class)]
 class CwmdescriptionParamsTest extends IntegrationTestCase

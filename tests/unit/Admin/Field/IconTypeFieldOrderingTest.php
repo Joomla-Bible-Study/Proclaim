@@ -27,7 +27,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * directly in the method body, as CwmactionlogFailOpenTest::testModelIsChecked
  * BeforeUse() already does for the same class of bug.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class IconTypeFieldOrderingTest extends ProclaimTestCase
 {

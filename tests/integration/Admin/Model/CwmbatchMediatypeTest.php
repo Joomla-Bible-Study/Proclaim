@@ -36,7 +36,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * The batch now carries a whole display configuration, the same payload the
  * Image Tools screen applies, scoped to the selected rows.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmmediafileModel::class)]
 class CwmbatchMediatypeTest extends IntegrationTestCase

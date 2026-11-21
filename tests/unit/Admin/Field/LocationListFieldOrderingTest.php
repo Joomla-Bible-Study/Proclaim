@@ -27,7 +27,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * file's own established pattern for an ordering bug: assert the call order
  * directly in the method body.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class LocationListFieldOrderingTest extends ProclaimTestCase
 {

@@ -27,14 +27,14 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.9
  */
 class MigrationVersionGateTest extends ProclaimTestCase
 {
     /**
      * @return  string  The manifest script's source
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private static function script(): string
     {
@@ -50,7 +50,7 @@ class MigrationVersionGateTest extends ProclaimTestCase
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private static function gate(string $from, string $since): bool
     {
@@ -64,7 +64,7 @@ class MigrationVersionGateTest extends ProclaimTestCase
     /**
      * @return  array<string, array{0: string, 1: string, 2: bool, 3: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     public static function cases(): array
     {
@@ -87,7 +87,7 @@ class MigrationVersionGateTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[DataProvider('cases')]
     #[TestDox('$_dataName')]
@@ -101,7 +101,7 @@ class MigrationVersionGateTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('the gate mirrored here matches the one in the script')]
     public function testTheMirrorMatchesTheSource(): void
@@ -135,7 +135,7 @@ class MigrationVersionGateTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('every migration in the update block is gated')]
     public function testEveryMigrationIsGated(): void
@@ -187,7 +187,7 @@ class MigrationVersionGateTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('the source version is captured in preflight, not postflight')]
     public function testTheVersionIsReadEarly(): void

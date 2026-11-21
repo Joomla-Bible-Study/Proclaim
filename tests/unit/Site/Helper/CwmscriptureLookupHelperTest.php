@@ -24,7 +24,7 @@ use Joomla\Registry\Registry;
  * coverage lives in the live dispatch test performed against j5-dev during
  * the #1445 investigation rather than here. These tests cover structure.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmscriptureLookupHelperTest extends ProclaimTestCase
 {

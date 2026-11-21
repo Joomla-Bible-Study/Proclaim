@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * the same ~10 lines, including the WebAssetManager wiring for the
  * dropdown-clipping fix. Extracted to SearchableFancySelectTrait.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class SearchableFancySelectTraitTest extends ProclaimTestCase
 {

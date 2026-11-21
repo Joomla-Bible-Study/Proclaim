@@ -22,7 +22,7 @@ use Joomla\Database\DatabaseDriver;
  * coverage. Seeds its own fixture and rolls back afterward, independent of
  * whatever data (if any) the target database already has.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmepisodeauditModelTest extends ProclaimTestCase
 {

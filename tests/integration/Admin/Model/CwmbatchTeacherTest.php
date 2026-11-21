@@ -39,7 +39,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * CwmmessageTable::store(), and Table::store() commits, so every row is removed
  * by hand in tearDown instead.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 #[CoversClass(CwmmessageModel::class)]
 class CwmbatchTeacherTest extends IntegrationTestCase

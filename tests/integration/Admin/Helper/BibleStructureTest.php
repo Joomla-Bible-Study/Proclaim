@@ -35,7 +35,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * a full 66-book sweep showed Genesis as the only mismatch, 32 discrepancies
  * in total.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(BibleStructure::class)]
 class BibleStructureTest extends IntegrationTestCase

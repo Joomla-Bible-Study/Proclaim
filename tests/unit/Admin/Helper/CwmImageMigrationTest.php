@@ -27,7 +27,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * Also covers the recoverBareIdFolders() N+1 fix: one SELECT per bare-ID
  * folder replaced with a single batched WHERE id IN (...) query.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmImageMigrationTest extends ProclaimTestCase
 {

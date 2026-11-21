@@ -42,7 +42,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * database uniqueness: a mocked driver would happily accept the duplicate.
  * Each test runs inside a transaction that is rolled back.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(Cwmalias::class)]
 class CwmaliasTest extends IntegrationTestCase

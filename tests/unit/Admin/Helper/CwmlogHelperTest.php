@@ -16,7 +16,7 @@ use Joomla\CMS\Log\Log;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class CwmlogHelperTest extends ProclaimTestCase
 {

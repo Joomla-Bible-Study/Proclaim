@@ -12,7 +12,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Site\Model;
@@ -28,31 +28,31 @@ use Joomla\Event\DispatcherInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * @var mixed
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
      * @var User|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private ?User $savedIdentity = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function setUp(): void
     {
@@ -76,7 +76,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function tearDown(): void
     {
@@ -99,7 +99,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('A sermon that fails the published filter queues a message instead of throwing')]
     public function testMismatchedPublishedStateQueuesAMessage(): void
@@ -133,7 +133,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
 
     /**
      * @return  int  Seeded study id.
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function seedStudy(): int
     {
@@ -156,7 +156,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
 
     /**
      * @return  CwmsermonModel
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function createModel(): CwmsermonModel
     {

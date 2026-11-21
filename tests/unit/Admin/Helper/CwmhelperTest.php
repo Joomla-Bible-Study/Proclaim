@@ -92,7 +92,7 @@ class CwmhelperTest extends ProclaimTestCase
      * made a Simple Mode message form read as a broken editor.
      *
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function testSimpleModeIndicatorDefaultsOnWhenUnset(): void
     {
@@ -107,7 +107,7 @@ class CwmhelperTest extends ProclaimTestCase
      * absent case only.
      *
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function testSimpleModeIndicatorRespectsAnExplicitOff(): void
     {
@@ -121,7 +121,7 @@ class CwmhelperTest extends ProclaimTestCase
      * treats as set and so would not fall back.
      *
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     public function testSimpleModeIndicatorTreatsAnEmptyStringAsUnset(): void
     {

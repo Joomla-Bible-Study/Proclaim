@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * unchanged title takes the next (2), (3), ... whose alias is free, and an
  * alias the user typed is kept.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class CwmaliasCopyTest extends IntegrationTestCase
 {
@@ -31,7 +31,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function setUp(): void
     {
@@ -48,7 +48,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function tearDown(): void
     {
@@ -66,7 +66,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
     /**
      * @return  array<string, array{string, string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function tables(): array
     {
@@ -82,7 +82,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[DataProvider('tables')]
     #[TestDox('A copy with the title unchanged gets (2), and its alias is cleared to be built from that')]
@@ -100,7 +100,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[DataProvider('tables')]
     #[TestDox('Copying the same original again gives (3), not a second (2)')]
@@ -119,7 +119,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[DataProvider('tables')]
     #[TestDox('A number whose alias another row holds is skipped, whatever that row is titled')]
@@ -138,7 +138,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[DataProvider('tables')]
     #[TestDox('A title ending in a number keeps it; the copy is numbered after it')]
@@ -159,7 +159,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[DataProvider('tables')]
     #[TestDox('An alias the user cleared is treated as one they left alone')]
@@ -177,7 +177,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[DataProvider('tables')]
     #[TestDox('An alias the user typed is kept as typed, even when taken, and the title is left alone')]
@@ -196,7 +196,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[DataProvider('tables')]
     #[TestDox('A new title is kept, and the copied alias is cleared to be built from it')]
@@ -216,7 +216,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function uniqueTitle(): string
     {
@@ -231,7 +231,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
      *
      * @return  string  The row's alias
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function seed(string $table, string $titleField, string $title, string $alias = ''): string
     {

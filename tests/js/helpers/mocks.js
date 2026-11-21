@@ -15,7 +15,7 @@
  *   promise callbacks run (jest.runAllTimers / advanceTimersByTimeAsync).
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.7.8
  */
 
 const path = require('node:path');

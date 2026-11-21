@@ -33,7 +33,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * directly here and reached via reflection since sanitizeForScriptEmbedding()
  * is a private static pure function with no Joomla application dependency.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class ProclaimScriptEmbeddingTest extends ProclaimTestCase
 {

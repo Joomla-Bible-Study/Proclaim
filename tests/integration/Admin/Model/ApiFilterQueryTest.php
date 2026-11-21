@@ -35,13 +35,13 @@ use PHPUnit\Framework\Attributes\TestDox;
  * appears would pass on every one of these models, because all five columns are
  * already in the SELECT list or a JOIN condition.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class ApiFilterQueryTest extends IntegrationTestCase
 {
     /**
      * @return  void
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -56,7 +56,7 @@ class ApiFilterQueryTest extends IntegrationTestCase
      * model, filter key, filter value, and a pattern the WHERE must gain.
      *
      * @return array<string, array{0: string, 1: string, 2: mixed, 3: string}>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public static function filterProvider(): array
     {
@@ -77,7 +77,7 @@ class ApiFilterQueryTest extends IntegrationTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function listSql(string $name, array $state): string
     {
@@ -155,7 +155,7 @@ class ApiFilterQueryTest extends IntegrationTestCase
      *
      * @return  mixed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function silenced(callable $fn): mixed
     {

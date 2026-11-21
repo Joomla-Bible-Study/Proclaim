@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * associations when a study was deleted, leaving rows that topic counts and
  * filter dropdowns still join against.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmstudytopicHelper::class)]
 class CwmstudytopicHelperTest extends IntegrationTestCase

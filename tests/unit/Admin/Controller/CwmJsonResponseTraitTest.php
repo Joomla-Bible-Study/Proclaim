@@ -44,7 +44,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * `data.hasFiles`/`data.files`), so unifying them would be a breaking
  * change with no functional benefit.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmJsonResponseTraitTest extends ProclaimTestCase
 {

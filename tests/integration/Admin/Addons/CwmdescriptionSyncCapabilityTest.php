@@ -34,7 +34,7 @@ use PHPUnit\Framework\Attributes\Test;
  * Both halves are pinned here: the roster, and the rule that a true flag must
  * have a real method behind it.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 #[CoversClass(CWMAddon::class)]
 class CwmdescriptionSyncCapabilityTest extends IntegrationTestCase

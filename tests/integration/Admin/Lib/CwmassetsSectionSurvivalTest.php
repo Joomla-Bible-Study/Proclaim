@@ -32,7 +32,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.6.2
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
@@ -46,13 +46,13 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.6.2
  */
 class CwmassetsSectionSurvivalTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     private ?DatabaseInterface $db = null;
 
@@ -60,7 +60,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * Asset ids this test created, removed again in tearDown.
      *
      * @var list<int>
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     private array $created = [];
 
@@ -68,13 +68,13 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * Source rows this test inserted, removed again in tearDown.
      *
      * @var list<int>
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     private array $createdStudies = [];
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     protected function setUp(): void
     {
@@ -93,7 +93,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * transaction-wrapped asset test leaks its rows rather than rolling back.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     protected function tearDown(): void
     {
@@ -130,7 +130,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      *
      * @return  int  The new asset id.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     private function createItemAsset(string $section, int $id, string $rules): int
     {
@@ -159,7 +159,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      *
      * @return  int  The new record id.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     private function createStudyRow(int $assetId): int
     {
@@ -185,7 +185,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      *
      * @return  int  Asset id, or 0 when the row is absent.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     private function sectionRowId(string $section): int
     {
@@ -203,7 +203,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * The headline: a cleanup pass must not delete the sections a seed created.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     #[TestDox('Section assets survive a full fixAllAssets() pass')]
     public function testSectionsSurviveCleanup(): void
@@ -272,7 +272,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     #[TestDox('A record parented to its section is not reported as drifted')]
     public function testCorrectlyParentedRecordIsNotDrifted(): void
@@ -329,7 +329,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * such a site as clean for ever.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     #[TestDox('An item flattened onto com_proclaim is moved back under its section')]
     public function testFlattenedItemIsRepaired(): void
@@ -404,7 +404,7 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * exclusion must not have broken.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.2
      */
     #[TestDox('An item asset with no override is still pruned')]
     public function testEmptyRulesItemAssetIsStillPruned(): void

@@ -25,7 +25,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * since dataAttributes is what collectLayoutData() snapshots into the
  * rendered `dataAttribute` string.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class ServerListFieldTest extends ProclaimTestCase
 {

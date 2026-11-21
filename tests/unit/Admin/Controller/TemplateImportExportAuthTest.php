@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * matters and is asserted is that the check exists, targets the right asset, and
  * runs before any file work.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.2
  */
 class TemplateImportExportAuthTest extends ProclaimTestCase
 {

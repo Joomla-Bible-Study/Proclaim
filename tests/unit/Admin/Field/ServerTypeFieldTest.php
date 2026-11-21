@@ -27,7 +27,7 @@ use Joomla\CMS\Form\Form;
  * interpolated values) no longer applies: getInput() isn't overridden at
  * all anymore, so there is no hand-rolled HTML left to escape.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class ServerTypeFieldTest extends ProclaimTestCase
 {

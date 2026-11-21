@@ -22,7 +22,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * isolated from the DB fetch so it can be tested with synthetic rows
  * rather than live DB content.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmbibleVersionHelperTest extends ProclaimTestCase
 {

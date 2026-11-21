@@ -17,7 +17,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * Restricted in Proclaim, but still handed out by the web server.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class CwmmediaProtectionHelperTest extends ProclaimTestCase
 {

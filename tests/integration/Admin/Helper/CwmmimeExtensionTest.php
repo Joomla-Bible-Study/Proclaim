@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * enclosure whose type or URL carries no usable extension is the same class of
  * defect that caused the Apple Podcasts delisting in v10.5.4/10.5.5.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(Cwmmime::class)]
 class CwmmimeExtensionTest extends IntegrationTestCase

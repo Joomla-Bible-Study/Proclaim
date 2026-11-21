@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * duration padding, enclosure MIME derivation, the guid permalink attribute, and
  * URL resolution for values that are neither absolute nor a menu item id.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.0
  */
 class CwmpodcastFeedSpecTest extends ProclaimTestCase
 {

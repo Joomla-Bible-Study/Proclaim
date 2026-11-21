@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * None of the prior unit tests touched a real database, so this bug shipped
  * undetected. Each test runs inside a transaction that is rolled back.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmlocationHelper::class)]
 class CwmlocationHelperIntegrationTest extends IntegrationTestCase

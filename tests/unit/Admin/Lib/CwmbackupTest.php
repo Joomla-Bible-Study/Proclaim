@@ -14,6 +14,8 @@ namespace CWM\Component\Proclaim\Tests\Admin\Lib;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Regression tests for #1521.
@@ -27,7 +29,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * These tests exercise the real (read-only) methods against the real dev database rather
  * than a mock, since the fix depends on CwmdbHelper::getObjects()'s actual table list.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmbackupTest extends ProclaimTestCase
 {
@@ -142,16 +144,11 @@ class CwmbackupTest extends ProclaimTestCase
      */
     public function testGetExportTableRowsReturnsExactlyTheRequestedLimit(): void
     {
-        $backup   = new Cwmbackup();
-        $rowCount = $backup->getTableRowCount('#__bsms_studies');
+        $this->withStudyRowsAbove(2, function (): void {
+            $chunk = (new Cwmbackup())->getExportTableRows('#__bsms_studies', 0, 2);
 
-        if ($rowCount <= 2) {
-            $this->markTestSkipped('#__bsms_studies needs more than 2 rows to exercise a bounded chunk; only ' . $rowCount . ' present on this DB.');
-        }
-
-        $chunk = $backup->getExportTableRows('#__bsms_studies', 0, 2);
-
-        $this->assertSame(2, preg_match_all('/^INSERT INTO/m', $chunk));
+            $this->assertSame(2, preg_match_all('/^INSERT INTO/m', $chunk));
+        });
     }
 
     /**
@@ -163,36 +160,83 @@ class CwmbackupTest extends ProclaimTestCase
      * a chunk boundary silently dropping one row and duplicating another.
      * This compares the actual set of primary-key ids extracted from each
      * chunk against the set from an unbounded read, on a table large enough
-     * to span multiple chunks at the real chunk size used by exportdb() --
-     * skipped on a DB too small to prove anything (e.g. a fresh CI fixture
-     * seeded from install SQL only, with no update-migration sample data).
+     * to span multiple chunks at the real chunk size used by exportdb().
      */
     public function testChunkedRowsCoverTheExactSameRowsAsAnUnboundedRead(): void
     {
-        $backup    = new Cwmbackup();
-        $table     = '#__bsms_studies';
         $chunkSize = 500;
-        $rowCount  = $backup->getTableRowCount($table);
 
-        if ($rowCount <= $chunkSize) {
-            $this->markTestSkipped('#__bsms_studies needs more than ' . $chunkSize . ' rows to span multiple chunks; only ' . $rowCount . ' present on this DB.');
+        $this->withStudyRowsAbove($chunkSize, function () use ($chunkSize): void {
+            $backup   = new Cwmbackup();
+            $table    = '#__bsms_studies';
+            $rowCount = $backup->getTableRowCount($table);
+
+            $chunkedIds = [];
+
+            for ($offset = 0; $offset < $rowCount; $offset += $chunkSize) {
+                preg_match_all('/`id`=\'(\d+)\'/', $backup->getExportTableRows($table, $offset, $chunkSize), $matches);
+                $chunkedIds = array_merge($chunkedIds, $matches[1]);
+            }
+
+            preg_match_all('/`id`=\'(\d+)\'/', $backup->getExportTableRows($table, 0, 0), $matches);
+            $unboundedIds = $matches[1];
+
+            $this->assertCount($rowCount, $chunkedIds, 'chunked read must return exactly one row per id -- see #1524');
+            $this->assertCount($rowCount, array_unique($chunkedIds), 'chunked read must not duplicate any id across chunk boundaries -- see #1524');
+            sort($chunkedIds);
+            sort($unboundedIds);
+            $this->assertSame($unboundedIds, $chunkedIds, 'chunked read must cover exactly the same ids as an unbounded read -- see #1524');
+        });
+    }
+
+    /**
+     * Run $test while #__bsms_studies holds more than $minimum rows.
+     *
+     * A fresh database, CI's among them, has almost none, so throwaway messages
+     * are added inside a transaction that is always rolled back. A dev database
+     * usually has plenty already, and then nothing is added.
+     *
+     * @param   int       $minimum  The row count the table must exceed
+     * @param   callable  $test     The assertions to run
+     *
+     * @return  void
+     */
+    private function withStudyRowsAbove(int $minimum, callable $test): void
+    {
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $before = (new Cwmbackup())->getTableRowCount('#__bsms_studies');
+
+        $db->transactionStart(true);
+
+        try {
+            $missing = $minimum + 1 - $before;
+
+            if ($missing > 0) {
+                $query = $db->createQuery()
+                    ->insert($db->quoteName('#__bsms_studies'))
+                    ->columns($db->quoteName(['studytitle', 'alias', 'published', 'language']));
+
+                for ($i = 1; $i <= $missing; $i++) {
+                    $query->values(
+                        $db->quote('Backup chunk fixture ' . $i) . ', '
+                        . $db->quote('backup-chunk-fixture-' . $i . '-' . bin2hex(random_bytes(4))) . ', 1, '
+                        . $db->quote('*')
+                    );
+                }
+
+                $db->setQuery($query)->execute();
+            }
+
+            $test();
+        } finally {
+            $db->transactionRollback(true);
         }
 
-        $chunkedIds = [];
-
-        for ($offset = 0; $offset < $rowCount; $offset += $chunkSize) {
-            preg_match_all('/`id`=\'(\d+)\'/', $backup->getExportTableRows($table, $offset, $chunkSize), $matches);
-            $chunkedIds = array_merge($chunkedIds, $matches[1]);
-        }
-
-        preg_match_all('/`id`=\'(\d+)\'/', $backup->getExportTableRows($table, 0, 0), $matches);
-        $unboundedIds = $matches[1];
-
-        $this->assertCount($rowCount, $chunkedIds, 'chunked read must return exactly one row per id -- see #1524');
-        $this->assertCount($rowCount, array_unique($chunkedIds), 'chunked read must not duplicate any id across chunk boundaries -- see #1524');
-        sort($chunkedIds);
-        sort($unboundedIds);
-        $this->assertSame($unboundedIds, $chunkedIds, 'chunked read must cover exactly the same ids as an unbounded read -- see #1524');
+        $this->assertSame(
+            $before,
+            (new Cwmbackup())->getTableRowCount('#__bsms_studies'),
+            'Test isolation broke: the fixture messages were not rolled back'
+        );
     }
 
     /**

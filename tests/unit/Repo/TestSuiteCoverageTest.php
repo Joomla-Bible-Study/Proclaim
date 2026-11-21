@@ -26,13 +26,13 @@ use PHPUnit\Framework\Attributes\TestDox;
  * was registered in phpunit.xml but not in composer.json, and the total stayed
  * at exactly 2064 until both were done.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class TestSuiteCoverageTest extends ProclaimTestCase
 {
     /**
      * @return  string
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function repoRoot(): string
     {
@@ -45,7 +45,7 @@ class TestSuiteCoverageTest extends ProclaimTestCase
      *
      * @return  string[]  Repo-relative directories
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function wiredDirectories(): array
     {

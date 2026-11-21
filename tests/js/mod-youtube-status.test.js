@@ -6,7 +6,7 @@
  * status is the data of a JsonResponse ({success, message, messages, data}).
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.7.4
  */
 
 require('./setup');

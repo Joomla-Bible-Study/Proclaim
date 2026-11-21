@@ -18,7 +18,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * Regression tests for #1539, found during a Helper-folder-wide bug-hunting
  * review (sequel to #1521-#1528).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmcsvimportHelperTest extends ProclaimTestCase
 {

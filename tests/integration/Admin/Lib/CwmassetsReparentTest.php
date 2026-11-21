@@ -13,7 +13,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
@@ -27,13 +27,13 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 class CwmassetsReparentTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private ?DatabaseInterface $db = null;
 
@@ -41,7 +41,7 @@ class CwmassetsReparentTest extends IntegrationTestCase
      * Asset ids this test created, removed again in tearDown.
      *
      * @var list<int>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private array $created = [];
 
@@ -49,13 +49,13 @@ class CwmassetsReparentTest extends IntegrationTestCase
      * Section rules on the way in, so a deny written here is undone.
      *
      * @var array<int, string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private array $savedRules = [];
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function setUp(): void
     {
@@ -79,7 +79,7 @@ class CwmassetsReparentTest extends IntegrationTestCase
      * implicit COMMIT in MySQL.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function tearDown(): void
     {
@@ -114,7 +114,7 @@ class CwmassetsReparentTest extends IntegrationTestCase
      * @param   string  $rules     JSON rule set
      *
      * @return  int
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function makeAsset(string $name, int $parentId, string $rules = '{}'): int
     {
@@ -136,7 +136,7 @@ class CwmassetsReparentTest extends IntegrationTestCase
      * @param   string  $name  Asset name
      *
      * @return  string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function parentNameOf(string $name): string
     {

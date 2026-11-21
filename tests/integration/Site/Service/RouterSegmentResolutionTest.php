@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Cwmalias::ensureUniqueAliases() and asserted in CwmaliasUniqueTest: the
  * unique index on alias means no test can seed a shared one here.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class RouterSegmentResolutionTest extends IntegrationTestCase
 {
@@ -34,7 +34,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     protected function setUp(): void
     {
@@ -57,7 +57,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     protected function tearDown(): void
     {
@@ -75,7 +75,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[TestDox('An alias that starts with another record\'s id resolves to its own record')]
     public function testAliasStartingWithAnotherRecordsIdResolvesByAlias(): void
@@ -91,7 +91,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[TestDox('An <id>-<alias> segment resolves to that record and is flagged for a redirect')]
     public function testIdAliasSegmentResolvesAndIsFlagged(): void
@@ -106,7 +106,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[TestDox('A bare id segment resolves to that record and is flagged for a redirect')]
     public function testBareIdSegmentResolvesAndIsFlagged(): void
@@ -120,7 +120,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[TestDox('An <id>-<alias> segment for a trashed record is not found')]
     public function testIdAliasSegmentForAHiddenRecordIsNotFound(): void
@@ -135,7 +135,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[TestDox('A segment that starts with an id but carries a different alias is not found')]
     public function testIdWithAnotherAliasIsNotFound(): void
@@ -149,7 +149,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[TestDox('An unknown alias is not found')]
     public function testUnknownAliasIsNotFound(): void
@@ -160,7 +160,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[TestDox('A series resolves by alias, and by <id>-<alias> with a redirect flag')]
     public function testSeriesResolvesByAliasAndIdAlias(): void
@@ -178,7 +178,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[TestDox('A teacher resolves by alias, and by <id>-<alias> with a redirect flag')]
     public function testTeacherResolvesByAliasAndIdAlias(): void
@@ -204,7 +204,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
      *
      * @return  int  The new message id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function seedStudy(string $alias, int $published): int
     {
@@ -224,7 +224,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
      *
      * @return  int  The new row id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     private function seedRow(string $table, array $values): int
     {
@@ -240,7 +240,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
  * Counts redirect flags instead of setting them on the site router, which a
  * test run does not have.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 final class TaintRecordingRouter extends Router
 {
@@ -249,7 +249,7 @@ final class TaintRecordingRouter extends Router
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     protected function markTainted(): void
     {

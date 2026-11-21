@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *   constraint on the rest of the name, so a stray non-app directory could be
  *   misclassified as an orphaned record folder.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmImageCleanupTest extends ProclaimTestCase
 {

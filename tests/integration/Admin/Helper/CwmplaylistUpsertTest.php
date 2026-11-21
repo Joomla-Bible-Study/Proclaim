@@ -34,7 +34,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
  *
  * Each test runs inside a transaction that is rolled back, so nothing persists.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.7
  */
 #[CoversClass(CwmplaylistSyncHelper::class)]
 class CwmplaylistUpsertTest extends IntegrationTestCase

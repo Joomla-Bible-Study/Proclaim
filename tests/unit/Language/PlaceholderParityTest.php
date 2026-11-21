@@ -13,7 +13,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 
 namespace CWM\Component\Proclaim\Tests\Language;
@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 class PlaceholderParityTest extends TestCase
 {
@@ -34,13 +34,13 @@ class PlaceholderParityTest extends TestCase
      * every locale that words the sentence differently is reported as drift.
      *
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const PLACEHOLDER = '/%%|%(?:\d+\$)?[-+0#]*[\d.]*[bcdeEfFgGosuxX]/';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const HTML_TAG = '/<\/?([a-z]+)[^>]*>/i';
 
@@ -48,7 +48,7 @@ class PlaceholderParityTest extends TestCase
      * Trees that hold shipped translations. Submodules keep their own suites.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private const SKIP = ['/libraries/', '/vendor/', '/node_modules/', '/tests/Backupfiles/'];
 
@@ -62,7 +62,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @return  array<string, array{0: string, 1: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     public static function localeFileProvider(): array
     {
@@ -117,7 +117,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @return  string[]
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private static function placeholders(string $value): array
     {
@@ -135,7 +135,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @return  string[]
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private static function tags(string $value): array
     {
@@ -153,7 +153,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Locale discovery finds the shipped translations')]
     public function testDiscoveryIsNotEmpty(): void
@@ -189,7 +189,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Translated values keep the printf placeholders en-GB declares')]
     #[\PHPUnit\Framework\Attributes\DataProvider('localeFileProvider')]
@@ -230,7 +230,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Translated values keep the HTML tags en-GB declares')]
     #[\PHPUnit\Framework\Attributes\DataProvider('localeFileProvider')]
@@ -284,7 +284,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Translations declare no key that en-GB has dropped')]
     #[\PHPUnit\Framework\Attributes\DataProvider('localeFileProvider')]
@@ -312,7 +312,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('No en-GB string escapes a percent unless something formats it')]
     public function testEscapedPercentOnlyWhereFormatted(): void

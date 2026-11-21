@@ -23,7 +23,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * these assert against its source. That is weaker than calling the methods, but
  * the alternative is instantiating an installer script outside an install.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.1
  */
 class ProclaimScriptCacheTest extends ProclaimTestCase
 {

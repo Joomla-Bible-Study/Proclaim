@@ -42,7 +42,7 @@ use PHPUnit\Framework\TestCase;
  * When it fails, re-capture and commit the fixture:
  *   php build/seed-scripture-fixture.php --refresh
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 #[Group('network')]
 class GetBibleContractTest extends TestCase
@@ -63,7 +63,7 @@ class GetBibleContractTest extends TestCase
      *
      * @return  array|null  Decoded response, or null when the host is unreachable
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function fetchLive(): ?array
     {
@@ -99,7 +99,7 @@ class GetBibleContractTest extends TestCase
      *
      * @return  array
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private function recorded(): array
     {
@@ -120,7 +120,7 @@ class GetBibleContractTest extends TestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('the live response still carries the fields the provider reads')]
     public function testLiveResponseKeepsTheProviderContract(): void
@@ -154,7 +154,7 @@ class GetBibleContractTest extends TestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox('the committed fixture still matches the live response shape')]
     public function testFixtureStillMatchesLive(): void
