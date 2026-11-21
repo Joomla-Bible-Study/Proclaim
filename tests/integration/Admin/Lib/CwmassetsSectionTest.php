@@ -109,8 +109,11 @@ class CwmassetsSectionTest extends IntegrationTestCase
     /**
      * Note which sections this test is responsible for cleaning up.
      *
+     * @param   array  $before  The section assets that existed before the test, keyed by section
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function rememberCreated(array $before): void
     {

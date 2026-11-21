@@ -34,6 +34,13 @@ class FiltersFieldTest extends ProclaimTestCase
 {
     /**
      * Call one of the field's protected static normalisers.
+     *
+     * @param   string  $method  The normaliser's name
+     * @param   mixed   $input   The value to normalise
+     *
+     * @return  array  What the normaliser returns
+     *
+     * @since   10.3.5
      */
     private static function normalise(string $method, mixed $input): array
     {
@@ -110,6 +117,12 @@ class FiltersFieldTest extends ProclaimTestCase
     /**
      * Whatever the entry is, the caller gets a complete array back — so the
      * named-key reads in getInput() cannot fatal.
+     *
+     * @param   mixed  $entry  A group entry in a broken or unexpected shape
+     *
+     * @return  void
+     *
+     * @since   10.3.5
      */
     #[DataProvider('brokenGroupEntryProvider')]
     public function testAnyGroupEntryYieldsACompleteFilterArray(mixed $entry): void

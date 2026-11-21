@@ -321,6 +321,13 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
     /**
      * Exercised as a pure function deliberately: proving this guard by calling
      * rollupAndPurge(0) would run the real DELETE if the guard were wrong.
+     *
+     * @param   int   $days      The retention window in days
+     * @param   bool  $expected  Whether that window may delete raw events
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('retentionProvider')]
     #[TestDox('Only a retention window at or above the floor permits deletion')]

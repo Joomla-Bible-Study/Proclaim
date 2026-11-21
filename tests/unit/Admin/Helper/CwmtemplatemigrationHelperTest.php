@@ -261,7 +261,15 @@ class TestableCwmtemplatemigrationHelper extends CwmtemplatemigrationHelper
         return $this->finalParams;
     }
 
-    /** Return the current (post-migration) params for template #$id as an array. */
+    /**
+     * Return the current (post-migration) params for template #$id as an array.
+     *
+     * @param   int  $id  The template's id
+     *
+     * @return  array  The params, or an empty array when the template has none
+     *
+     * @since   10.2.0
+     */
     public function getParamsArray(int $id = 1): array
     {
         return json_decode($this->finalParams[$id] ?? '{}', true) ?? [];
@@ -412,6 +420,12 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * Every parameter documented in Backward-Compatibility-Breaks-10.1.md
      * must appear in the $migrations array with the correct default value.
      *
+     * @param   string  $param            The parameter's name
+     * @param   string  $expectedDefault  The default it should be added with
+     *
+     * @return  void
+     *
+     * @since   10.2.0
      */
     #[DataProvider('provideExpectedNewParams')]
     public function testMigrationHasAllDocumentedNewParams(string $param, string $expectedDefault): void
@@ -456,6 +470,12 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * Every rename documented in Backward-Compatibility-Breaks-10.1.md must be
      * registered in the $renames array.
      *
+     * @param   string  $oldName  The parameter's old name
+     * @param   string  $newName  The name it is renamed to
+     *
+     * @return  void
+     *
+     * @since   10.2.0
      */
     #[DataProvider('provideExpectedRenames')]
     public function testRenameMapHasAllDocumentedEntries(string $oldName, string $newName): void

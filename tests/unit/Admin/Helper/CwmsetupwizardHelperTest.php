@@ -41,6 +41,12 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test that each preset has all required fields.
+     *
+     * @param   string  $key  The preset's key
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     #[DataProvider('presetKeyProvider')]
     public function testPresetHasRequiredFields(string $key): void
@@ -118,6 +124,12 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test that all preset labels are language string keys.
+     *
+     * @param   string  $key  The preset's key
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     #[DataProvider('presetKeyProvider')]
     public function testPresetLabelsAreLangKeys(string $key): void
@@ -130,6 +142,12 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test that all preset icons are FontAwesome classes.
+     *
+     * @param   string  $key  The preset's key
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     #[DataProvider('presetKeyProvider')]
     public function testPresetIconsAreFontAwesome(string $key): void

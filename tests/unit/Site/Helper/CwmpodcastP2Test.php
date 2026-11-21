@@ -102,8 +102,12 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test normalizeTime converts various formats to HH:MM:SS.
      *
-     * @return void
-     * @since  10.3.0
+     * @param   string  $input     A time in one of the accepted formats
+     * @param   string  $expected  The HH:MM:SS it should become
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     #[DataProvider('normalizeTimeProvider')]
     public function testNormalizeTime(string $input, string $expected): void
@@ -266,8 +270,12 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test CwmpodcastController::timeToSeconds conversion.
      *
-     * @return void
-     * @since  10.3.0
+     * @param   string  $input     A time in one of the accepted formats
+     * @param   float   $expected  The seconds it should convert to
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     #[DataProvider('timeToSecondsProvider')]
     public function testTimeToSeconds(string $input, float $expected): void

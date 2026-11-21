@@ -35,6 +35,12 @@ class ServerTypeFieldTest extends ProclaimTestCase
      * Build a field instance with a bound Form supplying id=5 for
      * $this->form->getValue('id'), without going through the constructor
      * (which needs a full Form already attached).
+     *
+     * @param   mixed  $value  The field's value
+     *
+     * @return  ServerTypeField  The field
+     *
+     * @since   10.5.6
      */
     private function makeField(mixed $value): ServerTypeField
     {

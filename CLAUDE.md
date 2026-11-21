@@ -55,8 +55,11 @@ methods and the members of anonymous test doubles:
 
 - a description first
 - `@param` entries aligned, one per parameter
-- a blank line, then `@return` with a description (`void` too)
+- a blank line, then `@return`, every time; a bare `@return  void` is enough,
+  and any other type takes a description
 - a blank line, then `@since`, then any `@throws`
+- no `@tag` words in a description: PhpStorm reads them as tags, even mid-line,
+  so write "since tag" or "parameter tags" in prose
 
 New code, tests and build scripts included, takes `@since __DEPLOY_VERSION__`.
 A release replaces it everywhere `versionTracking.substituteTokens` in
@@ -65,9 +68,21 @@ placeholder sits anywhere it doesn't. ⚠️ Never write the literal token as a
 string in a stamped file. The release rewrites every occurrence, so assemble it
 from two halves.
 
-⚠️ Most existing tests use a compact `@return void` / `@since` pair with no
-description, or no docblock at all. Don't copy it from the file next door.
-#2370 tracks bringing the suite up to standard.
+⚠️ Many existing tests still use a compact `@return void` / `@since` pair with
+no description, or no docblock at all. Don't copy it from the file next door.
+
+`TestDocblocksTest` holds the suite to this layout:
+- **It fails on any gap that `tests/unit/Repo/docblock-debt/` doesn't list,** so
+  new and changed tests are written in full.
+- **It also fails on a listed entry whose docblock is now complete.** The list
+  only shrinks: when you finish a docblock, delete its entry, or run
+  `PROCLAIM_SHRINK_DOCBLOCK_DEBT=1 libraries/vendor/bin/phpunit --filter TestDocblocksTest`,
+  which removes entries and never adds one.
+- **A branch with test files the others lack keeps their gaps in a list of its
+  own in that folder,** so no two branches edit the same list. ⚠️ Shrink mode
+  rewrites every list there, so on such a branch, edit its own list by hand.
+
+#2370 tracks clearing the list.
 
 ### Naming Conventions
 

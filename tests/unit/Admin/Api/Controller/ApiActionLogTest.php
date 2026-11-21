@@ -43,6 +43,13 @@ class ApiActionLogTest extends ProclaimTestCase
      *
      * A writable controller that does not extend the logging base is an audit
      * hole: changes land in the database with nothing recording who made them.
+     *
+     * @param   string  $class    The API controller's short class name
+     * @param   string  $logType  The entity name its log entries carry
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     #[DataProvider('writableControllerProvider')]
     public function testWritableControllerLogsChanges(string $class, string $logType): void
@@ -67,6 +74,13 @@ class ApiActionLogTest extends ProclaimTestCase
     /**
      * Each logType must have a matching entity-name language key, or the log entry
      * renders a raw key instead of "topic".
+     *
+     * @param   string  $class    The API controller's short class name
+     * @param   string  $logType  The entity name whose language key is checked
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     #[DataProvider('writableControllerProvider')]
     public function testLogTypeHasLanguageKey(string $class, string $logType): void
@@ -199,6 +213,13 @@ class ApiActionLogTest extends ProclaimTestCase
 
     /**
      * Slice one method body out of a source string by reflection line numbers.
+     *
+     * @param   string             $source  The class file's source
+     * @param   \ReflectionMethod  $ref     The method to slice out
+     *
+     * @return  string  The method's lines
+     *
+     * @since   10.7.3
      */
     private static function methodBody(string $source, \ReflectionMethod $ref): string
     {

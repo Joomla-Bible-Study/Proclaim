@@ -29,6 +29,13 @@ class MediaFileFieldTest extends ProclaimTestCase
 {
     /**
      * Invoke the field's private static label builder.
+     *
+     * @param   int       $id      The media file's id
+     * @param   Registry  $params  The media file's params
+     *
+     * @return  string  The option label
+     *
+     * @since   10.5.6
      */
     private static function buildOptionLabel(int $id, Registry $params): string
     {
