@@ -175,6 +175,54 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
     }
 
     /**
+     * Every install script a manifest names is stamped. Joomla runs it on each
+     * install and update, so it ships, and the release has to reach it through
+     * a listed path. A route that exists only in a working copy, such as
+     * dev-setup's admin/ symlink to proclaim.script.php, is missing from a
+     * fresh clone.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \JsonException
+     */
+    #[TestDox('Every install script a manifest names is stamped')]
+    public function testEveryInstallScriptIsStamped(): void
+    {
+        $manifests = preg_split(
+            '/\R/',
+            trim((string) shell_exec(
+                'git -C ' . escapeshellarg(self::repoRoot()) . ' grep -l -F ' . escapeshellarg('<scriptfile>')
+                . ' -- ' . escapeshellarg('*.xml') . ' 2>/dev/null'
+            )),
+            -1,
+            PREG_SPLIT_NO_EMPTY
+        );
+
+        $this->assertNotSame([], $manifests, 'No manifest names an install script, so this check would pass on nothing.');
+
+        $unstamped = [];
+
+        foreach ($manifests as $manifest) {
+            preg_match('~<scriptfile>\s*([^<\s]+)\s*</scriptfile>~', (string) file_get_contents(self::repoRoot() . '/' . $manifest), $m);
+
+            $dir    = \dirname($manifest);
+            $script = ($dir === '.' ? '' : $dir . '/') . ($m[1] ?? '');
+
+            if (!self::isStamped($script)) {
+                $unstamped[] = $manifest . ' names ' . $script;
+            }
+        }
+
+        $this->assertSame(
+            [],
+            $unstamped,
+            'A release would leave the placeholders in these install scripts, which ship. List each one in '
+            . 'versionTracking.substituteTokens.paths in cwm-build.config.json.'
+        );
+    }
+
+    /**
      * The placeholder a release replaces.
      *
      * @return  string  The token
