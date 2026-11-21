@@ -16,7 +16,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Site\Model;
@@ -36,32 +36,32 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 #[CoversClass(CwmsermonsModel::class)]
 class CwmsermonsMultiTeacherTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseDriver|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
      * @var int
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private int $studyId = 0;
 
     /**
      * @var int[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private array $teacherIds = [];
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function setUp(): void
     {
@@ -79,7 +79,7 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function tearDown(): void
     {
@@ -98,7 +98,7 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
      * A published, publicly visible study taught by two people.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function studyWithTwoTeachers(): void
     {
@@ -155,7 +155,7 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
      * Build a real site sermons model through a component MVCFactory.
      *
      * @return  CwmsermonsModel
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function createModel(): CwmsermonsModel
     {
@@ -185,7 +185,7 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
      * How many rows the real listing query returns for the fixture study.
      *
      * @return  int
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function listingRowsForFixture(): int
     {
@@ -279,7 +279,7 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
      *
      * @return  mixed
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function silenced(callable $fn): mixed
     {

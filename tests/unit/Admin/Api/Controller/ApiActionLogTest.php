@@ -15,7 +15,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class ApiActionLogTest extends ProclaimTestCase
 {

@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * (its own tests only verified the test helper against itself); the insert
  * helpers this genuine regression test needs were inlined here instead.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.2
  */
 #[CoversClass(Cwmpodcast::class)]
 class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase

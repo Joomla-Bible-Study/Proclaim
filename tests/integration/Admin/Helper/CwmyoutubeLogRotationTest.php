@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * admin log viewer went nearly empty while the recent history sat unread in
  * youtube_events.log.1.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmyoutubeLogHelper::class)]
 class CwmyoutubeLogRotationTest extends IntegrationTestCase

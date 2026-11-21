@@ -12,7 +12,7 @@
  * assert the request is actually issued, not merely that a method exists.
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.6.1
  */
 
 require('./setup');

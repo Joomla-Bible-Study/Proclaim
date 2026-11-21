@@ -22,7 +22,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * the field's own computed name — breaking silently outside that one
  * hardcoded form/group (e.g. a subform).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class TopicsFormFieldTest extends ProclaimTestCase
 {

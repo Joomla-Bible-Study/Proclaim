@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * The flat columns those callers also maintained are no longer written (#1623);
  * what remains to protect is the delete-then-insert pair itself.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmscriptureHelper::class)]
 class CwmscriptureSaveTest extends IntegrationTestCase

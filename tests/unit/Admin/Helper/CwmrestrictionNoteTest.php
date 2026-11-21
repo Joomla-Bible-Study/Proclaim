@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * showed such a row with nothing to say, because the restriction is inherited
  * and nothing named the inheriting link.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 #[CoversClass(CwmrestrictionNote::class)]
 class CwmrestrictionNoteTest extends ProclaimTestCase

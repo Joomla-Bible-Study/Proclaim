@@ -37,7 +37,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 declare(strict_types=1);
@@ -118,7 +118,7 @@ echo "Schema OK — Joomla reports no database errors.\n";
  *
  * @return  int  0 when Joomla reports no errors, 1 otherwise
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 function checkSite(string $site): int
 {
@@ -217,7 +217,7 @@ function checkSite(string $site): int
  *
  * @return  string
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 function squash(string $sql): string
 {

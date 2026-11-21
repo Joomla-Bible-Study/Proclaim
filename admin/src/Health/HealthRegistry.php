@@ -29,6 +29,7 @@ use CWM\Component\Proclaim\Administrator\Health\Check\MissingImagesCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\OrphanMediaServerCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PendingReviewCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PluginEnabledCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\PodcastSettingsCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PodcastTaskCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedPodcastCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedStorageCheck;
@@ -83,6 +84,7 @@ final class HealthRegistry
             new AssetDriftCheck(),
             new ProtectedStorageCheck(),
             new ProtectedPodcastCheck(),
+            new PodcastSettingsCheck(),
             new RestrictedMediaCheck(),
             new TemplateCodeCssCheck(),
             new DebugModeCheck(),

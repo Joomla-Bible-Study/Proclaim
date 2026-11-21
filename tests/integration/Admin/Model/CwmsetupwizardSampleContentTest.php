@@ -10,7 +10,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Model;
@@ -23,25 +23,25 @@ use Joomla\Database\ParameterType;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.8
  */
 class CwmsetupwizardSampleContentTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * @var mixed
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     protected function setUp(): void
     {
@@ -61,7 +61,7 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     protected function tearDown(): void
     {
@@ -80,7 +80,7 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     #[TestDox('The sample message is credited to the teacher the wizard created')]
     public function testSampleMessageCreditsTheWizardsTeacher(): void
@@ -94,7 +94,7 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     #[TestDox('With no teacher handed over, the sample message is credited to the teacher the wizard picks')]
     public function testSampleMessageCreditsThePickedTeacher(): void
@@ -113,7 +113,7 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
      *
      * @return  array  IDs of the sample content created
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     private function createSampleContent(array $defaults = []): array
     {
@@ -131,7 +131,7 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
      *
      * @return  int[]  The ids of the teachers credited on the message, in order
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     private function creditedTeachers(int $messageId): array
     {
@@ -148,7 +148,7 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
     /**
      * @return  int  The new teacher id
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.8
      */
     private function seedTeacher(): int
     {

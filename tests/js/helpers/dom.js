@@ -19,7 +19,7 @@
  * fresh window, as each got a fresh environment under Jest.
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.7.8
  */
 
 const vm = require('node:vm');

@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\Test;
  * empty picker back on every media file of that type, so the roster is pinned
  * here rather than left to the addon classes to agree among themselves.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.0
  */
 #[CoversClass(CWMAddon::class)]
 class CwmplaylistCapabilityTest extends IntegrationTestCase

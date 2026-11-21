@@ -28,7 +28,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * getInt(), which mangled it into a meaningless digit extraction. Fixed
  * in place — see #1492 and CwmadminControllerTest's dedicated tests below.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmadminControllerTest extends ProclaimTestCase
 {

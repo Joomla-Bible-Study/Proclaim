@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * by nothing. Retention lives on the purge task, which is opt-in; a component
  * field defaulting to 90 days implied a limit that was never applied.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmanalyticsHelper::class)]
 class CwmanalyticsReferrerTest extends ProclaimTestCase

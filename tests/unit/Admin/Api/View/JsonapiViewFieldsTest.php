@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  *    carries it (Table::load reads every column) and the list route does not.
  *    Checked against the controller's LIST_SELECT.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class JsonapiViewFieldsTest extends ProclaimTestCase
 {
@@ -42,7 +42,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      * skipped, so a new resource cannot join the API unchecked.
      *
      * @var array<string, string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const VIEW_TABLES = [
         'Comments'     => 'bsms_comments',
@@ -67,7 +67,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      * Declared names that come from a join rather than the view's own table.
      *
      * @var array<string, string[]>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const JOIN_ALIASES = [
         // CwmmediafilesModel selects study.studytitle and server.server_name
@@ -85,7 +85,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      *
      * @return  array<string, string[]>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function schemaColumns(): array
     {
@@ -110,7 +110,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
 
     /**
      * @return  string
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function repoRoot(): string
     {
@@ -122,7 +122,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: class-string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function viewProvider(): array
     {
@@ -143,7 +143,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      *
      * @return  array{item: string[], list: string[]}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function declaredFields(string $viewClass): array
     {
@@ -210,7 +210,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      *
      * @return  string[]|null
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function listSelectFor(string $view): ?array
     {

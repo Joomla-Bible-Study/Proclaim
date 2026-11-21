@@ -32,13 +32,13 @@ use PHPUnit\Framework\Attributes\TestDox;
  * #1757, where the release bundled whatever zip was newest on disk instead of
  * the pinned submodule.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.6.0
  */
 class SubmodulePinsTest extends ProclaimTestCase
 {
     /**
      * @return  string
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function repoRoot(): string
     {
@@ -57,7 +57,7 @@ class SubmodulePinsTest extends ProclaimTestCase
      *
      * @return  string|null  The recorded commit, or null if it cannot be read
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.0
      */
     private static function pinnedCommit(string $repo, string $submodule): ?string
     {

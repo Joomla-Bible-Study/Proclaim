@@ -15,7 +15,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 
 namespace CWM\Component\Proclaim\Tests\Admin\Table;
@@ -25,7 +25,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 class TemplatecodeLayoutPathTest extends ProclaimTestCase
 {
@@ -40,7 +40,7 @@ class TemplatecodeLayoutPathTest extends ProclaimTestCase
      *
      * @return  string  Absolute path in this repository
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     private static function repositoryPath(string $directory): string
     {
@@ -60,7 +60,7 @@ class TemplatecodeLayoutPathTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Every directory the map writes to is one the package actually ships')]
     public function testEveryMappedDirectoryIsShipped(): void
@@ -94,7 +94,7 @@ class TemplatecodeLayoutPathTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('No mapped directory carries a capitalised path segment')]
     public function testNoMappedDirectoryIsCapitalised(): void
@@ -122,7 +122,7 @@ class TemplatecodeLayoutPathTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Nothing outside the table hard-codes a layout directory again')]
     public function testTheMapIsNotCopied(): void

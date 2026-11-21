@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * controller of its own, it is rendered by the generic display controller. So
  * the default view is now passed separately.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 #[CoversClass(CwmproclaimHelper::class)]
 class CwmproclaimHelperDefaultViewTest extends IntegrationTestCase

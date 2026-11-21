@@ -1019,6 +1019,10 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             'asset_id'               => 0,
             'created'                => $now,
             'created_by'             => $userId,
+            // The wizard asks for no artwork. Left out, the column is NULL, which
+            // the feed can't be built with; blank, it builds, and System Health
+            // names the missing artwork.
+            'podcastimage' => '',
         ];
 
         try {

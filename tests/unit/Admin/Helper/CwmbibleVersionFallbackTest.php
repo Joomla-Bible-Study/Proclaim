@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Two fields ask for servable-only: bible_version in scripture_row.xml and
  * default_bible_version in admin.xml.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmbibleVersionHelper::class)]
 class CwmbibleVersionFallbackTest extends ProclaimTestCase

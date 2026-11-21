@@ -198,6 +198,16 @@ jobs:
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
           "
 
+      - name: Seed install-time state
+        run: |
+          # What a real site has after installing Joomla and Proclaim but the
+          # imports above do not create (tables, users, extension rows, the
+          # component asset); the file says what each part is for. Tests that
+          # need it skip without it. No --force: a seed that only half applies
+          # would quietly bring those skips back.
+          sed 's/#__/proclaim_/g' tests/fixtures/ci-test-database-seed.sql \
+            | mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test
+
       - name: Check PHP syntax
         run: composer lint:syntax
 
@@ -216,8 +226,10 @@ jobs:
       - name: Check coding standards
         run: composer lint
 
+      # --display-skipped names every skipped test and its reason in the log,
+      # so a new skip shows up in review instead of only as a count.
       - name: Run PHPUnit tests
-        run: composer test
+        run: composer test -- --display-skipped
         env:
           JOOMLA_CMS_PATH: /home/runner/work/Proclaim/joomla-cms
           JTEST_DB_HOST: 127.0.0.1
@@ -424,14 +436,26 @@ jobs:
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
           "
 
+      - name: Seed install-time state
+        run: |
+          # What a real site has after installing Joomla and Proclaim but the
+          # imports above do not create (tables, users, extension rows, the
+          # component asset); the file says what each part is for. Tests that
+          # need it skip without it. No --force: a seed that only half applies
+          # would quietly bring those skips back.
+          sed 's/#__/proclaim_/g' tests/fixtures/ci-test-database-seed.sql \
+            | mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test
+
       - name: Check PHP syntax
         run: composer lint:syntax
 
       - name: Check query builder usage
         run: composer lint:queries
 
+      # --display-skipped names every skipped test and its reason in the log,
+      # so a new skip shows up in review instead of only as a count.
       - name: Run PHPUnit tests
-        run: composer test
+        run: composer test -- --display-skipped
         env:
           JOOMLA_CMS_PATH: /home/runner/work/Proclaim/joomla-cms
           JTEST_DB_HOST: 127.0.0.1

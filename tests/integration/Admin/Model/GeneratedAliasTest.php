@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * a transaction that is rolled back, where a full save() would create an
  * asset and commit.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class GeneratedAliasTest extends IntegrationTestCase
 {
@@ -38,7 +38,7 @@ class GeneratedAliasTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function setUp(): void
     {
@@ -57,7 +57,7 @@ class GeneratedAliasTest extends IntegrationTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     protected function tearDown(): void
     {
@@ -75,7 +75,7 @@ class GeneratedAliasTest extends IntegrationTestCase
     /**
      * @return  array<string, array{string, string, string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     public static function models(): array
     {
@@ -92,7 +92,7 @@ class GeneratedAliasTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[DataProvider('models')]
     #[TestDox('A $_dataName alias built from a title another row already uses gets -2, with a warning')]
@@ -119,7 +119,7 @@ class GeneratedAliasTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[DataProvider('models')]
     #[TestDox('A $_dataName alias built from a free title is the plain slug, without a warning')]
@@ -145,7 +145,7 @@ class GeneratedAliasTest extends IntegrationTestCase
      *
      * @return  array{0: string, 1: list<array{0: string, 1: string}>}  The alias, and each queued type and message
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function prepare(string $model, string $titleField, string $title): array
     {
@@ -187,7 +187,7 @@ class GeneratedAliasTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function seed(string $table, string $titleField, string $alias): void
     {

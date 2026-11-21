@@ -23,7 +23,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Assets;
@@ -34,7 +34,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Binds every ACL asset name in the codebase to a section in admin/access.xml.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 class AssetNameContractTest extends TestCase
 {
@@ -49,7 +49,7 @@ class AssetNameContractTest extends TestCase
      * whose permissions govern nothing.
      *
      * @var array<string, string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const KNOWN_UNDECLARED = [];
 
@@ -57,7 +57,7 @@ class AssetNameContractTest extends TestCase
      * Section names declared in admin/access.xml.
      *
      * @return  list<string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function declaredSections(): array
     {
@@ -77,7 +77,7 @@ class AssetNameContractTest extends TestCase
      * Repository root.
      *
      * @return  string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function root(): string
     {
@@ -88,7 +88,7 @@ class AssetNameContractTest extends TestCase
      * Every PHP file that could carry an asset name.
      *
      * @return  list<string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function sourceFiles(): array
     {
@@ -121,7 +121,7 @@ class AssetNameContractTest extends TestCase
      * @param   string  $file  Absolute path to a PHP file
      *
      * @return  string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function codeWithoutComments(string $file): string
     {
@@ -419,7 +419,7 @@ class AssetNameContractTest extends TestCase
      * UI while nothing enforces them per record, so it needs a reason.
      *
      * @var array<string, string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const SECTIONS_WITHOUT_RECORDS = [
         'component' => 'Component-level permissions; owns no records.',
@@ -431,7 +431,7 @@ class AssetNameContractTest extends TestCase
      * Read from source rather than called, so the test needs no Joomla runtime.
      *
      * @return  list<string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function assetObjectSections(): array
     {
@@ -461,7 +461,7 @@ class AssetNameContractTest extends TestCase
      * whose table is plural, `#__bsms_playlists`, which is the likeliest reason.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('every declared section with records behind it is in getAssetObjects()')]
     public function testDeclaredSectionsAreAllInAssetObjects(): void

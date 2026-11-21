@@ -21,7 +21,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * mf.id. Moved into CwmmediafilesHelper::findFilesForDelete(); see
  * CwmmediafilesHelperTest.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmmessagesControllerTest extends ProclaimTestCase
 {

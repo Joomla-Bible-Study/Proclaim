@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * indexing the string with the numeric group id returned a single character, and
  * reading `['filter_tags']` off that character was fatal.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.5
  */
 class FiltersFieldTest extends ProclaimTestCase
 {

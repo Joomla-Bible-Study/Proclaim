@@ -28,7 +28,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * both halves gone: the check in the controller and the token in the view's
  * cached script options.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.6
  */
 class CwmsermonsControllerTest extends ProclaimTestCase
 {
@@ -38,7 +38,7 @@ class CwmsermonsControllerTest extends ProclaimTestCase
      *
      * @return  string  The method's source
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.6
      */
     private static function methodBody(string $class, string $method): string
     {
@@ -54,7 +54,7 @@ class CwmsermonsControllerTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.6
      */
     public function testFilterAjaxChecksNoToken(): void
     {
@@ -71,7 +71,7 @@ class CwmsermonsControllerTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.6
      */
     public function testListViewPutsNoFormTokenInItsCachedOptions(): void
     {

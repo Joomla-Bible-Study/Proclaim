@@ -53,7 +53,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.9
  */
 
 declare(strict_types=1);
@@ -91,7 +91,7 @@ if ($expectedType === 'update' && $expectedFrom === '') {
  *
  * @return  int  Number of step() call sites, or -1 when it cannot be counted
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.9
  */
 function countRegisteredSteps(string $scriptFile): int
 {
@@ -117,7 +117,7 @@ function countRegisteredSteps(string $scriptFile): int
  *
  * @return  array<string, string>  Step name => version it is gated at
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 function registeredStepVersions(string $scriptFile): array
 {
@@ -153,7 +153,7 @@ function registeredStepVersions(string $scriptFile): array
  *
  * @return  string  Absolute path to the log directory
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.9
  */
 function logPathFor(string $installPath): string
 {
@@ -191,7 +191,7 @@ function logPathFor(string $installPath): string
  *
  * @return  string[]  Messages, in order, from the last preflight onwards
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.9
  */
 function lastInstallBlock(string $logFile): array
 {

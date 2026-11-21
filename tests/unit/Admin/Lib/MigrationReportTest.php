@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.9
  */
 class MigrationReportTest extends ProclaimTestCase
 {
@@ -34,7 +34,7 @@ class MigrationReportTest extends ProclaimTestCase
      * Tags Joomla's message sanitiser accepts, from
      * media/system/js/core.js `DefaultAllowlist` (Joomla 6.1).
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.9
      */
     private const ALLOWED_TAGS = [
         'a', 'area', 'b', 'br', 'col', 'code', 'div', 'em', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -45,7 +45,7 @@ class MigrationReportTest extends ProclaimTestCase
     /**
      * @return  string  The manifest script's source
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private static function script(): string
     {
@@ -57,7 +57,7 @@ class MigrationReportTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private static function reportBody(): string
     {
@@ -74,7 +74,7 @@ class MigrationReportTest extends ProclaimTestCase
     /**
      * @return  array<string, array{0: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     public static function forbiddenMarkup(): array
     {
@@ -92,7 +92,7 @@ class MigrationReportTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[DataProvider('forbiddenMarkup')]
     #[TestDox('the report does not use $_dataName, which the sanitiser strips')]
@@ -110,7 +110,7 @@ class MigrationReportTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('every tag the report emits is on the sanitiser allowlist')]
     public function testEveryTagIsAllowed(): void
@@ -134,7 +134,7 @@ class MigrationReportTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('the report is queued rather than printed')]
     public function testTheReportIsQueued(): void
@@ -161,7 +161,7 @@ class MigrationReportTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('a wholly uneventful update reports nothing')]
     public function testSilenceWhenNothingHappened(): void
@@ -184,7 +184,7 @@ class MigrationReportTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('the report is called from postflight, and every step is timed')]
     public function testWiring(): void

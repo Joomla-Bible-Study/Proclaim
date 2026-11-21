@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * omission in CWMAddon::apiRequest(), which is the shared HTTP path for every
  * server addon -- eighteen call sites across Vimeo, Wistia and Resi.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmHttpTimeoutTest extends ProclaimTestCase
 {

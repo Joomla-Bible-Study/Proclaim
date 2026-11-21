@@ -210,6 +210,11 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
             \define('JPATH_API', $rootDir . '/api');
         }
 
+        // ApplicationHelper::getClientInfo() lists the CLI client too
+        if (!\defined('JPATH_CLI')) {
+            \define('JPATH_CLI', $rootDir . '/cli');
+        }
+
         if (!\defined('JPATH_INSTALLATION')) {
             \define('JPATH_INSTALLATION', $rootDir . '/installation');
         }

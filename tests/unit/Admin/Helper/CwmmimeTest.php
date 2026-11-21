@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * Pure-logic tests covering the extension map and download-header resolution
  * that were previously duplicated across Cwmbackup, CWMAddon and Cwmpodcast.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.3
  */
 #[CoversClass(Cwmmime::class)]
 class CwmmimeTest extends ProclaimTestCase

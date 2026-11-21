@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * reopens that path for the clearing save only, so a platform that can never
  * supply a value (YouTube has no file size) does not re-hit its API forever.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.0
  */
 class CwmmediafileRedetectTest extends ProclaimTestCase
 {

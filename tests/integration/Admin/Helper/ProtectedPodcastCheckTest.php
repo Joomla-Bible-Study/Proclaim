@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * escaping, exactly as the site does. A fixture built with unescaped slashes
  * would pass against the broken prefilter and guard nothing.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 #[CoversClass(ProtectedPodcastCheck::class)]
 class ProtectedPodcastCheckTest extends IntegrationTestCase

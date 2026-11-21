@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * top-level OR once escaped published/access/language (the reason
  * WhereClauseContractTest exists).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 class OrGroupShapeTest extends ProclaimTestCase
 {

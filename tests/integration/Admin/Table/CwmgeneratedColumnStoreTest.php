@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * the save fails -- but only for rows where the column is non-null, which is why
  * it survives a casual smoke test. These tests pin the exclusion.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmmessageTable::class)]
 #[CoversClass(CwmplaylistTable::class)]

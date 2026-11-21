@@ -13,7 +13,7 @@
  * against itself and prove nothing about what ships.
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.6.0
  */
 
 require('./setup');

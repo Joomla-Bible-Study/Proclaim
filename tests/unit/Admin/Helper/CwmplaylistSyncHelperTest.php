@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * import link a YouTube video to media we already have instead of duplicating
  * it. These tests pin its handling of the various ways a YouTube URL is stored.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.3
  */
 #[CoversClass(CwmplaylistSyncHelper::class)]
 class CwmplaylistSyncHelperTest extends ProclaimTestCase
@@ -34,7 +34,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testExtractVideoMapHandlesAllUrlForms(): void
     {
@@ -61,7 +61,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testExtractVideoMapSkipsJunkAndKeepsFirstMatch(): void
     {
@@ -86,7 +86,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testExtractVideoMapEmpty(): void
     {
@@ -98,7 +98,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testTitlePushDecisionNoneWhenTitlesMatch(): void
     {
@@ -111,7 +111,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testTitlePushDecisionPullsRemoteWhenNotLocallyEdited(): void
     {
@@ -124,7 +124,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testTitlePushDecisionPushesWhenLocallyEditedAndWritebackOn(): void
     {
@@ -136,7 +136,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testTitlePushDecisionConflictWhenLocallyEditedAndWritebackOff(): void
     {
@@ -150,7 +150,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testFieldPushDecisionCoversAllOutcomes(): void
     {
@@ -176,7 +176,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testTitlePushDecisionDelegatesToFieldPushDecision(): void
     {
@@ -198,7 +198,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testMembershipsToPushPlansOnlyMissingVideos(): void
     {
@@ -221,7 +221,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testMembershipsToPushSkipsJunkAndDedups(): void
     {
@@ -246,7 +246,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testMembershipsToPushEmptyWhenAllPresent(): void
     {
@@ -263,7 +263,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testPlanPlaylistAssignmentsDiffsCurrentAndDesired(): void
     {
@@ -279,7 +279,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testPlanPlaylistAssignmentsHandlesEmptySides(): void
     {
@@ -298,7 +298,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function testPlanPlaylistAssignmentsSanitisesDesiredIds(): void
     {

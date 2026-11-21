@@ -22,7 +22,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Site\Helper;
@@ -34,7 +34,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 #[CoversClass(Cwmlisting::class)]
 class CwmlistingNullTeacherTest extends IntegrationTestCase
@@ -43,7 +43,7 @@ class CwmlistingNullTeacherTest extends IntegrationTestCase
      * A layout-editor element row, as getFluidRow() receives one.
      *
      * @return  \stdClass
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function elementRow(): \stdClass
     {
@@ -63,7 +63,7 @@ class CwmlistingNullTeacherTest extends IntegrationTestCase
      * A series as the listing query returns one, with no teacher.
      *
      * @return  \stdClass
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function teacherlessSeries(): \stdClass
     {

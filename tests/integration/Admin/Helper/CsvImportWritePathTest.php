@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * and commas on purpose — the characters quoting exists for are the ones a
  * broken bind mangles first.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 #[CoversClass(CwmcsvimportHelper::class)]
 class CsvImportWritePathTest extends IntegrationTestCase

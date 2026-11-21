@@ -184,7 +184,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         try {
             (new Cwmpodcast())->makePodcasts();
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             try {
                 $this->logTask($jLanguage->_($exception->getMessage()));
             } catch (\Exception $exception) {

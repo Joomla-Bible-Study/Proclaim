@@ -23,7 +23,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * the same request silently got the first instance's stale merged options,
  * because the early return skipped calling parent::getOptions() again.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class TemplateListFieldTest extends ProclaimTestCase
 {

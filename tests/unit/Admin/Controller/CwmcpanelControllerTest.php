@@ -22,7 +22,7 @@ use Joomla\CMS\MVC\Controller\FormController;
  * links/redirects). Now extends BaseController, matching DisplayController's
  * pattern for display-only controllers.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmcpanelControllerTest extends ProclaimTestCase
 {

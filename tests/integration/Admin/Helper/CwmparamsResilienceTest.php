@@ -44,7 +44,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * has called getAdmin(). It is covered here by the runtime invariant every
  * caller depends on, plus a structural pin on the guard itself.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(Cwmparams::class)]
 class CwmparamsResilienceTest extends IntegrationTestCase

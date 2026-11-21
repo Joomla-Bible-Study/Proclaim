@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * model and form names differ, register it in the plugin, and the check keeps
  * reporting a clean site while rows pile up where no form reads them.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class SchemaorgContextCheckTest extends ProclaimTestCase
 {
@@ -39,7 +39,7 @@ class SchemaorgContextCheckTest extends ProclaimTestCase
      *
      * @return  string[]  Non-canonical context names.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private static function pluginNonCanonicalContexts(): array
     {
@@ -67,7 +67,7 @@ class SchemaorgContextCheckTest extends ProclaimTestCase
      *
      * @return  string[]
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private static function checkContexts(): array
     {

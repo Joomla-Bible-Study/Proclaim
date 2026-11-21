@@ -15,7 +15,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Assets;
@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 class PermissionsFormSizeTest extends TestCase
 {
@@ -32,7 +32,7 @@ class PermissionsFormSizeTest extends TestCase
      * Repository root.
      *
      * @return  string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static function root(): string
     {

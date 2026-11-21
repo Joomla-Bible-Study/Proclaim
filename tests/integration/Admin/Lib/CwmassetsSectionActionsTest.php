@@ -23,7 +23,7 @@
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
@@ -39,7 +39,7 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 class CwmassetsSectionActionsTest extends IntegrationTestCase
 {
@@ -47,19 +47,19 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * The section used for every assertion here.
      *
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const SECTION = 'teacher';
 
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * @var mixed
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private mixed $savedIdentity = null;
 
@@ -67,13 +67,13 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * Section asset id under test, and its rules on the way in.
      *
      * @var int
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private int $assetId = 0;
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private string $savedRules = '{}';
 
@@ -81,7 +81,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * Whether this test created the section asset, and must remove it again.
      *
      * @var bool
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private bool $created = false;
 
@@ -89,7 +89,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * Groups the acting identity belongs to.
      *
      * @var list<int>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private array $groups = [];
 
@@ -97,19 +97,19 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * `com_proclaim` asset id and its rules, when a test stages a grant on it.
      *
      * @var int
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private int $componentAssetId = 0;
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private string $savedComponentRules = '';
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function setUp(): void
     {
@@ -160,7 +160,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * implicit COMMIT in MySQL, so a rollback would leave the write behind.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected function tearDown(): void
     {
@@ -202,7 +202,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * Id of a user who holds a group but is not a Super User.
      *
      * @return  int
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function nonRootUserId(): int
     {
@@ -223,7 +223,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * Whether the section asset was already present before this test ran.
      *
      * @return  bool
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function sectionAssetExists(): bool
     {
@@ -245,7 +245,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * a section-level deny has something to overturn. Restored in tearDown.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function grantComponentEdit(): void
     {
@@ -290,7 +290,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * @param   string  $rules  A JSON rule set
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private function writeRules(string $rules): void
     {

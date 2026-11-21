@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * These tests exercise the parts a source-level scan cannot see. The wider gap
  * — that no passive check is ever run by the suite — is its own problem.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 #[CoversClass(ProtectedStorageCheck::class)]
 class ProtectedStorageCheckTest extends ProclaimTestCase

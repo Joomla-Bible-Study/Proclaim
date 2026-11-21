@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Tests\Integration\Admin\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Database\DatabaseDriver;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -33,7 +34,11 @@ use PHPUnit\Framework\Attributes\TestDox;
  * arbitrary one and uninstall removed only one, leaving the rest in core
  * tables forever.
  *
- * @since  __DEPLOY_VERSION__
+ * Start Tour is offered only while Joomla's System - Guided Tours plugin is
+ * enabled, because that plugin loads the tour script and serves the tour
+ * (#2361). Registration and removal must keep working with it disabled.
+ *
+ * @since  10.5.6
  */
 #[CoversClass(CwmguidedtourHelper::class)]
 class CwmguidedtourHelperTest extends IntegrationTestCase
@@ -43,6 +48,8 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     private ?DatabaseDriver $db = null;
 
     private int $toursAtStart = 0;
+
+    private ?int $pluginStateAtStart = null;
 
     protected function setUp(): void
     {
@@ -59,7 +66,8 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
         }
 
         $this->db->transactionStart(true);
-        $this->toursAtStart = $this->countTours();
+        $this->toursAtStart       = $this->countTours();
+        $this->pluginStateAtStart = $this->guidedToursPluginState();
     }
 
     protected function tearDown(): void
@@ -81,10 +89,25 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
                         $after
                     );
                 }
+
+                // A plugin left disabled would switch tours off for the whole site.
+                $pluginAfter = $this->guidedToursPluginState();
+
+                if ($pluginAfter !== $this->pluginStateAtStart) {
+                    $this->writeGuidedToursPluginState((int) $this->pluginStateAtStart);
+
+                    $leaked = trim(($leaked ?? '') . \sprintf(
+                        ' Test isolation broke: the Guided Tours plugin went from enabled=%d to %d; restored.',
+                        (int) $this->pluginStateAtStart,
+                        (int) $pluginAfter
+                    ));
+                }
             } catch (\Throwable) {
                 // Connection lost; nothing to roll back.
             }
         }
+
+        $this->resetPluginCache();
 
         parent::tearDown();
 
@@ -133,6 +156,104 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
         $this->db->insertObject('#__guidedtours', $row, 'id');
 
         return (int) $this->db->insertid();
+    }
+
+    /**
+     * A helper holding two synthetic tours under the shipped keys, so startTour
+     * values resolve against rows each test creates.
+     *
+     * @return  CwmguidedtourHelper
+     */
+    private function startTourHelper(): CwmguidedtourHelper
+    {
+        $helper = new CwmguidedtourHelper();
+
+        (new \ReflectionProperty(CwmguidedtourHelper::class, 'tours'))->setValue($helper, [
+            'whats_new_10_1'  => ['uid' => self::UID . '_whats_new'],
+            'getting_started' => ['uid' => self::UID . '_getting_started'],
+        ]);
+
+        return $helper;
+    }
+
+    /**
+     * Count a uid's rows straight from the table.
+     *
+     * The helper's own lookups share supportsGuidedTours() with the code under
+     * test, so asserting through them would pass if that check stopped them both.
+     *
+     * @param   string  $uid  Tour uid
+     *
+     * @return  int
+     */
+    private function rowsForUid(string $uid): int
+    {
+        return (int) $this->db->setQuery(
+            $this->db->createQuery()
+                ->select('COUNT(*)')
+                ->from($this->db->quoteName('#__guidedtours'))
+                ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid))
+        )->loadResult();
+    }
+
+    /**
+     * @return  int|null  The Guided Tours plugin's enabled flag, or null when it is not installed.
+     */
+    private function guidedToursPluginState(): ?int
+    {
+        $state = $this->db->setQuery(
+            $this->db->createQuery()
+                ->select($this->db->quoteName('enabled'))
+                ->from($this->db->quoteName('#__extensions'))
+                ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('plugin'))
+                ->where($this->db->quoteName('folder') . ' = ' . $this->db->quote('system'))
+                ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('guidedtours'))
+        )->loadResult();
+
+        return $state === null ? null : (int) $state;
+    }
+
+    /**
+     * Turn the Guided Tours plugin on or off inside the test's transaction, and
+     * drop PluginHelper's cached list so the change is seen.
+     *
+     * @param   bool  $enabled  Wanted state
+     *
+     * @return  void
+     */
+    private function setGuidedToursPlugin(bool $enabled): void
+    {
+        if ($this->pluginStateAtStart === null) {
+            $this->markTestSkipped('plg_system_guidedtours is not installed on the test database.');
+        }
+
+        $this->writeGuidedToursPluginState((int) $enabled);
+        $this->resetPluginCache();
+    }
+
+    /**
+     * @param   int  $enabled  Value to store in #__extensions.enabled
+     *
+     * @return  void
+     */
+    private function writeGuidedToursPluginState(int $enabled): void
+    {
+        $this->db->setQuery(
+            $this->db->createQuery()
+                ->update($this->db->quoteName('#__extensions'))
+                ->set($this->db->quoteName('enabled') . ' = ' . $enabled)
+                ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('plugin'))
+                ->where($this->db->quoteName('folder') . ' = ' . $this->db->quote('system'))
+                ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('guidedtours'))
+        )->execute();
+    }
+
+    /**
+     * @return  void
+     */
+    private function resetPluginCache(): void
+    {
+        (new \ReflectionProperty(PluginHelper::class, 'plugins'))->setValue(null, null);
     }
 
 
@@ -357,7 +478,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * other bound query — the post-install message existence check by title_key.
      *
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox("postInstallMessageExists() runs its bound title_key query")]
     public function testPostInstallMessageExistsBindExecutes(): void
@@ -368,5 +489,94 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
         // A broken :titleKey bind throws before it can answer; a clean run
         // returns a bool (false for this deliberately-absent key).
         $this->assertIsBool($result);
+    }
+
+    // -------------------------------------------------------------------------
+    // Start Tour needs Joomla's Guided Tours plugin
+    // -------------------------------------------------------------------------
+
+    #[TestDox('canStartTours() follows the System - Guided Tours plugin')]
+    public function testCanStartToursFollowsThePlugin(): void
+    {
+        $this->setGuidedToursPlugin(true);
+        $this->assertTrue($this->helper()->canStartTours());
+
+        $this->setGuidedToursPlugin(false);
+        $this->assertFalse(
+            $this->helper()->canStartTours(),
+            'Start Tour was offered with the plugin disabled, where clicking it does nothing — see #2361'
+        );
+    }
+
+    /**
+     * Turning the plugin back on has to find the tours already in place, so
+     * registration must not share the check that hides the button.
+     */
+    #[TestDox('Registering still writes a tour while the plugin is disabled')]
+    public function testRegisterIgnoresThePlugin(): void
+    {
+        $this->setGuidedToursPlugin(false);
+
+        $this->helper()->registerGuidedTours();
+
+        $this->assertSame(
+            1,
+            $this->rowsForUid(self::UID),
+            'Install and upgrade skipped the tours because the plugin was off — see #2361'
+        );
+    }
+
+    #[TestDox('Uninstall still removes a tour while the plugin is disabled')]
+    public function testRemoveAllToursIgnoresThePlugin(): void
+    {
+        $this->insertRawTour(self::UID);
+        $this->assertSame(1, $this->rowsForUid(self::UID), 'Precondition: the tour row exists');
+        $this->setGuidedToursPlugin(false);
+
+        $this->helper()->removeAllTours();
+
+        $this->assertSame(
+            0,
+            $this->rowsForUid(self::UID),
+            'Uninstall left the tour orphaned in core tables because the plugin was off — see #2361'
+        );
+    }
+
+    // -------------------------------------------------------------------------
+    // startTour links resolve to the tour they name
+    // -------------------------------------------------------------------------
+
+    #[TestDox('resolveStartTour() maps the legacy "1" and the tour keys to their tour ids')]
+    public function testResolveStartTourMapsAliasAndKeys(): void
+    {
+        $whatsNew = $this->insertRawTour(self::UID . '_whats_new');
+        $started  = $this->insertRawTour(self::UID . '_getting_started');
+        $this->setGuidedToursPlugin(true);
+
+        $helper = $this->startTourHelper();
+
+        $this->assertSame($whatsNew, $helper->resolveStartTour('1'), 'Stored What\'s New links carry startTour=1');
+        $this->assertSame($whatsNew, $helper->resolveStartTour('whats_new_10_1'));
+        $this->assertSame(
+            $started,
+            $helper->resolveStartTour('getting_started'),
+            'The Getting Started link started nothing — see #2362'
+        );
+    }
+
+    #[TestDox('resolveStartTour() starts nothing for an unknown value, a missing tour or a disabled plugin')]
+    public function testResolveStartTourRefuses(): void
+    {
+        $this->insertRawTour(self::UID . '_getting_started');
+        $this->setGuidedToursPlugin(true);
+
+        $helper = $this->startTourHelper();
+
+        $this->assertSame(0, $helper->resolveStartTour(''));
+        $this->assertSame(0, $helper->resolveStartTour('bogus'));
+        $this->assertSame(0, $helper->resolveStartTour('whats_new_10_1'), 'That key has no row in this test');
+
+        $this->setGuidedToursPlugin(false);
+        $this->assertSame(0, $helper->resolveStartTour('getting_started'), 'A tour was started with the plugin disabled');
     }
 }

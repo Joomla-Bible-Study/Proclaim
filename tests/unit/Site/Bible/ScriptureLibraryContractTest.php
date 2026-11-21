@@ -29,14 +29,14 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.9
  */
 class ScriptureLibraryContractTest extends ProclaimTestCase
 {
     /**
      * Trees that may call into the library.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.9
      */
     private const SOURCE_ROOTS = ['site/src', 'admin/src', 'api/src'];
 
@@ -45,7 +45,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      * carries google/apiclient — 598 of the 956 files a naive walk reads, and
      * none of them ours.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.9
      */
     private const SKIP = ['/vendor/', '/node_modules/'];
 
@@ -58,7 +58,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      * only on AbstractBibleProvider has nothing holding it in place, which is
      * the shape that went missing in 1.1.13.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.9
      */
     private const UNGUARDED_CALLS = [
         'getPassage'           => BibleProviderInterface::class,
@@ -74,7 +74,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      * asserted is that the guard is still there, because deleting it turns a
      * graceful degradation into a fatal.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.9
      */
     private const GUARDED_CALLS = ['setCacheTtl', 'getPassageFor'];
 
@@ -86,7 +86,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     public static function staticReferences(): array
     {
@@ -128,7 +128,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private static function sourceFiles(): array
     {
@@ -180,7 +180,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      *
      * @return  string  Code tokens only
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private static function codeOf(string $file): string
     {
@@ -208,7 +208,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private static function providerCalls(): array
     {
@@ -234,7 +234,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('the source scan finds the calls it is meant to check')]
     public function testTheScanFoundSomething(): void
@@ -250,7 +250,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[DataProvider('staticReferences')]
     #[TestDox('$class::$symbol still exists in the pinned library')]
@@ -268,7 +268,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('every unguarded provider call exists on the type it is called against')]
     public function testUnguardedCallsExist(): void
@@ -285,7 +285,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('every guarded call still has its guard')]
     public function testGuardedCallsKeepTheirGuard(): void
@@ -315,7 +315,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     #[TestDox('the guarded and unguarded lists match what the source actually calls')]
     public function testTheListsMatchTheSource(): void

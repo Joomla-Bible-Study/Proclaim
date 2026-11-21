@@ -37,7 +37,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.5.4
  */
 class CwmpodcastControllerTest extends ProclaimTestCase
 {

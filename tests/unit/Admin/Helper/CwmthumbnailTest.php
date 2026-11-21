@@ -96,7 +96,7 @@ class CwmthumbnailTest extends ProclaimTestCase
     /**
      * @return  array<string, array{0: ?string, 1: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     public static function mediaFieldPathProvider(): array
     {
@@ -129,7 +129,7 @@ class CwmthumbnailTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.3
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('mediaFieldPathProvider')]
     #[\PHPUnit\Framework\Attributes\TestDox('mediaFieldPath() turns a media-field value into a file path: $_dataName')]

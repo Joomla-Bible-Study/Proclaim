@@ -22,7 +22,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * own established convention, not a core-vs-Proclaim gap. Guards against it
  * happening again in a future form.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.3
  */
 class RadioSwitcherLayoutContractTest extends ProclaimTestCase
 {

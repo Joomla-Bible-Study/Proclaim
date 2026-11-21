@@ -18,20 +18,20 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.6.0
  */
 class CwmserverMigrationPendingTest extends ProclaimTestCase
 {
     /**
      * @var  \Joomla\Database\DatabaseDriver|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.1
      */
     private $db = null;
 
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     protected function setUp(): void
     {
@@ -53,7 +53,7 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     protected function tearDown(): void
     {
@@ -76,7 +76,7 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
      *
      * @return  int  The new server id.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.1
      */
     private function insertLegacyServer(int $published, int $mediaCount = 2): int
     {
@@ -110,7 +110,7 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('The pending count reports both servers and the media rows on them')]
     public function testCountShape(): void
@@ -133,7 +133,7 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('A published legacy server IS counted, and its media with it')]
     public function testPublishedLegacyServerIsCounted(): void
@@ -165,7 +165,7 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('A retired (unpublished) legacy server is not still reported as pending')]
     public function testUnpublishedLegacyServerIsNotCounted(): void
@@ -191,7 +191,7 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
     /**
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('A trashed legacy server is not reported as pending')]
     public function testTrashedLegacyServerIsNotCounted(): void
@@ -217,7 +217,7 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('Media is only counted for servers that are themselves counted')]
     public function testMediaMatchesTheServersReported(): void
@@ -264,7 +264,7 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('The server count matches the published legacy servers in the database')]
     public function testCountMatchesTheDatabase(): void
@@ -301,7 +301,7 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.6.0
      */
     #[TestDox('The count asks nothing about the current user, session or request')]
     public function testCountIsContextFree(): void

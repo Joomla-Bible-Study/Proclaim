@@ -31,7 +31,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  *    response. Broadened to \Throwable regardless, since the endpoint's
  *    only consumer is fetch()-based JS expecting JSON either way.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmseriesdisplaysControllerTest extends ProclaimTestCase
 {

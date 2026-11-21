@@ -23,7 +23,7 @@
  * `<input id="jform_study_id_name">` that Joomla never renders.
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.6.1
  */
 
 require('./setup');

@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * it in a separate statement that never ran when the first threw -- the same
  * divergence fixed for scripture references in #1573.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmstudyteacherHelper::class)]
 class CwmstudyteacherSaveTest extends IntegrationTestCase

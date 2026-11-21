@@ -80,14 +80,14 @@ class CwmpodcastController extends FormController
     }
 
     /**
-     * Method to run batch operations.
+     * Run a batch operation on the selected podcasts.
      *
-     * @param   CwmpodcastModel  $model  The model.
+     * @param   CwmpodcastModel|null  $model  Not used; the podcast model is always loaded.
      *
-     * @return  bool     True if successful, false otherwise and internal error is set.
+     * @return  bool  True on success; false when the batch failed or a podcast was refused, with the reason set as a warning
      *
-     * @throws \Exception
      * @since   1.6
+     * @throws  \Exception
      */
     public function batch($model = null): bool
     {
@@ -95,7 +95,15 @@ class CwmpodcastController extends FormController
             Route::_('index.php?option=com_proclaim&view=cwmpodcasts' . $this->getRedirectToListAppend(), false)
         );
 
-        return parent::batch($this->getModel());
+        // CwmpodcastTable::check() refuses a podcast by throwing, and core's batch
+        // does not catch it, so the refusal would otherwise end on an error page.
+        try {
+            return parent::batch($this->getModel());
+        } catch (\UnexpectedValueException $e) {
+            $this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $e->getMessage()), 'warning');
+
+            return false;
+        }
     }
 
     /**

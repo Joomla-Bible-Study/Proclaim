@@ -22,7 +22,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * CwmscriptureLookupHelperTest. getPassageXHR() now only handles the
  * CSRF/reference-presence checks and serializes the helper's result.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmscriptureControllerTest extends ProclaimTestCase
 {

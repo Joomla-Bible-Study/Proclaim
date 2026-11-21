@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * The container is the harness's real one, built by Factory::createContainer()
  * as cli/joomla.php builds it, so has() answers as a site's would.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.4
  */
 class ContainerLookupsTest extends ProclaimTestCase
 {
@@ -33,14 +33,14 @@ class ContainerLookupsTest extends ProclaimTestCase
      * Where the shipped code lives. Vendored code is skipped.
      *
      * @var    string[]
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.4
      */
     private const array ROOTS = ['admin/src', 'site/src', 'api/src', 'plugins', 'modules', 'proclaim.script.php'];
 
     /**
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     #[TestDox('Every service the code asks the container for is registered')]
     public function testEveryLookupIsRegistered(): void
@@ -70,7 +70,7 @@ class ContainerLookupsTest extends ProclaimTestCase
      *
      * @return  list<array{0: string, 1: string}>  Each key and where it is looked up
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function lookups(): array
     {
@@ -121,7 +121,7 @@ class ContainerLookupsTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function resolve(string $name, string $namespace, array $imports): string
     {
@@ -146,7 +146,7 @@ class ContainerLookupsTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function withoutComments(string $source): string
     {
@@ -166,7 +166,7 @@ class ContainerLookupsTest extends ProclaimTestCase
      *
      * @return  list<string>  Every PHP file under ROOTS, without vendored code
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.4
      */
     private function sourceFiles(string $root): array
     {

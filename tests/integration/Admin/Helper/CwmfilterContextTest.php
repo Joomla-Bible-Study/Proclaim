@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * ListModel::getFilterForm() names the filter form `{context}.filter`, so a
  * field can recover the context of the page it is on.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(CwmfilterHelper::class)]
 class CwmfilterContextTest extends IntegrationTestCase

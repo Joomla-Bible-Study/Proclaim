@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * CWM\Component\Proclaim\Administrator\Helper, not the global namespace -- one
  * "class not found" would simply have replaced another. The throw is qualified.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 #[CoversClass(Cwmtranslated::class)]
 class CwmtranslatedExceptionTest extends IntegrationTestCase

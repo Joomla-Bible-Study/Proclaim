@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
  * Asserted at source level because the failure needs a console application to
  * reproduce, which a unit test has no way to stand up.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class ApiBootstrapConsoleSafetyTest extends TestCase
 {

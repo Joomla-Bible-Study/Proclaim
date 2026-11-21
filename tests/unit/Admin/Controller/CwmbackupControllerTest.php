@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * FormController → BaseController base-class change (this controller is a
  * pure AJAX method bag; it never calls save/edit/cancel/getForm()).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmbackupControllerTest extends ProclaimTestCase
 {

@@ -11,7 +11,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Addons;
@@ -24,25 +24,25 @@ use Joomla\Database\ParameterType;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since __DEPLOY_VERSION__
+ * @since 10.7.1
  */
 class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
 {
     /**
      * @var DatabaseInterface|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * @var mixed
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function setUp(): void
     {
@@ -62,7 +62,7 @@ class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     protected function tearDown(): void
     {
@@ -81,7 +81,7 @@ class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
 
     /**
      * @return  void
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.1
      */
     #[TestDox("importTagsAsTopics() inserts a topic with the tag bound into the VALUES list")]
     public function testImportTagsAsTopicsBindsTheInsert(): void

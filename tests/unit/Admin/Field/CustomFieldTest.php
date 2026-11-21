@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * fields including this one); this file keeps only what's unique to
  * CustomField.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CustomFieldTest extends ProclaimTestCase
 {

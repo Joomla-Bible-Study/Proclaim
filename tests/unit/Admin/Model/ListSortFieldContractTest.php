@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * because the wrong name only exists in the template. This test reads the two
  * sides and asserts they agree.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class ListSortFieldContractTest extends ProclaimTestCase
 {

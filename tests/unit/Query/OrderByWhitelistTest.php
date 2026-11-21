@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * ASC/DESC check would fall back to the model's default instead and silently
  * flip every descending list. This test nails that case by name.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.1
  */
 class OrderByWhitelistTest extends ProclaimTestCase
 {

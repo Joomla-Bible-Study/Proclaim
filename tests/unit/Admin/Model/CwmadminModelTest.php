@@ -27,7 +27,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * changeMediaImages(), backed by the pure resolveMediaImageMatcher() decision
  * function tested directly here (no DB needed).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmadminModelTest extends ProclaimTestCase
 {
