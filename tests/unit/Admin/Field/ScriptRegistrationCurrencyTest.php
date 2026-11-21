@@ -80,6 +80,12 @@ class ScriptRegistrationCurrencyTest extends ProclaimTestCase
      * getInput() still calls it. Without this wiring assertion, deleting the
      * `$this->registerJavaScript();` line ships the field with no JS at all
      * while every other test stays green.
+     *
+     * @param   string  $class  The field's fully qualified class name
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('fieldClassProvider')]
     public function testGetInputWiresUpTheScriptRegistration(string $class): void

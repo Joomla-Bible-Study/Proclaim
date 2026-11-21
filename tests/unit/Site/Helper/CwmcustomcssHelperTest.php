@@ -196,7 +196,11 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
      * interpolated into an attribute selector — so anything that could end the
      * selector has to be refused rather than escaped.
      *
-     * @since 10.5.8
+     * @param   string  $id  A section id that is not a plain slug
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     #[DataProvider('unsafeSectionIdProvider')]
     #[TestDox('a section id that is not a plain slug is refused')]

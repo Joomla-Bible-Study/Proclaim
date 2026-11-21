@@ -68,16 +68,19 @@ class CwmbackupTest extends ProclaimTestCase
     }
 
     /**
-     * Regression tests for #1524.
+     * The source of one Cwmbackup method, for the tests that read it.
      *
-     * exportdb()'s per-table loop called getExportTable(), which ran an
-     * unbounded `SELECT *` (loadObjectList() with no LIMIT) and buffered the
-     * generated SQL for the entire database into $this->data_cache before a
-     * single write -- doubling peak memory (row objects + generated SQL
-     * text) across the whole dump at once, and risking memory/timeout
-     * exhaustion on large tables. exportdb() now streams each table through
-     * the already-existing chunked pair (getExportTableStructure() +
-     * repeated getExportTableRows() calls) and flushes to disk per chunk.
+     * The tests below hold exportdb() to streaming each table through
+     * getExportTableStructure() and repeated getExportTableRows() calls,
+     * flushing to disk per chunk, instead of reading every table whole and
+     * buffering the generated SQL for the entire database before the first
+     * write.
+     *
+     * @param   string  $method  The method's name
+     *
+     * @return  string  Its source, from the signature to the closing brace
+     *
+     * @since   10.5.6
      */
     private static function methodBody(string $method): string
     {

@@ -29,6 +29,13 @@ class LayoutEditorFieldTest extends ProclaimTestCase
     /**
      * Build a field instance with given formControl/group state, without
      * going through the constructor (which needs a full Form object).
+     *
+     * @param   string       $formControl  The form control name, such as jform
+     * @param   string|null  $group        The field group, such as params, or null for none
+     *
+     * @return  LayoutEditorField  The field
+     *
+     * @since   10.5.6
      */
     private function makeField(string $formControl, ?string $group): LayoutEditorField
     {
@@ -42,6 +49,12 @@ class LayoutEditorFieldTest extends ProclaimTestCase
 
     /**
      * Invoke the field's protected prefix computation.
+     *
+     * @param   LayoutEditorField  $field  The field
+     *
+     * @return  string  The computed params prefix
+     *
+     * @since   10.5.6
      */
     private function computePrefix(LayoutEditorField $field): string
     {

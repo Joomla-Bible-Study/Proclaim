@@ -82,7 +82,11 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
     /**
      * Chapters-only is the default (show_verses = 0).
      *
-     * @return  Registry
+     * @param   int  $showVerses  The show_verses setting
+     *
+     * @return  Registry  Params holding only that setting
+     *
+     * @since   10.5.6
      */
     private function params(int $showVerses = 0): Registry
     {

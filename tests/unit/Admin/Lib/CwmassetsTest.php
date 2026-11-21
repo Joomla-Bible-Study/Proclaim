@@ -71,7 +71,11 @@ class CwmassetsTest extends ProclaimTestCase
     /**
      * Test getAssetObjects includes each of the core content tables.
      *
-     * @return void
+     * @param   string  $table  The table's name, with the #__ prefix
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('coreTableProvider')]
     public function testGetAssetObjectsIncludesTable(string $table): void

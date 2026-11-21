@@ -35,6 +35,13 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
 
     /**
      * Create a valid PNG image at a temp path.
+     *
+     * @param   int  $width   The image width in pixels
+     * @param   int  $height  The image height in pixels
+     *
+     * @return  string  The file's path, recorded for removal after the test
+     *
+     * @since   10.2.0
      */
     private function createTempPng(int $width = 10, int $height = 10): string
     {

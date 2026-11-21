@@ -43,6 +43,11 @@ class ReadOnlyResourceTest extends ProclaimTestCase
     /**
      * Each read-only resource extends the base that refuses writes.
      *
+     * @param   string  $class  The API controller's short class name
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     #[DataProvider('readOnlyControllerProvider')]
     public function testReadOnlyControllerExtendsReadOnlyBase(string $class): void
@@ -77,6 +82,11 @@ class ReadOnlyResourceTest extends ProclaimTestCase
      * Write verbs on the read-only base throw rather than falling through to the
      * parent implementation.
      *
+     * @param   string  $method  The write verb's method name
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     #[DataProvider('writeVerbProvider')]
     public function testWriteVerbsThrow(string $method): void
@@ -157,7 +167,12 @@ class ReadOnlyResourceTest extends ProclaimTestCase
     /**
      * Read a JSON:API view's field list without booting the view.
      *
-     * @return array<int, string>
+     * @param   string  $view      The view's folder name under Api/View
+     * @param   string  $property  The field-list property to read
+     *
+     * @return  array<int, string>  The fields, or an empty list when the property is unset
+     *
+     * @since   10.3.4
      */
     private function viewFields(string $view, string $property): array
     {

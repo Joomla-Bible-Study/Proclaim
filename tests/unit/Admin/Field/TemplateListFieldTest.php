@@ -44,6 +44,13 @@ class TemplateListFieldTest extends ProclaimTestCase
      * Build a field instance with a given XML <option> child, without going
      * through the constructor (which needs a full Form object) or the
      * DB-backed half of getOptions() (pre-seeded directly below instead).
+     *
+     * @param   string  $optionValue  The XML option's value
+     * @param   string  $optionLabel  The XML option's label
+     *
+     * @return  TemplateListField  The field
+     *
+     * @since   10.5.6
      */
     private function makeField(string $optionValue, string $optionLabel): TemplateListField
     {

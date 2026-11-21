@@ -35,6 +35,13 @@ class CwmlogHelperTest extends ProclaimTestCase
 
     /**
      * Each helper maps to a distinct core severity, so operators can filter on it.
+     *
+     * @param   string  $method    The helper's method name
+     * @param   int     $priority  The Log priority it should write
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     #[DataProvider('levelProvider')]
     public function testSeverityMethodExists(string $method, int $priority): void

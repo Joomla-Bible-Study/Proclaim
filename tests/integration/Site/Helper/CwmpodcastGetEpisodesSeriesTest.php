@@ -94,8 +94,11 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      * @param   string  $title      Sermon title
      * @param   int     $published  Published state
      * @param   int     $seriesId   Series ID (0 = seriesless)
+     * @param   int     $access     Access level
      *
-     * @return  int
+     * @return  int  The new row's id
+     *
+     * @since   10.5.6
      */
     private function insertSermon(string $title, int $published = 1, int $seriesId = 0, int $access = 1): int
     {
@@ -153,8 +156,11 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      *
      * @param   int  $studyId    Owning study ID
      * @param   int  $podcastId  Podcast ID to tag via the CSV podcast_id column
+     * @param   int  $access     Access level
      *
-     * @return  int
+     * @return  int  The new row's id
+     *
+     * @since   10.5.2
      */
     private function insertMediaFile(int $studyId, int $podcastId, int $access = 1): int
     {

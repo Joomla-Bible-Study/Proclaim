@@ -82,6 +82,12 @@ class TableExistenceTest extends ProclaimTestCase
      * Strip block and line comments, so prose explaining the old pattern is not
      * mistaken for the pattern. The explanation of why `SHOW TABLES LIKE` is
      * wrong necessarily contains the words.
+     *
+     * @param   string  $path  The file to read
+     *
+     * @return  string  Its source without comments
+     *
+     * @since   10.5.10
      */
     private static function code(string $path): string
     {

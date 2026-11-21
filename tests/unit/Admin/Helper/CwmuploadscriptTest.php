@@ -191,6 +191,12 @@ class CwmuploadscriptTest extends ProclaimTestCase
      * An empty/absent setting must leave the key unset so Joomla's default list
      * applies. Writing '' would make canUpload() reject every file — a worse
      * failure than the bug being fixed.
+     *
+     * @param   array  $config  The component configuration, with upload_extensions absent or empty
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('emptyExtensionProvider')]
     public function testEmptyConfigurationFallsBackToJoomlaDefaults(array $config): void

@@ -100,6 +100,12 @@ class WebservicesPluginTest extends ProclaimTestCase
     /**
      * Every expected resource is registered, with the expected write posture.
      *
+     * @param   string  $resource  The resource's route name
+     * @param   bool    $writable  Whether the resource accepts writes
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     #[DataProvider('resourceProvider')]
     public function testResourceRegisteredWithExpectedWritePosture(string $resource, bool $writable): void

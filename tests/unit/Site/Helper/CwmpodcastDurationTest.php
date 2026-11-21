@@ -87,7 +87,16 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     }
 
     /**
-     * Test formatTime with various durations
+     * Test formatTime with various durations.
+     *
+     * @param   int  $seconds          The duration in seconds
+     * @param   int  $expectedHours    The hours it should format to
+     * @param   int  $expectedMinutes  The minutes it should format to
+     * @param   int  $expectedSeconds  The seconds it should format to
+     *
+     * @return  void
+     *
+     * @since   10.2.0
      */
     #[DataProvider('formatTimeProvider')]
     public function testFormatTime(int $seconds, int $expectedHours, int $expectedMinutes, int $expectedSeconds): void
@@ -321,7 +330,14 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     }
 
     /**
-     * Test YouTube URL detection
+     * Test YouTube URL detection.
+     *
+     * @param   string  $url       The URL to check
+     * @param   bool    $expected  Whether it is a YouTube URL
+     *
+     * @return  void
+     *
+     * @since   10.2.0
      */
     #[DataProvider('youtubeUrlProvider')]
     public function testIsYouTubeUrl(string $url, bool $expected): void
@@ -348,7 +364,14 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     }
 
     /**
-     * Test YouTube video ID extraction
+     * Test YouTube video ID extraction.
+     *
+     * @param   string       $url         The URL to read
+     * @param   string|null  $expectedId  The video id it holds, or null when it holds none
+     *
+     * @return  void
+     *
+     * @since   10.2.0
      */
     #[DataProvider('youtubeVideoIdProvider')]
     public function testExtractYouTubeVideoId(string $url, ?string $expectedId): void
@@ -373,7 +396,14 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     }
 
     /**
-     * Test ISO 8601 duration parsing
+     * Test ISO 8601 duration parsing.
+     *
+     * @param   string  $duration         An ISO 8601 duration, such as PT1H30M45S
+     * @param   int     $expectedSeconds  The seconds it should parse to
+     *
+     * @return  void
+     *
+     * @since   10.2.0
      */
     #[DataProvider('iso8601DurationProvider')]
     public function testParseIso8601Duration(string $duration, int $expectedSeconds): void

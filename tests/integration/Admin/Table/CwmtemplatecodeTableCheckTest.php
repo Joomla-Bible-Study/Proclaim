@@ -83,6 +83,12 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      * ⚠️ check() is the only place a user sees this refused. Without it the
      * save reports success and silently writes nothing, because the write path
      * refuses the same name further down.
+     *
+     * @param   string  $name  A file name that is not a plain name
+     *
+     * @return  void
+     *
+     * @since   10.7.1
      */
     #[DataProvider('unsafeFilenameProvider')]
     public function testCheckThrowsForUnsafeFilename(string $name): void
@@ -112,6 +118,12 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
     /**
      * The other half. A fix that refused everything would pass the test above
      * and make every existing record unsavable.
+     *
+     * @param   string  $name  An ordinary file name
+     *
+     * @return  void
+     *
+     * @since   10.7.1
      */
     #[DataProvider('ordinaryFilenameProvider')]
     public function testCheckPassesForOrdinaryFilename(string $name): void
@@ -133,8 +145,16 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
     }
 
     /**
-     * The seven names that were creatable before #2109 and would each have
-     * overwritten a layout the package ships.
+     * A name a shipped layout already uses is refused for that template type,
+     * because a record saved under it would overwrite the layout the package
+     * ships.
+     *
+     * @param   int     $type  The template type the name is shipped for
+     * @param   string  $name  The shipped layout's name
+     *
+     * @return  void
+     *
+     * @since   10.7.1
      */
     #[DataProvider('shippedFilenameProvider')]
     public function testCheckThrowsForShippedFilename(int $type, string $name): void
@@ -229,6 +249,12 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
 
     /**
      * A database whose loadObject() yields this row.
+     *
+     * @param   object|null  $row  The row loadObject() returns, or null for none
+     *
+     * @return  \Joomla\Database\DatabaseInterface  The stubbed database
+     *
+     * @since   10.7.1
      */
     private function databaseReturning(?object $row): \Joomla\Database\DatabaseInterface
     {

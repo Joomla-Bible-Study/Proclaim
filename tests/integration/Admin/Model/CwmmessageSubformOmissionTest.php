@@ -133,7 +133,12 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
     }
 
     /**
+     * A one-chapter, two-verse KJV reference to the given book.
+     *
+     * @param   int  $book  The book number
+     *
      * @return  object  A reference shaped like ScriptureReference.
+     *
      * @since   10.6.0
      */
     private function ref(int $book): object
