@@ -35,7 +35,9 @@ class CwmHttpTimeoutTest extends ProclaimTestCase
     /**
      * Files that make outbound HTTP calls through Joomla's HttpFactory.
      *
-     * @return array<string, array{0: string}>
+     * @return  array<string, array{0: string}>
+     *
+     * @since   10.5.6
      */
     public static function httpCallerProvider(): array
     {
@@ -51,6 +53,10 @@ class CwmHttpTimeoutTest extends ProclaimTestCase
      * position -- a constant, or a variable carrying one.
      *
      * @param   string  $relative  Repo-relative file path
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('httpCallerProvider')]
     #[TestDox('Every outbound HTTP call passes a timeout')]
@@ -86,7 +92,9 @@ class CwmHttpTimeoutTest extends ProclaimTestCase
     /**
      * The value has to be a sane bound, not a placeholder.
      *
-     * @return array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>
+     *
+     * @since   10.5.6
      */
     public static function timeoutConstantProvider(): array
     {
@@ -97,8 +105,14 @@ class CwmHttpTimeoutTest extends ProclaimTestCase
     }
 
     /**
+     * The timeout constant is declared and bounded.
+     *
      * @param   string  $relative  Repo-relative file path
      * @param   string  $constant  Constant name
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('timeoutConstantProvider')]
     #[TestDox('The timeout constant is declared and bounded')]
@@ -126,6 +140,11 @@ class CwmHttpTimeoutTest extends ProclaimTestCase
     /**
      * The addon helper is shared, so a caller with a slower provider needs to
      * be able to raise the bound without abandoning it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[TestDox('The addon HTTP helper lets callers override the timeout')]
     public function testAddonRequestTimeoutIsOverridable(): void

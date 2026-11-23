@@ -26,6 +26,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class RadioSwitcherLayoutContractTest extends ProclaimTestCase
 {
+    /**
+     * No form field uses the legacy btn-group-yesno class without the switcher layout.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testNoFormUsesTheLegacyYesNoClassWithoutTheSwitcherLayout(): void
     {
         $root  = \dirname(__DIR__, 4);

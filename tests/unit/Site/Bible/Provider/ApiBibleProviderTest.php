@@ -22,14 +22,19 @@ use CWM\Library\Scripture\Bible\Provider\ApiBibleProvider;
 class ApiBibleProviderTest extends ProclaimTestCase
 {
     /**
-     * @var ApiBibleProvider
+     * The provider under test, with a test API key.
+     *
+     * @var    ApiBibleProvider
+     * @since  10.1.0
      */
     private ApiBibleProvider $provider;
 
     /**
      * Set up test
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -40,7 +45,9 @@ class ApiBibleProviderTest extends ProclaimTestCase
     /**
      * Test provider properties
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testProviderProperties(): void
     {
@@ -52,7 +59,9 @@ class ApiBibleProviderTest extends ProclaimTestCase
     /**
      * Test OSIS codes mapping has all 66 books
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testOsisCodesMapping(): void
     {
@@ -69,7 +78,9 @@ class ApiBibleProviderTest extends ProclaimTestCase
     /**
      * Test buildPassageId with single verse
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildPassageIdSingleVerse(): void
     {
@@ -80,7 +91,9 @@ class ApiBibleProviderTest extends ProclaimTestCase
     /**
      * Test buildPassageId with verse range
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildPassageIdVerseRange(): void
     {
@@ -91,7 +104,9 @@ class ApiBibleProviderTest extends ProclaimTestCase
     /**
      * Test buildPassageId with Genesis
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildPassageIdGenesis(): void
     {
@@ -102,7 +117,9 @@ class ApiBibleProviderTest extends ProclaimTestCase
     /**
      * Test buildPassageId with numbered book
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildPassageIdNumberedBook(): void
     {
@@ -113,7 +130,9 @@ class ApiBibleProviderTest extends ProclaimTestCase
     /**
      * Test buildPassageId with invalid reference
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildPassageIdInvalid(): void
     {
@@ -124,7 +143,9 @@ class ApiBibleProviderTest extends ProclaimTestCase
     /**
      * Test buildPassageId with unknown book
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildPassageIdUnknownBook(): void
     {
@@ -135,7 +156,9 @@ class ApiBibleProviderTest extends ProclaimTestCase
     /**
      * Test constructor accepts empty API key
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testConstructorAcceptsEmptyKey(): void
     {
