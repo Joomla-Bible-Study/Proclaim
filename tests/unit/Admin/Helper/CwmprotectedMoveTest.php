@@ -38,6 +38,8 @@ class CwmprotectedMoveTest extends ProclaimTestCase
      * @param   array<string, mixed>  $overrides  Fields to change.
      *
      * @return  object
+     *
+     * @since   10.7.0
      */
     private static function row(array $overrides = []): object
     {
@@ -49,6 +51,14 @@ class CwmprotectedMoveTest extends ProclaimTestCase
         ], $overrides);
     }
 
+    /**
+     * refusal() returns null for a local file on a server that has protected storage
+     * switched on.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A local file on an opted-in server is eligible')]
     public function testEligibleRowIsEligible(): void
     {
@@ -62,7 +72,11 @@ class CwmprotectedMoveTest extends ProclaimTestCase
     }
 
     /**
-     * @return  array<string, array{0: array<string, mixed>, 1: string}>
+     * Rows that each break one rule, with the refusal that must name it.
+     *
+     * @return  array<string, array{0: array<string, mixed>, 1: string}>  Each case
+     *
+     * @since   10.7.0
      */
     public static function refusals(): array
     {
@@ -84,10 +98,14 @@ class CwmprotectedMoveTest extends ProclaimTestCase
     }
 
     /**
+     * refusal() names the rule each row breaks.
+     *
      * @param   array<string, mixed>  $overrides  What to break.
      * @param   string                $expected   The refusal that must name it.
      *
      * @return  void
+     *
+     * @since   10.7.0
      */
     #[DataProvider('refusals')]
     #[TestDox('Each rule refuses on its own, by name')]
@@ -97,7 +115,11 @@ class CwmprotectedMoveTest extends ProclaimTestCase
     }
 
     /**
-     * @return  array<string, array{0: ?string, 1: bool}>
+     * podcast_id values, each with whether it references a podcast.
+     *
+     * @return  array<string, array{0: ?string, 1: bool}>  Each case
+     *
+     * @since   10.7.0
      */
     public static function podcastValues(): array
     {
@@ -116,10 +138,15 @@ class CwmprotectedMoveTest extends ProclaimTestCase
     }
 
     /**
+     * podcastReferenced() treats empty, null, 0 and -1 as no podcast, and any list holding
+     * a real id as a reference.
+     *
      * @param   ?string  $value     The raw column value.
      * @param   bool     $expected  Whether it references a podcast.
      *
      * @return  void
+     *
+     * @since   10.7.0
      */
     #[DataProvider('podcastValues')]
     #[TestDox('podcast_id is read the way the feed reads it')]

@@ -25,8 +25,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test parsing a simple single-verse reference.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testParseSimpleReference(): void
     {
@@ -43,8 +44,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test parsing a verse range within the same chapter.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testParseVerseRange(): void
     {
@@ -61,8 +63,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test parsing a cross-chapter range.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testParseCrossChapterRange(): void
     {
@@ -79,8 +82,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test parsing a chapter-only reference (e.g., Psalm 23).
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testParseChapterOnly(): void
     {
@@ -97,8 +101,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test parsing with abbreviations.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testParseAbbreviation(): void
     {
@@ -111,8 +116,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test parsing a numbered book.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testParseNumberedBook(): void
     {
@@ -129,8 +135,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test parsing Revelation with cross-chapter range.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testParseLongCrossChapter(): void
     {
@@ -147,8 +154,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test that invalid input returns null.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testParseInvalidInput(): void
     {
@@ -160,8 +168,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test formatting a simple single-verse reference.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testFormatSingleVerse(): void
     {
@@ -173,8 +182,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test formatting a verse range.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testFormatVerseRange(): void
     {
@@ -185,8 +195,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test formatting a cross-chapter range.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testFormatCrossChapterRange(): void
     {
@@ -197,8 +208,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test formatting chapter-only.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testFormatChapterOnly(): void
     {
@@ -209,8 +221,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test round-trip: parse then format produces equivalent string.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testRoundTrip(): void
     {
@@ -251,8 +264,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test getBookNumber with various inputs.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetBookNumber(): void
     {
@@ -268,8 +282,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test getBookName returns translated name.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetBookName(): void
     {
@@ -284,8 +299,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test getAllBooks returns full list.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetAllBooks(): void
     {
@@ -302,8 +318,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test ScriptureReference value object.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testScriptureReferenceToArray(): void
     {
@@ -329,8 +346,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test ScriptureReference fromRow factory method.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testScriptureReferenceFromRow(): void
     {
@@ -354,8 +372,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     /**
      * Test parsing various abbreviation formats.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testParseVariousAbbreviations(): void
     {

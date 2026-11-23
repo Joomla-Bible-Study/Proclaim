@@ -18,20 +18,28 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.6.0
+ * countPendingMigration() counts only published legacy servers and the media on them,
+ * reports a server count that matches the database, and calls nothing tied to a web
+ * request.
+ *
+ * @since  10.6.0
  */
 class CwmserverMigrationPendingTest extends ProclaimTestCase
 {
     /**
-     * @var  \Joomla\Database\DatabaseDriver|null
-     * @since 10.6.1
+     * The test database connection, or null when there is none.
+     *
+     * @var    \Joomla\Database\DatabaseDriver|null
+     * @since  10.6.1
      */
     private $db = null;
 
     /**
+     * Skip without a test database; otherwise start a transaction.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     protected function setUp(): void
     {
@@ -51,9 +59,11 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
     }
 
     /**
+     * Roll back the transaction, if there is a connection.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     protected function tearDown(): void
     {
@@ -108,9 +118,11 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
     }
 
     /**
+     * countPendingMigration() returns non-negative integer counts of servers and of media.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('The pending count reports both servers and the media rows on them')]
     public function testCountShape(): void
@@ -189,9 +201,11 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
     }
 
     /**
+     * A trashed legacy server isn't counted as pending.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('A trashed legacy server is not reported as pending')]
     public function testTrashedLegacyServerIsNotCounted(): void
