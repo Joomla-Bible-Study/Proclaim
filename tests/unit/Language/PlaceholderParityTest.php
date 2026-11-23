@@ -22,7 +22,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since 10.6.0
+ * A translated string keeps the printf placeholders and the HTML tags of its
+ * en-GB original.
+ *
+ * @since  10.6.0
  */
 class PlaceholderParityTest extends TestCase
 {
@@ -33,21 +36,23 @@ class PlaceholderParityTest extends TestCase
      * ordinary prose such as "30% smaller" matches as a `% s` conversion and
      * every locale that words the sentence differently is reported as drift.
      *
-     * @var string
+     * @var    string
      * @since 10.6.0
      */
     private const PLACEHOLDER = '/%%|%(?:\d+\$)?[-+0#]*[\d.]*[bcdeEfFgGosuxX]/';
 
     /**
-     * @var string
-     * @since 10.6.0
+     * Matches an opening or closing HTML tag, capturing its name.
+     *
+     * @var    string
+     * @since  10.6.0
      */
     private const HTML_TAG = '/<\/?([a-z]+)[^>]*>/i';
 
     /**
      * Trees that hold shipped translations. Submodules keep their own suites.
      *
-     * @var string[]
+     * @var    string[]
      * @since 10.6.0
      */
     private const SKIP = ['/libraries/', '/vendor/', '/node_modules/', '/tests/Backupfiles/'];
@@ -184,12 +189,14 @@ class PlaceholderParityTest extends TestCase
     }
 
     /**
+     * Translated values keep the printf placeholders en-GB declares.
+     *
      * @param   string  $localePath  Absolute path of the translated file
      * @param   string  $enPath      Absolute path of its en-GB original
      *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('Translated values keep the printf placeholders en-GB declares')]
     #[\PHPUnit\Framework\Attributes\DataProvider('localeFileProvider')]
@@ -225,12 +232,14 @@ class PlaceholderParityTest extends TestCase
     }
 
     /**
+     * Translated values keep the HTML tags en-GB declares.
+     *
      * @param   string  $localePath  Absolute path of the translated file
      * @param   string  $enPath      Absolute path of its en-GB original
      *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('Translated values keep the HTML tags en-GB declares')]
     #[\PHPUnit\Framework\Attributes\DataProvider('localeFileProvider')]

@@ -37,7 +37,10 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
     private const string YOUTUBE_ADDON = 'admin/src/Addons/Servers/Youtube';
 
     /**
-     * @return  string
+     * The repository root.
+     *
+     * @return  string  Its absolute path
+     *
      * @since   10.7.8
      */
     private static function repoRoot(): string
@@ -152,6 +155,8 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
     }
 
     /**
+     * The YouTube addon is among the projects whose committed vendor is checked.
+     *
      * @return  void
      *
      * @since   10.7.8
@@ -168,6 +173,8 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
     }
 
     /**
+     * Every committed vendor folder installs exactly the packages its composer.lock pins.
+     *
      * @return  void
      *
      * @since   10.7.8

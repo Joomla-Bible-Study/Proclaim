@@ -25,14 +25,19 @@ use PHPUnit\Framework\TestCase;
 abstract class ProclaimTestCase extends TestCase
 {
     /**
-     * @var array Backup of $_SERVER
+     * A copy of $_SERVER, restored after each test.
+     *
+     * @var    array
+     * @since  10.2.0
      */
     protected array $serverBackup = [];
 
     /**
      * Sets up the fixture
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     protected function setUp(): void
     {
@@ -45,7 +50,9 @@ abstract class ProclaimTestCase extends TestCase
     /**
      * Tears down the fixture
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     protected function tearDown(): void
     {
@@ -58,7 +65,9 @@ abstract class ProclaimTestCase extends TestCase
     /**
      * Create a mock database driver
      *
-     * @return MockObject
+     * @return  MockObject
+     *
+     * @since   10.2.0
      */
     protected function createMockDatabase(): MockObject
     {
@@ -72,7 +81,9 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @param array $data Initial data for the registry
      *
-     * @return MockObject
+     * @return  MockObject
+     *
+     * @since   10.2.0
      */
     protected function createMockRegistry(array $data = []): MockObject
     {
@@ -97,7 +108,9 @@ abstract class ProclaimTestCase extends TestCase
      * @param string $json The string to check
      * @param string $message Optional assertion message
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     protected function assertValidJson(string $json, string $message = ''): void
     {
@@ -112,7 +125,9 @@ abstract class ProclaimTestCase extends TestCase
      * @param array $array Array to check
      * @param string $message Optional assertion message
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     protected function assertArrayHasKeys(array $keys, array $array, string $message = ''): void
     {
@@ -127,7 +142,9 @@ abstract class ProclaimTestCase extends TestCase
      * @param object $object Object instance
      * @param string $property Property name
      *
-     * @return mixed Property value
+     * @return  mixed Property value
+     *
+     * @since   10.2.0
      */
     protected function getProtectedProperty(object $object, string $property): mixed
     {
@@ -144,7 +161,9 @@ abstract class ProclaimTestCase extends TestCase
      * @param string $property Property name
      * @param mixed $value Value to set
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     protected function setProtectedProperty(object $object, string $property, mixed $value): void
     {
@@ -160,7 +179,9 @@ abstract class ProclaimTestCase extends TestCase
      * @param string $method Method name
      * @param array $args Method arguments
      *
-     * @return mixed Method return value
+     * @return  mixed Method return value
+     *
+     * @since   10.2.0
      */
     protected function invokeProtectedMethod(object $object, string $method, array $args = []): mixed
     {
@@ -180,7 +201,9 @@ abstract class ProclaimTestCase extends TestCase
      * @param   string             $expected    Expected type name
      * @param   \ReflectionMethod  $method      Reflected method
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     protected function assertReturnTypeName(string $expected, \ReflectionMethod $method): void
     {
@@ -200,7 +223,9 @@ abstract class ProclaimTestCase extends TestCase
      * @param   string                $expected  Expected type name
      * @param   \ReflectionParameter  $param     Reflected parameter
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     protected function assertParamTypeName(string $expected, \ReflectionParameter $param): void
     {
@@ -217,7 +242,9 @@ abstract class ProclaimTestCase extends TestCase
      * @param string $content File content
      * @param string $extension File extension
      *
-     * @return string Path to temporary file
+     * @return  string Path to temporary file
+     *
+     * @since   10.2.0
      */
     protected function createTempFile(string $content = '', string $extension = 'tmp'): string
     {
@@ -232,7 +259,9 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @param string $path Path to file
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     protected function removeTempFile(string $path): void
     {

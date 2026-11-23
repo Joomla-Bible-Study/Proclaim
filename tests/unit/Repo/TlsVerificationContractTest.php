@@ -27,14 +27,16 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * Nothing Proclaim ships turns off TLS certificate verification.
+ *
+ * @since  10.7.1
  */
 class TlsVerificationContractTest extends ProclaimTestCase
 {
     /**
      * Source trees that ship.
      *
-     * @var string[]
+     * @var    string[]
      * @since 10.7.1
      */
     private const ROOTS = ['admin/src', 'site/src', 'api/src', 'plugins', 'modules'];
@@ -42,14 +44,17 @@ class TlsVerificationContractTest extends ProclaimTestCase
     /**
      * Third-party code we neither wrote nor ship-audit here.
      *
-     * @var string[]
+     * @var    string[]
      * @since 10.7.1
      */
     private const SKIP = ['/vendor/', '/node_modules/'];
 
     /**
+     * Every PHP file the contract covers.
+     *
      * @return  string[]  Absolute paths of every PHP file to inspect.
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     private static function sourceFiles(): array
     {
@@ -84,8 +89,11 @@ class TlsVerificationContractTest extends ProclaimTestCase
     }
 
     /**
+     * No shipped file disables TLS peer or host verification.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     #[TestDox('No shipped file disables TLS peer or host verification')]
     public function testNothingDisablesTlsVerification(): void
@@ -122,7 +130,8 @@ class TlsVerificationContractTest extends ProclaimTestCase
      * would actually fire.
      *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     #[TestDox('The scan reads real files and its pattern matches a disabling line')]
     public function testScanIsNotVacuous(): void

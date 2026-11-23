@@ -35,11 +35,17 @@ class StudyColumnContractTest extends ProclaimTestCase
 {
     /**
      * The shipped schema, which is authoritative for what a study row holds.
+     *
+     * @var    string
+     * @since  10.5.8
      */
     private const INSTALL_SQL = JPATH_ROOT . '/admin/sql/install.mysql.utf8.sql';
 
     /**
      * Templates whose `$this->item` is a study row.
+     *
+     * @var    string
+     * @since  10.5.8
      */
     private const TEMPLATE_DIR = JPATH_ROOT . '/admin/tmpl/cwmmessage';
 
@@ -48,6 +54,9 @@ class StudyColumnContractTest extends ProclaimTestCase
      *
      * These are subform payloads assembled from junction tables, so they are
      * legitimately absent from #__bsms_studies. Anything else must be a column.
+     *
+     * @var    list<string>
+     * @since  10.5.8
      */
     private const MODEL_ADDED = [
         'scriptures',
@@ -58,6 +67,8 @@ class StudyColumnContractTest extends ProclaimTestCase
      * One case per distinct property read across the message templates.
      *
      * @return  array<string, array{0: string, 1: string}>
+     *
+     * @since   10.5.8
      */
     public static function itemPropertyProvider(): array
     {
@@ -80,6 +91,8 @@ class StudyColumnContractTest extends ProclaimTestCase
      * Column names declared for #__bsms_studies by the install schema.
      *
      * @return  string[]
+     *
+     * @since   10.5.8
      */
     private static function studyColumns(): array
     {
@@ -97,6 +110,10 @@ class StudyColumnContractTest extends ProclaimTestCase
 
     /**
      * A parser that silently matched nothing would pass every other case here.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     #[TestDox('the schema and the templates both actually parse')]
     public function testTheInputsAreNotEmpty(): void
@@ -116,6 +133,10 @@ class StudyColumnContractTest extends ProclaimTestCase
      * both failure modes at once: a name no longer in the table is a fatal
      * "Unknown column", and a count that drifts apart writes every value after
      * the gap into the wrong column.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     #[TestDox('the CSV importer inserts real study columns, one value each')]
     public function testCsvImportColumnsExist(): void
@@ -155,6 +176,17 @@ class StudyColumnContractTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Each property a message template reads from its item is a column of the
+     * item, or one the model attaches.
+     *
+     * @param   string  $file      The template
+     * @param   string  $property  The item property it reads
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[DataProvider('itemPropertyProvider')]
     #[TestDox('$file reads $property, which the item carries')]
     public function testItemReadsNameSomethingTheItemCarries(string $file, string $property): void

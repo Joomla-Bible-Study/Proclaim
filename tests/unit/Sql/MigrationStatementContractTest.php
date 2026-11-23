@@ -44,6 +44,9 @@ class MigrationStatementContractTest extends ProclaimTestCase
 {
     /**
      * Directory holding the MySQL schema updates.
+     *
+     * @var    string
+     * @since  10.5.7
      */
     private const UPDATES_DIR = JPATH_ROOT . '/admin/sql/updates/mysql';
 
@@ -51,6 +54,9 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * Installer::CAN_FAIL_MARKER — the opt-out that lets one statement fail
      * without aborting the update. Duplicated rather than imported because the
      * unit suite does not load the CMS installer.
+     *
+     * @var    string
+     * @since  10.5.10
      */
     private const CAN_FAIL_MARKER = '/** CAN FAIL **/';
 
@@ -58,6 +64,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * Every ALTER TABLE in the migration set, one case per statement.
      *
      * @return  array<string, array{0: string, 1: string}>
+     *
+     * @since   10.5.7
      */
     public static function alterStatementProvider(): array
     {
@@ -90,6 +98,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * @param   string  $statement  The normalised statement.
      *
      * @return  void
+     *
+     * @since   10.5.7
      */
     #[DataProvider('alterStatementProvider')]
     public function testAlterStatementsCarryOneClause(string $file, string $statement): void
@@ -116,6 +126,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * @param   string  $statement  The normalised statement.
      *
      * @return  void
+     *
+     * @since   10.5.7
      */
     #[DataProvider('alterStatementProvider')]
     public function testNoUnguardableIndexDrops(string $file, string $statement): void
@@ -137,6 +149,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * accept — indistinguishable from the form it does.
      *
      * @return  array<string, array{0: string, 1: string}>
+     *
+     * @since   10.5.10
      */
     public static function addStatementProvider(): array
     {
@@ -195,6 +209,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * @param   string  $statement  The raw statement, up to but excluding its `;`.
      *
      * @return  void
+     *
+     * @since   10.5.10
      */
     #[DataProvider('addStatementProvider')]
     public function testAdditiveAltersAreMarkedCanFail(string $file, string $statement): void
@@ -225,6 +241,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * @param   string  $sql  File contents, line comments already removed.
      *
      * @return  list<string>
+     *
+     * @since   10.5.10
      */
     private static function rawStatementsIn(string $sql): array
     {
@@ -277,6 +295,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * @param   string  $sql  File contents.
      *
      * @return  list<string>
+     *
+     * @since   10.5.7
      */
     private static function statementsIn(string $sql): array
     {
@@ -306,6 +326,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * @param   string  $statement  The normalised statement.
      *
      * @return  int
+     *
+     * @since   10.5.7
      */
     private static function topLevelClauses(string $statement): int
     {

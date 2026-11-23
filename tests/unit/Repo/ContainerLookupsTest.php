@@ -38,6 +38,8 @@ class ContainerLookupsTest extends ProclaimTestCase
     private const array ROOTS = ['admin/src', 'site/src', 'api/src', 'plugins', 'modules', 'proclaim.script.php'];
 
     /**
+     * Every service the code asks the container for is registered.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -162,6 +164,8 @@ class ContainerLookupsTest extends ProclaimTestCase
     }
 
     /**
+     * Every PHP file the scan covers.
+     *
      * @param   string  $root  The repository root
      *
      * @return  list<string>  Every PHP file under ROOTS, without vendored code

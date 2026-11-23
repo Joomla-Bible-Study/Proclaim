@@ -98,6 +98,13 @@ class ObsoletePathsTest extends ProclaimTestCase
         return null;
     }
 
+    /**
+     * No path scheduled for deletion is still shipped.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('No path scheduled for deletion is still shipped')]
     public function testNoShippedPathIsScheduledForDeletion(): void
     {

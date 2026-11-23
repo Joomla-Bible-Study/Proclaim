@@ -103,6 +103,13 @@ class InstallScriptImportsTest extends ProclaimTestCase
         return $found;
     }
 
+    /**
+     * Every class named in a static call in the install script is imported.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('Every class named in a static call in the install script is imported')]
     public function testEveryStaticCallTargetIsImported(): void
     {

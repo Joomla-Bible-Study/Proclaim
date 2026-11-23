@@ -24,21 +24,25 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since 10.6.0
+ * Every Text::plural() call names a key en-GB declares.
+ *
+ * @since  10.6.0
  */
 class PluralKeyContractTest extends TestCase
 {
     /**
      * The suffixes en-GB's localise.php offers, in the order Joomla tries them.
      *
-     * @var string[]
+     * @var    string[]
      * @since 10.6.0
      */
     private const array SUFFIXES = ['0', 'ONE', '1', 'OTHER', 'MORE'];
 
     /**
-     * @var string[]
-     * @since 10.6.0
+     * The folders scanned for Text::plural() calls.
+     *
+     * @var    string[]
+     * @since  10.6.0
      */
     private const array ROOTS = ['admin', 'site', 'api', 'components', 'modules', 'plugins'];
 
@@ -91,9 +95,11 @@ class PluralKeyContractTest extends TestCase
     }
 
     /**
+     * Every Text::plural() key resolves to a declared en-GB string.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('Every Text::plural() key resolves to a declared en-GB string')]
     public function testPluralKeysResolve(): void
