@@ -33,9 +33,17 @@ class ListDirectionDefaultTest extends ProclaimTestCase
      * "unordered" and let the query builder decide.
      *
      * @var string[]
+     * @since  10.3.4
      */
     private const VALID = ['asc', 'desc', ''];
 
+    /**
+     * Every list.direction fallback in the admin models is a valid SQL sort direction.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
+     */
     public function testEveryListDirectionDefaultIsValidSql(): void
     {
         $offenders = [];
@@ -68,6 +76,10 @@ class ListDirectionDefaultTest extends ProclaimTestCase
 
     /**
      * The scan must actually find directions, or the test above passes vacuously.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testScanFindsListDirectionDefaults(): void
     {
@@ -84,7 +96,11 @@ class ListDirectionDefaultTest extends ProclaimTestCase
     }
 
     /**
-     * @return string[]
+     * The admin model source files.
+     *
+     * @return  string[]  Their paths
+     *
+     * @since   10.3.4
      */
     private function modelFiles(): array
     {

@@ -33,7 +33,10 @@ use PHPUnit\Framework\Attributes\Test;
 class CwmstreamModeFieldTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver
+     * @since  10.4.1
      */
     private DatabaseDriver $db;
 
@@ -41,6 +44,8 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
      * Begin a transaction so seeded servers roll back.
      *
      * @return  void
+     *
+     * @since   10.4.1
      */
     protected function setUp(): void
     {
@@ -58,6 +63,9 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
      * Roll the seeded rows back and clear the request id.
      *
      * @return  void
+     *
+     * @since   10.4.1
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -72,6 +80,14 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * A server with client credentials but no OAuth token is not connected.
+     *
+     * @return  void
+     *
+     * @since   10.4.1
+     * @throws  \Exception
+     */
     #[Test]
     public function aServerWithoutOauthIsNotConnected(): void
     {
@@ -81,6 +97,14 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
         $this->assertFalse($this->field()->isServerConnected(), 'Credentials alone are not a connection');
     }
 
+    /**
+     * A server with a stored OAuth token is connected.
+     *
+     * @return  void
+     *
+     * @since   10.4.1
+     * @throws  \Exception
+     */
     #[Test]
     public function aServerWithAStoredTokenIsConnected(): void
     {
@@ -90,6 +114,14 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
         $this->assertTrue($this->field()->isServerConnected());
     }
 
+    /**
+     * A new, unsaved server is not connected.
+     *
+     * @return  void
+     *
+     * @since   10.4.1
+     * @throws  \Exception
+     */
     #[Test]
     public function aNewUnsavedServerIsNotConnected(): void
     {
@@ -98,6 +130,16 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
         $this->assertFalse($this->field()->isServerConnected(), 'OAuth cannot exist before the first save');
     }
 
+    /**
+     * An unconnected server gets the OAuth requirement notice and a hidden External
+     * value instead of the switch.
+     *
+     * @return  void
+     *
+     * @since   10.4.1
+     * @throws  \Exception
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function anUnconnectedServerGetsTheRequirementNoticeInsteadOfTheSwitch(): void
     {
@@ -117,6 +159,15 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
         $this->assertStringNotContainsString('value="direct"', $html, 'Direct must not be offered at all');
     }
 
+    /**
+     * A connected server gets the normal switch.
+     *
+     * @return  void
+     *
+     * @since   10.4.1
+     * @throws  \Exception
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function aConnectedServerGetsTheNormalSwitch(): void
     {
@@ -137,6 +188,10 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
      * exercises the same gate without the switcher's web-asset needs.
      *
      * @return  string
+     *
+     * @since   10.4.1
+     * @throws  \Exception
+     * @throws  \ReflectionException
      */
     private function renderInput(): string
     {
@@ -160,6 +215,8 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
      * The field under test.
      *
      * @return  YoutubeStreamModeField
+     *
+     * @since   10.4.1
      */
     private function field(): YoutubeStreamModeField
     {
@@ -172,6 +229,8 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
      * @param   array  $params  Server params to store.
      *
      * @return  int  Server ID.
+     *
+     * @since   10.4.1
      */
     private function insertServer(array $params): int
     {

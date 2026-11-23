@@ -20,7 +20,9 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.6.0
+ * The rules every System Health check has to obey.
+ *
+ * @since  10.6.0
  */
 class HealthContractTest extends ProclaimTestCase
 {
@@ -50,6 +52,8 @@ class HealthContractTest extends ProclaimTestCase
     }
 
     /**
+     * A check id is prefixed with the group it reports under.
+     *
      * @return  void
      *
      * @since   10.6.0
@@ -147,14 +151,19 @@ class HealthContractTest extends ProclaimTestCase
         // came out Unknown.
         $spy = new class () implements HealthCheckInterface {
             /**
-             * @var bool
-             * @since 10.6.0
+             * Whether run() was called.
+             *
+             * @var    bool
+             * @since  10.6.0
              */
             public bool $wasRun = false;
 
             /**
-             * @return string
-             * @since  10.6.0
+             * The spy's check id, in the external services group.
+             *
+             * @return  string  Its id
+             *
+             * @since   10.6.0
              */
             public function getId(): string
             {
@@ -162,8 +171,11 @@ class HealthContractTest extends ProclaimTestCase
             }
 
             /**
-             * @return HealthGroup
-             * @since  10.6.0
+             * The group the spy reports under.
+             *
+             * @return  HealthGroup  External services
+             *
+             * @since   10.6.0
              */
             public function getGroup(): HealthGroup
             {
@@ -171,8 +183,11 @@ class HealthContractTest extends ProclaimTestCase
             }
 
             /**
-             * @return string
-             * @since  10.6.0
+             * The spy's title.
+             *
+             * @return  string  Its title
+             *
+             * @since   10.6.0
              */
             public function getTitle(): string
             {
@@ -180,8 +195,11 @@ class HealthContractTest extends ProclaimTestCase
             }
 
             /**
-             * @return bool
-             * @since  10.6.0
+             * Declare the spy active, so an unprompted run must not call run().
+             *
+             * @return  bool  Always false
+             *
+             * @since   10.6.0
              */
             public function isPassive(): bool
             {
@@ -189,8 +207,11 @@ class HealthContractTest extends ProclaimTestCase
             }
 
             /**
-             * @return HealthResult
-             * @since  10.6.0
+             * Record that run() was called, and report success.
+             *
+             * @return  HealthResult  An Ok result
+             *
+             * @since   10.6.0
              */
             public function run(): HealthResult
             {
@@ -660,6 +681,7 @@ class HealthContractTest extends ProclaimTestCase
      * One level deep, which is where all three sat.
      *
      * @return  void
+     *
      * @since   10.6.0
      */
     #[TestDox('No check reaches the identity, the session or the request through a helper')]

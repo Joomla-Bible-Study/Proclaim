@@ -23,9 +23,12 @@ use PHPUnit\Framework\Attributes\TestDox;
 class DisplayControllerViewCacheIdTest extends ProclaimTestCase
 {
     /**
+     * The view-cache key matches the key ViewController stores a view under.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('The view-cache key matches the key ViewController stores a view under')]
     public function testKeyMatchesViewController(): void

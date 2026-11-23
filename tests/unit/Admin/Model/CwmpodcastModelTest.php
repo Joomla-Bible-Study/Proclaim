@@ -32,6 +32,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmpodcastModelTest extends ProclaimTestCase
 {
+    /**
+     * The source of the model's save().
+     *
+     * @return  string  Its source lines
+     *
+     * @since   10.5.6
+     */
     private static function methodBody(): string
     {
         $reflection = new \ReflectionMethod(CwmpodcastModel::class, 'save');
@@ -43,6 +50,13 @@ class CwmpodcastModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * save() returns false before regenerating anything when the parent save fails.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testSaveReturnsFalseImmediatelyWhenParentSaveFails(): void
     {
         $body = self::methodBody();
@@ -54,6 +68,13 @@ class CwmpodcastModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * A successful save() regenerates the podcast feeds.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testSaveTriggersFeedRegenerationOnSuccess(): void
     {
         $body = self::methodBody();
@@ -66,6 +87,13 @@ class CwmpodcastModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * A feed regeneration failure, an Error included, is caught and logged, not thrown.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testFeedRegenerationFailureIsCaughtAndLoggedNotThrown(): void
     {
         $body = self::methodBody();
@@ -80,6 +108,13 @@ class CwmpodcastModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * save() returns true once the parent save succeeds, whatever the regeneration does.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testSaveAlwaysReturnsTrueAfterASuccessfulParentSaveRegardlessOfRegenerationOutcome(): void
     {
         $body = self::methodBody();
@@ -95,6 +130,13 @@ class CwmpodcastModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * CwmpodcastModel imports the site-side Cwmpodcast helper that the feed writers use.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testCwmpodcastImportedFromSiteHelperNamespace(): void
     {
         $reflection = new \ReflectionClass(CwmpodcastModel::class);

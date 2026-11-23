@@ -35,6 +35,9 @@ class CwmmessageModelTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $method): string
     {
@@ -47,6 +50,15 @@ class CwmmessageModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * save() calls saveTopics() alongside every saveScriptures() and saveTeachers()
+     * pair, six times in all.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testSaveDelegatesTopicSyncToSaveTopicsInEveryReturnTrueBranch(): void
     {
         $body = self::methodBody('save');
@@ -58,6 +70,15 @@ class CwmmessageModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * saveTopics() takes the study id from the model state, not from the raw posted
+     * data.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testSaveTopicsDerivesStudyIdFromStateNotRawPostData(): void
     {
         $body = self::methodBody('saveTopics');
@@ -87,6 +108,8 @@ class CwmmessageModelTest extends ProclaimTestCase
      * (which read raw $_POST, bypassing Form::filter()) ever had to handle.
      *
      * @return  array<string, array{0: array|string, 1: string[]}>
+     *
+     * @since   10.5.6
      */
     public static function topicsRawProvider(): array
     {
@@ -102,10 +125,16 @@ class CwmmessageModelTest extends ProclaimTestCase
     }
 
     /**
-     * @param   array|string  $topicsRaw
-     * @param   string[]      $expected
+     * normalizeTopicTags() splits the submitted topics into one tag per value,
+     * dropping empty ones.
+     *
+     * @param   array|string  $topicsRaw  The topics as submitted
+     * @param   string[]      $expected   The tags they should become
      *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('topicsRawProvider')]
     public function testNormalizeTopicTags(array|string $topicsRaw, array $expected): void
@@ -114,6 +143,14 @@ class CwmmessageModelTest extends ProclaimTestCase
         $this->assertSame($expected, $method->invoke(null, $topicsRaw));
     }
 
+    /**
+     * saveTopics() returns void and takes the topics, intro, text and language, in
+     * that order.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testSaveTopicsSignature(): void
     {
         $method = new \ReflectionMethod(CwmmessageModel::class, 'saveTopics');
@@ -126,6 +163,14 @@ class CwmmessageModelTest extends ProclaimTestCase
         $this->assertSame('language', $params[3]->getName());
     }
 
+    /**
+     * saveTopics() leaves the junction write and the topic lookup to CwmstudytopicHelper.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testSaveTopicsDelegatesJunctionWritesToHelper(): void
     {
         $body = self::methodBody('saveTopics');
@@ -134,6 +179,15 @@ class CwmmessageModelTest extends ProclaimTestCase
         $this->assertStringContainsString('CwmstudytopicHelper::findTopicIdByText(', $body, 'saveTopics() must delegate the topic lookup to CwmstudytopicHelper — see #1444');
     }
 
+    /**
+     * saveTopics() passes id 0 when it creates a topic, so the save inserts rather
+     * than updating the previous one.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testSaveTopicsPreservesNewTopicCreationIdZeroFix(): void
     {
         $body = self::methodBody('saveTopics');
@@ -159,6 +213,11 @@ class CwmmessageModelTest extends ProclaimTestCase
      * application here is the bare Joomla\Console\Application, which has no
      * isClient() method at all (unlike a real site/administrator app) — so
      * this follows the file's existing structural-assertion pattern instead.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     * @throws  \ReflectionException
      */
     public function testSaveGuardsTheAIdOverrideToTheSiteClient(): void
     {
