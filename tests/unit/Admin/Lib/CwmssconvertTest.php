@@ -28,6 +28,16 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmssconvertTest extends ProclaimTestCase
 {
+    /**
+     * The source of one Cwmssconvert method.
+     *
+     * @param   string  $method  The method's name
+     *
+     * @return  string  Its source, from the signature to the closing brace
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private static function methodBody(string $method): string
     {
         $reflection = new \ReflectionMethod(Cwmssconvert::class, $method);
@@ -43,6 +53,11 @@ class CwmssconvertTest extends ProclaimTestCase
      * $db->escape($teacher->bio) pre-escaped the string before insertObject()
      * escaped it again internally -- apostrophes/backslashes in imported bios
      * got double-escaped (e.g. "O'Brien" stored as literal "O''Brien").
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testTeacherBioIsNotPreEscapedBeforeInsertObject(): void
     {
@@ -67,6 +82,11 @@ class CwmssconvertTest extends ProclaimTestCase
      * so a correct match found early could be clobbered by a later
      * non-matching iteration -- the final value depended on iteration order
      * rather than the actual match.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testSeriesCrosswalkStopsAtFirstMatchInsteadOfOverwriting(): void
     {
@@ -86,6 +106,11 @@ class CwmssconvertTest extends ProclaimTestCase
      * loop, and (for series) the query targeted the wrong table entirely
      * (#__bsms_studies instead of #__bsms_series), corrupting every
      * series-to-teacher crosswalk id downstream.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testInsertsUseTheInsertObjectKeyParameterNotAFollowUpQuery(): void
     {
@@ -116,6 +141,13 @@ class CwmssconvertTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * newStudies() and getVerses() declare typed parameters.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testNewStudiesAndGetVersesHaveTypedParameters(): void
     {
         $newStudies = new \ReflectionMethod(Cwmssconvert::class, 'newStudies');

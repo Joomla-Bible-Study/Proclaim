@@ -38,6 +38,8 @@ class CwmpIconvertTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
      */
     private static function methodBody(string $method): string
     {
@@ -55,6 +57,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * setRedirect() as the flash message on every conversion — success or failure looked
      * identical to the user. The sibling Cwmssconvert::convertSS() already returns a built
      * results-summary string; convertPI() must do the same.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testConvertPIReturnsString(): void
     {
@@ -63,6 +69,13 @@ class CwmpIconvertTest extends ProclaimTestCase
         $this->assertSame('string', (string) $reflection->getReturnType(), 'convertPI() must return string — see #1513');
     }
 
+    /**
+     * convertPI() returns the results table it builds.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testConvertPIReturnsTheBuiltResultsTable(): void
     {
         $body = self::methodBody('convertPI');
@@ -78,6 +91,13 @@ class CwmpIconvertTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/\$\$this->sradd/', $body);
     }
 
+    /**
+     * The admin controller passes the conversion's result to its redirect.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testConvertPreachItControllerPassesResultToRedirect(): void
     {
         $reflection = new \ReflectionMethod(
@@ -106,6 +126,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * $db->escape() (SQL escaping) into JSON content — wrong escaping semantics, and one
      * branch (JWPlayer) was outright malformed JSON (missing colon after "size", a stray
      * '":""' token). All branches must build an array and encode it instead.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testInsertMediaBuildsParamsViaJsonEncode(): void
     {
@@ -124,6 +148,13 @@ class CwmpIconvertTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * insertMedia() does not SQL-escape values before encoding them as JSON.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testInsertMediaDoesNotSqlEscapeValuesBeforeJsonEncoding(): void
     {
         $body = self::methodBody('insertMedia');
@@ -136,6 +167,13 @@ class CwmpIconvertTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * insertMedia() declares typed parameters.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testInsertMediaHasTypedParameters(): void
     {
         $reflection = new \ReflectionMethod(CwmpIconvert::class, 'insertMedia');
@@ -147,6 +185,13 @@ class CwmpIconvertTest extends ProclaimTestCase
         $this->assertCount(3, $params, 'the unused $oldid parameter must stay removed — see #1513');
     }
 
+    /**
+     * insertPodcast() returns ?int, with an explicit return on every path.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testInsertPodcastReturnsNullableIntWithExplicitFallthrough(): void
     {
         $reflection = new \ReflectionMethod(CwmpIconvert::class, 'insertPodcast');
@@ -161,6 +206,13 @@ class CwmpIconvertTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * checkMedia() returns ?int, with an explicit return on every path.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testCheckMediaReturnsNullableIntWithExplicitFallthrough(): void
     {
         $reflection = new \ReflectionMethod(CwmpIconvert::class, 'checkMedia');
@@ -186,6 +238,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * resolveAccessLevel() is exercised directly against the real `#__viewlevels` table
      * (read-only) rather than a fabricated schema -- unlike PreachIT's own tables, this one
      * genuinely exists on every Joomla install, so this is real behavior, not a guess.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testResolveAccessLevelAcceptsAnExistingViewLevel(): void
     {
@@ -202,6 +258,14 @@ class CwmpIconvertTest extends ProclaimTestCase
         $this->assertSame($validId, $result);
     }
 
+    /**
+     * An access level with no match falls back to public.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testResolveAccessLevelFallsBackToPublicForAnUnmappedId(): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
@@ -215,6 +279,13 @@ class CwmpIconvertTest extends ProclaimTestCase
         $this->assertSame(1, $result, 'an unmapped access value must fall back to Public (id 1) — see #1515');
     }
 
+    /**
+     * Every place the converter sets an access level goes through resolveAccessLevel().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testAllAccessSitesGoThroughResolveAccessLevel(): void
     {
         $bodies = self::methodBody('convertPI') . self::methodBody('insertMedia');
@@ -232,6 +303,13 @@ class CwmpIconvertTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The converter's class docblock sits directly above the class declaration.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testClassDocblockIsAboveTheClassDeclaration(): void
     {
         $reflection = new \ReflectionClass(CwmpIconvert::class);
@@ -253,6 +331,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * survived. Every other imported study landed on the wrong book regardless
      * of its actual scripture reference. $booknumber must default once before
      * the loop and only be assigned on an actual match.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testBookNumberDefaultsBeforeLoopInsteadOfOnEveryNonMatch(): void
     {
@@ -273,6 +355,10 @@ class CwmpIconvertTest extends ProclaimTestCase
     /**
      * getBooks() gave Hosea (id 28) the same jbs code as Joel (id 29,
      * '129'), instead of continuing the 100+index pattern with '128'.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetBooksHoseaAndJoelHaveDistinctJbsCodes(): void
     {
@@ -289,6 +375,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * `false`, which PHP's coercive typing silently turns into `0` rather
      * than `null` -- writing podcast_id=0 (an invalid FK) instead of leaving
      * the field unset for excluded records.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testInsertPodcastNeverReturnsFalse(): void
     {
@@ -308,6 +398,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * conversion whenever any podcast had teacher/ministry exclusion
      * configured. Both must be Registry-decoded first, matching the
      * pattern already used by the inclusion checks in the same method.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testInsertPodcastDecodesTeacherAndMinistryBeforeExclusionCheck(): void
     {
@@ -331,6 +425,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * podcasts configured for "all media types" (media==0) never matched
      * anything. Exercised live: checkMedia() has no DB dependency once
      * $podcastids is set directly on the instance.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testCheckMediaAllSentinelMatchesAgainstTheArray(): void
     {
@@ -351,6 +449,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * podcast's configured value against the still-encoded $pi->teacher/
      * $pi->ministry string instead of the decoded array built two lines
      * earlier -- essentially never true.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testInsertPodcastSingleItemInclusionComparesAgainstDecodedArray(): void
     {
@@ -377,6 +479,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * study with only one teacher fell into the elseif branch and checked
      * only $teacher_list[0], silently ignoring the rest of the configured
      * list.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testInsertPodcastTeacherInclusionGuardsOnTheConfiguredListNotTheStudy(): void
     {
@@ -399,6 +505,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * LIMIT 1 query at 6 call sites instead of insertObject()'s own $key
      * parameter -- a race hazard under concurrent writes and an avoidable
      * query per insert. Same pattern as #1525's Cwmssconvert finding.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testLastInsertedIdUsesInsertObjectKeyParamNotAFollowUpQuery(): void
     {
@@ -421,6 +531,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * even though only the audio branch used it -- video/notes/slides
      * either don't need it or already do their own scoped query. Now scoped
      * like the notes/slides branches (WHERE id = ...).
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testInsertMediaOnlyQueriesPifilepathWithinTheAudioBranch(): void
     {
@@ -442,6 +556,10 @@ class CwmpIconvertTest extends ProclaimTestCase
      * insertPodcast() reloaded the entire #__pipodcast table on every call,
      * and it's invoked up to 4x per study inside the studies loop despite
      * the source table never changing during a single conversion run.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testInsertPodcastCachesPipodcastAcrossCalls(): void
     {

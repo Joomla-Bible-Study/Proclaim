@@ -14,17 +14,42 @@ use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * CwmtemplateTable::delete() refuses the default template.
+ *
+ * @since  10.2.0
+ */
 #[CoversClass(CwmtemplateTable::class)]
 class CwmtemplateTableDeleteTest extends IntegrationTestCase
 {
+    /**
+     * The table under test.
+     *
+     * @var    CwmtemplateTable
+     * @since  10.2.0
+     */
     private CwmtemplateTable $table;
 
+    /**
+     * Create a fresh table for each test.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
         $this->table = $this->createTableInstance(CwmtemplateTable::class);
     }
 
+    /**
+     * Deleting template 1, the default, is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testDeleteBlocksDefaultTemplateId1(): void
     {
         $this->table->id = 1;
@@ -32,6 +57,13 @@ class CwmtemplateTableDeleteTest extends IntegrationTestCase
         $this->table->delete(1);
     }
 
+    /**
+     * Another template is not refused by the default-template guard.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testDeleteAllowsNonDefaultTemplate(): void
     {
         $this->table->id = 5;
