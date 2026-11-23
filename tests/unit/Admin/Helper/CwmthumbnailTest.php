@@ -26,8 +26,10 @@ class CwmthumbnailTest extends ProclaimTestCase
     /**
      * Test that the SCALE_INSIDE constant is defined correctly
      *
-     * @return void
+     * @return  void
      *#[CoversClass(Cwmthumbnail::class)]::SCALE_INSIDE
+     *
+     * @since   10.1.0
      */
     public function testScaleInsideConstant(): void
     {
@@ -37,8 +39,10 @@ class CwmthumbnailTest extends ProclaimTestCase
     /**
      * Test check method returns false for non-existent directory
      *
-     * @return void
+     * @return  void
      *#[CoversClass(Cwmthumbnail::class)]::check
+     *
+     * @since   10.1.0
      */
     public function testCheckReturnsFalseForNonExistentDirectory(): void
     {
@@ -50,8 +54,10 @@ class CwmthumbnailTest extends ProclaimTestCase
     /**
      * Test check method returns true for existing directory
      *
-     * @return void
+     * @return  void
      *#[CoversClass(Cwmthumbnail::class)]::check
+     *
+     * @since   10.1.0
      */
     public function testCheckReturnsTrueForExistingDirectory(): void
     {
@@ -63,8 +69,10 @@ class CwmthumbnailTest extends ProclaimTestCase
     /**
      * Test check method with file parameter returns false for non-existent file
      *
-     * @return void
+     * @return  void
      *#[CoversClass(Cwmthumbnail::class)]::check
+     *
+     * @since   10.1.0
      */
     public function testCheckReturnsFalseForNonExistentFile(): void
     {
@@ -74,7 +82,11 @@ class CwmthumbnailTest extends ProclaimTestCase
     }
 
     /**
+     * extensionForType() names JPEG output jpg, not jpeg.
+     *
      * @return  void
+     *
+     * @since   10.7.2
      */
     #[\PHPUnit\Framework\Attributes\TestDox('JPEG output is named .jpg, not .jpeg')]
     public function testJpegOutputIsNamedJpg(): void
@@ -83,7 +95,11 @@ class CwmthumbnailTest extends ProclaimTestCase
     }
 
     /**
+     * extensionForType() gives PNG, GIF and WebP output their own extensions.
+     *
      * @return  void
+     *
+     * @since   10.7.2
      */
     #[\PHPUnit\Framework\Attributes\TestDox('Other image types keep their own extension')]
     public function testOtherTypesKeepTheirExtension(): void
@@ -94,7 +110,10 @@ class CwmthumbnailTest extends ProclaimTestCase
     }
 
     /**
-     * @return  array<string, array{0: ?string, 1: string}>
+     * Stored media-field values, each with the relative path mediaFieldPath() should
+     * return.
+     *
+     * @return  array<string, array{0: ?string, 1: string}>  Each case
      *
      * @since   10.7.3
      */
@@ -124,6 +143,9 @@ class CwmthumbnailTest extends ProclaimTestCase
     }
 
     /**
+     * mediaFieldPath() drops the joomlaImage fragment and decodes the path, and returns an
+     * empty string for null, empty, traversal and NUL-byte values.
+     *
      * @param   ?string  $value     Stored media-field value
      * @param   string   $expected  Expected relative path
      *

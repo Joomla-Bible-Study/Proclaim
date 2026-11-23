@@ -43,6 +43,7 @@ class JsonThrowContractTest extends ProclaimTestCase
      * under Addons/Servers/Youtube/vendor is third-party and not ours to change.
      *
      * @var  string[]
+     * @since  10.5.6
      */
     private const ROOTS = ['admin/src', 'site/src', 'api/src'];
 
@@ -55,6 +56,7 @@ class JsonThrowContractTest extends ProclaimTestCase
      * `json_encode()` returns false and `quote(false)` is an empty string.
      *
      * @var  string[]
+     * @since  10.6.0
      */
     private const FILES = ['proclaim.script.php'];
 
@@ -67,6 +69,7 @@ class JsonThrowContractTest extends ProclaimTestCase
      * sites would suggest a failure mode that cannot occur.
      *
      * @var  array<string, string>
+     * @since  10.5.6
      */
     private const ALLOWED = [
         'admin/src/Table/CwmteacherTable.php' => 'Re-encodes an array produced by a successful json_decode() a few lines above; cannot fail.',
@@ -78,6 +81,8 @@ class JsonThrowContractTest extends ProclaimTestCase
      * resolved by matching parentheses rather than counting lines.
      *
      * @return  array<int, array{file: string, line: int, fn: string, args: string}>
+     *
+     * @since   10.5.6
      */
     private function calls(): array
     {
@@ -159,6 +164,13 @@ class JsonThrowContractTest extends ProclaimTestCase
         return $found;
     }
 
+    /**
+     * Every json_decode() in our source passes JSON_THROW_ON_ERROR, apart from the allow-listed files.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Every json_decode in our source can throw, so a malformed value is never silently null')]
     public function testEveryDecodeCanThrow(): void
     {
@@ -184,6 +196,14 @@ class JsonThrowContractTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Every json_encode() whose result is stored, in a property, a file or a quoted query
+     * value, passes JSON_THROW_ON_ERROR, apart from the allow-listed files.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Every json_encode whose result is stored can throw')]
     public function testEveryPersistedEncodeCanThrow(): void
     {
@@ -232,6 +252,13 @@ class JsonThrowContractTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Each allow-listed file exists, gives a reason, and still has a call without the flag.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The allow-list only names files that exist and still omit the flag')]
     public function testAllowListIsNotStale(): void
     {
@@ -254,6 +281,13 @@ class JsonThrowContractTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * The scan finds more than 180 calls, more than 100 of them with the flag.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The scan reaches real calls, so a green result is not an empty sweep')]
     public function testScanIsNotVacuous(): void
     {
@@ -288,6 +322,8 @@ class JsonThrowContractTest extends ProclaimTestCase
      * @param   string    $line    That line's text
      *
      * @return  bool
+     *
+     * @since   10.6.0
      */
     private function encodedLocalIsPersisted(array $lines, int $number, string $line): bool
     {

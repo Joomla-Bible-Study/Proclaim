@@ -26,8 +26,10 @@ class VersionTest extends ProclaimTestCase
     /**
      * Test product name constant
      *
-     * @return void
+     * @return  void
      * #[CoversClass(Version::class)]::PRODUCT
+     *
+     * @since   10.1.0
      */
     public function testProductNameIsCorrect(): void
     {
@@ -37,8 +39,10 @@ class VersionTest extends ProclaimTestCase
     /**
      * Test isInDevelopmentState method
      *
-     * @return void
+     * @return  void
      * #[CoversClass(Version::class)]::isInDevelopmentState
+     *
+     * @since   10.1.0
      */
     public function testIsInDevelopmentState(): void
     {
@@ -49,8 +53,10 @@ class VersionTest extends ProclaimTestCase
     /**
      * Test isCompatible method
      *
-     * @return void
+     * @return  void
      * #[CoversClass(Version::class)]::isCompatible
+     *
+     * @since   10.1.0
      */
     public function testIsCompatible(): void
     {
@@ -67,8 +73,10 @@ class VersionTest extends ProclaimTestCase
     /**
      * Test getHelpVersion method
      *
-     * @return void
+     * @return  void
      * #[CoversClass(Version::class)]::getHelpVersion
+     *
+     * @since   10.1.0
      */
     public function testGetHelpVersion(): void
     {
@@ -83,8 +91,10 @@ class VersionTest extends ProclaimTestCase
     /**
      * Test getShortVersion method
      *
-     * @return void
+     * @return  void
      * #[CoversClass(Version::class)]::getShortVersion
+     *
+     * @since   10.1.0
      */
     public function testGetShortVersion(): void
     {
@@ -101,8 +111,10 @@ class VersionTest extends ProclaimTestCase
     /**
      * Test getLongVersion method
      *
-     * @return void
+     * @return  void
      * #[CoversClass(Version::class)]::getLongVersion
+     *
+     * @since   10.1.0
      */
     public function testGetLongVersion(): void
     {
@@ -118,8 +130,10 @@ class VersionTest extends ProclaimTestCase
     /**
      * Test getUserAgent method
      *
-     * @return void
+     * @return  void
      * #[CoversClass(Version::class)]::getUserAgent
+     *
+     * @since   10.1.0
      */
     public function testGetUserAgent(): void
     {

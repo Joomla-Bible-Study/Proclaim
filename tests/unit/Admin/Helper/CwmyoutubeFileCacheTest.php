@@ -25,10 +25,30 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmyoutubeFileCacheTest extends ProclaimTestCase
 {
+    /**
+     * A server id well outside any real server range, so the fixture never collides
+     * with a real cache file.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private const TEST_SERVER_ID = 999999;
 
+    /**
+     * This site's YouTube cache directory.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $cacheDir;
 
+    /**
+     * Point at this site's cache directory, remove it, and clear the YouTube log.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -43,6 +63,13 @@ class CwmyoutubeFileCacheTest extends ProclaimTestCase
         CwmyoutubeLogHelper::clear();
     }
 
+    /**
+     * Restore the permissions a write-failure test may have removed, then delete the cache directory.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         // Restore permissions before deleting -- a 0000-mode fixture left
@@ -62,6 +89,13 @@ class CwmyoutubeFileCacheTest extends ProclaimTestCase
         parent::tearDown();
     }
 
+    /**
+     * Delete the cache directory, its files and its now-empty parent directories.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     private function removeCacheDir(): void
     {
         if (!is_dir($this->cacheDir)) {
@@ -87,6 +121,13 @@ class CwmyoutubeFileCacheTest extends ProclaimTestCase
         @rmdir(\dirname($this->cacheDir, 2));
     }
 
+    /**
+     * A stored last-known video can be read back.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testStoreAndRetrieveLastKnownVideo(): void
     {
         CwmyoutubeFileCache::storeLastKnownVideo(self::TEST_SERVER_ID, ['id' => 'abc123', 'title' => 'Test']);
@@ -96,6 +137,13 @@ class CwmyoutubeFileCacheTest extends ProclaimTestCase
         $this->assertSame('abc123', $video['id'] ?? null);
     }
 
+    /**
+     * A cached video can be read back while its TTL lasts.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testStoreAndRetrieveVideoCacheWithinTtl(): void
     {
         CwmyoutubeFileCache::storeVideoCache('test-key', ['id' => 'xyz789'], 300);
@@ -105,6 +153,13 @@ class CwmyoutubeFileCacheTest extends ProclaimTestCase
         $this->assertSame('xyz789', $video['id'] ?? null);
     }
 
+    /**
+     * A stored scheduled start time can be read back.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testStoreAndRetrieveScheduledStart(): void
     {
         CwmyoutubeFileCache::storeScheduledStart(self::TEST_SERVER_ID, 'vid123', '2026-08-05T12:00:00Z');
@@ -122,6 +177,10 @@ class CwmyoutubeFileCacheTest extends ProclaimTestCase
      * -- meaning its contents were directly web-servable with no auth
      * check. ensureDir() must now write deny-all access files the first
      * time it creates the directory. See #1551.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testEnsureDirWritesAccessDenyFilesOnFirstCreation(): void
     {
@@ -143,6 +202,10 @@ class CwmyoutubeFileCacheTest extends ProclaimTestCase
      * cache "ensures module can always show a video instead of 'no video
      * available'"; if a write failure isn't even logged, an admin has no
      * way to discover why that guarantee stopped holding. See #1551.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testStoreLastKnownVideoLogsOnWriteFailure(): void
     {
@@ -178,6 +241,11 @@ class CwmyoutubeFileCacheTest extends ProclaimTestCase
      * bare file_get_contents() that can observe a torn write. Verified by
      * source inspection since a true concurrent-write race isn't
      * reproducible deterministically in a single-threaded test.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testReadMethodsUseTheSharedLockHelperNotBareFileGetContents(): void
     {
