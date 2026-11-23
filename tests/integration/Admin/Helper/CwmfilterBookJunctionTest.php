@@ -29,26 +29,36 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * applyCrossFilters() matches the Book filter against every book a study references in
+ * the scripture junction, not just its first two, and leaves it out when the caller
+ * excludes it.
+ *
+ * @since  10.5.8
  */
 #[CoversClass(CwmfilterHelper::class)]
 class CwmfilterBookJunctionTest extends IntegrationTestCase
 {
     /**
-     * @var string
-     * @since 10.5.8
+     * The list context the filter state is kept under.
+     *
+     * @var    string
+     * @since  10.5.8
      */
     private const CONTEXT = 'com_proclaim.cwm1623.list';
 
     /**
-     * @var DatabaseDriver|null
-     * @since 10.5.8
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var mixed
-     * @since 10.5.8
+     * The application setUp() replaced with the stub, for tearDown() to put back.
+     *
+     * @var    mixed
+     * @since  10.5.8
      */
     private mixed $realApplication = null;
 
@@ -61,8 +71,12 @@ class CwmfilterBookJunctionTest extends IntegrationTestCase
     private array $filterState = [];
 
     /**
+     * Skip without a test database. Otherwise open a transaction, and swap the application
+     * for a stub whose getUserStateFromRequest() reads the test's filter state.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -86,19 +100,27 @@ class CwmfilterBookJunctionTest extends IntegrationTestCase
 
         Factory::$application = new class ($state) {
             /**
+             * Hold the test's filter state by reference.
+             *
              * @param   array  $state  Filter values by state key
+             *
+             * @since   10.5.8
              */
             public function __construct(private array &$state)
             {
             }
 
             /**
+             * The filter value kept under the key, or the default when there is none.
+             *
              * @param   string  $key      State key
              * @param   string  $request  Request variable name, unused here
              * @param   mixed   $default  Value when nothing is set
              * @param   string  $type     Filter type, unused here
              *
-             * @return  mixed
+             * @return  mixed  The kept value, or the default
+             *
+             * @since   10.5.8
              */
             public function getUserStateFromRequest($key, $request, $default = null, $type = 'none'): mixed
             {
@@ -108,8 +130,11 @@ class CwmfilterBookJunctionTest extends IntegrationTestCase
     }
 
     /**
+     * Put the real application back, and roll back the transaction setUp() opened.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function tearDown(): void
     {
@@ -192,6 +217,13 @@ class CwmfilterBookJunctionTest extends IntegrationTestCase
         return array_map('intval', $this->db->setQuery($query)->loadColumn() ?: []);
     }
 
+    /**
+     * Filtering on the third of a study's three books finds the study.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('filtering on a study\'s third book finds it')]
     public function testTheThirdReferenceIsFilterable(): void
     {
@@ -207,6 +239,13 @@ class CwmfilterBookJunctionTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Filtering on either of a study's first two books finds it.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the first two references still filter as they always did')]
     public function testTheFirstTwoReferencesStillMatch(): void
     {
@@ -216,6 +255,13 @@ class CwmfilterBookJunctionTest extends IntegrationTestCase
         $this->assertContains($studyId, $this->filteredStudyIds(171), 'The secondary reference stopped matching.');
     }
 
+    /**
+     * Filtering on a book the study doesn't reference leaves it out.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a book the study does not reference does not match it')]
     public function testUnrelatedBooksDoNotMatch(): void
     {
@@ -228,6 +274,14 @@ class CwmfilterBookJunctionTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * With the book filter excluded, as BookListField excludes it, the query still finds a
+     * study whose only book isn't the one the filter holds.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the filter is skipped entirely when the caller excludes it')]
     public function testExcludingBookSkipsTheJoin(): void
     {

@@ -40,15 +40,30 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(BibleStructure::class)]
 class BibleStructureTest extends IntegrationTestCase
 {
+    /**
+     * The database the installed KJV verses are read from.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
     /**
      * Real verse counts keyed [bookOrdinal][chapter] => max verse.
      *
      * @var array<int, array<int, int>>
+     * @since  10.5.6
      */
     private array $realCounts = [];
 
+    /**
+     * Skip without a test database. Otherwise record the highest KJV verse number of each
+     * installed chapter, by book and chapter.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -85,6 +100,8 @@ class BibleStructureTest extends IntegrationTestCase
      * those carry the regression pin that has to run everywhere.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function requireScriptureData(): void
     {
@@ -93,6 +110,14 @@ class BibleStructureTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * Each book with installed KJV text is in the table, with as many chapters as the text
+     * has. Skipped when no KJV text is installed.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Every book\'s chapter count matches the installed KJV text')]
     public function testChapterCountsMatchInstalledScripture(): void
     {
@@ -113,6 +138,14 @@ class BibleStructureTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * The table's verse count for each installed KJV chapter equals that chapter's highest
+     * verse number. Skipped when no KJV text is installed.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Every chapter\'s verse count matches the installed KJV text')]
     public function testVerseCountsMatchInstalledScripture(): void
     {
@@ -148,6 +181,14 @@ class BibleStructureTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The table gives Genesis 50 chapters and 1,533 verses, with 31 in chapter 1, 67 in
+     * chapter 24 and 26 in chapter 50. It needs no installed scripture.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Genesis specifically: 50 chapters, 1533 verses, 24:67')]
     public function testGenesisIsCorrect(): void
     {
@@ -160,6 +201,14 @@ class BibleStructureTest extends IntegrationTestCase
         $this->assertSame(26, $genesis[49], 'Genesis 50 has 26 verses');
     }
 
+    /**
+     * Every book in the table has at least one chapter, and every chapter's verse count is a
+     * positive integer.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The table is structurally sound regardless of installed scripture')]
     public function testTableIsStructurallySound(): void
     {

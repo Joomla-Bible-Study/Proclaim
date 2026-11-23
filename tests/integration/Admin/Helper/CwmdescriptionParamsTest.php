@@ -35,12 +35,39 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmdescriptionHelper::class)]
 class CwmdescriptionParamsTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back. tearDown() checks that the
+     * rollback restored the media files.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * How many media files there were when setUp() ran.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $rowsAtStart = 0;
 
+    /**
+     * The id of the study setUp() inserts, which the media files belong to.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $studyId = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction, count the media files, and
+     * insert a published study.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -63,6 +90,14 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
         $this->studyId = (int) $this->db->insertid();
     }
 
+    /**
+     * Roll back the transaction setUp() opened, then fail the test if the media files don't
+     * number what they did at setUp().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         $leaked = null;
@@ -92,7 +127,11 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
     }
 
     /**
+     * The number of media files.
+     *
      * @return  int  Rows in the media table.
+     *
+     * @since   10.5.6
      */
     private function countMedia(): int
     {
@@ -107,6 +146,8 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
      * @param   string  $paramsJson  Raw params column value
      *
      * @return  int  Media id
+     *
+     * @since   10.5.6
      */
     private function insertMedia(string $paramsJson): int
     {
@@ -126,7 +167,9 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
     /**
      * Shapes that are valid JSON but not what the code expects.
      *
-     * @return array<string, array{0: string}>
+     * @return  array<string, array{0: string}>
+     *
+     * @since   10.5.6
      */
     public static function malformedShapeProvider(): array
     {
@@ -150,6 +193,11 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
      * bad params data degrades description building, it does not crash it.
      *
      * @param   string  $paramsJson  Raw params value
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('malformedShapeProvider')]
     #[TestDox('Chapters lookup survives valid JSON with the wrong shape')]
@@ -172,7 +220,15 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
     }
 
     /**
+     * getServerDescriptionFormat() returns a string, without a TypeError, for a media file
+     * whose server holds params of the wrong shape, malformed or empty.
+     *
      * @param   string  $paramsJson  Raw params value
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('malformedShapeProvider')]
     #[TestDox('Server description format survives valid JSON with the wrong shape')]
@@ -212,6 +268,15 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
     // The well-formed cases still have to work
     // -------------------------------------------------------------------------
 
+    /**
+     * getChaptersForDescription() returns a media file's one well-formed chapter, with its
+     * title.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('A real chapters array is still returned')]
     public function testWellFormedChaptersAreReturned(): void
     {
@@ -224,6 +289,15 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
         $this->assertSame('Intro', $result[0]['title']);
     }
 
+    /**
+     * getServerDescriptionFormat() returns the description_format string a media file's
+     * server holds.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('A real description format string is still returned')]
     public function testWellFormedFormatIsReturned(): void
     {
@@ -247,6 +321,15 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
         $this->assertSame('{title} — {teacher}', $ref->invoke(null, (int) $this->db->insertid()));
     }
 
+    /**
+     * getServerDescriptionFormat() returns the format a server holds under the legacy
+     * yt_description_format key.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('The legacy yt_description_format key is still honoured')]
     public function testLegacyFormatKeyStillWorks(): void
     {

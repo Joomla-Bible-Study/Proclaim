@@ -34,8 +34,22 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmanalyticsHelper::class)]
 class AnalyticsEventInsertTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.0
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction, and set the user agent,
+     * referrer and accept-language headers logEvent() reads, two of them holding an apostrophe.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -54,6 +68,13 @@ class AnalyticsEventInsertTest extends IntegrationTestCase
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en-US,en;q=0.9';
     }
 
+    /**
+     * Unset the three request headers, then roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function tearDown(): void
     {
         unset($_SERVER['HTTP_USER_AGENT'], $_SERVER['HTTP_REFERER'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -69,6 +90,14 @@ class AnalyticsEventInsertTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * logEvent() writes one row for the study, typed page_view with a desktop device, and
+     * the absent UTM source and campaign land as SQL NULL.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('logEvent writes a row, and the nullable columns arrive as real NULLs')]
     public function testEventRowLands(): void
     {
@@ -103,6 +132,13 @@ class AnalyticsEventInsertTest extends IntegrationTestCase
         $this->assertNull($row->utm_campaign);
     }
 
+    /**
+     * The number of rows in the analytics events table.
+     *
+     * @return  int  Row count
+     *
+     * @since   10.7.0
+     */
     private function eventCount(): int
     {
         return (int) $this->db->setQuery(

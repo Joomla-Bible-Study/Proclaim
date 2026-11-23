@@ -29,12 +29,22 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CwmaliasRenameReportTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.4
+     */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database. Otherwise load the installer's language strings, which
+     * the report uses, and open a transaction.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -53,6 +63,8 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -71,6 +83,9 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     }
 
     /**
+     * sharedRenames() keeps the message renamed from a shared alias, with its id, title,
+     * date and both aliases. It drops the one that had no alias, and the empty series list.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -101,9 +116,14 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     }
 
     /**
+     * announceRenames() queues one notice. It links the message's edit form, with the escaped
+     * title and the date as the link text, gives both aliases, and suggests a clearer title
+     * and alias.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Exception
      */
     #[TestDox('The notice links each renamed record to its edit form, its title escaped')]
     public function testNoticeLinksEachRecord(): void
@@ -136,9 +156,15 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     }
 
     /**
+     * emailRenames() sends one email, in Bcc only, that includes the Super User who receives
+     * system emails but not the one who opted out or the blocked one, and returns the Bcc
+     * count. The body lists the record without HTML escaping, and both SMTP timeouts are 5
+     * seconds.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Throwable
      */
     #[TestDox('One email goes in Bcc to the Super Users who receive system emails, naming each record, with short SMTP timeouts')]
     public function testEmailGoesToSuperUsersWhoReceiveSystemEmails(): void
@@ -172,9 +198,13 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     }
 
     /**
+     * With Live Site empty the email holds no link; with it set, the email links the
+     * message's administrator edit form at that address. Live Site is restored after.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Throwable
      */
     #[TestDox('From the command line the email links each record only when the site\'s Live Site is configured')]
     public function testEmailLinksNeedAKnownSiteAddress(): void
@@ -211,9 +241,12 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     }
 
     /**
+     * With no renames, emailRenames() returns 0 without creating a mailer.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Throwable
      */
     #[TestDox('With nothing renamed, no mailer is even created')]
     public function testNothingRenamedSendsNothing(): void
@@ -225,9 +258,13 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     }
 
     /**
+     * emailRenames() lets the RuntimeException of a mail server that can't be reached
+     * through to its caller.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Throwable
      */
     #[TestDox('A mail server that fails reaches the caller, for it to log where it logs')]
     public function testFailedSendReachesTheCaller(): void
@@ -244,6 +281,9 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     }
 
     /**
+     * reportRenames() tries the email once and returns normally when the mail server can't
+     * be reached.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -264,6 +304,8 @@ class CwmaliasRenameReportTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published message with the given title and date, and a unique alias.
+     *
      * @param   string  $title  The message title
      * @param   string  $date   Its date
      *

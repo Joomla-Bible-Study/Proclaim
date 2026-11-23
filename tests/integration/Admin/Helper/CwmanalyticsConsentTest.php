@@ -41,11 +41,31 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmanalyticsHelper::class)]
 class CwmanalyticsConsentTest extends IntegrationTestCase
 {
-    /** @var array<string, string|null> */
+    /**
+     * The Sec-GPC and DNT headers as they were before setUp() removed them, null for one
+     * that was absent.
+     *
+     * @var    array<string, string|null>
+     * @since  10.5.6
+     */
     private array $savedServer = [];
 
+    /**
+     * The opt-out cookie as it was before setUp() removed it, null when it was absent.
+     *
+     * @var    mixed
+     * @since  10.5.6
+     */
     private mixed $savedCookie = null;
 
+    /**
+     * Remove the Sec-GPC and DNT headers and the opt-out cookie, keeping their values for
+     * tearDown().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -59,6 +79,13 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
         unset($_COOKIE[CwmanalyticsHelper::OPTOUT_COOKIE]);
     }
 
+    /**
+     * Put back the headers and the cookie setUp() removed, leaving out any that were absent.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         foreach ($this->savedServer as $key => $value) {
@@ -82,6 +109,13 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
     // Finding 1 -- Sec-GPC is honoured
     // -------------------------------------------------------------------------
 
+    /**
+     * A Sec-GPC header of 1 opts the visitor out.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A Sec-GPC: 1 header opts the visitor out')]
     public function testGlobalPrivacyControlIsHonoured(): void
     {
@@ -93,6 +127,13 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A DNT header of 1 opts the visitor out.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('DNT: 1 still opts the visitor out')]
     public function testDoNotTrackStillHonoured(): void
     {
@@ -101,6 +142,13 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
         $this->assertTrue(CwmanalyticsHelper::isOptedOut(), 'DNT support must not regress');
     }
 
+    /**
+     * The opt-out cookie set to 1 opts the visitor out.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The published opt-out cookie opts the visitor out')]
     public function testOptOutCookieIsHonoured(): void
     {
@@ -117,6 +165,10 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
      *
      * @param   string  $header  Header name
      * @param   string  $value   Header value
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('nonOptOutSignalProvider')]
     #[TestDox('A non-opt-out signal value does not opt the visitor out')]
@@ -131,7 +183,12 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
     }
 
     /**
-     * @return array<string, array{0: string, 1: string}>
+     * Sec-GPC and DNT values that don't opt out: 0 for either, an empty Sec-GPC and an
+     * unspecified DNT.
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each header name and value
+     *
+     * @since   10.5.6
      */
     public static function nonOptOutSignalProvider(): array
     {
@@ -143,6 +200,13 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * With no opt-out header or cookie, the visitor isn't opted out.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('With no signal at all the visitor is not opted out')]
     public function testNoSignalMeansNotOptedOut(): void
     {
@@ -157,6 +221,10 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
      * logEvent() needs a full application/session stack to run end to end, so
      * the gate is pinned structurally: every assignment to $referrerUrl must
      * sit behind $consentOn.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Every referrer_url assignment is behind the consent gate')]
     public function testOutboundClickIsGatedOnConsent(): void
@@ -192,6 +260,8 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
      * first read emits a warning and phpunit.xml sets failOnWarning.
      *
      * @return  string  File contents
+     *
+     * @since   10.5.6
      */
     private function languageIni(): string
     {
@@ -213,6 +283,13 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
     // Finding 3 -- the integration contract
     // -------------------------------------------------------------------------
 
+    /**
+     * The opt-out cookie's name is proclaim_analytics_optout.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The opt-out cookie name is published as a stable constant')]
     public function testOptOutCookieNameIsPublished(): void
     {
@@ -228,6 +305,10 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
      * could opt out via this cookie, while nothing in the product set it and
      * the contract was undocumented. It must now tell admins to wire up their
      * own consent extension instead.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Admin help text describes the cookie as a consent-manager integration')]
     public function testAdminHelpTextDocumentsTheIntegration(): void
@@ -249,6 +330,13 @@ class CwmanalyticsConsentTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The language file's description of GDPR Compliance Mode mentions analytics.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('GDPR Compliance Mode discloses that it also suppresses analytics')]
     public function testGdprModeDisclosesItsAnalyticsEffect(): void
     {
