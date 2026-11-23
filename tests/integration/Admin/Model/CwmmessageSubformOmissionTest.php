@@ -36,14 +36,35 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CwmmessageSubformOmissionTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.6.0
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * The id of the fixture study.
+     *
+     * @var    int
+     * @since  10.6.0
+     */
     private int $studyId = 0;
 
+    /**
+     * The id of the fixture topic.
+     *
+     * @var    int
+     * @since  10.6.0
+     */
     private int $topicId = 0;
 
     /**
+     * Skip without a test database. Otherwise open a transaction, and insert the fixture study and topic.
+     *
      * @return  void
+     *
      * @since   10.6.0
      */
     protected function setUp(): void
@@ -72,7 +93,10 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the fixtures.
+     *
      * @return  void
+     *
      * @since   10.6.0
      */
     protected function tearDown(): void
@@ -105,7 +129,10 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
     }
 
     /**
+     * Count the fixture study's scripture references.
+     *
      * @return  int  Reference rows owned by the fixture study.
+     *
      * @since   10.6.0
      */
     private function countReferences(): int
@@ -119,7 +146,10 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
     }
 
     /**
+     * Count the fixture study's topics.
+     *
      * @return  int  Topic rows owned by the fixture study.
+     *
      * @since   10.6.0
      */
     private function countTopics(): int
@@ -154,6 +184,14 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * Omitting the scriptures subform leaves existing references alone.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     * @throws  \Throwable
+     */
     #[TestDox('Omitting the scriptures subform leaves existing references alone')]
     public function testOmittedScripturesArePreserved(): void
     {
@@ -169,6 +207,14 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * An explicitly emptied scriptures subform still clears the references.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     * @throws  \Throwable
+     */
     #[TestDox('An explicitly emptied scriptures subform still clears the references')]
     public function testEmptyScripturesStillClear(): void
     {
@@ -187,6 +233,13 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Omitting the topics field leaves existing topics alone.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('Omitting the topics field leaves existing topics alone')]
     public function testOmittedTopicsArePreserved(): void
     {
@@ -203,6 +256,13 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Omitting the teachers subform leaves existing assignments alone.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('Omitting the teachers subform leaves existing assignments alone')]
     public function testOmittedTeachersArePreserved(): void
     {
@@ -220,7 +280,10 @@ class CwmmessageSubformOmissionTest extends IntegrationTestCase
     }
 
     /**
+     * Count the fixture study's teacher assignments.
+     *
      * @return  int  Teacher rows owned by the fixture study.
+     *
      * @since   10.6.0
      */
     private function countTeachers(): int

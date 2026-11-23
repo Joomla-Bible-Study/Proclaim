@@ -31,21 +31,30 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.3
+ * The media file and server models return false for a record that does not
+ * exist, rather than throwing a TypeError.
+ *
+ * @since  10.7.3
  */
 #[CoversClass(CwmmediafileModel::class)]
 #[CoversClass(CwmserverModel::class)]
 class CwmMissingItemTest extends IntegrationTestCase
 {
     /**
-     * @var  mixed  The request id before the test changed it
-     * @since 10.7.3
+     * The request id before the test changed it.
+     *
+     * @var    mixed
+     * @since  10.7.3
      */
     private mixed $savedId = null;
 
     /**
+     * Skip without a test database. Otherwise remember the request id.
+     *
      * @return  void
-     * @since 10.7.3
+     *
+     * @since   10.7.3
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -59,8 +68,12 @@ class CwmMissingItemTest extends IntegrationTestCase
     }
 
     /**
+     * Restore the request id.
+     *
      * @return  void
-     * @since 10.7.3
+     *
+     * @since   10.7.3
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -75,7 +88,8 @@ class CwmMissingItemTest extends IntegrationTestCase
      * @param   string  $table  Table name
      *
      * @return  int
-     * @since 10.7.3
+     *
+     * @since   10.7.3
      */
     private function missingId(string $table): int
     {
@@ -85,10 +99,14 @@ class CwmMissingItemTest extends IntegrationTestCase
     }
 
     /**
+     * A model built through the MVC factory, ignoring the request.
+     *
      * @param   string  $name  Model name
      *
-     * @return  object
-     * @since 10.7.3
+     * @return  object  The model
+     *
+     * @since   10.7.3
+     * @throws  \Exception
      */
     private function model(string $name): object
     {
@@ -101,6 +119,14 @@ class CwmMissingItemTest extends IntegrationTestCase
         return $factory->createModel($name, 'Administrator', ['ignore_request' => true]);
     }
 
+    /**
+     * The media file model returns false for a missing id.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('the media file model returns false for a missing id')]
     public function testMediafileModelReturnsFalseForAMissingId(): void
     {
@@ -113,6 +139,14 @@ class CwmMissingItemTest extends IntegrationTestCase
         $this->assertFalse($model->getItem());
     }
 
+    /**
+     * The server model returns false for a missing id.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('the server model returns false for a missing id')]
     public function testServerModelReturnsFalseForAMissingId(): void
     {
@@ -122,6 +156,14 @@ class CwmMissingItemTest extends IntegrationTestCase
         $this->assertFalse($model->getItem($this->missingId('#__bsms_servers')));
     }
 
+    /**
+     * A media file pointing at a deleted server has no server form.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('a media file pointing at a deleted server has no server form')]
     public function testMediafileWithADeletedServerHasNoServerForm(): void
     {
