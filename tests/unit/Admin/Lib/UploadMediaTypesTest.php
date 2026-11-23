@@ -32,6 +32,8 @@ class UploadMediaTypesTest extends ProclaimTestCase
      * side effects, so requiring it only declares the class.
      *
      * @return  void
+     *
+     * @since   10.7.2
      */
     public static function setUpBeforeClass(): void
     {
@@ -53,6 +55,8 @@ class UploadMediaTypesTest extends ProclaimTestCase
      * @param   mixed   ...$args
      *
      * @return  mixed
+     *
+     * @since   10.7.2
      */
     private static function call(string $method, mixed ...$args): mixed
     {
@@ -61,6 +65,13 @@ class UploadMediaTypesTest extends ProclaimTestCase
         return $ref->invoke(null, ...$args);
     }
 
+    /**
+     * A list that allows jpg gains jpeg, webp and avif.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     */
     #[TestDox('A list that allows jpg gains jpeg, webp and avif')]
     public function testJpgListGainsJpegWebpAvif(): void
     {
@@ -73,6 +84,13 @@ class UploadMediaTypesTest extends ProclaimTestCase
         $this->assertContains('png', $out);
     }
 
+    /**
+     * An upper-case-only list still gains the usable lower-case tokens.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     */
     #[TestDox('An upper-case-only list still gains the usable lower-case tokens')]
     public function testUpperCaseOnlyListGainsLowerCaseTokens(): void
     {
@@ -85,6 +103,13 @@ class UploadMediaTypesTest extends ProclaimTestCase
         $this->assertContains('webp', $out);
     }
 
+    /**
+     * An audio or video list is left untouched.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     */
     #[TestDox('An audio/video-only list is left untouched')]
     public function testNonImageListUntouched(): void
     {
@@ -94,6 +119,13 @@ class UploadMediaTypesTest extends ProclaimTestCase
         $this->assertSame($in, $out, 'Image formats must not be forced onto a non-image policy.');
     }
 
+    /**
+     * An empty list is left empty, so the built-in default applies.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     */
     #[TestDox('An empty list is left empty so the built-in default applies')]
     public function testEmptyListStaysEmpty(): void
     {
@@ -101,6 +133,13 @@ class UploadMediaTypesTest extends ProclaimTestCase
         $this->assertSame([], self::call('augmentImageMimes', []));
     }
 
+    /**
+     * A complete list is returned unchanged.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     */
     #[TestDox('A complete list is returned unchanged (idempotent)')]
     public function testCompleteListIsIdempotent(): void
     {
@@ -111,6 +150,13 @@ class UploadMediaTypesTest extends ProclaimTestCase
         $this->assertSame($mimes, self::call('augmentImageMimes', $mimes));
     }
 
+    /**
+     * The MIME list gains the image types that match the extensions.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     */
     #[TestDox('The MIME list gains the image types that match the extensions')]
     public function testMimeListGainsImageTypes(): void
     {

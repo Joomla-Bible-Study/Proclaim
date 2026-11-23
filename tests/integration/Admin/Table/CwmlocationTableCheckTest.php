@@ -14,23 +14,55 @@ use CWM\Component\Proclaim\Administrator\Table\CwmlocationTable;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * CwmlocationTable::check() requires a location name.
+ *
+ * @since  10.2.0
+ */
 #[CoversClass(CwmlocationTable::class)]
 class CwmlocationTableCheckTest extends IntegrationTestCase
 {
+    /**
+     * The table under test.
+     *
+     * @var    CwmlocationTable
+     * @since  10.2.0
+     */
     private CwmlocationTable $table;
 
+    /**
+     * Create a fresh table for each test.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
         $this->table = $this->createTableInstance(CwmlocationTable::class);
     }
 
+    /**
+     * A location with a location name passes.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckPassesWithValidData(): void
     {
         $this->table->location_text = 'Main Sanctuary';
         $this->assertTrue($this->table->check());
     }
 
+    /**
+     * A NULL location name is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenLocationTextNull(): void
     {
         $this->table->location_text = null;
@@ -38,6 +70,13 @@ class CwmlocationTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * An empty location name is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenLocationTextEmpty(): void
     {
         $this->table->location_text = '';
@@ -45,6 +84,13 @@ class CwmlocationTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * A location name of only whitespace is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenLocationTextWhitespace(): void
     {
         $this->table->location_text = '   ';

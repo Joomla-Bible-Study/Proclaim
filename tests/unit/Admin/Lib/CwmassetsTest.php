@@ -30,6 +30,10 @@ class CwmassetsTest extends ProclaimTestCase
      * Cwmassets::parentId()/ensureParentAsset(), which populate the cache --
      * without a reset, test order determines whether testParentIdDefaultIsZero
      * sees a pristine value.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -41,7 +45,9 @@ class CwmassetsTest extends ProclaimTestCase
     /**
      * Test parent_id default value
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     public function testParentIdDefaultIsZero(): void
     {
@@ -51,7 +57,9 @@ class CwmassetsTest extends ProclaimTestCase
     /**
      * Test getAssetObjects returns expected structure
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     public function testGetAssetObjectsReturnsExpectedStructure(): void
     {
@@ -87,7 +95,11 @@ class CwmassetsTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string}>
+     * The core content tables.
+     *
+     * @return  array<string, array{string}>  Each table's name
+     *
+     * @since   10.5.6
      */
     public static function coreTableProvider(): array
     {
@@ -105,6 +117,8 @@ class CwmassetsTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
      */
     private static function methodBody(string $method): string
     {
@@ -134,6 +148,10 @@ class CwmassetsTest extends ProclaimTestCase
      * row with lft greater than the moved node's old rgt), so this is a
      * structural assertion rather than a live DB test, matching the pattern
      * used for other high-blast-radius code in this suite.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testFixSingleRecordCaseThreeUsesNestedSetAwareMove(): void
     {
@@ -163,6 +181,10 @@ class CwmassetsTest extends ProclaimTestCase
      * loser down the "parent missing" fallback instead of finding the
      * winner's row. The catch block must re-query for an existing row before
      * giving up.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testEnsureParentAssetRecoversFromDuplicateKeyRace(): void
     {
@@ -191,6 +213,10 @@ class CwmassetsTest extends ProclaimTestCase
      * Exercised against the real DB read-only via DatabaseDriver::getCount(),
      * which tracks total statements executed by the driver -- a real
      * regression proof, not a mock expecting a specific call count.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetAssetStatusQueryCountIsBounded(): void
     {
@@ -237,6 +263,10 @@ class CwmassetsTest extends ProclaimTestCase
      * safe because getAssetStatus() is read-only (SELECT
      * only), unlike fixSingleRecord()'s moveByReference() path which takes
      * a table lock that would implicitly commit a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetAssetStatusValuesReflectCustomAndDriftedAssets(): void
     {
@@ -325,6 +355,8 @@ class CwmassetsTest extends ProclaimTestCase
      * @param   int                $count  How many ids are needed
      *
      * @return  int[]
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private static function teacherIdsForFixture(DatabaseInterface $db, int $count): array
     {
@@ -354,10 +386,14 @@ class CwmassetsTest extends ProclaimTestCase
     }
 
     /**
+     * Count a table's rows.
+     *
      * @param   DatabaseInterface  $db     Database driver
      * @param   string             $table  Table to count
      *
-     * @return  int
+     * @return  int  The count
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private static function countRows(DatabaseInterface $db, string $table): int
     {
@@ -375,6 +411,8 @@ class CwmassetsTest extends ProclaimTestCase
      * @param   string             $rules      JSON rules string
      *
      * @return  int  Inserted asset id
+     *
+     * @since   10.5.6
      */
     private static function insertFixtureAsset(DatabaseInterface $db, int $parentId, int $teacherId, string $rules): int
     {

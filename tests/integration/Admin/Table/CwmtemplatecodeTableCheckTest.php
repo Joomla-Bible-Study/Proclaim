@@ -15,17 +15,43 @@ use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+/**
+ * CwmtemplatecodeTable::check() requires a file name and a valid template
+ * type, and refuses a name that is restricted, unsafe or already shipped.
+ *
+ * @since  10.2.0
+ */
 #[CoversClass(CwmtemplatecodeTable::class)]
 class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
 {
+    /**
+     * The table under test.
+     *
+     * @var    CwmtemplatecodeTable
+     * @since  10.2.0
+     */
     private CwmtemplatecodeTable $table;
 
+    /**
+     * Create a fresh table for each test.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
         $this->table = $this->createTableInstance(CwmtemplatecodeTable::class);
     }
 
+    /**
+     * A record with a file name and a valid type passes.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckPassesWithValidData(): void
     {
         $this->table->filename = 'mytemplate';
@@ -33,6 +59,13 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         $this->assertTrue($this->table->check());
     }
 
+    /**
+     * A NULL file name is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenFilenameNull(): void
     {
         $this->table->filename = null;
@@ -41,6 +74,13 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * An empty file name is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenFilenameEmpty(): void
     {
         $this->table->filename = '';
@@ -49,6 +89,13 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * A file name of only whitespace is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenFilenameWhitespace(): void
     {
         $this->table->filename = '   ';
@@ -56,6 +103,15 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         $this->expectException(\UnexpectedValueException::class);
         $this->table->check();
     }
+    /**
+     * A restricted file name is refused.
+     *
+     * @param   string  $name  A restricted file name
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     #[DataProvider('restrictedFilenameProvider')]
     public function testCheckThrowsForRestrictedFilename(string $name): void
     {
@@ -67,6 +123,10 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
 
     /**
      * Restricted filenames that cannot be used for template codes.
+     *
+     * @return  array<string, array{0: string}>  Each name
+     *
+     * @since   10.2.0
      */
     public static function restrictedFilenameProvider(): array
     {
@@ -101,6 +161,10 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
 
     /**
      * Filenames that could place the layout outside its directory.
+     *
+     * @return  array<string, array{0: string}>  Each name
+     *
+     * @since   10.7.1
      */
     public static function unsafeFilenameProvider(): array
     {
@@ -133,6 +197,13 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         $this->assertTrue($this->table->check());
     }
 
+    /**
+     * Ordinary file names, which check() accepts.
+     *
+     * @return  array<string, array{0: string}>  Each name
+     *
+     * @since   10.7.1
+     */
     public static function ordinaryFilenameProvider(): array
     {
         return [
@@ -165,6 +236,13 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * The names of layouts the package ships, by template type.
+     *
+     * @return  array<string, array{0: int, 1: string}>  The template type and the shipped name
+     *
+     * @since   10.7.1
+     */
     public static function shippedFilenameProvider(): array
     {
         return [
@@ -181,6 +259,10 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
     /**
      * ⚠️ Per type. `header` ships for type 2 only, so it must stay usable for a
      * type that ships no such file -- the refusal is not global.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
      */
     public function testCheckPassesForShippedNameOfAnotherType(): void
     {
@@ -192,6 +274,10 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
     /**
      * A record that already carries the name keeps working. Its code is the
      * only copy at that path, so refusing the save would strand it.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
      */
     public function testCheckGrandfathersARecordThatAlreadyHasTheName(): void
     {
@@ -206,6 +292,10 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
     /**
      * ⚠️ The grandfather is on the *stored* name, not on having an id. Renaming
      * some other record onto a shipped name is a new collision and is refused.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
      */
     public function testCheckRefusesRenamingAnExistingRecordOntoAShippedName(): void
     {
@@ -220,6 +310,10 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
 
     /**
      * Same name, different type: still a new collision for that type.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
      */
     public function testCheckRefusesMovingAnExistingRecordOntoAShippedNameOfAnotherType(): void
     {
@@ -235,6 +329,10 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
     /**
      * ⚠️ A failed read must refuse, not grandfather -- the permissive branch is
      * the one that overwrites a shipped file.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
      */
     public function testCheckRefusesWhenTheStoredRowCannotBeRead(): void
     {
@@ -266,6 +364,10 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
 
     /**
      * A database whose loadObject() fails.
+     *
+     * @return  \Joomla\Database\DatabaseInterface  The stubbed database
+     *
+     * @since   10.7.1
      */
     private function databaseThrowing(): \Joomla\Database\DatabaseInterface
     {
@@ -277,6 +379,10 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
 
     /**
      * A query chain that survives select/from/where/bind.
+     *
+     * @return  \Joomla\Database\DatabaseDriver&\PHPUnit\Framework\MockObject\Stub  The stubbed database
+     *
+     * @since   10.7.1
      */
     private function stubDatabase(): \Joomla\Database\DatabaseDriver&\PHPUnit\Framework\MockObject\Stub
     {
@@ -298,6 +404,13 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         return $db;
     }
 
+    /**
+     * Template type 0 is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenTypeZero(): void
     {
         $this->table->filename = 'mytemplate';
@@ -306,6 +419,13 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * Template type 8 is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenTypeEight(): void
     {
         $this->table->filename = 'mytemplate';
@@ -313,6 +433,15 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         $this->expectException(\UnexpectedValueException::class);
         $this->table->check();
     }
+    /**
+     * Each valid template type passes.
+     *
+     * @param   int  $type  The template type
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     #[DataProvider('validTypeProvider')]
     public function testCheckPassesForValidTypes(int $type): void
     {
@@ -321,6 +450,13 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
         $this->assertTrue($this->table->check());
     }
 
+    /**
+     * The valid template types.
+     *
+     * @return  array<string, array{0: int}>  Each type
+     *
+     * @since   10.2.0
+     */
     public static function validTypeProvider(): array
     {
         return [

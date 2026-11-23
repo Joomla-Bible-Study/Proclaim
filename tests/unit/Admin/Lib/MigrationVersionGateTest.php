@@ -27,12 +27,17 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
+ * A migration runs only on a site updating from a version older than the
+ * migration's release.
+ *
  * @since  10.5.9
  */
 class MigrationVersionGateTest extends ProclaimTestCase
 {
     /**
-     * @return  string  The manifest script's source
+     * The install script's source.
+     *
+     * @return  string  Its source
      *
      * @since   10.5.9
      */
@@ -62,7 +67,9 @@ class MigrationVersionGateTest extends ProclaimTestCase
     }
 
     /**
-     * @return  array<string, array{0: string, 1: string, 2: bool, 3: string}>
+     * Source versions and migration releases, with whether the migration runs.
+     *
+     * @return  array<string, array{0: string, 1: string, 2: bool, 3: string}>  The source version, the migration's release, whether it runs, and why
      *
      * @since   10.5.9
      */
@@ -80,6 +87,8 @@ class MigrationVersionGateTest extends ProclaimTestCase
     }
 
     /**
+     * The gate runs a migration exactly when the source version predates it.
+     *
      * @param   string  $from   Source version
      * @param   string  $since  Migration's release
      * @param   bool    $runs   Whether it should run

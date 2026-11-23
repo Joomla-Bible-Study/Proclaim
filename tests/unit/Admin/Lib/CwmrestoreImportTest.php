@@ -18,7 +18,10 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.6.0
+ * Cwmrestore demotes and rebuilds generated columns, splits SQL exactly as
+ * core does, and classifies each statement in a restore.
+ *
+ * @since  10.6.0
  */
 class CwmrestoreImportTest extends ProclaimTestCase
 {
@@ -27,7 +30,7 @@ class CwmrestoreImportTest extends ProclaimTestCase
      * STORED generated column, a UNIQUE index spanning it, and ordinary
      * columns and indexes either side that must survive untouched.
      *
-     * @var string
+     * @var    string
      * @since 10.6.0
      */
     private const string STUDIES = <<<'SQL'
@@ -43,9 +46,11 @@ CREATE TABLE `#__bsms_studies` (
 SQL;
 
     /**
+     * A generated column is demoted so the dump's own INSERT is accepted.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('A generated column is demoted so the dump\'s own INSERT is accepted')]
     public function testGeneratedColumnIsDemoted(): void
@@ -71,9 +76,11 @@ SQL;
     }
 
     /**
+     * An index spanning the generated column stays put for the load.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('An index spanning the generated column stays put for the load')]
     public function testSpanningIndexSurvivesTheLoad(): void
@@ -125,9 +132,11 @@ SQL;
     }
 
     /**
+     * The rebuilt column carries the original expression.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('The rebuilt column carries the original expression')]
     public function testRestoredExpressionMatches(): void
@@ -199,11 +208,13 @@ SQL;
     }
 
     /**
+     * The fast splitter returns exactly what the core splitter returns.
+     *
      * @param   string  $sql  Input to split both ways
      *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('The fast splitter returns exactly what the core splitter returns')]
     #[\PHPUnit\Framework\Attributes\DataProvider('splitProvider')]
@@ -218,9 +229,11 @@ SQL;
     }
 
     /**
-     * @return  array<string, array{0: string, 1: string}>
+     * Statements a restore may meet, each with the verdict it should get.
      *
-     * @since 10.6.0
+     * @return  array<string, array{0: string, 1: string}>  The statement and its verdict
+     *
+     * @since   10.6.0
      */
     public static function statementProvider(): array
     {
@@ -261,12 +274,14 @@ SQL;
     }
 
     /**
+     * Statements are classified for what the restore should do with them.
+     *
      * @param   string  $statement  The statement to classify
      * @param   string  $expected   The verdict it should get
      *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('Statements are classified for what the restore should do with them')]
     #[\PHPUnit\Framework\Attributes\DataProvider('statementProvider')]

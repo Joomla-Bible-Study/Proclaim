@@ -45,6 +45,12 @@ use Joomla\Database\DatabaseQuery;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
+/**
+ * Deleting a template-code record named after a layout the package ships keeps
+ * that layout's file, and logs why.
+ *
+ * @since  10.7.1
+ */
 #[CoversClass(CwmtemplatecodeTable::class)]
 class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
 {
@@ -57,9 +63,11 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
     private static array $logged = [];
 
     /**
+     * Replace the logger with one that records each entry for the test to read.
+     *
      * @return  void
      *
-     * @since 10.7.1
+     * @since   10.7.1
      */
     protected function setUp(): void
     {
@@ -80,11 +88,13 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
             }
 
             /**
+             * Record the entry for the test instead of writing it anywhere.
+             *
              * @param   LogEntry  $entry  The entry to record
              *
-             * @return  bool
+             * @return  bool  True, so the entry counts as logged
              *
-             * @since 10.7.1
+             * @since   10.7.1
              */
             #[\Override]
             protected function addLogEntry(LogEntry $entry): bool
@@ -97,9 +107,11 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
     }
 
     /**
+     * Put Joomla's own logger back.
+     *
      * @return  void
      *
-     * @since 10.7.1
+     * @since   10.7.1
      */
     protected function tearDown(): void
     {

@@ -31,6 +31,8 @@ class ProclaimScriptCacheTest extends ProclaimTestCase
      * The install script's source.
      *
      * @return  string
+     *
+     * @since   10.5.1
      */
     private function script(): string
     {
@@ -45,6 +47,8 @@ class ProclaimScriptCacheTest extends ProclaimTestCase
      * name appeared twice in one sentence.
      *
      * @return  void
+     *
+     * @since   10.5.1
      */
     public function testExternalCacheNamesAreDeduplicated(): void
     {
@@ -60,6 +64,8 @@ class ProclaimScriptCacheTest extends ProclaimTestCase
      * described rather than merely present.
      *
      * @return  void
+     *
+     * @since   10.5.1
      */
     public function testDeduplicationCollapsesRepeatedPlugins(): void
     {
@@ -93,6 +99,8 @@ class ProclaimScriptCacheTest extends ProclaimTestCase
      * clean() never sees it. Joomla routes that category into the message queue.
      *
      * @return  void
+     *
+     * @since   10.5.1
      */
     public function testCacheClearFiltersItsOwnHousekeepingWarning(): void
     {
@@ -115,6 +123,8 @@ class ProclaimScriptCacheTest extends ProclaimTestCase
      * including messages from plugins reacting to the cache events, is put back.
      *
      * @return  void
+     *
+     * @since   10.5.1
      */
     public function testFilterPreservesOtherMessages(): void
     {
