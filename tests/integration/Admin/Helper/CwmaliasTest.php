@@ -47,8 +47,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(Cwmalias::class)]
 class CwmaliasTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -61,6 +74,13 @@ class CwmaliasTest extends IntegrationTestCase
         $this->db->transactionStart();
     }
 
+    /**
+     * Roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -80,6 +100,8 @@ class CwmaliasTest extends IntegrationTestCase
      * @param   string  $title  Series title
      *
      * @return  int  Inserted id
+     *
+     * @since   10.5.6
      */
     private function insertSeriesNeedingAlias(string $title): int
     {
@@ -104,6 +126,8 @@ class CwmaliasTest extends IntegrationTestCase
      * @param   string  $title  Message type title
      *
      * @return  int  Inserted id
+     *
+     * @since   10.7.4
      */
     private function insertMessageTypeNeedingAlias(string $title): int
     {
@@ -126,6 +150,8 @@ class CwmaliasTest extends IntegrationTestCase
      * @param   string  $name  Teacher name
      *
      * @return  int  Inserted id
+     *
+     * @since   10.5.6
      */
     private function insertTeacherNeedingAlias(string $name): int
     {
@@ -150,6 +176,8 @@ class CwmaliasTest extends IntegrationTestCase
      * @param   int     $id     Row id
      *
      * @return  string
+     *
+     * @since   10.5.6
      */
     private function aliasOf(string $table, int $id): string
     {
@@ -161,6 +189,14 @@ class CwmaliasTest extends IntegrationTestCase
         )->loadResult();
     }
 
+    /**
+     * updateAlias() gives the alias-less message types Faith & Works, Faith and Works and
+     * faith-and-works three distinct, non-empty aliases.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Two message types whose titles slugify identically get distinct aliases')]
     public function testCollidingTitlesGetDistinctAliases(): void
     {
@@ -189,6 +225,13 @@ class CwmaliasTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Two alias-less message types titled Romans Study get romans-study and romans-study-2.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The disambiguating suffix follows the -2, -3 convention')]
     public function testDuplicateAliasesUseNumericSuffixes(): void
     {
@@ -206,6 +249,14 @@ class CwmaliasTest extends IntegrationTestCase
         $this->assertSame(['romans-study', 'romans-study-2'], $aliases);
     }
 
+    /**
+     * An alias-less series titled Gospel of John gets gospel-of-john-2, since another series
+     * already holds gospel-of-john.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A generated alias also avoids colliding with a pre-existing row')]
     public function testGeneratedAliasAvoidsAnAlreadyStoredAlias(): void
     {
@@ -231,6 +282,14 @@ class CwmaliasTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * An alias-less teacher whose name builds another teacher's alias gets that alias with
+     * -2, and updateAlias() completes, counting at least one row.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A teacher whose slug collides with an existing alias does not abort the backfill')]
     public function testCollidingTeacherAliasDoesNotAbortTheBackfill(): void
     {
@@ -263,6 +322,14 @@ class CwmaliasTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * updateAlias() gives an alias-less series the alias built from its title, and a teacher
+     * whose name builds another teacher's alias a non-empty one.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A failure on one row does not abandon rows queued behind it')]
     public function testBackfillContinuesPastAnUnwritableRow(): void
     {
@@ -296,6 +363,13 @@ class CwmaliasTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A series titled only with punctuation gets a non-empty alias that holds its id.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A title with no transliterable characters still yields a usable alias')]
     public function testUntransliterableTitleStillGetsAnAlias(): void
     {
@@ -311,6 +385,13 @@ class CwmaliasTest extends IntegrationTestCase
         $this->assertStringContainsString((string) $id, $alias, 'The id-based fallback keeps it unique');
     }
 
+    /**
+     * updateAlias() leaves a series' existing alias as it is.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Rows that already have an alias are left untouched')]
     public function testExistingAliasesAreNotRewritten(): void
     {

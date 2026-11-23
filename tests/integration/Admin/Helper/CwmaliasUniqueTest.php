@@ -28,11 +28,27 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CwmaliasUniqueTest extends IntegrationTestCase
 {
+    /**
+     * The temporary copy of the messages table the tests write to.
+     *
+     * @var    string
+     * @since  10.7.4
+     */
     private const string TABLE = '#__zz_alias_unique_test';
 
+    /**
+     * The database. No transaction is used, since the helper's ALTER TABLE commits; the
+     * tests write only to the temporary table.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.4
+     */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database. Otherwise recreate the temporary table as an empty copy
+     * of the messages table, which takes its columns but none of its indexes.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -54,6 +70,8 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * Drop the temporary table.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -72,6 +90,10 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * Of three rows sharing an alias, the lower-id published row keeps it, the other
+     * published row gets -2 and the trashed row -3, and ensureUniqueAliases() returns those
+     * two renames in that order.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -98,6 +120,8 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * An archived row keeps the alias it shares with an older trashed row, which gets -2.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -115,6 +139,9 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * When another row already holds part-2, the duplicate of part gets part-3, and the
+     * part-2 row keeps its alias.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -134,6 +161,9 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * Rows without an alias get one built from their title, the second of two with the same
+     * title taking -2, and a row with no title gets item- and its id.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -153,6 +183,9 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * The first run renames the duplicate and adds the unique index, a second run changes
+     * nothing, and the index then refuses a duplicate alias.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -174,6 +207,9 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * A non-unique index with the unique index's name is replaced by a unique one, and the
+     * duplicate alias gets -2.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -197,7 +233,9 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
-     * @return  list<array{id: int, from: string, to: string}>
+     * Run ensureUniqueAliases() on the temporary table, building aliases from the title.
+     *
+     * @return  list<array{id: int, from: string, to: string}>  Each row whose alias changed
      *
      * @since   10.7.4
      */
@@ -207,6 +245,8 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a row into the temporary table with the given id, alias, state and title.
+     *
      * @param   int     $id         Row id
      * @param   string  $alias      Alias
      * @param   int     $published  State
@@ -234,9 +274,11 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * Read one row's alias back from the temporary table.
+     *
      * @param   int  $id  Row id
      *
-     * @return  string
+     * @return  string  The row's alias
      *
      * @since   10.7.4
      */
@@ -251,6 +293,9 @@ class CwmaliasUniqueTest extends IntegrationTestCase
     }
 
     /**
+     * The state of the unique alias index on the temporary table: unique, other when an
+     * index of that name isn't unique, or none.
+     *
      * @return  string  'unique', 'other' or 'none'
      *
      * @since   10.7.4

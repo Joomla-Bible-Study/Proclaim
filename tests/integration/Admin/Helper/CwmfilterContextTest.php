@@ -37,7 +37,11 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmfilterContextTest extends IntegrationTestCase
 {
     /**
-     * @return array<string, array{0: string, 1: string}>
+     * Filter form names, each with the list context contextFromForm() should recover.
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each form name and its context
+     *
+     * @since   10.5.6
      */
     public static function formNameProvider(): array
     {
@@ -50,8 +54,14 @@ class CwmfilterContextTest extends IntegrationTestCase
     }
 
     /**
+     * contextFromForm() returns the form's name without its trailing .filter.
+     *
      * @param   string  $formName  The filter form's name
      * @param   string  $expected  The context it should yield
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('formNameProvider')]
     #[TestDox('The list context is recovered from the filter form name')]
@@ -69,6 +79,10 @@ class CwmfilterContextTest extends IntegrationTestCase
     /**
      * Two different pages must never resolve to the same context, which is
      * precisely what the hardcoded value did.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Different pages resolve to different contexts')]
     public function testDifferentPagesDoNotShareAContext(): void
@@ -84,7 +98,12 @@ class CwmfilterContextTest extends IntegrationTestCase
     }
 
     /**
-     * @return array<string, array{0: ?Form}>
+     * Forms no context can be recovered from: none at all, one without a name, and one whose
+     * name doesn't end in .filter.
+     *
+     * @return  array<string, array{0: ?Form}>  Each form
+     *
+     * @since   10.5.6
      */
     public static function unresolvableProvider(): array
     {
@@ -101,6 +120,10 @@ class CwmfilterContextTest extends IntegrationTestCase
      * filters entirely.
      *
      * @param   ?Form  $form  Form to resolve from
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('unresolvableProvider')]
     #[TestDox('An unresolvable form falls back to the previous behaviour')]
@@ -112,6 +135,10 @@ class CwmfilterContextTest extends IntegrationTestCase
     /**
      * The helper is only useful if the dropdowns actually pass their context.
      * A field that keeps calling the two-argument form silently keeps the bug.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Every list field passes its own context')]
     public function testEveryListFieldPassesItsContext(): void
@@ -140,6 +167,10 @@ class CwmfilterContextTest extends IntegrationTestCase
     /**
      * applyCrossFilters() must accept a context; without the parameter the
      * fields above would have nowhere to pass it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('applyCrossFilters accepts a context argument')]
     public function testApplyCrossFiltersAcceptsAContext(): void

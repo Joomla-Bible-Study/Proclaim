@@ -26,9 +26,17 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CwmaliasCopyTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.4
+     */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -46,6 +54,8 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -64,7 +74,9 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
-     * @return  array<string, array{string, string}>
+     * The messages and series tables, each with its title column.
+     *
+     * @return  array<string, array{string, string}>  Each case
      *
      * @since   10.7.4
      */
@@ -77,6 +89,9 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
+     * A copy keeping the original's title and alias gets the title with (2), and an empty
+     * alias for the save to build.
+     *
      * @param   string  $table       The table
      * @param   string  $titleField  Its title column
      *
@@ -95,6 +110,8 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
+     * When a (2) copy of the original exists, the next copy gets (3) and an empty alias.
+     *
      * @param   string  $table       The table
      * @param   string  $titleField  Its title column
      *
@@ -114,6 +131,9 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
+     * When a differently titled row holds the alias (2) would build, the copy gets (3)
+     * instead.
+     *
      * @param   string  $table       The table
      * @param   string  $titleField  Its title column
      *
@@ -133,6 +153,9 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
+     * A title ending in Psalm 23 keeps its number: the copy's title gains (2), and the alias
+     * built from it is the original's with -2 added.
+     *
      * @param   string  $table       The table
      * @param   string  $titleField  Its title column
      *
@@ -154,6 +177,9 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
+     * A copy whose alias was cleared is numbered like an untouched one: its title gets (2),
+     * and its alias stays empty.
+     *
      * @param   string  $table       The table
      * @param   string  $titleField  Its title column
      *
@@ -172,6 +198,9 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
+     * A copy with a typed alias keeps it, though another row already holds it, and its
+     * unchanged title isn't numbered.
+     *
      * @param   string  $table       The table
      * @param   string  $titleField  Its title column
      *
@@ -191,6 +220,9 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
+     * A copy given a new title keeps it, and the alias copied from the original is cleared
+     * for the save to build from that title.
+     *
      * @param   string  $table       The table
      * @param   string  $titleField  Its title column
      *
@@ -224,6 +256,8 @@ class CwmaliasCopyTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published row with the given title and alias.
+     *
      * @param   string  $table       The table
      * @param   string  $titleField  Its title column
      * @param   string  $title       The row's title

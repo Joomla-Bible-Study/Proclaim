@@ -45,8 +45,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmdbHelper::class)]
 class CwmdbHelperTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -59,6 +72,13 @@ class CwmdbHelperTest extends IntegrationTestCase
         $this->db->transactionStart();
     }
 
+    /**
+     * Roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -76,6 +96,15 @@ class CwmdbHelperTest extends IntegrationTestCase
     // Finding 1 -- performDB() honours its documented bool contract
     // -------------------------------------------------------------------------
 
+    /**
+     * performDB() returns false, rather than throwing, for a query on a table that doesn't
+     * exist.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('performDB() returns false instead of throwing when the query fails')]
     public function testPerformDbReturnsFalseOnAFailingQuery(): void
     {
@@ -90,6 +119,14 @@ class CwmdbHelperTest extends IntegrationTestCase
         $this->assertFalse($result, 'A failing query must return false, not throw — see #1566');
     }
 
+    /**
+     * performDB() returns true for a query that runs.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('performDB() still returns true for a query that succeeds')]
     public function testPerformDbReturnsTrueOnSuccess(): void
     {
@@ -100,12 +137,28 @@ class CwmdbHelperTest extends IntegrationTestCase
         $this->assertTrue($result, 'A valid query must still report success');
     }
 
+    /**
+     * performDB() returns false for an empty query.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('performDB() rejects an empty query without touching the database')]
     public function testPerformDbRejectsEmptyQuery(): void
     {
         $this->assertFalse(CwmdbHelper::performDB(''));
     }
 
+    /**
+     * A failing performDB() call queues an application message.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('A failing query is reported, not silently swallowed')]
     public function testPerformDbSurfacesTheFailureToTheOperator(): void
     {
@@ -131,6 +184,13 @@ class CwmdbHelperTest extends IntegrationTestCase
     // Finding 2 -- getObjects() anchors its prefix match
     // -------------------------------------------------------------------------
 
+    /**
+     * getObjects() finds tables, and every name it returns starts with #__bsms_.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('getObjects() returns this component\'s tables, all well-formed')]
     public function testGetObjectsReturnsWellFormedProclaimTables(): void
     {
@@ -147,6 +207,14 @@ class CwmdbHelperTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * A table name that contains the site's prefix without starting with it fails the
+     * anchored prefix check, and no name getObjects() returns carries a second prefix.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A sibling install\'s table that merely contains the prefix is not matched')]
     public function testUnanchoredPrefixMatchIsRejected(): void
     {
@@ -179,6 +247,13 @@ class CwmdbHelperTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * getObjects() leaves out the legacy #__bsms_update table.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The legacy #__bsms_update table stays excluded')]
     public function testLegacyUpdateTableRemainsExcluded(): void
     {

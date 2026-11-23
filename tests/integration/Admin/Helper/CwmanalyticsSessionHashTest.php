@@ -38,13 +38,32 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmanalyticsHelper::class)]
 class CwmanalyticsSessionHashTest extends IntegrationTestCase
 {
+    /**
+     * The session id the hashes are derived from.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private const string SESSION = 'abc123sessionidentifier';
+    /**
+     * The site secret the hashes are keyed with.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private const string SECRET  = 'site-secret-value';
 
     // -------------------------------------------------------------------------
     // The rotation property
     // -------------------------------------------------------------------------
 
+    /**
+     * hashSessionForDay() gives the same session, secret and day the same hash.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The same visitor on the same day produces a stable hash')]
     public function testStableWithinADay(): void
     {
@@ -57,6 +76,10 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
 
     /**
      * The point of the change: history cannot be joined across days.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The same visitor on a different day is unlinkable')]
     public function testRotatesAcrossDays(): void
@@ -71,6 +94,13 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Two session ids hashed with the same secret on the same day give different hashes.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Different visitors on the same day differ')]
     public function testDistinctVisitorsDiffer(): void
     {
@@ -80,6 +110,14 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The hash differs from a plain SHA-256 of the session id, and from the hash made with
+     * another secret.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The digest is keyed, not a plain SHA-256 of the session id')]
     public function testIsKeyed(): void
     {
@@ -100,6 +138,13 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The hash is a 64-character hex digest that doesn't contain the session id.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The stored value never contains the raw session id')]
     public function testRawSessionIdIsNotStored(): void
     {
@@ -113,6 +158,10 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
      * An empty secret must not silently degrade to an unkeyed hash. logEvent()
      * stores NULL in that case; this pins that the derivation itself still
      * keys rather than collapsing to hash('sha256', $id).
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('An empty secret does not collapse to an unkeyed digest')]
     public function testEmptySecretDoesNotCollapseToPlainHash(): void
@@ -123,6 +172,14 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * logEvent()'s source checks for a non-empty secret, and holds no plain SHA-256 of the
+     * session id.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('logEvent leaves the hash NULL when no site secret is available')]
     public function testLogEventRefusesToWriteAnUnkeyedHash(): void
     {
@@ -155,6 +212,10 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
      *
      * Runs against a TEMPORARY table: it exists only for this connection and
      * disappears with it, so there is no path from this test to real rows.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Re-keying historical rows preserves the per-day Sessions count')]
     public function testMigrationPreservesPerDaySessionCounts(): void

@@ -34,12 +34,20 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CwmcountHelperTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
     /**
      * Skip the whole class when no live database is available.
      *
      * @return  void
+     *
+     * @since   10.3.3
      */
     protected function setUp(): void
     {
@@ -59,7 +67,11 @@ class CwmcountHelperTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened and clear the helper's count cache.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -82,6 +94,8 @@ class CwmcountHelperTest extends IntegrationTestCase
      * @param   int  $published  Published state value
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function insertStudy(int $published): void
     {
@@ -103,6 +117,15 @@ class CwmcountHelperTest extends IntegrationTestCase
         $this->db->insertObject('#__bsms_studies', $row);
     }
 
+    /**
+     * Adding one published, two unpublished, one archived and one trashed study raises the
+     * published, unpublished and archived counts by 1, 2 and 1, and the total by 4, which
+     * leaves out the trashed one.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Each published state is counted independently and exactly')]
     public function testStateCountsMatchSeededFixturesExactly(): void
     {
@@ -143,6 +166,14 @@ class CwmcountHelperTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * getCountByState() serves its cached count after an unpublished study is added, and
+     * counts that study once the cache is cleared.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The per-request cache serves the cached value until reset')]
     public function testCountIsCachedPerRequest(): void
     {
