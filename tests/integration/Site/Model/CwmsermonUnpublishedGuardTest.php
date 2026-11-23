@@ -28,31 +28,44 @@ use Joomla\Event\DispatcherInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * A sermon that fails the published filter queues a message and returns
+ * nothing, rather than throwing.
+ *
+ * @since  10.7.1
  */
 class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseInterface|null
-     * @since 10.7.1
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
-     * @var mixed
-     * @since 10.7.1
+     * Factory's language before the test replaced it to silence date warnings.
+     *
+     * @var    mixed
+     * @since  10.7.1
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
-     * @var User|null
-     * @since 10.7.1
+     * The identity before the test switched to a guest.
+     *
+     * @var    User|null
+     * @since  10.7.1
      */
     private ?User $savedIdentity = null;
 
     /**
+     * Skip without a test database. Otherwise silence date language warnings, act as a guest, and open a transaction.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -75,8 +88,12 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back, and restore the identity and language.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -98,8 +115,12 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
     }
 
     /**
+     * A sermon that fails the published filter queues a message instead of throwing.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \Exception
      */
     #[TestDox('A sermon that fails the published filter queues a message instead of throwing')]
     public function testMismatchedPublishedStateQueuesAMessage(): void
@@ -132,8 +153,11 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published study.
+     *
      * @return  int  Seeded study id.
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     private function seedStudy(): int
     {
@@ -155,8 +179,12 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
     }
 
     /**
-     * @return  CwmsermonModel
-     * @since 10.7.1
+     * A site CwmsermonModel built through the MVC factory, ignoring the request.
+     *
+     * @return  CwmsermonModel  The model under test
+     *
+     * @since   10.7.1
+     * @throws  \Exception
      */
     private function createModel(): CwmsermonModel
     {

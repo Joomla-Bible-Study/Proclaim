@@ -30,6 +30,9 @@ class CwmmediafilesControllerTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $method): string
     {
@@ -42,6 +45,15 @@ class CwmmediafilesControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * checkDeleteFiles() builds no query, parses no params and loops over no rows
+     * itself.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testCheckDeleteFilesHasNoInlineQueryOrRegistryLoop(): void
     {
         $body = self::methodBody('checkDeleteFiles');
@@ -51,6 +63,14 @@ class CwmmediafilesControllerTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/\bforeach\b/', $body, 'checkDeleteFiles() must not contain the old row-processing loop — see #1448');
     }
 
+    /**
+     * checkDeleteFiles() asks the shared helper for the files by media file id.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testCheckDeleteFilesDelegatesToSharedHelperById(): void
     {
         $body = self::methodBody('checkDeleteFiles');
@@ -67,6 +87,11 @@ class CwmmediafilesControllerTest extends ProclaimTestCase
      * is protected, so $this->getModel()->getDatabase() — present in this method since before
      * this refactor — always 500'd. Fixed alongside the dedup by fetching DatabaseInterface from
      * the container instead, matching the convention used everywhere else in this codebase.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testCheckDeleteFilesUsesContainerDatabaseNotProtectedModelMethod(): void
     {

@@ -34,19 +34,26 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     use PodcastFeedFixtures;
 
     /**
+     * The database, inside a transaction each test rolls back.
+     *
      * @var    DatabaseDriver|null
      * @since  __DEPLOY_VERSION__
      */
     private ?DatabaseDriver $db = null;
 
     /**
+     * Factory's language before the test replaced it to silence date warnings.
+     *
      * @var    mixed
      * @since  __DEPLOY_VERSION__
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
+     * Skip without a test database. Otherwise silence date language warnings, and open a transaction.
+     *
      * @return  void
+     *
      * @since   __DEPLOY_VERSION__
      */
     protected function setUp(): void
@@ -64,7 +71,10 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back, and restore the language.
+     *
      * @return  void
+     *
      * @since   __DEPLOY_VERSION__
      */
     protected function tearDown(): void
@@ -83,8 +93,14 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     }
 
     /**
+     * An undated media file is published under its message's date.
+     *
      * @return  void
+     *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
+     * @throws  \DateInvalidTimeZoneException
+     * @throws  \ReflectionException
      */
     #[TestDox('An undated media file is published under its message\'s date')]
     public function testUndatedMediaFileTakesItsMessagesDate(): void
@@ -95,8 +111,14 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     }
 
     /**
+     * A dated media file is published under its own date, not its message's.
+     *
      * @return  void
+     *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
+     * @throws  \DateInvalidTimeZoneException
+     * @throws  \ReflectionException
      */
     #[TestDox('A dated media file is published under its own date, not its message\'s')]
     public function testDatedMediaFileKeepsItsOwnDate(): void
@@ -107,7 +129,11 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     }
 
     /**
+     * With no date on the media file or its message, the episode is dated when
+     * the feed is written.
+     *
      * @return  void
+     *
      * @since   __DEPLOY_VERSION__
      */
     #[TestDox('With no date on the media file or its message, the episode is dated when the feed is written')]
@@ -134,7 +160,11 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      * has to be ordered by the date the feed gives it rather than sorted last.
      *
      * @return  void
+     *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
+     * @throws  \DateInvalidTimeZoneException
+     * @throws  \ReflectionException
      */
     #[TestDox('An undated episode is ordered by its message\'s date, so the episode limit does not cut it first')]
     public function testEpisodeLimitKeepsTheNewestUndatedEpisode(): void
@@ -184,9 +214,24 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     private function captureFeed(string $filename): string
     {
         $helper = new class () extends Cwmpodcast {
-            /** @var array<string, string> Feed XML by file name */
+            /**
+             * Feed XML by file name, as writeFile() received it.
+             *
+             * @var    array<string, string>
+             * @since  __DEPLOY_VERSION__
+             */
             public array $written = [];
 
+            /**
+             * Keep the feed instead of writing it under the site root.
+             *
+             * @param   string  $file         The feed's path
+             * @param   string  $filecontent  The feed's XML
+             *
+             * @return  bool  Always true
+             *
+             * @since   __DEPLOY_VERSION__
+             */
             public function writeFile(string $file, string $filecontent): bool
             {
                 $this->written[basename($file)] = $filecontent;
@@ -203,6 +248,8 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     }
 
     /**
+     * Every item's pubDate in a feed.
+     *
      * @param   string  $feed  Feed XML
      *
      * @return  string[]  Every item's pubDate, in feed order
@@ -217,11 +264,16 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
     }
 
     /**
+     * A stored date as the feed writes it, in the site's time zone.
+     *
      * @param   string  $stored  A UTC date as the database stores it
      *
      * @return  string  The date as the feed writes it
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
+     * @throws  \DateInvalidTimeZoneException
+     * @throws  \ReflectionException
      */
     private function feedDate(string $stored): string
     {

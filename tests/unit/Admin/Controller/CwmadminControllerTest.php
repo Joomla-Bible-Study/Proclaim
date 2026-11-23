@@ -38,6 +38,9 @@ class CwmadminControllerTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $method): string
     {
@@ -50,6 +53,14 @@ class CwmadminControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * changePlayers() delegates to the model, with no SQL or per-row loop of its own.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testChangePlayersDelegatesToModelAndHasNoRawSql(): void
     {
         $body = self::methodBody('changePlayers');
@@ -59,6 +70,14 @@ class CwmadminControllerTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/\bforeach\b/', $body, 'changePlayers() must not contain the old per-row loop — see #1443');
     }
 
+    /**
+     * changePopup() delegates to the model, with no SQL or per-row loop of its own.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testChangePopupDelegatesToModelAndHasNoRawSql(): void
     {
         $body = self::methodBody('changePopup');
@@ -68,6 +87,14 @@ class CwmadminControllerTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/\bforeach\b/', $body, 'changePopup() must not contain the old per-row loop — see #1443');
     }
 
+    /**
+     * mediaimages() delegates to the model, with no switch of its own.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testMediaimagesDelegatesToModelAndHasNoSwitchStatement(): void
     {
         $body = self::methodBody('mediaimages');
@@ -81,6 +108,11 @@ class CwmadminControllerTest extends ProclaimTestCase
      * payload was decoded with json_decode(..., true, ...) (associative
      * array) while every switch branch read it via `->` property access.
      * See CwmadminModelTest::testResolveMatcherWorksAgainstRealJsonDecodedObject().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testMediaimagesDecodesPayloadAsObjectNotArray(): void
     {
@@ -93,6 +125,14 @@ class CwmadminControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * changePlayersXHR() delegates to the model, without repeating the model's batch SQL.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testChangePlayersXHRDelegatesToModelAndHasNoDuplicateSql(): void
     {
         $body = self::methodBody('changePlayersXHR');
@@ -101,6 +141,14 @@ class CwmadminControllerTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/REPLACE\(/', $body, 'changePlayersXHR() must not duplicate the batch SQL now owned by the Model — see #1443');
     }
 
+    /**
+     * changePopupXHR() delegates to the model, without repeating the model's batch SQL.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testChangePopupXHRDelegatesToModelAndHasNoDuplicateSql(): void
     {
         $body = self::methodBody('changePopupXHR');
@@ -119,6 +167,11 @@ class CwmadminControllerTest extends ProclaimTestCase
      * that only exists inside the JSON params blob, never a real column on
      * #__bsms_mediafiles — so any request whose mangled value got past the
      * "=== 0" guard still threw a DB error ("Unknown column 'media_image'").
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testChangePlayerByMediaTypeXHRReadsMediatypeAsAString(): void
     {
@@ -138,6 +191,15 @@ class CwmadminControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * changePlayerByMediaTypeXHR() does not query media_image as a column: it is a
+     * key in the params JSON.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testChangePlayerByMediaTypeXHRDoesNotQueryMediaImageAsAColumn(): void
     {
         $body = self::methodBody('changePlayerByMediaTypeXHR');
@@ -157,6 +219,11 @@ class CwmadminControllerTest extends ProclaimTestCase
      * can still have 'audio/mp3' stored, and MimeTypeField keeps a
      * stored-but-no-longer-offered value selectable. A whitelist check would
      * have silently broken matching for exactly those records.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testChangePlayerByMediaTypeXHRDoesNotRejectUnrecognizedMimetypes(): void
     {

@@ -49,7 +49,11 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmsermonCommentSubmissionTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database. The comment table's store would commit a transaction, so tests
+     * use none and tearDown deletes their comments by hand.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.8
      */
     private ?DatabaseDriver $db = null;
 
@@ -57,21 +61,33 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
      * Comment rows created by a test.
      *
      * @var  int[]
+     * @since  10.5.8
      */
     private array $comments = [];
 
     /**
-     * @var  object|null
+     * Cwmparams' cached template before the test seeded its own.
+     *
+     * @var    object|null
+     * @since  10.5.8
      */
     private ?object $savedTemplate = null;
 
     /**
-     * @var  bool
+     * Whether Cwmparams had a cached template before the test.
+     *
+     * @var    bool
+     * @since  10.5.8
      */
     private bool $hadTemplate = false;
 
     /**
+     * Skip without a test database. Otherwise remember Cwmparams' cached template,
+     * which the tests replace.
+     *
      * @return  void
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -93,7 +109,11 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
     }
 
     /**
+     * Delete the comments the test stored, and put back any template Cwmparams had cached.
+     *
      * @return  void
+     *
+     * @since   10.5.8
      */
     protected function tearDown(): void
     {
@@ -116,6 +136,11 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
     /**
      * The exploit, as a test: the request asks to be published, the template
      * says hold, and the template wins.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     #[TestDox('a comment claiming published=1 is still held when the template holds comments')]
     public function testRequestCannotSelfApprove(): void
@@ -126,6 +151,14 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
         self::assertSame(0, $this->storedState(), 'A visitor must not be able to approve their own comment.');
     }
 
+    /**
+     * Omitting published does not publish.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
+     */
     #[TestDox('omitting published does not publish')]
     public function testOmittingPublishedDoesNotPublish(): void
     {
@@ -135,6 +168,14 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
         self::assertSame(0, $this->storedState(), 'The old default of 1 published whenever the field was absent.');
     }
 
+    /**
+     * A template that auto-approves publishes the comment, whatever the request says.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
+     */
     #[TestDox('a template that auto-approves still auto-approves')]
     public function testAutoApproveIsPreserved(): void
     {
@@ -146,6 +187,11 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
 
     /**
      * Fail closed: an unreadable or unset setting must hold, not publish.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     #[TestDox('an unset comment_publish holds the comment')]
     public function testUnsetSettingHolds(): void
@@ -158,6 +204,11 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
 
     /**
      * The date is recorded by the server, not asked for.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     #[TestDox('comment_date is set server-side, not taken from the request')]
     public function testCommentDateIsNotTakenFromTheRequest(): void
@@ -175,9 +226,15 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
     }
 
     /**
+     * Cache a template with this comment_publish setting, and point the request at
+     * it.
+     *
      * @param   int|null  $publish  comment_publish value, or null to leave it unset
      *
      * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     private function seedTemplate(?int $publish): void
     {
@@ -199,9 +256,15 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
     }
 
     /**
+     * Submit a comment through storecomment() with these request values, and
+     * remember its id.
+     *
      * @param   array  $extra  Request values a visitor could control
      *
      * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     private function postComment(array $extra): void
     {
@@ -226,7 +289,11 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
     }
 
     /**
+     * Read back the published state of the latest stored comment.
+     *
      * @return  int  The published state of the comment this test just stored
+     *
+     * @since   10.5.8
      */
     private function storedState(): int
     {
@@ -238,7 +305,12 @@ class CwmsermonCommentSubmissionTest extends IntegrationTestCase
     }
 
     /**
-     * @return  CwmsermonModel
+     * A site CwmsermonModel built through the MVC factory, ignoring the request.
+     *
+     * @return  CwmsermonModel  The model under test
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     private function createModel(): CwmsermonModel
     {

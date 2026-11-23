@@ -37,17 +37,30 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
 {
     /**
-     * @var  Cwmlisting|null
+     * The listing helper under test.
+     *
+     * @var    Cwmlisting|null
+     * @since  10.5.6
      */
     private ?Cwmlisting $listing = null;
 
     /**
-     * @var  mixed
+     * Factory's language before the test replaced it to silence date warnings.
+     *
+     * @var    mixed
+     * @since  10.5.6
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
+     * Skip without a test database. Otherwise silence date language warnings, load
+     * the component's language so book names render as text, and create the listing
+     * helper.
+     *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -70,7 +83,11 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
     }
 
     /**
+     * Restore the language.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -100,6 +117,8 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
      * @param   array  $overrides  Column overrides.
      *
      * @return  object
+     *
+     * @since   10.5.6
      */
     private function legacyRow(array $overrides = []): object
     {
@@ -157,6 +176,8 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
      * while verifying nothing.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function requireJoinLayout(): void
     {
@@ -168,6 +189,13 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * A single reference renders its book and chapter.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A single reference renders its book and chapter')]
     public function testSingleReferenceRenders(): void
     {
@@ -186,6 +214,8 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
      * what stops rows carrying a name.
      *
      * @return  void
+     *
+     * @since   10.5.7
      */
     #[TestDox('A row with no bookname resolves the name from its book number')]
     public function testBookNameIsResolvedWhenTheRowCarriesNone(): void
@@ -208,6 +238,13 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Chapters-only and with-verses modes render differently.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Chapters-only and with-verses modes render differently')]
     public function testShowVersesChangesTheOutput(): void
     {
@@ -224,12 +261,26 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
         $this->assertStringContainsString('16', $withVerses, 'The verse must appear in verse mode');
     }
 
+    /**
+     * An empty second reference renders nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('An empty second reference renders nothing')]
     public function testEmptySecondReferenceRendersNothing(): void
     {
         $this->assertSame('', $this->listing->getScripture($this->params(), $this->legacyRow(), 0, 2));
     }
 
+    /**
+     * A populated second reference renders on its own.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A populated second reference renders on its own')]
     public function testSecondReferenceRenders(): void
     {
@@ -245,6 +296,13 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
         $this->assertSame('Romans 5', $out);
     }
 
+    /**
+     * A row with no book at all renders nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A row with no book at all renders nothing')]
     public function testNoBookRendersNothing(): void
     {
@@ -253,6 +311,13 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
         $this->assertSame('', $this->listing->getScripture($this->params(), $row, 0, 1));
     }
 
+    /**
+     * Both references render individually, ready to be joined.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('Both legacy references render individually, ready to be joined')]
     public function testBothReferencesRender(): void
     {
@@ -278,6 +343,10 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
      * populated and falls back to the flat columns otherwise, so the seam the
      * refactor moves through exists today. If the two branches render the same
      * data differently, converting the read paths silently changes the site.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
 
     #[TestDox('Multiple references are joined into one string')]
@@ -313,6 +382,13 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The junction renders more than two references, joined into one string.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The junction branch can express more references than the flat columns can hold')]
     public function testJunctionCarriesMoreThanTwoReferences(): void
     {
@@ -340,6 +416,13 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * An unparsed junction reference falls back to its raw text.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('An unparsed junction reference falls back to its raw text')]
     public function testUnparsedJunctionReferenceUsesRawText(): void
     {
