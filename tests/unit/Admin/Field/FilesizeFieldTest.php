@@ -38,6 +38,13 @@ use Joomla\CMS\Form\Field\TextField;
  */
 class FilesizeFieldTest extends ProclaimTestCase
 {
+    /**
+     * FilesizeField extends TextField, so its input renders through core's layout.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testExtendsTextFieldInsteadOfHandBuildingTheInput(): void
     {
         $this->assertTrue(
@@ -47,6 +54,13 @@ class FilesizeFieldTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * getInput() delegates to the parent rather than concatenating attributes.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testGetInputDelegatesToParentRatherThanConcatenatingAttributes(): void
     {
         $ref   = new \ReflectionMethod(FilesizeField::class, 'getInput');

@@ -26,6 +26,14 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class SpanOptionsFieldTest extends ProclaimTestCase
 {
+    /**
+     * The None option's value is the number zero.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testNoneOptionHasNumericZeroValue(): void
     {
         $field = (new \ReflectionClass(SpanOptionsField::class))->newInstanceWithoutConstructor();

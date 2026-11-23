@@ -15,6 +15,9 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
+ * Writable API resources record their changes in the action log, under an
+ * entity name that has a language key.
+ *
  * @since  10.3.4
  */
 class ApiActionLogTest extends ProclaimTestCase
@@ -22,7 +25,9 @@ class ApiActionLogTest extends ProclaimTestCase
     /**
      * Writable controllers and the entity type each logs under.
      *
-     * @return array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>
+     *
+     * @since   10.3.4
      */
     public static function writableControllerProvider(): array
     {
@@ -99,6 +104,10 @@ class ApiActionLogTest extends ProclaimTestCase
     /**
      * The API uses the same key family as the admin UI — one taxonomy, not a
      * parallel API one.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testUsesUnifiedKeyFamily(): void
     {
@@ -117,6 +126,10 @@ class ApiActionLogTest extends ProclaimTestCase
     /**
      * Origin is derived centrally, never passed by a caller — otherwise a call
      * site could mislabel where a change came from.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testOriginIsDerivedNotPassed(): void
     {
@@ -140,6 +153,10 @@ class ApiActionLogTest extends ProclaimTestCase
      * {origin} is free text, translated at write time, and the action log only
      * filters by `extension` — so an API change must also carry a structural,
      * filterable signal, not just a human-readable one.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
      */
     public function testLogUsesAFilterableContextNotAHardcodedExtension(): void
     {
@@ -169,6 +186,10 @@ class ApiActionLogTest extends ProclaimTestCase
      * API writes get a dotted sub-extension so they can be isolated by a saved
      * search or SQL query; other origins keep the plain extension every
      * existing row already uses.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
      */
     public function testApiContextUsesJoomlasDottedExtensionConvention(): void
     {
@@ -195,6 +216,10 @@ class ApiActionLogTest extends ProclaimTestCase
      * The control panel's "Recent Activity" link filters on the plain
      * extension — it must keep matching API rows via the list model's prefix
      * LIKE, or splitting the context would silently hide API activity from it.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
      */
     public function testCpanelActivityLinkStillUsesThePlainExtension(): void
     {
@@ -233,6 +258,10 @@ class ApiActionLogTest extends ProclaimTestCase
 
     /**
      * Every message key and origin label the code references must exist.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testUnifiedKeysExistInLanguageFile(): void
     {
@@ -252,6 +281,10 @@ class ApiActionLogTest extends ProclaimTestCase
     /**
      * The shared messages must actually render the origin, or unifying the family
      * would have thrown away the ability to tell an API change from a UI one.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testUnifiedMessagesRenderOrigin(): void
     {
@@ -275,6 +308,10 @@ class ApiActionLogTest extends ProclaimTestCase
     /**
      * Content changes are logged once. The operational logger must not also record
      * successful writes, or an audit would show every change twice.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testOperationalLoggerDoesNotDuplicateContentChanges(): void
     {
@@ -305,6 +342,10 @@ class ApiActionLogTest extends ProclaimTestCase
      * then attempted something their account is not permitted to do. Failed
      * authentication is deliberately NOT logged — an anonymous bad key is
      * unbounded noise and the web server access log already has it.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testDeniedActionsAreLogged(): void
     {
@@ -331,6 +372,10 @@ class ApiActionLogTest extends ProclaimTestCase
 
     /**
      * A refusal must still reach the caller as a 403 — logging never swallows it.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testDeniedActionsRethrow(): void
     {
@@ -349,6 +394,8 @@ class ApiActionLogTest extends ProclaimTestCase
      * @param   string  $verb  Method name (add/edit/delete)
      *
      * @return  string
+     *
+     * @since   10.5.6
      */
     private static function verbBody(string $verb): string
     {
@@ -367,6 +414,10 @@ class ApiActionLogTest extends ProclaimTestCase
     /**
      * Refusals are operational logging, not audit entries — nothing changed, so
      * there is nothing to audit.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testDeniedActionsDoNotWriteToTheActionLog(): void
     {

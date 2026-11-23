@@ -28,7 +28,12 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 class TemplateListFieldTest extends ProclaimTestCase
 {
     /**
-     * @return void
+     * Clear the field's shared static cache, so each test starts from nothing a
+     * previous test or request left behind.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -73,7 +78,11 @@ class TemplateListFieldTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * Each instance keeps its own XML options, though the cache is shared.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testEachInstanceKeepsItsOwnXmlOptions(): void
     {

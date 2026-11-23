@@ -27,7 +27,9 @@ class ColorPickerFieldTest extends ProclaimTestCase
      * interpolated unescaped into two value="..." attributes (the
      * <input type="color"> and the hex text input).
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testHexValueIsEscapedBeforeInterpolation(): void
     {
@@ -51,7 +53,9 @@ class ColorPickerFieldTest extends ProclaimTestCase
      * bypassing WebAssetManager. Now registered via
      * WebAssetManager::addInlineStyle()/addInlineScript() instead.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testStylesAndScriptAreRegisteredViaWebAssetManagerNotRawTags(): void
     {
@@ -106,7 +110,9 @@ class ColorPickerFieldTest extends ProclaimTestCase
      * test suite's CLI application has no Document/WebAssetManager to
      * invoke the real registration against.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testStylesAndScriptContentIsUnchanged(): void
     {

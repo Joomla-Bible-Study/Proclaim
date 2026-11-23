@@ -36,7 +36,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class PredefinedOptionsFieldsTest extends ProclaimTestCase
 {
     /**
-     * @return array<string, array{0: class-string, 1: array<string, string>}>
+     * The predefined-options fields checked, each with a sample of its options.
+     *
+     * @return  array<string, array{0: class-string, 1: array<string, string>}>  The field class and a sample of value => language-key pairs
+     *
+     * @since   10.5.6
      */
     public static function fieldProvider(): array
     {
@@ -63,8 +67,14 @@ class PredefinedOptionsFieldsTest extends ProclaimTestCase
     }
 
     /**
+     * The field extends PredefinedlistField and keeps its options.
+     *
      * @param   class-string           $fieldClass       The field class under test.
      * @param   array<string, string>  $expectedOptions  A representative sample of value => language-key pairs.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('fieldProvider')]
     public function testFieldExtendsPredefinedlistFieldAndKeepsItsOptions(string $fieldClass, array $expectedOptions): void
@@ -113,7 +123,9 @@ class PredefinedOptionsFieldsTest extends ProclaimTestCase
      * options to an allowlist of keys -- core's PredefinedlistField has
      * supported it since 4.0.0.
      *
-     * @return array<string, array{0: array<int, string>, 1: array<string, string>}>
+     * @return  array<string, array{0: array<int, string>, 1: array<string, string>}>
+     *
+     * @since   10.7.3
      */
     public static function optionsFilterProvider(): array
     {
@@ -130,8 +142,14 @@ class PredefinedOptionsFieldsTest extends ProclaimTestCase
     }
 
     /**
+     * An optionsFilter allowlist reproduces the subset a retired field offered.
+     *
      * @param   array<int, string>     $filter           The optionsFilter allowlist.
      * @param   array<string, string>  $expectedOptions  The exact value => language-key set the filter must produce.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
      */
     #[DataProvider('optionsFilterProvider')]
     public function testOptionsFilterReproducesTheRetiredFieldsSubsets(array $filter, array $expectedOptions): void
@@ -167,7 +185,11 @@ class PredefinedOptionsFieldsTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * FilesizeField extends FormField, not a list field.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testFilesizeFieldExtendsFormFieldNotListField(): void
     {

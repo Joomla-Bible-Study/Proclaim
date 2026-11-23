@@ -33,7 +33,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class ApiControllerBoilerplateTest extends ProclaimTestCase
 {
     /**
-     * @return array<string, array{0: class-string, 1: string}>
+     * The API controllers checked here, each with its content type.
+     *
+     * @return  array<string, array{0: class-string, 1: string}>  The controller class and its content type
+     *
+     * @since   10.5.6
      */
     public static function controllerProvider(): array
     {
@@ -46,6 +50,16 @@ class ApiControllerBoilerplateTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * Each controller extends Joomla's ApiController.
+     *
+     * @param   string  $class        The controller's class name
+     * @param   string  $contentType  Its content type
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[DataProvider('controllerProvider')]
     public function testExtendsApiController(string $class, string $contentType): void
     {
@@ -55,6 +69,17 @@ class ApiControllerBoilerplateTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Each controller declares its content type.
+     *
+     * @param   string  $class        The controller's class name
+     * @param   string  $contentType  Its content type
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('controllerProvider')]
     public function testContentType(string $class, string $contentType): void
     {
@@ -63,6 +88,17 @@ class ApiControllerBoilerplateTest extends ProclaimTestCase
         $this->assertEquals($contentType, $prop->getDefaultValue());
     }
 
+    /**
+     * Each controller's default view is its content type.
+     *
+     * @param   string  $class        The controller's class name
+     * @param   string  $contentType  Its content type
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('controllerProvider')]
     public function testDefaultView(string $class, string $contentType): void
     {
@@ -71,6 +107,17 @@ class ApiControllerBoilerplateTest extends ProclaimTestCase
         $this->assertEquals($contentType, $prop->getDefaultValue());
     }
 
+    /**
+     * Each controller has a public displayList().
+     *
+     * @param   string  $class        The controller's class name
+     * @param   string  $contentType  Its content type
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('controllerProvider')]
     public function testDisplayListMethodExists(string $class, string $contentType): void
     {
@@ -78,6 +125,18 @@ class ApiControllerBoilerplateTest extends ProclaimTestCase
         $this->assertTrue($ref->isPublic());
     }
 
+    /**
+     * Each controller's displayList() limits the list to published and archived
+     * items.
+     *
+     * @param   string  $class        The controller's class name
+     * @param   string  $contentType  Its content type
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('controllerProvider')]
     public function testDisplayListSetsPublishedFilter(string $class, string $contentType): void
     {

@@ -24,6 +24,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class TeachersControllerTest extends ProclaimTestCase
 {
+    /**
+     * getModel() maps the teachers content type to Cwmteachers.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testGetModelNameMapping(): void
     {
         $ref    = new \ReflectionMethod(TeachersController::class, 'getModel');
@@ -33,12 +40,26 @@ class TeachersControllerTest extends ProclaimTestCase
         $this->assertStringContainsString("'teacher'  => 'Cwmteacher'", $source);
     }
 
+    /**
+     * preprocessSaveData() exists and is protected.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testPreprocessSaveDataExists(): void
     {
         $ref = new \ReflectionMethod(TeachersController::class, 'preprocessSaveData');
         $this->assertTrue($ref->isProtected());
     }
 
+    /**
+     * preprocessSaveData() defaults image to an empty string.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testPreprocessDefaultsImage(): void
     {
         $source = file_get_contents((new \ReflectionClass(TeachersController::class))->getFileName());

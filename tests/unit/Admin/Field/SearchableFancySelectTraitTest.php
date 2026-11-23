@@ -30,7 +30,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class SearchableFancySelectTraitTest extends ProclaimTestCase
 {
     /**
-     * @return array<string, array{0: class-string}>
+     * The fields that use the searchable fancy-select trait.
+     *
+     * @return  array<string, array{0: class-string}>  Each field's class
+     *
+     * @since   10.7.3
      */
     public static function fieldProvider(): array
     {
@@ -41,6 +45,15 @@ class SearchableFancySelectTraitTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * The field uses SearchableFancySelectTrait rather than a copy of its own.
+     *
+     * @param   string  $fieldClass  The field's class name
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     #[DataProvider('fieldProvider')]
     public function testFieldUsesTheSharedTrait(string $fieldClass): void
     {
@@ -51,6 +64,16 @@ class SearchableFancySelectTraitTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The field's setup() leaves the layout switching to the trait.
+     *
+     * @param   string  $fieldClass  The field's class name
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \ReflectionException
+     */
     #[DataProvider('fieldProvider')]
     public function testSetupNoLongerDuplicatesTheLayoutSwitchingLogic(string $fieldClass): void
     {
@@ -74,6 +97,13 @@ class SearchableFancySelectTraitTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The trait applies the fancy-select layout only when searchable is true.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testTraitAppliesTheLayoutOnlyWhenSearchableIsTrue(): void
     {
         $ref   = new \ReflectionMethod(SearchableFancySelectTrait::class, 'applySearchableFancySelect');
