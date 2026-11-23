@@ -28,7 +28,9 @@ class CwmplaylistControllerTest extends ProclaimTestCase
      * non-admin editor in a multi-campus install edit any playlist regardless
      * of its access level.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testUsesMultiCampusAccessTrait(): void
     {
@@ -40,7 +42,12 @@ class CwmplaylistControllerTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * The controller's access table is the playlists table.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testAccessTableIsSet(): void
     {
@@ -55,7 +62,9 @@ class CwmplaylistControllerTest extends ProclaimTestCase
      * allowEdit() must actually call into the trait's access-level check, not
      * just declare `use MultiCampusAccessTrait;` without wiring it up.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testAllowEditCallsAccessLevelCheck(): void
     {

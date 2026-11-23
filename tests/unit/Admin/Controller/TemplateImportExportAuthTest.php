@@ -35,6 +35,9 @@ class TemplateImportExportAuthTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.7.2
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $method): string
     {
@@ -44,6 +47,15 @@ class TemplateImportExportAuthTest extends ProclaimTestCase
         return implode('', \array_slice($lines, $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1));
     }
 
+    /**
+     * templateImport() requires core.create on the templatecode section before
+     * reading the upload.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('templateImport requires core.create on the templatecode section before reading the upload')]
     public function testImportGatedBeforeFileRead(): void
     {
@@ -57,6 +69,15 @@ class TemplateImportExportAuthTest extends ProclaimTestCase
         $this->assertLessThan($read, $gate, 'The permission check must run before the file is read.');
     }
 
+    /**
+     * templateExport() requires core.edit on the templatecode section before
+     * reading the request.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('templateExport requires core.edit on the templatecode section before reading the request')]
     public function testExportGatedBeforeWork(): void
     {
@@ -70,6 +91,14 @@ class TemplateImportExportAuthTest extends ProclaimTestCase
         $this->assertLessThan($work, $gate, 'The permission check must run before the export work.');
     }
 
+    /**
+     * The gate authorises against the templatecode section asset.
+     *
+     * @return  void
+     *
+     * @since   10.7.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('The gate authorises against the templatecode section asset')]
     public function testGateChecksTheSectionAsset(): void
     {

@@ -36,32 +36,44 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * A study with two teachers appears once in the listing, named by its primary
+ * teacher, and both teachers stay readable from the junction.
+ *
+ * @since  10.5.8
  */
 #[CoversClass(CwmsermonsModel::class)]
 class CwmsermonsMultiTeacherTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseDriver|null
-     * @since 10.5.8
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var int
-     * @since 10.5.8
+     * The id of the two-teacher fixture study.
+     *
+     * @var    int
+     * @since  10.5.8
      */
     private int $studyId = 0;
 
     /**
-     * @var int[]
-     * @since 10.5.8
+     * The fixture study's teachers, primary first.
+     *
+     * @var    int[]
+     * @since  10.5.8
      */
     private array $teacherIds = [];
 
     /**
+     * Skip without a test database. Otherwise open a transaction, and clear the study-teacher cache.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -78,8 +90,11 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
     }
 
     /**
+     * Clear the study-teacher cache, and roll back.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function tearDown(): void
     {
@@ -98,7 +113,8 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
      * A published, publicly visible study taught by two people.
      *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function studyWithTwoTeachers(): void
     {
@@ -155,7 +171,9 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
      * Build a real site sermons model through a component MVCFactory.
      *
      * @return  CwmsermonsModel
-     * @since 10.5.8
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     private function createModel(): CwmsermonsModel
     {
@@ -185,7 +203,10 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
      * How many rows the real listing query returns for the fixture study.
      *
      * @return  int
-     * @since 10.5.8
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     * @throws  \Exception
      */
     private function listingRowsForFixture(): int
     {
@@ -200,6 +221,15 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
         return \count($this->silenced(fn () => $this->db->setQuery($query)->loadObjectList()) ?: []);
     }
 
+    /**
+     * A two-teacher study appears once in the listing, not once per teacher.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('a two-teacher study appears once in the listing, not once per teacher')]
     public function testTwoTeachersDoNotDuplicateTheStudy(): void
     {
@@ -213,6 +243,15 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The teacher join is pinned to a single junction row.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('the teacher join is pinned to a single junction row')]
     public function testTheTeacherJoinIsPinnedToOneRow(): void
     {
@@ -232,6 +271,13 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Both teachers are readable from the junction, in order.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('both teachers are readable from the junction, in order')]
     public function testBothTeachersAreReadable(): void
     {
@@ -247,6 +293,15 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The listing names the primary teacher, not the second.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('the listing names the primary teacher, not the second')]
     public function testTheListingNamesThePrimary(): void
     {

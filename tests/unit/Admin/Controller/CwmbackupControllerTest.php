@@ -27,6 +27,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class CwmbackupControllerTest extends ProclaimTestCase
 {
+    /**
+     * The controller's source file.
+     *
+     * @return  string  Its contents
+     *
+     * @since   10.5.6
+     */
     private static function fileSource(): string
     {
         $reflection = new \ReflectionClass(CwmbackupController::class);
@@ -34,6 +41,16 @@ class CwmbackupControllerTest extends ProclaimTestCase
         return file_get_contents($reflection->getFileName());
     }
 
+    /**
+     * The source of one of the controller's methods.
+     *
+     * @param   string  $method  The method name
+     *
+     * @return  string  Its source lines
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private static function methodBody(string $method): string
     {
         $reflection = new \ReflectionMethod(CwmbackupController::class, $method);
@@ -45,6 +62,13 @@ class CwmbackupControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * CwmbackupController extends BaseController, not FormController.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testExtendsBaseControllerNotFormController(): void
     {
         $reflection = new \ReflectionClass(CwmbackupController::class);
@@ -56,6 +80,13 @@ class CwmbackupControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * register_shutdown_function() appears once in the controller, in the shared helper.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testRegisterShutdownFunctionAppearsExactlyOnce(): void
     {
         $count = substr_count(self::fileSource(), 'register_shutdown_function(');
@@ -67,6 +98,17 @@ class CwmbackupControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Each long-running XHR method registers the fatal-error handler through the
+     * shared helper.
+     *
+     * @param   string  $method  The XHR method
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('xhrMethodsProvider')]
     public function testXhrMethodDelegatesToSharedShutdownHandler(string $method): void
     {
@@ -80,6 +122,13 @@ class CwmbackupControllerTest extends ProclaimTestCase
         $this->assertStringNotContainsString('register_shutdown_function(', $body);
     }
 
+    /**
+     * The XHR methods that register the fatal-error handler.
+     *
+     * @return  array<string, array{string}>  Each method's name
+     *
+     * @since   10.5.6
+     */
     public static function xhrMethodsProvider(): array
     {
         return [

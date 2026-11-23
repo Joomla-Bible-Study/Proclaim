@@ -26,6 +26,13 @@ use Joomla\CMS\MVC\Controller\FormController;
  */
 class CwmcpanelControllerTest extends ProclaimTestCase
 {
+    /**
+     * CwmcpanelController extends BaseController, not FormController.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testExtendsBaseControllerNotFormController(): void
     {
         $this->assertTrue(

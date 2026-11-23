@@ -36,7 +36,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmsermonsModuleStateTest extends IntegrationTestCase
 {
     /**
-     * @var  \Joomla\Database\DatabaseDriver|null
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    \Joomla\Database\DatabaseDriver|null
+     * @since  10.5.6
      */
     private ?\Joomla\Database\DatabaseDriver $db = null;
 
@@ -44,6 +47,8 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      * Open a transaction so seeded studies roll back.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -58,7 +63,11 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the seeded studies.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -77,6 +86,8 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      * Insert a published, publicly-visible study the module query will match.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function insertPublishedStudy(): void
     {
@@ -110,6 +121,9 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      * a real driver to build and run its list query.
      *
      * @return  CwmsermonsModel
+     *
+     * @since   10.3.3
+     * @throws  \Exception
      */
     private function createModel(): CwmsermonsModel
     {
@@ -138,6 +152,9 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      * @param   CwmsermonsModel  $model  Configured model
      *
      * @return  string  The query cast to string
+     *
+     * @since   10.3.3
+     * @throws  \ReflectionException
      */
     private function listQuerySql(CwmsermonsModel $model): string
     {
@@ -155,6 +172,8 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      * @param   CwmsermonsModel  $model  Configured model
      *
      * @return  array
+     *
+     * @since   10.3.3
      */
     private function items(CwmsermonsModel $model): array
     {
@@ -173,6 +192,8 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      * @param   callable  $fn  Callback to run
      *
      * @return  mixed  The callback's return value
+     *
+     * @since   10.3.3
      */
     private function silenced(callable $fn): mixed
     {
@@ -193,6 +214,8 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      * @param   array  $overrides  Module param key => value pairs
      *
      * @return  Registry
+     *
+     * @since   10.3.3
      */
     private function moduleParams(array $overrides = []): Registry
     {
@@ -211,6 +234,8 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      * triggered the bug.
      *
      * @return  Registry
+     *
+     * @since   10.3.3
      */
     private function unsetFilterParams(): Registry
     {
@@ -224,6 +249,14 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
         ]);
     }
 
+    /**
+     * setModuleState() maps module params to m-prefixed state keys.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
+     */
     #[TestDox('setModuleState maps module params to m-prefixed state keys')]
     public function testSetModuleStateMapsParams(): void
     {
@@ -242,6 +275,15 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
         $this->assertSame(5, $model->getState('list.limit'), 'moduleitems should set list.limit');
     }
 
+    /**
+     * An empty-string teacher param adds no EXISTS filter subquery.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
+     * @throws  \ReflectionException
+     */
     #[TestDox('Empty-string teacher param adds no EXISTS filter subquery (regression)')]
     public function testEmptyTeacherParamAddsNoExists(): void
     {
@@ -258,6 +300,15 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
         $this->assertStringNotContainsString('EXISTS', $sql, 'Empty teacher param must not add an EXISTS subquery');
     }
 
+    /**
+     * A real teacher param adds an EXISTS filter subquery.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
+     * @throws  \ReflectionException
+     */
     #[TestDox('A real teacher param does add an EXISTS filter subquery')]
     public function testValidTeacherParamAddsExists(): void
     {
@@ -269,6 +320,14 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
         $this->assertStringContainsString('EXISTS', $sql, 'Valid teacher param should add an EXISTS subquery');
     }
 
+    /**
+     * Empty-string filter params return the same items as no filters.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
+     */
     #[TestDox('Empty-string filter params return the same items as no filters (regression)')]
     public function testEmptyParamsDoNotFilterEverythingOut(): void
     {
@@ -360,6 +419,14 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
         return ['teacher' => $teacherId, 'title' => $title];
     }
 
+    /**
+     * A teacher module param lists only that teacher's studies.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('A teacher module param lists only that teacher\'s studies')]
     public function testTeacherParamKeepsOnlyThatTeachersStudies(): void
     {
@@ -378,6 +445,14 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
         $this->assertNotContains($other['title'], $titles);
     }
 
+    /**
+     * getItems() returns an array for default module params without throwing.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
+     */
     #[TestDox('getItems returns an array for default module params without throwing')]
     public function testGetItemsReturnsArray(): void
     {

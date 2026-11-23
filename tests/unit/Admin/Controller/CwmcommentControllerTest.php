@@ -27,7 +27,9 @@ class CwmcommentControllerTest extends ProclaimTestCase
      * but there is no CommentModel — only CwmcommentModel, matching the
      * Cwm-prefixed naming every other controller in this codebase uses.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testBatchResolvesRealModelName(): void
     {

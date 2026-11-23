@@ -48,6 +48,12 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmJsonResponseTraitTest extends ProclaimTestCase
 {
+    /**
+     * The controllers that send their JSON responses through CwmJsonResponseTrait.
+     *
+     * @var    list<class-string>
+     * @since  10.5.6
+     */
     private const CONSUMERS = [
         CwmassetsController::class,
         CwmlocationwizardController::class,
@@ -56,6 +62,14 @@ class CwmJsonResponseTraitTest extends ProclaimTestCase
         CwmbackupController::class,
     ];
 
+    /**
+     * sendJsonResponse() is declared exactly once across admin, site and api: in
+     * CwmJsonResponseTrait.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testExactlyOneSendJsonResponseDeclarationExistsRepoWide(): void
     {
         $root = \dirname(__DIR__, 4);
@@ -88,6 +102,13 @@ class CwmJsonResponseTraitTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Each of the five consumer controllers uses CwmJsonResponseTrait.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testAllFiveFormerlyDuplicatedControllersUseTheTrait(): void
     {
         foreach (self::CONSUMERS as $class) {
@@ -99,6 +120,13 @@ class CwmJsonResponseTraitTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * The trait sends the success, message and data envelope the JavaScript consumers read.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testTraitProducesTheEstablishedSuccessMessageDataEnvelope(): void
     {
         $reflection = new \ReflectionMethod(CwmJsonResponseTrait::class, 'sendJsonResponse');
@@ -118,6 +146,13 @@ class CwmJsonResponseTraitTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * CwmbackupController has its own fatal-error shutdown handler.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testCwmbackupControllerRetainsItsOwnFatalErrorShutdownHandler(): void
     {
         $reflection = new \ReflectionClass(CwmbackupController::class);

@@ -36,7 +36,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * The Book filter matches a study on any of its references, within the chapter
+ * range, without letting it escape the published and access conditions around it.
+ *
+ * @since  10.5.8
  */
 #[CoversClass(CwmsermonsModel::class)]
 class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
@@ -50,14 +53,19 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
     private const BOOK = 160;
 
     /**
-     * @var DatabaseDriver|null
-     * @since 10.5.8
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -72,8 +80,12 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
     }
 
     /**
+     * Clear the chapter bounds from the request, and roll back.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -165,6 +177,13 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
         return array_map('intval', $this->db->setQuery($query)->loadColumn() ?: []);
     }
 
+    /**
+     * An unpublished study does not escape through a matching reference.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('an unpublished study does not escape through a matching reference')]
     public function testUnpublishedStudiesStayHidden(): void
     {
@@ -178,6 +197,14 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A study above the visitor's view level does not escape through a matching
+     * reference.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a study above the visitor\'s view level does not escape through a matching reference')]
     public function testRestrictedStudiesStayHidden(): void
     {
@@ -191,6 +218,13 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A published, public study matches on a reference other than its first.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a published, public study matches on a reference other than its first')]
     public function testANonFirstReferenceStillMatches(): void
     {
@@ -206,6 +240,14 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A multi-book menu param matches a study referencing any one of them.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     */
     #[TestDox('a multi-book menu param matches a study referencing any one of them')]
     public function testMultiBookParamMatchesAnyOfThem(): void
     {
@@ -228,6 +270,13 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
         $this->assertNotContains($none, $visible, 'A study referencing none of the listed books was returned.');
     }
 
+    /**
+     * The chapter range constrains whichever reference matched.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the chapter range constrains whichever reference matched')]
     public function testChapterRangeStillApplies(): void
     {

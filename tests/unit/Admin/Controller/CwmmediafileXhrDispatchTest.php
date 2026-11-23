@@ -37,7 +37,9 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
     /**
      * Every concrete addon class.
      *
-     * @return array<string, array{0: class-string}>
+     * @return  array<string, array{0: class-string}>
+     *
+     * @since   10.5.6
      */
     public static function addonClassProvider(): array
     {
@@ -58,6 +60,10 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
 
     /**
      * An addon exposes nothing unless it opts in.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testBaseAddonExposesNoHandlersByDefault(): void
     {
@@ -83,6 +89,11 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
      * on a request the allow-list claims is valid.
      *
      * @param   class-string  $class  Addon under test
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('addonClassProvider')]
     public function testEveryListedHandlerResolvesToAPublicMethod(string $class): void
@@ -113,6 +124,11 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
      * by request-supplied name.
      *
      * @param   class-string  $class  Addon under test
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('addonClassProvider')]
     public function testStateChangingAndInternalMethodsAreNeverExposed(string $class): void
@@ -145,7 +161,9 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
      * serve them. Derived from `handler=` in build/media_source/js — a new JS
      * caller without a matching allow-list entry would 404 at runtime.
      *
-     * @return array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>
+     *
+     * @since   10.5.6
      */
     public static function jsCallerProvider(): array
     {
@@ -171,8 +189,15 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
     }
 
     /**
+     * Each handler the shipped admin JavaScript calls is on its addon's allow-list.
+     *
      * @param   string  $server   Addon directory/class suffix
      * @param   string  $handler  Handler the JS requests
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('jsCallerProvider')]
     public function testHandlersCalledByShippedJsRemainAllowed(string $server, string $handler): void
@@ -193,6 +218,11 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
      * implement it.
      *
      * @param   string  $server  Addon serving uploads
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('uploadAddonProvider')]
     public function testUploadRemainsAllowedForRealUploadHandlers(string $server): void
@@ -205,7 +235,11 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{0: string}>
+     * The addons whose upload handler stays on the allow-list.
+     *
+     * @return  array<string, array{0: string}>  Each addon's directory and class suffix
+     *
+     * @since   10.5.6
      */
     public static function uploadAddonProvider(): array
     {
@@ -216,6 +250,10 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
      * xhr() must check permissions before it dispatches. A structural
      * assertion: a live permission test would need a user/group fixture for
      * what is a single authorise() call.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testXhrRequiresAnEditOrCreatePermission(): void
     {
@@ -244,6 +282,10 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
 
     /**
      * The dispatcher must consult the allow-list, not just method_exists().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testXhrDispatchesOnlyThroughTheAllowList(): void
     {

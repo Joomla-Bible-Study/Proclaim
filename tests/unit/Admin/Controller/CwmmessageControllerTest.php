@@ -30,6 +30,9 @@ class CwmmessageControllerTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $method): string
     {
@@ -42,6 +45,14 @@ class CwmmessageControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * save() builds no SQL and syncs no topic tags itself.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testSaveHasNoRawSqlOrTagSyncLoop(): void
     {
         $body = self::methodBody('save');
@@ -51,6 +62,14 @@ class CwmmessageControllerTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/createTable\(.Cwmstudytopics./', $body, 'save() must not construct Cwmstudytopics rows directly — see #1444');
     }
 
+    /**
+     * save() checks the CSRF token and delegates to FormController::save().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testSaveStillChecksTokenAndDelegatesToParent(): void
     {
         $body = self::methodBody('save');
