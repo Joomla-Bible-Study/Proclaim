@@ -26,12 +26,21 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class YoutubeStatusEndpointTest extends ProclaimTestCase
 {
+    /**
+     * The YouTube module's folder, from the repository root.
+     *
+     * @var    string
+     * @since  10.7.4
+     */
     private const string MODULE_DIR = '/modules/site/mod_proclaim_youtube';
 
     /**
+     * The poll URL in the template names a helper and method that com_ajax can call.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \ReflectionException
      */
     #[TestDox('The poll URL in the template names a helper and method that com_ajax can call')]
     public function testPollUrlReachesTheHelper(): void

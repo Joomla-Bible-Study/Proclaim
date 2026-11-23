@@ -32,13 +32,33 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class YoutubeStatusCacheTest extends ProclaimTestCase
 {
+    /**
+     * The test server's id.
+     *
+     * @var    int
+     * @since  10.7.4
+     */
     private const int SERVER_ID = 999998;
 
+    /**
+     * The test video's id.
+     *
+     * @var    string
+     * @since  10.7.4
+     */
     private const string VIDEO_ID = 'zzStatusVid';
 
+    /**
+     * The folder CwmyoutubeFileCache writes to.
+     *
+     * @var    string
+     * @since  10.7.4
+     */
     private string $cacheDir;
 
     /**
+     * Find CwmyoutubeFileCache's folder and clear it.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -52,6 +72,8 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     }
 
     /**
+     * Clear CwmyoutubeFileCache's folder.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -64,6 +86,9 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     }
 
     /**
+     * A page reloaded because the poll saw the stream go live renders it live, so
+     * the poll does not reload it again.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -86,6 +111,8 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     }
 
     /**
+     * A status the poll only guessed because the quota ran out does not change the page.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -107,6 +134,8 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     }
 
     /**
+     * A browser's status poll is answered from the cache rather than asking YouTube again.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -126,6 +155,8 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     }
 
     /**
+     * A poll's answer is cached for the next poll.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -140,6 +171,9 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     }
 
     /**
+     * A token for one video cannot ask about another, so a poll cannot fill the
+     * cache with videos of its own choosing.
+     *
      * @return  void
      *
      * @since   10.7.4

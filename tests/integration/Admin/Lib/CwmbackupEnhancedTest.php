@@ -29,8 +29,21 @@ use Joomla\Database\DatabaseDriver;
  */
 class CwmbackupEnhancedTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction for the test's rows.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -47,6 +60,13 @@ class CwmbackupEnhancedTest extends IntegrationTestCase
         $this->db->transactionStart();
     }
 
+    /**
+     * Roll back the test's rows.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -69,6 +89,8 @@ class CwmbackupEnhancedTest extends IntegrationTestCase
      * or updated row rolls back.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function ensureComponentConfigRow(): void
     {
@@ -109,6 +131,8 @@ class CwmbackupEnhancedTest extends IntegrationTestCase
      * Insert a proclaim.% scheduler task row for the export to find.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function insertProclaimTask(): void
     {

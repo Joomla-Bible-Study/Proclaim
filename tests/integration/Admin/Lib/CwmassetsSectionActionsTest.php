@@ -39,48 +39,57 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * Cwmassets::sectionActions() answers from the section asset, a question
+ * core's getActions() cannot ask.
+ *
+ * @since  10.5.8
  */
 class CwmassetsSectionActionsTest extends IntegrationTestCase
 {
     /**
      * The section used for every assertion here.
      *
-     * @var string
+     * @var    string
      * @since 10.5.8
      */
     private const SECTION = 'teacher';
 
     /**
-     * @var DatabaseInterface|null
-     * @since 10.5.8
+     * The database.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.5.8
      */
     private ?DatabaseInterface $db = null;
 
     /**
-     * @var mixed
-     * @since 10.5.8
+     * The identity before the test switched to a user who is not a Super User.
+     *
+     * @var    mixed
+     * @since  10.5.8
      */
     private mixed $savedIdentity = null;
 
     /**
      * Section asset id under test, and its rules on the way in.
      *
-     * @var int
+     * @var    int
      * @since 10.5.8
      */
     private int $assetId = 0;
 
     /**
-     * @var string
-     * @since 10.5.8
+     * The section asset's rules before the test wrote its own.
+     *
+     * @var    string
+     * @since  10.5.8
      */
     private string $savedRules = '{}';
 
     /**
      * Whether this test created the section asset, and must remove it again.
      *
-     * @var bool
+     * @var    bool
      * @since 10.5.8
      */
     private bool $created = false;
@@ -88,7 +97,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
     /**
      * Groups the acting identity belongs to.
      *
-     * @var list<int>
+     * @var    list<int>
      * @since 10.5.8
      */
     private array $groups = [];
@@ -96,20 +105,28 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
     /**
      * `com_proclaim` asset id and its rules, when a test stages a grant on it.
      *
-     * @var int
+     * @var    int
      * @since 10.5.8
      */
     private int $componentAssetId = 0;
 
     /**
-     * @var string
-     * @since 10.5.8
+     * The component asset's rules before the test changed them.
+     *
+     * @var    string
+     * @since  10.5.8
      */
     private string $savedComponentRules = '';
 
     /**
+     * Skip without a test database, a readable access.xml, a user who is not a
+     * Super User, or the section asset. Otherwise act as that user, and remember
+     * the section asset's rules.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -160,7 +177,9 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * implicit COMMIT in MySQL, so a rollback would leave the write behind.
      *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -202,7 +221,8 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * Id of a user who holds a group but is not a Super User.
      *
      * @return  int
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function nonRootUserId(): int
     {
@@ -223,7 +243,8 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * Whether the section asset was already present before this test ran.
      *
      * @return  bool
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function sectionAssetExists(): bool
     {
@@ -245,7 +266,9 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * a section-level deny has something to overturn. Restored in tearDown.
      *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
+     * @throws  \JsonException
      */
     private function grantComponentEdit(): void
     {
@@ -290,7 +313,8 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
      * @param   string  $rules  A JSON rule set
      *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function writeRules(string $rules): void
     {
@@ -306,6 +330,14 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
         Access::clearStatics();
     }
 
+    /**
+     * sectionActions() asks the section asset, not the component.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
+     */
     #[TestDox('sectionActions() asks the section asset, not the component')]
     public function testSectionActionsAsksTheSectionAsset(): void
     {
@@ -321,6 +353,15 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * A deny on the section changes sectionActions() but not the component answer.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \JsonException
+     * @throws  \Exception
+     */
     #[TestDox('a deny on the section changes sectionActions() but not the component answer')]
     public function testSectionDenyBitesOnlyTheSection(): void
     {
@@ -363,6 +404,15 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Core's getActions() cannot ask a section question, which is why this helper exists.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \JsonException
+     * @throws  \Exception
+     */
     #[TestDox("core's getActions() cannot ask a section question, which is why this helper exists")]
     public function testCoreGetActionsIgnoresASectionWithoutAnId(): void
     {
@@ -397,6 +447,15 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * An undeclared section falls back to the component rather than answering nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \JsonException
+     * @throws  \Exception
+     */
     #[TestDox('an undeclared section falls back to the component rather than answering nothing')]
     public function testUndeclaredSectionFallsBackToTheComponent(): void
     {

@@ -46,20 +46,25 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.6.2
+ * A record whose asset is parented to its section is not reported as drifted.
+ *
+ * @since  10.6.2
  */
 class CwmassetsSectionSurvivalTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseInterface|null
-     * @since 10.6.2
+     * The database. A test deletes the rows it adds instead of rolling them back,
+     * because Table\Asset::store() takes a table lock, an implicit COMMIT in MySQL.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.6.2
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * Asset ids this test created, removed again in tearDown.
      *
-     * @var list<int>
+     * @var    list<int>
      * @since 10.6.2
      */
     private array $created = [];
@@ -67,14 +72,17 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
     /**
      * Source rows this test inserted, removed again in tearDown.
      *
-     * @var list<int>
+     * @var    list<int>
      * @since 10.6.2
      */
     private array $createdStudies = [];
 
     /**
+     * Skip when access.xml is not readable from this install path.
+     *
      * @return  void
-     * @since 10.6.2
+     *
+     * @since   10.6.2
      */
     protected function setUp(): void
     {
@@ -93,7 +101,8 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * transaction-wrapped asset test leaks its rows rather than rolling back.
      *
      * @return  void
-     * @since 10.6.2
+     *
+     * @since   10.6.2
      */
     protected function tearDown(): void
     {
@@ -203,7 +212,8 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * The headline: a cleanup pass must not delete the sections a seed created.
      *
      * @return  void
-     * @since 10.6.2
+     *
+     * @since   10.6.2
      */
     #[TestDox('Section assets survive a full fixAllAssets() pass')]
     public function testSectionsSurviveCleanup(): void
@@ -271,8 +281,11 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
     }
 
     /**
+     * A record parented to its section is not reported as drifted.
+     *
      * @return  void
-     * @since 10.6.2
+     *
+     * @since   10.6.2
      */
     #[TestDox('A record parented to its section is not reported as drifted')]
     public function testCorrectlyParentedRecordIsNotDrifted(): void
@@ -329,7 +342,8 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * such a site as clean for ever.
      *
      * @return  void
-     * @since 10.6.2
+     *
+     * @since   10.6.2
      */
     #[TestDox('An item flattened onto com_proclaim is moved back under its section')]
     public function testFlattenedItemIsRepaired(): void
@@ -404,7 +418,8 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
      * exclusion must not have broken.
      *
      * @return  void
-     * @since 10.6.2
+     *
+     * @since   10.6.2
      */
     #[TestDox('An item asset with no override is still pruned')]
     public function testEmptyRulesItemAssetIsStillPruned(): void

@@ -22,10 +22,20 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmdownloadAccessTest extends ProclaimTestCase
 {
-    /** An anonymous visitor: Public and Guest. */
+    /**
+     * An anonymous visitor: Public and Guest.
+     *
+     * @var    list<int>
+     * @since  10.5.8
+     */
     private const ANON = [1, 5];
 
-    /** A logged-in member: Public and Registered. */
+    /**
+     * A logged-in member: Public and Registered.
+     *
+     * @var    list<int>
+     * @since  10.5.8
+     */
     private const MEMBER = [1, 2];
 
     /**
@@ -35,7 +45,9 @@ class CwmdownloadAccessTest extends ProclaimTestCase
      * @param   int|null  $study   The message's level, or null when there is no message.
      * @param   int|null  $series  The series' level, or null when the message is in no series.
      *
-     * @return object
+     * @return  object
+     *
+     * @since   10.5.8
      */
     private function media(?int $file, ?int $study = null, ?int $series = null): object
     {
@@ -50,6 +62,10 @@ class CwmdownloadAccessTest extends ProclaimTestCase
      * The whole point. Before this, only the file's own level was checked, so a
      * Public file hanging off a Registered message was downloadable by anyone —
      * j6-dev carried seven such rows.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testAPublicFileUnderARestrictedMessageIsRefused(): void
     {
@@ -65,7 +81,13 @@ class CwmdownloadAccessTest extends ProclaimTestCase
         );
     }
 
-    /** The series restricts too, even when the message itself is Public. */
+    /**
+     * The series restricts too, even when the message itself is Public.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAPublicFileUnderARestrictedSeriesIsRefused(): void
     {
         $media = $this->media(file: 1, study: 1, series: 2);
@@ -74,7 +96,13 @@ class CwmdownloadAccessTest extends ProclaimTestCase
         $this->assertTrue(Cwmdownload::isAccessible($media, self::MEMBER));
     }
 
-    /** Nothing restricted anywhere in the chain: still downloadable. */
+    /**
+     * Nothing restricted anywhere in the chain: still downloadable.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAFullyPublicChainIsAllowed(): void
     {
         $this->assertTrue(
@@ -90,6 +118,10 @@ class CwmdownloadAccessTest extends ProclaimTestCase
      * The per-file level is not ignored — it can tighten beyond the message.
      * Today every media file is Public, so this never fires in practice, but
      * the field keeps its meaning rather than becoming decorative.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testTheFilesOwnLevelCanRestrictBeyondItsMessage(): void
     {
@@ -107,6 +139,10 @@ class CwmdownloadAccessTest extends ProclaimTestCase
      * there is no "strictest" of Special and Guest to reduce the chain to. A
      * user holding one but not the other must be refused, which only works if
      * every level is required independently.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testEveryLevelIsRequiredBecauseLevelsHaveNoOrdering(): void
     {
@@ -130,6 +166,10 @@ class CwmdownloadAccessTest extends ProclaimTestCase
      * The joins are LEFT joins: a media file with no message, or a message in no
      * series, yields null. A missing link constrains nothing — it must not be
      * treated as level 0 and deny everyone.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testAbsentChainLinksDoNotRestrict(): void
     {
@@ -147,7 +187,13 @@ class CwmdownloadAccessTest extends ProclaimTestCase
         );
     }
 
-    /** A user with no levels at all gets nothing, not everything. */
+    /**
+     * A user with no levels at all gets nothing, not everything.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAUserWithNoLevelsIsRefused(): void
     {
         $this->assertFalse(

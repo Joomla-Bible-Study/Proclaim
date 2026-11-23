@@ -24,7 +24,9 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
     /**
      * Test addScore accumulates points correctly
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     public function testAddScoreAccumulates(): void
     {
@@ -41,7 +43,9 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
     /**
      * Test addScore initializes at zero
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     public function testAddScoreInitializesAtZero(): void
     {
@@ -62,7 +66,9 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
      * stayed green if buildCards() dropped its own sort. Until buildCards()
      * gets integration coverage, pin the sort's presence structurally.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testBuildCardsRanksByScore(): void
     {
