@@ -33,12 +33,22 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class GeneratedAliasTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.4
+     */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database. Otherwise load the component's language, so
+     * the warning reads as text, and open a transaction.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -55,6 +65,8 @@ class GeneratedAliasTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the seeded rows.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -73,7 +85,9 @@ class GeneratedAliasTest extends IntegrationTestCase
     }
 
     /**
-     * @return  array<string, array{string, string, string}>
+     * The models that build an alias from a title.
+     *
+     * @return  array<string, array{string, string, string}>  Each model's name, table and title column
      *
      * @since   10.7.4
      */
@@ -86,6 +100,9 @@ class GeneratedAliasTest extends IntegrationTestCase
     }
 
     /**
+     * A message or series alias built from a title that another row already uses
+     * gets -2, with a warning.
+     *
      * @param   string  $model       Model name
      * @param   string  $table       Its table
      * @param   string  $titleField  Its title column
@@ -113,6 +130,9 @@ class GeneratedAliasTest extends IntegrationTestCase
     }
 
     /**
+     * A message or series alias built from a free title is the plain slug,
+     * without a warning.
+     *
      * @param   string  $model       Model name
      * @param   string  $table       Its table
      * @param   string  $titleField  Its title column
@@ -181,6 +201,8 @@ class GeneratedAliasTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published row that holds an alias.
+     *
      * @param   string  $table       The table
      * @param   string  $titleField  Its title column
      * @param   string  $alias       The alias the row holds

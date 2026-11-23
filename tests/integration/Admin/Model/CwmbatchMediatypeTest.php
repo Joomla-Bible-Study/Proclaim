@@ -42,27 +42,47 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmbatchMediatypeTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database. Tests run inside a transaction, and tearDown also deletes the
+     * media files they created by id.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  mixed
+     * Factory's language before the test replaced it to silence date warnings.
+     *
+     * @var    mixed
+     * @since  10.5.6
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
-     * @var  int[]
+     * The media files a test created, deleted afterwards.
+     *
+     * @var    int[]
+     * @since  10.5.6
      */
     private array $created = [];
 
     /**
-     * @var  mixed
+     * The identity before the test switched to a Super User.
+     *
+     * @var    mixed
+     * @since  10.5.6
      */
     private mixed $savedIdentity = null;
 
     /**
+     * Skip without a test database or a Super User. Otherwise silence date
+     * language warnings, act as that Super User so each row's core.edit check
+     * passes, and open a transaction.
+     *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -101,7 +121,12 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back, delete the media files the test created, and restore the identity and language.
+     *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -132,6 +157,15 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * A batch writes the whole display configuration, not an integer into the image path.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('A batch writes the whole display configuration, not an integer into the image path')]
     public function testBatchAppliesFullDisplayConfiguration(): void
     {
@@ -163,6 +197,15 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
         $this->assertSame('', (string) $params->get('media_image'), 'media_image must hold a path, never a number');
     }
 
+    /**
+     * A batch leaves media files outside the selection untouched.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('A batch leaves media files outside the selection untouched')]
     public function testUnselectedRowsAreUntouched(): void
     {
@@ -199,6 +242,15 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A batch value carrying unknown keys writes only display params.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('A batch value carrying unknown keys writes only display params')]
     public function testUnknownKeysAreIgnored(): void
     {
@@ -227,6 +279,15 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A malformed batch value is refused rather than written.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     * @throws  \ReflectionException
+     */
     #[TestDox('A malformed batch value is refused rather than written')]
     public function testMalformedValueIsRefused(): void
     {
@@ -240,6 +301,13 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
         $this->assertSame($beforeJson, $this->loadRawParams($target), 'Nothing may be written on refusal');
     }
 
+    /**
+     * The batch widget offers the same configurations as the Image Tools field.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The batch widget offers the same configurations as the Image Tools field')]
     public function testWidgetOptionsMatchTheImageToolsField(): void
     {
@@ -268,10 +336,16 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
     }
 
     /**
+     * Run the batch on the selected media files, and assert that it succeeded.
+     *
      * @param   string  $value  JSON display configuration.
      * @param   int[]   $pks    Selected media file IDs.
      *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     * @throws  \Exception
      */
     private function runBatch(string $value, array $pks): void
     {
@@ -279,11 +353,17 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
     }
 
     /**
+     * Call the model's protected batchMediatype() with a context for each
+     * selected row.
+     *
      * @param   CwmmediafileModel  $model  Model under test.
      * @param   string             $value  JSON display configuration.
      * @param   int[]              $pks    Selected media file IDs.
      *
-     * @return  bool
+     * @return  bool  Whether the batch succeeded
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private function invokeBatch(CwmmediafileModel $model, string $value, array $pks): bool
     {
@@ -299,7 +379,12 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
     }
 
     /**
-     * @return  CwmmediafileModel
+     * A CwmmediafileModel built through the MVC factory, ignoring the request.
+     *
+     * @return  CwmmediafileModel  The model under test
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     private function createModel(): CwmmediafileModel
     {
@@ -319,9 +404,13 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
     }
 
     /**
+     * A media file's params.
+     *
      * @param   int  $id  Media file ID.
      *
-     * @return  Registry
+     * @return  Registry  Its params
+     *
+     * @since   10.5.6
      */
     private function loadParams(int $id): Registry
     {
@@ -332,9 +421,13 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
     }
 
     /**
+     * A media file's params as stored.
+     *
      * @param   int  $id  Media file ID.
      *
      * @return  string  The raw params JSON.
+     *
+     * @since   10.5.6
      */
     private function loadRawParams(int $id): string
     {
@@ -345,9 +438,14 @@ class CwmbatchMediatypeTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published media file with these params, plus a default filename
+     * and player where they are not given.
+     *
      * @param   array  $params  Params to seed.
      *
      * @return  int  Media file ID.
+     *
+     * @since   10.5.6
      */
     private function insertMediafile(array $params): int
     {

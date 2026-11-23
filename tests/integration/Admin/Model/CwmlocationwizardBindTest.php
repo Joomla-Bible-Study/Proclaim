@@ -22,19 +22,28 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * The location wizard's bound UPDATEs of component params and asset rules
+ * execute against the real database.
+ *
+ * @since  10.7.1
  */
 class CwmlocationwizardBindTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseInterface|null
-     * @since 10.7.1
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database. Otherwise open a transaction, since every
+     * method here updates extension params or asset rules.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     protected function setUp(): void
     {
@@ -50,8 +59,11 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the wizard's updates.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     protected function tearDown(): void
     {
@@ -67,12 +79,16 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
     }
 
     /**
-     * @param   string  $method  Method name.
-     * @param   mixed   ...$args Arguments.
+     * Call one of the wizard model's methods on an instance built without its
+     * constructor.
      *
-     * @return  mixed
+     * @param   string  $method   Method name.
+     * @param   mixed   ...$args  Arguments.
      *
-     * @since 10.7.1
+     * @return  mixed  What the method returns
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     private function invoke(string $method, ...$args): mixed
     {
@@ -83,8 +99,12 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
     }
 
     /**
+     * dismiss()'s bound :params UPDATE executes.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     #[TestDox("dismiss()'s bound :params UPDATE executes")]
     public function testDismissBindExecutes(): void
@@ -95,8 +115,12 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
     }
 
     /**
+     * applyWizard()'s bound :params UPDATE executes.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     #[TestDox("applyWizard()'s bound :params UPDATE executes")]
     public function testApplyWizardBindExecutes(): void
@@ -107,8 +131,12 @@ class CwmlocationwizardBindTest extends IntegrationTestCase
     }
 
     /**
+     * applyPermissions()'s bound :rules UPDATE executes against the component asset.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     #[TestDox("applyPermissions()'s bound :rules UPDATE executes against the component asset")]
     public function testApplyPermissionsBindExecutes(): void

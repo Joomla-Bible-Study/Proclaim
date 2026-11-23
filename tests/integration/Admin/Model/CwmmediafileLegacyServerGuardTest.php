@@ -41,32 +41,56 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database. Each test runs inside a transaction, but an asset-tracked save
+     * can commit it, so the rows a test creates are deleted by id as well.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.3
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  mixed
+     * The identity before the test switched to a Super User.
+     *
+     * @var    mixed
+     * @since  10.7.3
      */
     private mixed $savedIdentity = null;
 
     /**
-     * @var  int[]
+     * The media files a test created, deleted afterwards.
+     *
+     * @var    int[]
+     * @since  10.7.3
      */
     private array $createdMediaFiles = [];
 
     /**
-     * @var  int[]
+     * The servers a test created, deleted afterwards.
+     *
+     * @var    int[]
+     * @since  10.7.3
      */
     private array $createdServers = [];
 
     /**
-     * @var  \ReflectionProperty|null
+     * PluginHelper's static plugin cache, which setUp primes empty and tearDown
+     * resets.
+     *
+     * @var    \ReflectionProperty|null
+     * @since  10.7.3
      */
     private ?\ReflectionProperty $pluginCacheProperty = null;
 
     /**
+     * Skip without a test database or a Super User. Otherwise act as that Super
+     * User, open a transaction, register the real Proclaim component, and keep
+     * content plugins from booting.
+     *
      * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -113,6 +137,8 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
      * DB query runs at all. No plugin side effects are under test here.
      *
      * @return  void
+     *
+     * @since   10.7.3
      */
     private function suppressContentPlugins(): void
     {
@@ -139,6 +165,8 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
      * trusted "already present" would keep it instead of fixing it.
      *
      * @return  void
+     *
+     * @since   10.7.3
      */
     private function registerProclaimComponent(): void
     {
@@ -152,7 +180,13 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
     }
 
     /**
+     * Delete the media files and servers the test created, roll back, restore the
+     * identity, and reset PluginHelper's plugin cache.
+     *
      * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -195,6 +229,14 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * A new media file cannot be pointed at a legacy server.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('A new media file cannot be pointed at a legacy server')]
     public function testNewRecordOnLegacyServerIsRefused(): void
     {
@@ -206,6 +248,14 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
         $this->assertNotEmpty($model->getError());
     }
 
+    /**
+     * Save as Copy of a legacy-attached record is refused the same way.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('Save as Copy of a legacy-attached record is refused the same way')]
     public function testSaveAsCopyOfLegacyAttachedRecordIsRefused(): void
     {
@@ -220,6 +270,14 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
         $this->assertFalse($model->save($this->baseData($legacyId, 0)));
     }
 
+    /**
+     * Reassigning an existing record from a modern server to a legacy one is refused.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('Reassigning an existing record from a modern server to a legacy one is refused')]
     public function testReassigningToLegacyIsRefused(): void
     {
@@ -232,6 +290,14 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
         $this->assertFalse($model->save($this->baseData($legacyId, $mediaId)));
     }
 
+    /**
+     * An already-legacy-attached record re-saved unchanged keeps working.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('An already-legacy-attached record re-saved unchanged keeps working')]
     public function testExistingLegacyRecordUnchangedIsAllowed(): void
     {
@@ -243,6 +309,15 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
         $this->assertTrue($model->save($this->baseData($legacyId, $mediaId)));
     }
 
+    /**
+     * An API PATCH carrying the row's own stored server_id, as the core backfill
+     * produces, keeps working.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('An API PATCH carrying the row\'s own stored server_id -- as the core backfill produces -- keeps working')]
     public function testBackfilledServerIdOnExistingLegacyRecordIsAllowed(): void
     {
@@ -259,6 +334,14 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
         $this->assertTrue($model->save($this->baseData($legacyId, $mediaId)));
     }
 
+    /**
+     * Migrating an existing record from legacy to a modern server is allowed.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('Migrating an existing record from legacy to a modern server is allowed')]
     public function testMigratingAwayFromLegacyIsAllowed(): void
     {
@@ -271,6 +354,14 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
         $this->assertTrue($model->save($this->baseData($modernId, $mediaId)));
     }
 
+    /**
+     * A trusted internal caller can opt in to create legacy-server media directly.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('A trusted internal caller can opt in to create legacy-server media directly')]
     public function testAllowLegacyServerParameterBypassesTheGuard(): void
     {
@@ -299,9 +390,13 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published server of a given type.
+     *
      * @param   string  $type  The server's addon type.
      *
      * @return  int  The new server id.
+     *
+     * @since   10.7.3
      */
     private function insertServer(string $type): int
     {
@@ -321,9 +416,13 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published media file on a server.
+     *
      * @param   int  $serverId  The server to attach the fixture row to.
      *
      * @return  int  The new media file id.
+     *
+     * @since   10.7.3
      */
     private function insertMediaFile(int $serverId): int
     {
@@ -342,10 +441,14 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
     }
 
     /**
+     * The data save() receives for a media file on a server.
+     *
      * @param   int  $serverId  The server_id to submit.
      * @param   int  $id        0 for a new record, otherwise the existing record's id.
      *
-     * @return  array
+     * @return  array  The data to save
+     *
+     * @since   10.7.3
      */
     private function baseData(int $serverId, int $id = 0): array
     {
@@ -362,7 +465,12 @@ class CwmmediafileLegacyServerGuardTest extends IntegrationTestCase
     }
 
     /**
-     * @return  CwmmediafileModel
+     * A CwmmediafileModel built through the MVC factory, ignoring the request.
+     *
+     * @return  CwmmediafileModel  The model under test
+     *
+     * @since   10.7.3
+     * @throws  \Exception
      */
     private function createModel(): CwmmediafileModel
     {
