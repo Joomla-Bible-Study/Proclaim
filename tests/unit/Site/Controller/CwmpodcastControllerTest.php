@@ -37,12 +37,19 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * @since 10.5.4
+ * CwmmediaStreamer resolves byte ranges, tells a local host from a remote one,
+ * and refuses to fetch unsafe hosts.
+ *
+ * @since  10.5.4
  */
 class CwmpodcastControllerTest extends ProclaimTestCase
 {
     /**
-     * @return \ReflectionMethod
+     * CwmmediaStreamer's private resolveRange().
+     *
+     * @return  \ReflectionMethod  The method
+     *
+     * @since   10.5.4
      */
     private function resolveRangeMethod(): \ReflectionMethod
     {
@@ -54,7 +61,10 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * declared correctly so the response advertises Accept-Ranges from a
      * plain GET/HEAD, not only when a Range header happens to be present.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \ReflectionException
      */
     public function testNoRangeHeaderReturnsWholeFileAs200(): void
     {
@@ -66,7 +76,12 @@ class CwmpodcastControllerTest extends ProclaimTestCase
     }
 
     /**
-     * @return iterable<string, array{0: string, 1: int, 2: array{0:int,1:int,2:int}}>
+     * Satisfiable Range headers, each with the file size and the [start, end,
+     * status] it resolves to.
+     *
+     * @return  iterable<string, array{0: string, 1: int, 2: array{0:int,1:int,2:int}}>  Each case
+     *
+     * @since   10.5.4
      */
     public static function rangeProvider(): iterable
     {
@@ -79,11 +94,16 @@ class CwmpodcastControllerTest extends ProclaimTestCase
     }
 
     /**
+     * A satisfiable Range header resolves to the right window and status.
+     *
      * @param   string  $rangeHeader  Raw incoming Range header
      * @param   int     $size         Known content length
      * @param   array   $expected     [start, end, status]
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \ReflectionException
      */
     #[DataProvider('rangeProvider')]
     public function testValidRangesResolveCorrectly(string $rangeHeader, int $size, array $expected): void
@@ -94,7 +114,12 @@ class CwmpodcastControllerTest extends ProclaimTestCase
     }
 
     /**
-     * @return iterable<string, array{0: string, 1: int}>
+     * Range headers that no window of the file can satisfy, each with the file
+     * size.
+     *
+     * @return  iterable<string, array{0: string, 1: int}>  The header and the size
+     *
+     * @since   10.5.4
      */
     public static function unsatisfiableRangeProvider(): iterable
     {
@@ -114,7 +139,10 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * @param   string  $rangeHeader  Raw incoming Range header
      * @param   int     $size         Known content length
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \ReflectionException
      */
     #[DataProvider('unsatisfiableRangeProvider')]
     public function testUnsatisfiableRangesReturn416(string $rangeHeader, int $size): void
@@ -129,7 +157,10 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * garbage) must be treated as if there were no Range header — never
      * crash, never silently miscount bytes.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \ReflectionException
      */
     public function testMalformedRangeHeaderFallsBackToWholeFile(): void
     {
@@ -146,7 +177,10 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * A zero-byte file (size metadata missing/wrong) must never produce a
      * negative end offset that would corrupt a Content-Range header.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \ReflectionException
      */
     public function testZeroSizeNeverProducesANegativeEnd(): void
     {
@@ -162,7 +196,11 @@ class CwmpodcastControllerTest extends ProclaimTestCase
     // -------------------------------------------------------------------------
 
     /**
-     * @return \ReflectionMethod
+     * CwmmediaStreamer's private isLocalHost().
+     *
+     * @return  \ReflectionMethod  The method
+     *
+     * @since   10.5.4
      */
     private function isLocalHostMethod(): \ReflectionMethod
     {
@@ -178,7 +216,10 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * failure and fell back to the pre-#1424 redirect, masking the bug
      * behind seemingly-correct behavior). Any site not on :80/:443 hits this.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \ReflectionException
      */
     public function testPortInHostHeaderDoesNotDefeatLocalDetection(): void
     {
@@ -192,7 +233,12 @@ class CwmpodcastControllerTest extends ProclaimTestCase
     }
 
     /**
-     * @return iterable<string, array{0: string, 1: string, 2: bool}>
+     * Request hosts and media URLs, with whether the media is on the request's own
+     * host.
+     *
+     * @return  iterable<string, array{0: string, 1: string, 2: bool}>  The host, the URL and the answer
+     *
+     * @since   10.5.4
      */
     public static function localHostProvider(): iterable
     {
@@ -206,11 +252,16 @@ class CwmpodcastControllerTest extends ProclaimTestCase
     }
 
     /**
+     * isLocalHost() tells media on the request's own host from media elsewhere.
+     *
      * @param   string  $requestHost  Raw incoming Host header
      * @param   string  $target       Absolute URL of the live media
      * @param   bool    $expected     Expected local/remote classification
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \ReflectionException
      */
     #[DataProvider('localHostProvider')]
     public function testLocalHostDetection(string $requestHost, string $target, bool $expected): void
@@ -240,7 +291,10 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * terminate(). Widening this list to include it would fail on correct
      * code.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \ReflectionException
      */
     public function testEveryStreamingBranchTerminatesInsteadOfReturning(): void
     {
@@ -280,7 +334,9 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * accommodate one test, so this pins the guard's presence and position
      * instead of simulating curl's absence.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.4
      */
     public function testStreamRemoteFileGuardsCurlAvailability(): void
     {
@@ -317,7 +373,11 @@ class CwmpodcastControllerTest extends ProclaimTestCase
     // -------------------------------------------------------------------------
 
     /**
-     * @return \ReflectionMethod
+     * CwmmediaStreamer's private resolveSafeRemoteIp().
+     *
+     * @return  \ReflectionMethod  The method
+     *
+     * @since   10.5.5
      */
     private function resolveSafeRemoteIpMethod(): \ReflectionMethod
     {
@@ -335,7 +395,9 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * services, and cloud metadata endpoints in particular (AWS/GCP/Azure
      * all use 169.254.169.254, a link-local address).
      *
-     * @return iterable<string, array{0: string}>
+     * @return  iterable<string, array{0: string}>
+     *
+     * @since   10.5.5
      */
     public static function unsafeRemoteHostProvider(): iterable
     {
@@ -350,9 +412,14 @@ class CwmpodcastControllerTest extends ProclaimTestCase
     }
 
     /**
+     * resolveSafeRemoteIp() refuses a host that must never be fetched.
+     *
      * @param   string  $host  A host that must never be fetched
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.5
+     * @throws  \ReflectionException
      */
     #[DataProvider('unsafeRemoteHostProvider')]
     public function testUnsafeRemoteHostsAreRejected(string $host): void
@@ -367,7 +434,10 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * guard must not be so aggressive it breaks the actual, intended use
      * case (an admin-configured external media host).
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.5
+     * @throws  \ReflectionException
      */
     public function testPublicIpLiteralIsAccepted(): void
     {
@@ -386,7 +456,9 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * than behavioral: exercising the live-network resolution path in a unit
      * test would make it non-deterministic and environment-dependent.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.5
      */
     public function testStreamRemoteFileGuardsAgainstUnsafeHostsBeforeCurl(): void
     {

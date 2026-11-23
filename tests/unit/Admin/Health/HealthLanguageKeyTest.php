@@ -29,6 +29,8 @@ use PHPUnit\Framework\TestCase;
 class HealthLanguageKeyTest extends TestCase
 {
     /**
+     * Every status has a label defined in en-GB.
+     *
      * @return  void
      *
      * @since   10.6.0
@@ -48,6 +50,8 @@ class HealthLanguageKeyTest extends TestCase
     }
 
     /**
+     * Every report section has a heading defined in en-GB.
+     *
      * @return  void
      *
      * @since   10.6.0

@@ -37,6 +37,9 @@ class CwmadminModelTest extends ProclaimTestCase
      * @param   object  $decoded
      *
      * @return  array{keys: string[], values: array<int, mixed>}|null
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function resolveMatcher(object $decoded): ?array
     {
@@ -51,6 +54,9 @@ class CwmadminModelTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $method): string
     {
@@ -63,6 +69,14 @@ class CwmadminModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * In button-only mode the matcher keys on the button type and text.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testResolveMatcherButtonOnlyMode(): void
     {
         $decoded = (object) [
@@ -77,6 +91,14 @@ class CwmadminModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * In button-and-icon mode the matcher keys on the button type and icon.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testResolveMatcherButtonAndIconMode(): void
     {
         $decoded = (object) [
@@ -91,6 +113,14 @@ class CwmadminModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * In icon-only mode the matcher keys on the icon alone.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testResolveMatcherIconOnlyMode(): void
     {
         $decoded = (object) [
@@ -104,6 +134,14 @@ class CwmadminModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * In image mode the matcher keys on the image path.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testResolveMatcherImageMode(): void
     {
         $decoded = (object) [
@@ -117,6 +155,14 @@ class CwmadminModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * An unknown mode yields no matcher.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testResolveMatcherUnknownModeReturnsNull(): void
     {
         $decoded = (object) ['media_use_button_icon' => 99];
@@ -133,6 +179,12 @@ class CwmadminModelTest extends ProclaimTestCase
      * Passing a genuine object (as the fixed controller now decodes it)
      * through the real json_decode() path proves the matcher works against
      * real request payloads, not just hand-built stdClass fixtures.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \JsonException
+     * @throws  \ReflectionException
      */
     public function testResolveMatcherWorksAgainstRealJsonDecodedObject(): void
     {
@@ -145,6 +197,14 @@ class CwmadminModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * changePlayer() uses one batch REPLACE() update and no per-row loop.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testChangePlayerUsesSingleBatchUpdateNotPerRowLoop(): void
     {
         $body = self::methodBody('changePlayer');
@@ -153,6 +213,15 @@ class CwmadminModelTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/\bforeach\b/', $body, 'changePlayer() must not re-introduce a per-row N+1 loop — see #1443');
     }
 
+    /**
+     * changePopup() uses two batch REPLACE() updates, for the value and its legacy
+     * alias, and no per-row loop.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testChangePopupUsesBatchUpdatesNotPerRowLoop(): void
     {
         $body = self::methodBody('changePopup');
@@ -161,6 +230,14 @@ class CwmadminModelTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/\bforeach\b/', $body, 'changePopup() must not re-introduce a per-row N+1 loop — see #1443');
     }
 
+    /**
+     * changeMediaImages() loops over the images once, with no switch.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testChangeMediaImagesHasOneLoopNotFourSwitchCases(): void
     {
         $body = self::methodBody('changeMediaImages');
@@ -177,6 +254,9 @@ class CwmadminModelTest extends ProclaimTestCase
      * @param   string[]  $formNames
      *
      * @return  array
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     private static function mergeStored(array $stored, array $submitted, array $formNames): array
     {
@@ -190,6 +270,9 @@ class CwmadminModelTest extends ProclaimTestCase
      * model's own extraction against the real admin.xml.
      *
      * @return  string[]
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     private static function shippedFormParamNames(): array
     {
@@ -201,6 +284,15 @@ class CwmadminModelTest extends ProclaimTestCase
         return $method->invoke(null, $form);
     }
 
+    /**
+     * A stored param the settings form does not define survives a save, while the
+     * submitted values still win.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     public function testUnformedStoredParamSurvivesASave(): void
     {
         // #2134: health_quiet has no field in admin.xml, so it is absent from
@@ -219,6 +311,14 @@ class CwmadminModelTest extends ProclaimTestCase
         $this->assertSame('0', $merged['simple_mode'], 'The submitted value must still win.');
     }
 
+    /**
+     * A form-defined field that posts no key is cleared, not restored from storage.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     public function testClearingAFormFieldThatPostsNothingStillClearsIt(): void
     {
         // A `multiple` field with nothing selected posts no key at all. Carrying
@@ -237,6 +337,14 @@ class CwmadminModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The merge overwrites numeric-string keys rather than renumbering them.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     public function testMergeOverwritesNumericStringKeysRatherThanRenumbering(): void
     {
         // array_merge() renumbers numeric-string keys; array_replace() does not.
@@ -245,6 +353,14 @@ class CwmadminModelTest extends ProclaimTestCase
         $this->assertSame(['9' => 'submitted'], $merged);
     }
 
+    /**
+     * formParamNames() reads the form's bare param names, not its field ids.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     public function testFormParamNamesReadsBareNamesNotFieldIds(): void
     {
         // ⚠️ Form::getGroup() keys by field id (jform_params_podcast). Taking
@@ -262,6 +378,14 @@ class CwmadminModelTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * The shipped settings form yields dozens of param names.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     public function testShippedFormCoversEveryKeyTheInstallSqlSeeds(): void
     {
         // The seeded blob is what a fresh site stores. Any key in it that the
@@ -273,6 +397,15 @@ class CwmadminModelTest extends ProclaimTestCase
         $this->assertGreaterThan(40, \count($names), 'The settings form should define dozens of params.');
     }
 
+    /**
+     * save() builds its params through paramsToStore(), not from the submitted
+     * params directly.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     public function testSaveActuallyRoutesParamsThroughTheCarryForward(): void
     {
         // ⚠️ A source assertion on purpose, and the weakest test here. The
@@ -301,6 +434,9 @@ class CwmadminModelTest extends ProclaimTestCase
      * @param   array  $data
      *
      * @return  int
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     private static function rowId(array $data): int
     {
@@ -309,6 +445,14 @@ class CwmadminModelTest extends ProclaimTestCase
         return $method->invoke(null, $data);
     }
 
+    /**
+     * An empty or absent posted id resolves to the singleton settings row.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     public function testEmptyPostedIdStillResolvesTheSettingsRow(): void
     {
         // ⚠️ The edit form posts `id` as an empty string, so trusting it
@@ -319,6 +463,14 @@ class CwmadminModelTest extends ProclaimTestCase
         $this->assertSame(1, self::rowId([]), 'An absent id must fall back too.');
     }
 
+    /**
+     * A real posted id is used as given.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     public function testARealPostedIdIsHonoured(): void
     {
         $this->assertSame(7, self::rowId(['id' => '7']));

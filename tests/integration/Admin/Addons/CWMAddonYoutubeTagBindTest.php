@@ -24,25 +24,35 @@ use Joomla\Database\ParameterType;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * The YouTube addon's importTagsAsTopics() inserts a topic with the tag bound
+ * into the VALUES list.
+ *
+ * @since  10.7.1
  */
 class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseInterface|null
-     * @since 10.7.1
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
-     * @var mixed
-     * @since 10.7.1
+     * Factory's language before the test replaced it to silence date warnings.
+     *
+     * @var    mixed
+     * @since  10.7.1
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
+     * Skip without a test database. Otherwise silence date language warnings, and open a transaction.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     protected function setUp(): void
     {
@@ -61,8 +71,11 @@ class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back, and restore the language.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     protected function tearDown(): void
     {
@@ -80,8 +93,12 @@ class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
     }
 
     /**
+     * importTagsAsTopics() inserts a topic with the tag bound into the VALUES list.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     #[TestDox("importTagsAsTopics() inserts a topic with the tag bound into the VALUES list")]
     public function testImportTagsAsTopicsBindsTheInsert(): void

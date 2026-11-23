@@ -33,12 +33,15 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 class CwmsermonsControllerTest extends ProclaimTestCase
 {
     /**
+     * The source of a method.
+     *
      * @param   class-string  $class   The class holding the method
      * @param   string        $method  The method name
      *
      * @return  string  The method's source
      *
      * @since   10.7.6
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $class, string $method): string
     {
@@ -52,9 +55,12 @@ class CwmsermonsControllerTest extends ProclaimTestCase
     }
 
     /**
+     * filterAjax() checks no CSRF token.
+     *
      * @return  void
      *
      * @since   10.7.6
+     * @throws  \ReflectionException
      */
     public function testFilterAjaxChecksNoToken(): void
     {
@@ -69,9 +75,12 @@ class CwmsermonsControllerTest extends ProclaimTestCase
     }
 
     /**
+     * The list view puts no form token in the script options it caches.
+     *
      * @return  void
      *
      * @since   10.7.6
+     * @throws  \ReflectionException
      */
     public function testListViewPutsNoFormTokenInItsCachedOptions(): void
     {

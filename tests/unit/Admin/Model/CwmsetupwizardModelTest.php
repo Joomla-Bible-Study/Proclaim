@@ -22,6 +22,10 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
 {
     /**
      * Test that createDefaultServers checks for existing servers.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testCreateDefaultServersChecksExisting(): void
     {
@@ -45,6 +49,10 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
 
     /**
      * Test that registerScheduledTasks checks for existing tasks.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testRegisterScheduledTasksChecksExisting(): void
     {
@@ -63,6 +71,10 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
 
     /**
      * Test that applyWizard sets setup_wizard_complete flag.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testApplyWizardSetsCompletionFlag(): void
     {
@@ -75,6 +87,10 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
 
     /**
      * Test that dismiss sets completion flag.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testDismissSetsCompletionFlag(): void
     {

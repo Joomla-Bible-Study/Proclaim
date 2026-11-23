@@ -42,6 +42,8 @@ class ListSortFieldContractTest extends ProclaimTestCase
      * with the model whose whitelist has to accept them.
      *
      * @return  array<string, array{0: string, 1: string}>
+     *
+     * @since   10.5.6
      */
     public static function listViewProvider(): array
     {
@@ -69,6 +71,8 @@ class ListSortFieldContractTest extends ProclaimTestCase
      * @param   string  $template  Absolute path to the template.
      *
      * @return  string[]
+     *
+     * @since   10.5.6
      */
     private static function sortFields(string $template): array
     {
@@ -92,6 +96,8 @@ class ListSortFieldContractTest extends ProclaimTestCase
      * @param   string  $model  Absolute path to the model.
      *
      * @return  string[]
+     *
+     * @since   10.5.6
      */
     private static function filterFields(string $model): array
     {
@@ -104,6 +110,16 @@ class ListSortFieldContractTest extends ProclaimTestCase
         return $matches[1];
     }
 
+    /**
+     * Every sortable column header submits a name its model accepts.
+     *
+     * @param   string  $template  The list template's path
+     * @param   string  $model     The path of the model whose whitelist must accept it
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[DataProvider('listViewProvider')]
     #[TestDox('Every sortable column header submits a name its model accepts')]
     public function testSortHeadersAreWhitelisted(string $template, string $model): void
@@ -127,6 +143,17 @@ class ListSortFieldContractTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * A dotted whitelist entry names a real column, so a crafted filter_order cannot
+     * cause a 500.
+     *
+     * @param   string  $template  The list template's path, unused here
+     * @param   string  $model     The path of the model whose whitelist must accept it
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[DataProvider('listViewProvider')]
     #[TestDox('A dotted whitelist entry names a real column, so a crafted filter_order cannot 500')]
     public function testWhitelistHasNoDanglingColumns(string $template, string $model): void

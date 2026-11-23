@@ -26,10 +26,30 @@ use Joomla\Database\DatabaseDriver;
  */
 class CwmepisodeauditModelTest extends ProclaimTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * The id of the fixture series.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $seriesId = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction, and seed a series
+     * with two messages numbered distinctly.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -84,6 +104,13 @@ class CwmepisodeauditModelTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * Roll back the fixture.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -107,6 +134,10 @@ class CwmepisodeauditModelTest extends ProclaimTestCase
      * The positive case is covered structurally instead: the model's query
      * filters (series_id > 0, non-empty studynumber) match the constraint, so
      * anything it would report is by definition legacy data.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetDuplicatesDoesNotReportAUniqueSeries(): void
     {
