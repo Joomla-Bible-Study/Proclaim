@@ -23,6 +23,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 {
     /**
      * Test that exactly 3 presets are defined.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testThreePresetsExist(): void
     {
@@ -31,6 +35,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test that all expected preset keys exist.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testPresetKeysExist(): void
     {
@@ -66,6 +74,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test simple preset has simple_mode enabled.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testSimplePresetEnablesSimpleMode(): void
     {
@@ -78,6 +90,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test full_media preset has simple_mode disabled.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testFullMediaPresetDisablesSimpleMode(): void
     {
@@ -90,6 +106,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test multi_campus preset enables locations.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testMultiCampusPresetEnablesLocations(): void
     {
@@ -102,6 +122,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test that simple preset auto-creates analytics only (backup/podcast optional).
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testSimplePresetTasksAnalyticsOnly(): void
     {
@@ -112,6 +136,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test that full_media preset includes analytics (podcast/backup are optional toggles).
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testFullMediaPresetTasksIncludeAnalytics(): void
     {
@@ -159,6 +187,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test getPreset returns correct preset.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testGetPresetReturnsCorrectData(): void
     {
@@ -170,6 +202,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test getPreset returns null for unknown key.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testGetPresetReturnsNullForUnknown(): void
     {
@@ -178,6 +214,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test shouldShowWizard method exists and is static.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testShouldShowWizardMethodExists(): void
     {
@@ -189,6 +229,10 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Data provider for preset keys.
+     *
+     * @return  array<string, array{0: string}>  Each case
+     *
+     * @since   10.3.0
      */
     public static function presetKeyProvider(): array
     {

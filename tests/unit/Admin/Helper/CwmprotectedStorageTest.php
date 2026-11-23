@@ -29,6 +29,10 @@ class CwmprotectedStorageTest extends ProclaimTestCase
      * Under images/biblestudy/ with the rest of the user content, so a backup
      * that collects media collects this too and a host move does not leave a
      * second location to discover.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testItLivesUnderTheUsualMediaTree(): void
     {
@@ -39,13 +43,26 @@ class CwmprotectedStorageTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * path() and url() both end in RELATIVE_PATH.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testPathAndUrlDescribeTheSameLocation(): void
     {
         self::assertStringEndsWith(CwmprotectedStorage::RELATIVE_PATH, CwmprotectedStorage::path());
         self::assertStringEndsWith(CwmprotectedStorage::RELATIVE_PATH, CwmprotectedStorage::url());
     }
 
-    /** No doubled or missing separator, whatever JPATH_ROOT ends with. */
+    /**
+     * No doubled or missing separator, whatever JPATH_ROOT ends with.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testThePathIsWellFormed(): void
     {
         self::assertStringNotContainsString('//', substr(CwmprotectedStorage::path(), 1));
@@ -55,13 +72,26 @@ class CwmprotectedStorageTest extends ProclaimTestCase
     // when a verdict is taken again
     // -----------------------------------------------------------------
 
-    /** Never checked is always due — absence of a verdict is not a good one. */
+    /**
+     * Never checked is always due — absence of a verdict is not a good one.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAVerdictThatWasNeverTakenIsDue(): void
     {
         self::assertTrue(CwmprotectedStorage::isRecheckDue(null, 1_000_000));
         self::assertTrue(CwmprotectedStorage::isRecheckDue(0, 1_000_000));
     }
 
+    /**
+     * A verdict taken a minute ago is not due for a recheck.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAFreshVerdictIsTrusted(): void
     {
         $now = 1_000_000_000;
@@ -75,6 +105,10 @@ class CwmprotectedStorageTest extends ProclaimTestCase
     /**
      * The thing being watched for is a host migration or a switch to nginx,
      * neither of which announces itself — so a verdict has a shelf life.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testAStaleVerdictIsRetaken(): void
     {
@@ -92,6 +126,10 @@ class CwmprotectedStorageTest extends ProclaimTestCase
     /**
      * A timestamp ahead of now means the clock moved or the value was edited.
      * Trusting it would park a stale verdict indefinitely.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testAFutureTimestampIsNotTrusted(): void
     {
@@ -104,7 +142,13 @@ class CwmprotectedStorageTest extends ProclaimTestCase
     // what can be moved in
     // -----------------------------------------------------------------
 
-    /** Only a file we serve can be relocated here. */
+    /**
+     * Only a file we serve can be relocated here.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testOnlyOurOwnFilesCanBeMovedIn(): void
     {
         self::assertTrue(
@@ -123,6 +167,10 @@ class CwmprotectedStorageTest extends ProclaimTestCase
     /**
      * The sibling-prefix case. Without the trailing separator, /var/www-evil
      * passes a prefix test against /var/www and the guard means nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testASiblingDirectoryIsNotInside(): void
     {
@@ -130,6 +178,13 @@ class CwmprotectedStorageTest extends ProclaimTestCase
         self::assertFalse(CwmprotectedStorage::isInside('/var/wwwsomething', '/var/www'));
     }
 
+    /**
+     * isInside() accepts a file at any depth under the root, and the root itself.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testRealChildrenAreInside(): void
     {
         self::assertTrue(CwmprotectedStorage::isInside('/var/www/x.mp3', '/var/www'));
@@ -140,11 +195,25 @@ class CwmprotectedStorageTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * isInside() still works when the root ends in a slash.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testATrailingSlashOnTheRootDoesNotBreakIt(): void
     {
         self::assertTrue(CwmprotectedStorage::isInside('/var/www/x.mp3', '/var/www/'));
     }
 
+    /**
+     * isInside() is false when either path is empty.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testEmptyPathsAreNeverInside(): void
     {
         self::assertFalse(CwmprotectedStorage::isInside('', '/var/www'));
@@ -155,6 +224,14 @@ class CwmprotectedStorageTest extends ProclaimTestCase
     // collisions — two services, one sermon.mp3
     // -----------------------------------------------------------------
 
+    /**
+     * uniqueName() keeps a name no file has taken.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Random\RandomException
+     */
     public function testAFreeNameIsUsedAsIs(): void
     {
         $dir = $this->tempDir();
@@ -166,7 +243,14 @@ class CwmprotectedStorageTest extends ProclaimTestCase
         }
     }
 
-    /** Overwriting would destroy a file this class exists to look after. */
+    /**
+     * Overwriting would destroy a file this class exists to look after.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Random\RandomException
+     */
     public function testATakenNameIsNotOverwritten(): void
     {
         $dir = $this->tempDir();
@@ -183,6 +267,14 @@ class CwmprotectedStorageTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * uniqueName() changes a taken name that has no extension, too.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Random\RandomException
+     */
     public function testAnExtensionlessNameStillGetsUniquified(): void
     {
         $dir = $this->tempDir();
@@ -199,7 +291,13 @@ class CwmprotectedStorageTest extends ProclaimTestCase
     // moving in
     // -----------------------------------------------------------------
 
-    /** The stored filename is administrator-editable, so it is untrusted. */
+    /**
+     * The stored filename is administrator-editable, so it is untrusted.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testItRefusesPathsThatEscapeTheSiteRoot(): void
     {
         foreach (['../../../etc/passwd', '/etc/passwd', ''] as $path) {
@@ -210,13 +308,26 @@ class CwmprotectedStorageTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * moveInto() returns null for a file that doesn't exist.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Random\RandomException
+     */
     public function testItRefusesAFileThatDoesNotExist(): void
     {
         self::assertNull(CwmprotectedStorage::moveInto('images/biblestudy/nope-' . bin2hex(random_bytes(4)) . '.mp3'));
     }
 
     /**
-     * @return string
+     * Make an empty temporary directory.
+     *
+     * @return  string  Its path
+     *
+     * @since   10.5.8
+     * @throws  \Random\RandomException
      */
     private function tempDir(): string
     {
@@ -227,9 +338,13 @@ class CwmprotectedStorageTest extends ProclaimTestCase
     }
 
     /**
+     * Remove a temporary directory and the files in it.
+     *
      * @param   string  $dir  Directory to remove.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.8
      */
     private function cleanup(string $dir): void
     {

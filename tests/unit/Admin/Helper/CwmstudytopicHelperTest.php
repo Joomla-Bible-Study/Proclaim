@@ -22,11 +22,25 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmstudytopicHelperTest extends ProclaimTestCase
 {
+    /**
+     * The CwmstudytopicHelper class exists.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testClassExists(): void
     {
         $this->assertTrue(class_exists(CwmstudytopicHelper::class));
     }
 
+    /**
+     * findTopicIdByText() takes a string and returns an int.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testFindTopicIdByTextSignature(): void
     {
         $method = new \ReflectionMethod(CwmstudytopicHelper::class, 'findTopicIdByText');
@@ -34,12 +48,26 @@ class CwmstudytopicHelperTest extends ProclaimTestCase
         $this->assertParamTypeName('string', $method->getParameters()[0]);
     }
 
+    /**
+     * findTopicIdByText() returns 0 for text no topic has.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testFindTopicIdByTextReturnsZeroForUnknownText(): void
     {
         $result = CwmstudytopicHelper::findTopicIdByText('a topic name that certainly does not exist ' . uniqid());
         $this->assertSame(0, $result);
     }
 
+    /**
+     * saveTopics() takes an int and an array, and returns a bool.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testSaveTopicsSignature(): void
     {
         $method = new \ReflectionMethod(CwmstudytopicHelper::class, 'saveTopics');
@@ -49,6 +77,13 @@ class CwmstudytopicHelperTest extends ProclaimTestCase
         $this->assertParamTypeName('array', $params[1]);
     }
 
+    /**
+     * Every public method the helper declares is static.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testAllPublicMethodsAreStatic(): void
     {
         $reflection    = new \ReflectionClass(CwmstudytopicHelper::class);

@@ -31,9 +31,19 @@ class CwmrestrictionNoteTest extends ProclaimTestCase
 {
     /**
      * A visitor holding Public (1) and the site-default Guest level (5).
+     *
+     * @var    int[]
+     * @since  10.7.0
      */
     private const VISITOR = [1, 5];
 
+    /**
+     * restrictedBy() names nothing for a chain that is public at every level.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A fully public chain restricts nothing')]
     public function testPublicChainIsUnrestricted(): void
     {
@@ -43,6 +53,13 @@ class CwmrestrictionNoteTest extends ProclaimTestCase
         $this->assertSame([], CwmrestrictionNote::restrictedBy(1, 1, 1, self::VISITOR));
     }
 
+    /**
+     * A Public file under a Special message names the message as what restricts it.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('The motivating case: a Public file under a Special message names the message')]
     public function testInheritedRestrictionNamesTheMessage(): void
     {
@@ -53,6 +70,14 @@ class CwmrestrictionNoteTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * restrictedBy() names each refusing link on its own, and all three in chain order
+     * when all three refuse.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('Each link is named independently, and only the refusing ones')]
     public function testEveryCombination(): void
     {
@@ -75,6 +100,14 @@ class CwmrestrictionNoteTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * An absent message or series names nothing, while a restricted media file still
+     * does.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('An absent link constrains nothing')]
     public function testNullLinksAreSkipped(): void
     {
@@ -87,6 +120,13 @@ class CwmrestrictionNoteTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * restrictedBy() names nothing when the visitor holds every level in the chain.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A visitor holding the level is not refused by it')]
     public function testHeldLevelsSatisfy(): void
     {

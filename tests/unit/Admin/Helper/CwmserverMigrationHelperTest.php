@@ -34,6 +34,20 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // detectContentType() tests
     // -------------------------------------------------------------------------
 
+    /**
+     * detectContentType() picks the expected type for each case, from the filename, the
+     * media code, the MIME type or the legacy player number.
+     *
+     * @param   string  $filename   Media filename or URL
+     * @param   string  $mediacode  Stored media code
+     * @param   string  $mimeType   MIME type
+     * @param   string  $player     Legacy player number
+     * @param   string  $expected   The type it should detect
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('contentTypeProvider')]
     public function testDetectContentType(
         string $filename,
@@ -47,7 +61,12 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, string, string, string, string}>
+     * Filenames, media codes, MIME types and player numbers, each with the content type
+     * they should be detected as.
+     *
+     * @return  array<string, array{string, string, string, string, string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function contentTypeProvider(): array
     {
@@ -238,6 +257,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // detectContentType() with legacy ID params
     // -------------------------------------------------------------------------
 
+    /**
+     * An article_id in the legacy params makes the type article.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testDetectContentTypeWithArticleIdParam(): void
     {
         $result = CwmserverMigrationHelper::detectContentType(
@@ -250,6 +276,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('article', $result);
     }
 
+    /**
+     * A docMan_id in the legacy params makes the type docman.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testDetectContentTypeWithDocmanIdParam(): void
     {
         $result = CwmserverMigrationHelper::detectContentType(
@@ -262,6 +295,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('docman', $result);
     }
 
+    /**
+     * A virtueMart_id in the legacy params makes the type virtuemart.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testDetectContentTypeWithVirtuemartIdParam(): void
     {
         $result = CwmserverMigrationHelper::detectContentType(
@@ -283,6 +323,10 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
      * so virtuemart beats article beats docman. Checking in
      * [docman, article, virtuemart] order and returning on first match was
      * the exact inverse -- see #1540.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testDetectContentTypeLegacyIdPrecedenceMatchesLiveRendererWhenMultipleSet(): void
     {
@@ -317,6 +361,17 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // detectContentType() with AllVideos shortcodes
     // -------------------------------------------------------------------------
 
+    /**
+     * detectContentType() reads each AllVideos shortcode as the expected type.
+     *
+     * @param   string  $mediacode  Media code holding the shortcode
+     * @param   string  $player     Legacy player number
+     * @param   string  $expected   The type it should detect
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('allVideosShortcodeProvider')]
     public function testDetectContentTypeWithAllVideosShortcode(
         string $mediacode,
@@ -328,7 +383,12 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, string, string}>
+     * AllVideos shortcodes with a player number, each with the type they should be
+     * detected as.
+     *
+     * @return  array<string, array{string, string, string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function allVideosShortcodeProvider(): array
     {
@@ -378,6 +438,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * A YouTube shortcode in the media code is detected as youtube when the filename is empty.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testAllVideosShortcodeOverridesUrlInFilename(): void
     {
         // Shortcode in mediacode says YouTube, even though filename is empty
@@ -390,6 +457,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('youtube', $result);
     }
 
+    /**
+     * Player type 7 with an mp3 filename is detected as local.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testPlayerType7DetectsAsLocal(): void
     {
         $result = CwmserverMigrationHelper::detectContentType(
@@ -401,6 +475,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('local', $result);
     }
 
+    /**
+     * An article_id with player type 5 wins over a YouTube URL in the filename.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testDetectContentTypeLegacyIdTakesPriorityOverUrl(): void
     {
         // A media file with article_id=42 but also a YouTube URL in filename —
@@ -419,6 +500,17 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — YouTube
     // -------------------------------------------------------------------------
 
+    /**
+     * CWMAddonYoutube::extractMediaId() reads the video id from a watch, embed, short or
+     * live URL, and returns null for anything else.
+     *
+     * @param   string       $text      URL or embed code
+     * @param   string|null  $expected  The id it should yield, or null
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('youtubeIdProvider')]
     public function testExtractYoutubeMediaId(string $text, ?string $expected): void
     {
@@ -427,7 +519,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, ?string}>
+     * YouTube URLs and others, each with the video id that should be extracted, or null.
+     *
+     * @return  array<string, array{string, ?string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function youtubeIdProvider(): array
     {
@@ -445,6 +541,17 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — Vimeo
     // -------------------------------------------------------------------------
 
+    /**
+     * CWMAddonVimeo::extractMediaId() reads the video id from a vimeo.com URL, a player
+     * URL or an iframe, and returns null for anything else.
+     *
+     * @param   string       $text      URL or embed code
+     * @param   string|null  $expected  The id it should yield, or null
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('vimeoIdProvider')]
     public function testExtractVimeoMediaId(string $text, ?string $expected): void
     {
@@ -453,7 +560,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, ?string}>
+     * Vimeo URLs and others, each with the video id that should be extracted, or null.
+     *
+     * @return  array<string, array{string, ?string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function vimeoIdProvider(): array
     {
@@ -469,6 +580,17 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — Wistia
     // -------------------------------------------------------------------------
 
+    /**
+     * CWMAddonWistia::extractMediaId() reads the media hash from a medias or embed URL,
+     * and returns null for anything else.
+     *
+     * @param   string       $text      URL or embed code
+     * @param   string|null  $expected  The id it should yield, or null
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('wistiaHashProvider')]
     public function testExtractWistiaMediaId(string $text, ?string $expected): void
     {
@@ -477,7 +599,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, ?string}>
+     * Wistia URLs and others, each with the media hash that should be extracted, or null.
+     *
+     * @return  array<string, array{string, ?string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function wistiaHashProvider(): array
     {
@@ -492,6 +618,17 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — Dailymotion
     // -------------------------------------------------------------------------
 
+    /**
+     * CWMAddonDailymotion::extractMediaId() reads the video id from a video, embed or
+     * dai.ly URL, and returns null for anything else.
+     *
+     * @param   string       $text      URL or embed code
+     * @param   string|null  $expected  The id it should yield, or null
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('dailymotionIdProvider')]
     public function testExtractDailymotionMediaId(string $text, ?string $expected): void
     {
@@ -500,7 +637,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, ?string}>
+     * Dailymotion URLs and others, each with the video id that should be extracted, or null.
+     *
+     * @return  array<string, array{string, ?string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function dailymotionIdProvider(): array
     {
@@ -516,6 +657,17 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — Rumble
     // -------------------------------------------------------------------------
 
+    /**
+     * CWMAddonRumble::extractMediaId() reads the video id from an embed or video page URL,
+     * and returns null for anything else.
+     *
+     * @param   string       $text      URL or embed code
+     * @param   string|null  $expected  The id it should yield, or null
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('rumbleIdProvider')]
     public function testExtractRumbleMediaId(string $text, ?string $expected): void
     {
@@ -524,7 +676,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, ?string}>
+     * Rumble URLs and others, each with the video id that should be extracted, or null.
+     *
+     * @return  array<string, array{string, ?string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function rumbleIdProvider(): array
     {
@@ -539,6 +695,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // transformParams() tests
     // -------------------------------------------------------------------------
 
+    /**
+     * A YouTube watch URL becomes an embed URL with enablejsapi=1 and player 1, and the
+     * display params are kept.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsYoutube(): void
     {
         $params = [
@@ -563,6 +727,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('video/mp4', $result['mime_type']);
     }
 
+    /**
+     * A Vimeo URL becomes a player embed URL with player 1 and no media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsVimeo(): void
     {
         $params = [
@@ -578,6 +749,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A Wistia medias URL becomes an embed iframe URL with player 1 and no media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsWistia(): void
     {
         $params = [
@@ -592,6 +770,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A local file loses the legacy server's path prefix and keeps player 0.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsLocal(): void
     {
         $params = [
@@ -618,6 +803,10 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
      * bare relative path that mediaBuildUrl() then silently concatenated
      * onto the *new* local server's own base path -- pointing at a file
      * that was never actually moved there. See #1540.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testStripLegacyPrefixDoesNotStripAnUnrelatedHost(): void
     {
@@ -642,6 +831,10 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
      * Sanity check the fix didn't also break the case it's meant to
      * preserve: a filename actually served by the legacy server being
      * migrated must still have its prefix stripped.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testStripLegacyPrefixStillStripsTheConfiguredLegacyServerPrefix(): void
     {
@@ -658,6 +851,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('sermons/audio.mp3', $result);
     }
 
+    /**
+     * An embed keeps its filename, player 8 and media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsEmbed(): void
     {
         $params = [
@@ -673,6 +873,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('<iframe src="https://example.com/embed/123"></iframe>', $result['mediacode']);
     }
 
+    /**
+     * A Dailymotion video URL becomes an embed URL with player 1.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsDailymotion(): void
     {
         $params = [
@@ -686,6 +893,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('1', $result['player']);
     }
 
+    /**
+     * A Rumble video page URL becomes an embed URL with player 1.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsRumble(): void
     {
         $params = [
@@ -699,6 +913,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('1', $result['player']);
     }
 
+    /**
+     * A SoundCloud track URL becomes a player embed URL with player 1 and no media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsSoundcloud(): void
     {
         $params = [
@@ -714,6 +935,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertStringContainsString('w.soundcloud.com/player', $result['filename']);
     }
 
+    /**
+     * An article URL is kept, with player 100 and no media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsArticle(): void
     {
         $params = [
@@ -729,6 +957,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A legacy article_id becomes an article URL, with player 100.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsArticleFromLegacyId(): void
     {
         // Legacy media files store the article reference in article_id param
@@ -746,6 +981,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A VirtueMart URL is kept, with player 1 and no media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsVirtuemart(): void
     {
         $params = [
@@ -761,6 +1003,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A legacy virtueMart_id becomes a VirtueMart product URL, with player 1.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsVirtuemartFromLegacyId(): void
     {
         $params = [
@@ -780,6 +1029,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A DOCman URL is kept, with player 100 and no media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsDocman(): void
     {
         $params = [
@@ -795,6 +1051,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A legacy docMan_id becomes a DOCman document URL by slug, with player 100.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsDocmanFromLegacyId(): void
     {
         $params = [
@@ -814,6 +1077,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * transformParams() keeps every display param: image, button, icon, MIME type, size,
+     * duration, autostart, popup, link type and player size.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsPreservesDisplayParams(): void
     {
         $params = [
@@ -861,6 +1132,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // Dynamic type/label methods tests
     // -------------------------------------------------------------------------
 
+    /**
+     * getTargetTypes() returns exactly the fifteen expected types.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testGetTargetTypesIncludesAllExpected(): void
     {
         $expected = [
@@ -876,6 +1154,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * getTypeLabels() has a label for every target type, and for unknown.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testGetTypeLabelsCoversAllTargetTypes(): void
     {
         foreach (CwmserverMigrationHelper::getTargetTypes() as $type) {
@@ -890,6 +1175,17 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractAllVideosContent() tests
     // -------------------------------------------------------------------------
 
+    /**
+     * extractAllVideosContent() returns what an AllVideos shortcode wraps, and an empty
+     * string for a dash placeholder or when there is no shortcode.
+     *
+     * @param   string  $mediacode  Media code
+     * @param   string  $expected   What it should return
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('allVideosContentProvider')]
     public function testExtractAllVideosContent(string $mediacode, string $expected): void
     {
@@ -898,7 +1194,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, string}>
+     * Media codes, each with the content extractAllVideosContent() should return.
+     *
+     * @return  array<string, array{string, string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function allVideosContentProvider(): array
     {
@@ -937,6 +1237,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // transformParams() with AllVideos bare IDs
     // -------------------------------------------------------------------------
 
+    /**
+     * A YouTube shortcode's bare id becomes an embed URL with player 1 and no media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsYoutubeFromAllVideos(): void
     {
         $params = [
@@ -952,6 +1259,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A Vimeo shortcode's bare id becomes a player embed URL with player 1 and no media
+     * code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsVimeoFromAllVideos(): void
     {
         $params = [
@@ -967,6 +1282,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A Dailymotion shortcode's bare id becomes an embed URL with player 1 and no media
+     * code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsDailymotionFromAllVideos(): void
     {
         $params = [
@@ -982,6 +1305,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A YouTube shortcode holding only a dash takes the video from the filename.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsYoutubeAllVideosDashUsesFilename(): void
     {
         // Dash placeholder means "use filename field" — should fall back
@@ -1001,6 +1331,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // transformParams() preserves embed URL query params
     // -------------------------------------------------------------------------
 
+    /**
+     * A YouTube iframe's autoplay, start, loop and rel become form fields, and its embed
+     * URL keeps enablejsapi=1, with player 1 and no media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsYoutubePreservesIframeParams(): void
     {
         $params = [
@@ -1022,6 +1360,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('', $result['mediacode']);
     }
 
+    /**
+     * A YouTube watch URL becomes an embed URL with enablejsapi=1 and without its v param.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsYoutubePreservesWatchUrlParams(): void
     {
         $params = [
@@ -1040,6 +1385,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         // so they are not mapped to form fields (only standard embed API params are mapped)
     }
 
+    /**
+     * A Vimeo iframe's color, title, byline and portrait become form fields.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsVimeoPreservesIframeParams(): void
     {
         $params = [
@@ -1058,6 +1410,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('0', $result['vm_portrait']);
     }
 
+    /**
+     * A Wistia URL's autoPlay and controlsVisibleOnLoad become form fields.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsWistiaPreservesParams(): void
     {
         $params = [
@@ -1073,6 +1432,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('false', $result['ws_controls_visible']);
     }
 
+    /**
+     * A Dailymotion iframe's autoplay, mute and startTime become form fields.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsDailymotionPreservesParams(): void
     {
         $params = [
@@ -1090,6 +1456,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('15', $result['dm_start']);
     }
 
+    /**
+     * A Rumble URL's pub and autoplay become form fields.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsRumblePreservesParams(): void
     {
         $params = [
@@ -1105,6 +1478,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('true', $result['autostart']);
     }
 
+    /**
+     * A SoundCloud player URL from an iframe is kept whole as the filename, with player 1.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsSoundcloudPreservesEmbedUrl(): void
     {
         // If someone had a full SoundCloud embed URL in an iframe, preserve it
@@ -1121,6 +1501,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('1', $result['player']);
     }
 
+    /**
+     * A Vimeo URL with no params becomes an embed URL with no trailing question mark.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsCleanUrlNoExtraParams(): void
     {
         // Clean URLs without params should still produce clean output (no trailing ?)
@@ -1139,6 +1526,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractSourceUrlParams() tests
     // -------------------------------------------------------------------------
 
+    /**
+     * extractSourceUrlParams() reads v, start and autoplay from a YouTube watch URL.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testExtractSourceUrlParamsYoutubeWatch(): void
     {
         $params = CwmserverMigrationHelper::extractSourceUrlParams(
@@ -1151,6 +1545,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('1', $params['autoplay']);
     }
 
+    /**
+     * extractSourceUrlParams() reads autoplay, loop and rel from a YouTube iframe.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testExtractSourceUrlParamsYoutubeEmbed(): void
     {
         $params = CwmserverMigrationHelper::extractSourceUrlParams(
@@ -1163,6 +1564,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('0', $params['rel']);
     }
 
+    /**
+     * extractSourceUrlParams() reads color and title from a Vimeo iframe.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testExtractSourceUrlParamsVimeo(): void
     {
         $params = CwmserverMigrationHelper::extractSourceUrlParams(
@@ -1174,6 +1582,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('0', $params['title']);
     }
 
+    /**
+     * extractSourceUrlParams() returns an empty array for a URL with no query.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testExtractSourceUrlParamsNoParams(): void
     {
         $params = CwmserverMigrationHelper::extractSourceUrlParams(
@@ -1184,6 +1599,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame([], $params);
     }
 
+    /**
+     * extractSourceUrlParams() returns an empty array for an unknown platform.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testExtractSourceUrlParamsUnknownPlatform(): void
     {
         $params = CwmserverMigrationHelper::extractSourceUrlParams(
@@ -1194,6 +1616,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame([], $params);
     }
 
+    /**
+     * An unknown AllVideos shortcode becomes an embed with player 8, keeping its filename
+     * and media code.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testTransformParamsAllVideosPlayer2ToEmbed(): void
     {
         // Unrecognized AllVideos shortcode → embed, preserve mediacode
@@ -1217,6 +1647,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
      * process) -- discovered when a #1538 regression test that calls
      * CwmmigrationHelper::migrateLegacyServers() (which calls this method)
      * triggered exactly that in CI, where no identity is ever set up.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     public function testCreateServerForTypeDoesNotDereferenceANullIdentity(): void
     {
@@ -1252,6 +1687,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // Files a legacy server served from another host
     // -------------------------------------------------------------------------
 
+    /**
+     * isRemoteLegacyHost() is true for a legacy server on another host.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testRemoteLegacyHostIsDetected(): void
     {
         $legacy = ['path' => '//www.calvarychapelnewberg.net/', 'protocol' => 'http://'];
@@ -1259,6 +1701,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         $this->assertTrue(CwmserverMigrationHelper::isRemoteLegacyHost($legacy, 'example.org'));
     }
 
+    /**
+     * isRemoteLegacyHost() is false for the site's own host, even with www in front.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testTheSitesOwnHostIsNotRemoteEvenWithWww(): void
     {
         $legacy = ['path' => '//www.example.org/', 'protocol' => 'https://'];
@@ -1266,12 +1715,26 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         $this->assertFalse(CwmserverMigrationHelper::isRemoteLegacyHost($legacy, 'example.org'));
     }
 
+    /**
+     * isRemoteLegacyHost() is false for a legacy server with no host.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testALegacyServerWithNoHostIsNotRemote(): void
     {
         $this->assertFalse(CwmserverMigrationHelper::isRemoteLegacyHost(['path' => '', 'protocol' => 'http://'], 'example.org'));
         $this->assertFalse(CwmserverMigrationHelper::isRemoteLegacyHost([], 'example.org'));
     }
 
+    /**
+     * resolveTargetType() sends a local file on another host to a direct server.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testALocalFileOnARemoteHostGoesToADirectServer(): void
     {
         $legacy = ['path' => '//cdn.example.net/', 'protocol' => 'http://'];
@@ -1279,6 +1742,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         $this->assertSame('direct', CwmserverMigrationHelper::resolveTargetType('local', $legacy, 'example.org'));
     }
 
+    /**
+     * resolveTargetType() leaves other types alone, and keeps a local file local when the
+     * legacy host is the site's own or not set.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testOnlyLocalFilesAreRerouted(): void
     {
         $legacy = ['path' => '//cdn.example.net/', 'protocol' => 'http://'];
@@ -1291,6 +1762,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * A relative filename migrated to a direct server gets the legacy server's protocol
+     * and host in front.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testAMigratedRelativeFileKeepsItsLegacyHost(): void
     {
         $legacy = ['path' => '//www.calvarychapelnewberg.net/', 'protocol' => 'http://'];
@@ -1304,6 +1783,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         $this->assertSame('http://www.calvarychapelnewberg.net/MediaFiles/2015/2015-008.mp3', $result['filename']);
     }
 
+    /**
+     * absoluteLegacyUrl() doesn't add a second protocol to a legacy path that already
+     * has one.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testALegacyPathWithItsOwnProtocolIsNotDoubled(): void
     {
         $legacy = ['path' => 'http://calvarynewberg.org/', 'protocol' => 'http://'];
@@ -1314,6 +1801,13 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * absoluteLegacyUrl() leaves a filename that is already absolute alone.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testAnAbsoluteFilenameIsLeftAlone(): void
     {
         $legacy = ['path' => '//cdn.example.net/', 'protocol' => 'http://'];
@@ -1324,6 +1818,14 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * createServerForType()'s source doesn't read created_by straight from $user->id,
+     * since the identity can be null.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testCreateServerForTypeGuardsAgainstANullIdentity(): void
     {
         $reflection = new \ReflectionMethod(CwmserverMigrationHelper::class, 'createServerForType');

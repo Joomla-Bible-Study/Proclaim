@@ -28,7 +28,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create a fully-populated sermon item for testing.
      *
-     * @return \stdClass
+     * @return  \stdClass
+     *
+     * @since   10.1.0
      */
     private function makeSermonItem(): \stdClass
     {
@@ -50,7 +52,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create a minimal sermon item with only required fields.
      *
-     * @return \stdClass
+     * @return  \stdClass
+     *
+     * @since   10.1.0
      */
     private function makeMinimalSermonItem(): \stdClass
     {
@@ -64,7 +68,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create a fully-populated teacher item for testing.
      *
-     * @return \stdClass
+     * @return  \stdClass
+     *
+     * @since   10.1.0
      */
     private function makeTeacherItem(): \stdClass
     {
@@ -90,7 +96,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create a series item for testing.
      *
-     * @return \stdClass
+     * @return  \stdClass
+     *
+     * @since   10.1.0
      */
     private function makeSeriesItem(): \stdClass
     {
@@ -107,7 +115,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create study items for series testing.
      *
-     * @return array
+     * @return  array
+     *
+     * @since   10.1.0
      */
     private function makeStudies(): array
     {
@@ -129,7 +139,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test buildSermonDetail with full data.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildSermonDetailFullData(): void
     {
@@ -159,7 +171,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test buildSermonDetail with minimal data omits optional fields.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildSermonDetailMinimalData(): void
     {
@@ -180,7 +194,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test that HTML is stripped from description.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildSermonDetailStripsHtml(): void
     {
@@ -197,7 +213,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test buildSermonList with items.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildSermonListWithItems(): void
     {
@@ -217,7 +235,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test buildSermonList with empty array.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildSermonListEmpty(): void
     {
@@ -233,7 +253,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test buildTeacherDetail with full data.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildTeacherDetailFullData(): void
     {
@@ -257,7 +279,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test buildTeacherDetail with no social links.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildTeacherDetailNoSocialLinks(): void
     {
@@ -285,7 +309,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test that invalid URLs are filtered from sameAs.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildTeacherDetailFiltersBadUrls(): void
     {
@@ -310,7 +336,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
      * (used by the sync path). The PreachIT importer writes social_links
      * directly, bypassing the legacy facebooklink/twitterlink/... columns.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testBuildTeacherDetailPrefersSocialLinksJsonOverLegacyFields(): void
     {
@@ -336,7 +364,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
      * Regression test for #1562 finding 5: link3 was missing from the
      * legacy-field fallback list.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testBuildTeacherDetailFallsBackToLink3(): void
     {
@@ -360,7 +390,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test buildSeriesDetail with full data.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildSeriesDetailFullData(): void
     {
@@ -387,7 +419,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test buildSeriesDetail with no studies.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildSeriesDetailNoStudies(): void
     {
@@ -404,7 +438,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
      * sentinel as datePublished, unlike syncMessages()/buildSermonSchemaFromRow()
      * which already guarded against it.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testZeroDateSentinelOmitsDatePublished(): void
     {
@@ -428,7 +464,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test cleanDescription strips HTML and truncates.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testCleanDescriptionStripsAndTruncates(): void
     {
@@ -443,7 +481,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test cleanDescription returns empty for empty input.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testCleanDescriptionEmpty(): void
     {
@@ -454,7 +494,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test cleanDescription handles special characters.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testCleanDescriptionSpecialChars(): void
     {
@@ -466,7 +508,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test that topics are correctly split from comma-separated string.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildSermonDetailParsesTopics(): void
     {
@@ -480,7 +524,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Test sermon list items include author when available.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testBuildSermonListItemIncludesAuthor(): void
     {
@@ -504,7 +550,9 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
      * inject() runs its real json_encode()/addCustomTag() logic without a full
      * Joomla application bootstrap.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testInjectNeutralizesScriptBreakoutInMaliciousTitle(): void
     {
@@ -517,19 +565,49 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
         $box->html = null;
 
         $app = new class ($box) {
+            /**
+             * Keep the box the document double writes its tag into.
+             *
+             * @param   \stdClass  $box  Holds the captured tag
+             *
+             * @since   10.5.6
+             */
             public function __construct(private $box)
             {
             }
 
+            /**
+             * A document double that writes the tag it is given into the box.
+             *
+             * @return  object  The document
+             *
+             * @since   10.5.6
+             */
             public function getDocument()
             {
                 $box = $this->box;
 
                 return new class ($box) {
+                    /**
+                     * Keep the box the tag is written into.
+                     *
+                     * @param   \stdClass  $box  Holds the captured tag
+                     *
+                     * @since   10.5.6
+                     */
                     public function __construct(private $box)
                     {
                     }
 
+                    /**
+                     * Record the tag in the box.
+                     *
+                     * @param   string  $html  The tag
+                     *
+                     * @return  void
+                     *
+                     * @since   10.5.6
+                     */
                     public function addCustomTag($html)
                     {
                         $this->box->html = $html;

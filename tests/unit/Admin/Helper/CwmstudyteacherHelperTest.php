@@ -24,8 +24,9 @@ class CwmstudyteacherHelperTest extends ProclaimTestCase
     /**
      * Test getTeachersForStudy returns empty array for zero/negative IDs.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetTeachersForStudyWithZeroId(): void
     {
@@ -39,8 +40,9 @@ class CwmstudyteacherHelperTest extends ProclaimTestCase
     /**
      * Test getTeachersForStudies returns empty array for empty input.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetTeachersForStudiesWithEmptyInput(): void
     {
@@ -51,8 +53,9 @@ class CwmstudyteacherHelperTest extends ProclaimTestCase
     /**
      * Test getTeachersForStudies filters out zero/negative IDs.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetTeachersForStudiesFiltersInvalidIds(): void
     {
@@ -63,8 +66,9 @@ class CwmstudyteacherHelperTest extends ProclaimTestCase
     /**
      * Test resetCache can be called without errors.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testResetCacheDoesNotThrow(): void
     {
