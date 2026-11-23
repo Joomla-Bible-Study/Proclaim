@@ -28,14 +28,21 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class CwmpodcastFeedSpecTest extends ProclaimTestCase
 {
     /**
-     * @var Cwmpodcast
+     * The podcast helper under test.
+     *
+     * @var    Cwmpodcast
+     * @since  10.5.0
      */
     protected Cwmpodcast $podcast;
 
     /**
      * Set up test fixtures.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \Exception
+     * @throws  \ReflectionException
      */
     protected function setUp(): void
     {
@@ -68,6 +75,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * values reach the feed exactly as typed.
      *
      * @return  array<string, array{0: mixed, 1: mixed, 2: mixed, 3: string}>
+     *
+     * @since   10.5.0
      */
     public static function durationProvider(): array
     {
@@ -93,6 +102,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * @param   string  $expected  The itunes:duration value.
      *
      * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \ReflectionException
      */
     #[DataProvider('durationProvider')]
     public function testDurationIsZeroPadded(
@@ -119,6 +131,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * bogus 0:0:0 duration.
      *
      * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \ReflectionException
      */
     public function testZeroDurationIsOmittedRatherThanEmittedAsZeros(): void
     {
@@ -137,6 +152,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * Values a hand-typed duration can hold, and their normalized form.
      *
      * @return  array<string, array{0: string, 1: string}>
+     *
+     * @since   10.5.0
      */
     public static function durationNormalizationProvider(): array
     {
@@ -164,6 +181,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * @param   string  $expected  What must be stored.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     #[DataProvider('durationNormalizationProvider')]
     public function testDurationPartsAreNormalizedOnSave(string $typed, string $expected): void
@@ -203,6 +222,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * and detection routines skip exactly the records that need them.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     public function testDurationSetChecksCompareNumerically(): void
     {
@@ -233,6 +254,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * File paths, the stored mime_type, and the type that must be declared.
      *
      * @return  array<string, array{0: string, 1: ?string, 2: string}>
+     *
+     * @since   10.5.0
      */
     public static function enclosureTypeProvider(): array
     {
@@ -263,6 +286,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * @param   string   $expected  Type that must be declared.
      *
      * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \ReflectionException
      */
     #[DataProvider('enclosureTypeProvider')]
     public function testEnclosureTypeIsDerivedFromTheFile(string $path, ?string $stored, string $expected): void
@@ -276,6 +302,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * audio/mpeg3 was never IANA-registered; it must not reappear as a default.
      *
      * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \ReflectionException
      */
     public function testUnregisteredMpeg3TypeIsNeverEmitted(): void
     {
@@ -294,6 +323,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * An empty type attribute is invalid; every branch must yield something.
      *
      * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \ReflectionException
      */
     public function testEnclosureTypeIsNeverEmpty(): void
     {
@@ -313,6 +345,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * the guid as a web page. resolveGuid() returns a media URL, not a page.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     public function testGuidIsDeclaredNotAPermalink(): void
     {
@@ -347,6 +381,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * concatenation, producing "https:///resources/sermons.html".
      *
      * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \ReflectionException
      */
     public function testRootRelativePathDoesNotProduceAnEmptyAuthority(): void
     {
@@ -366,6 +403,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * The other input classes keep working unchanged.
      *
      * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \ReflectionException
      */
     public function testAbsoluteAndBareDomainValuesAreUnchanged(): void
     {
@@ -399,6 +439,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * default would send subscribers to a different origin than the feed.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     public function testProtocolFallbacksDefaultToHttps(): void
     {
@@ -439,6 +481,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * Filenames, stored types, and whether the validator should warn.
      *
      * @return  array<string, array{0: string, 1: string, 2: bool}>
+     *
+     * @since   10.5.0
      */
     public static function mimeMismatchProvider(): array
     {
@@ -466,6 +510,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * @param   bool    $expected  Whether a warning is expected.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     #[DataProvider('mimeMismatchProvider')]
     public function testValidatorFlagsOnlyGenuineMimeMismatches(
@@ -496,6 +542,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * than warned about on every episode.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     public function testValidatorSkipsYouTubeRecords(): void
     {
@@ -521,6 +569,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * a live feed audit found "/resources/sermons.html" in both tags.
      *
      * @return  void
+     *
+     * @since   10.5.1
      */
     public function testMenuItemIdResolvesToAnAbsoluteUrl(): void
     {
@@ -546,6 +596,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * groups nowhere in Apple Podcasts.
      *
      * @return  void
+     *
+     * @since   10.5.1
      */
     public function testSeasonAndEpisodeAreEmittedForAppleToo(): void
     {
@@ -574,6 +626,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * sat eight hours from the real instant.
      *
      * @return  void
+     *
+     * @since   10.5.1
+     * @throws  \ReflectionException
      */
     public function testFeedDateUsesTheSiteTimeZone(): void
     {
@@ -599,6 +654,10 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * not the instant.
      *
      * @return  void
+     *
+     * @since   10.5.1
+     * @throws  \DateInvalidTimeZoneException
+     * @throws  \ReflectionException
      */
     public function testFeedDateConvertsRatherThanRelabels(): void
     {
@@ -619,6 +678,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * No naive date() call should reach the feed again.
      *
      * @return  void
+     *
+     * @since   10.5.1
      */
     public function testFeedDoesNotFormatDatesWithTheServerZone(): void
     {
@@ -644,6 +705,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * The copyright line names the holder and drops the stray parentheses.
      *
      * @return  void
+     *
+     * @since   10.5.1
+     * @throws  \ReflectionException
      */
     public function testCopyrightNamesTheHolder(): void
     {
@@ -670,6 +734,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * An empty holder falls back rather than publishing a bare year.
      *
      * @return  void
+     *
+     * @since   10.5.1
+     * @throws  \ReflectionException
      */
     public function testCopyrightFallsBackWhenNoHolderIsSet(): void
     {
@@ -691,6 +758,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * installed — en-GB — so a US church could not declare en-us (#1411).
      *
      * @return  void
+     *
+     * @since   10.5.1
+     * @throws  \ReflectionException
      */
     public function testFeedLanguageOffersCodesJoomlaDoesNotInstall(): void
     {
@@ -719,6 +789,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * content languages.
      *
      * @return  void
+     *
+     * @since   10.5.1
      */
     public function testPodcastFormUsesTheFeedLanguageField(): void
     {
@@ -746,6 +818,10 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * is on, the URL must be a real path carrying the media's own extension.
      *
      * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \Exception
+     * @throws  \ReflectionException
      */
     public function testTrackedEnclosureUrlCarriesRealExtensionWhenSefEnabled(): void
     {
@@ -780,6 +856,10 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * extension-bearing but isn't actually routable.
      *
      * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \Exception
+     * @throws  \ReflectionException
      */
     public function testTrackedEnclosureUrlReturnsNullWhenSefDisabled(): void
     {
@@ -811,6 +891,10 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * media URL rather than emit a path with a blank or wrong extension.
      *
      * @return  void
+     *
+     * @since   10.5.4
+     * @throws  \Exception
+     * @throws  \ReflectionException
      */
     public function testTrackedEnclosureUrlReturnsNullForUnknownExtension(): void
     {

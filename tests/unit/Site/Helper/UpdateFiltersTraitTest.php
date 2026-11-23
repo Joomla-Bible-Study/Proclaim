@@ -31,7 +31,8 @@ class UpdateFiltersTraitTest extends ProclaimTestCase
     /**
      * Filter form XML mirroring the groups site/forms/filter_cwmsermons.xml declares.
      *
-     * @var string
+     * @var    string
+     * @since  10.5.0
      */
     private const FORM_XML = <<<'XML'
 <?xml version="1.0" encoding="utf-8"?>
@@ -57,7 +58,8 @@ XML;
     /**
      * Request keys the trait reads, cleared between tests.
      *
-     * @var string[]
+     * @var    string[]
+     * @since  10.5.0
      */
     private const REQUEST_KEYS = [
         'filter_search',
@@ -74,7 +76,10 @@ XML;
     /**
      * Reset the shared CLI input between tests.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -91,7 +96,9 @@ XML;
      * Filters left at their user-state default of '' must not count as active,
      * otherwise the searchtools panel renders open on every request.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.0
      */
     public function testEmptyFilterValuesAreNotActive(): void
     {
@@ -109,7 +116,9 @@ XML;
      * A filter carrying a real value is reported as active, keyed by field name
      * with its value — the shape ListModel::getActiveFilters() produces.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.0
      */
     public function testSelectedFilterIsActiveAndKeyedByName(): void
     {
@@ -124,7 +133,10 @@ XML;
      * A landing page call (?filter_teacher=3) sets the form value and marks the
      * filter active so the panel opens showing what was pre-selected.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \Exception
      */
     public function testLandingPageValueIsAppliedAndActive(): void
     {
@@ -141,7 +153,9 @@ XML;
      * Filters absent from the request keep whatever the user state loaded — an
      * unset request key must not blank the form value.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.0
      */
     public function testAbsentRequestKeyDoesNotClearExistingValue(): void
     {
@@ -156,7 +170,9 @@ XML;
      * A filter hidden by template params is dropped from both the form and the
      * active list, so a hidden filter cannot force the panel open.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.0
      */
     public function testHiddenFilterIsRemovedFromFormAndActiveFilters(): void
     {
@@ -175,6 +191,8 @@ XML;
      * @param   array  $params        Template params driving the show_*_search toggles.
      *
      * @return  object
+     *
+     * @since   10.5.0
      */
     private function makeHost(array $filterValues, array $params = []): object
     {
@@ -185,18 +203,51 @@ XML;
         return new class ($form, new Registry($params)) {
             use UpdateFiltersTrait;
 
+            /**
+             * The filter form the trait updates.
+             *
+             * @var    Form|null
+             * @since  10.5.0
+             */
             public ?Form $filterForm = null;
 
+            /**
+             * The filters the trait reports as active.
+             *
+             * @var    array|null
+             * @since  10.5.0
+             */
             public ?array $activeFilters = null;
 
+            /**
+             * The params that decide which filters show.
+             *
+             * @var    Registry|null
+             * @since  10.5.0
+             */
             protected ?Registry $params = null;
 
+            /**
+             * Hold the form and params the trait works on.
+             *
+             * @param   Form      $filterForm  The filter form
+             * @param   Registry  $params      The params
+             *
+             * @since   10.5.0
+             */
             public function __construct(Form $filterForm, Registry $params)
             {
                 $this->filterForm = $filterForm;
                 $this->params     = $params;
             }
 
+            /**
+             * Run the trait's updateFilters().
+             *
+             * @return  void
+             *
+             * @since   10.5.0
+             */
             public function run(): void
             {
                 $this->updateFilters();

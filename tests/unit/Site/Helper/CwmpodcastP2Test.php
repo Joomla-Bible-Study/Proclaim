@@ -22,12 +22,19 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class CwmpodcastP2Test extends ProclaimTestCase
 {
     /**
-     * @var Cwmpodcast
+     * The podcast helper under test.
+     *
+     * @var    Cwmpodcast
+     * @since  10.3.2
      */
     protected Cwmpodcast $podcast;
 
     /**
      * Set up test fixtures
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     protected function setUp(): void
     {
@@ -42,8 +49,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test UUIDv5 generation produces valid format.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
+     * @throws  \ReflectionException
      */
     public function testUuidv5ProducesValidFormat(): void
     {
@@ -64,8 +73,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test UUIDv5 is deterministic — same input always produces same output.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
+     * @throws  \ReflectionException
      */
     public function testUuidv5IsDeterministic(): void
     {
@@ -81,8 +92,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test UUIDv5 produces different results for different inputs.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
+     * @throws  \ReflectionException
      */
     public function testUuidv5DiffersForDifferentInputs(): void
     {
@@ -119,6 +132,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
 
     /**
      * Data provider for normalizeTime tests.
+     *
+     * @return  array<string, array{0: string, 1: string}>  The time, and the HH:MM:SS it becomes
+     *
+     * @since   10.3.2
      */
     public static function normalizeTimeProvider(): array
     {
@@ -139,8 +156,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test generatePodcastGuid strips protocol and trailing slashes.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
+     * @throws  \ReflectionException
      */
     public function testGeneratePodcastGuidNormalizesUrl(): void
     {
@@ -156,8 +175,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test generatePodcastGuid produces valid UUIDv5.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
+     * @throws  \ReflectionException
      */
     public function testGeneratePodcastGuidIsValidUuid(): void
     {
@@ -178,8 +199,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test getChapterTimecodes returns empty for no chapters.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
+     * @throws  \ReflectionException
      */
     public function testGetChapterTimecodesEmptyWhenNoChapters(): void
     {
@@ -194,8 +217,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test getChapterTimecodes formats output correctly.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
+     * @throws  \ReflectionException
      */
     public function testGetChapterTimecodesFormatsCorrectly(): void
     {
@@ -224,8 +249,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test getTranscriptXml returns empty for no tracks.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
+     * @throws  \ReflectionException
      */
     public function testGetTranscriptXmlEmptyWhenNoTracks(): void
     {
@@ -240,8 +267,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
     /**
      * Test getTranscriptXml generates correct MIME types.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
+     * @throws  \ReflectionException
      */
     public function testGetTranscriptXmlCorrectMimeTypes(): void
     {
@@ -290,6 +319,10 @@ class CwmpodcastP2Test extends ProclaimTestCase
 
     /**
      * Data provider for timeToSeconds tests.
+     *
+     * @return  array<string, array{0: string, 1: float}>  The time, and its length in seconds
+     *
+     * @since   10.3.2
      */
     public static function timeToSecondsProvider(): array
     {

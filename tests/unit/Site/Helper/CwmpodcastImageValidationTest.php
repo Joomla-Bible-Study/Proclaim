@@ -43,8 +43,13 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
     private mixed $previousLanguage = null;
 
     /**
+     * Load a language of the test's own, so the report's messages carry their
+     * paths without leaking into later tests, and make a folder for the artwork.
+     *
      * @return  void
+     *
      * @since   10.7.8
+     * @throws  \Random\RandomException
      */
     protected function setUp(): void
     {
@@ -63,7 +68,10 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
     }
 
     /**
+     * Remove the artwork folder and restore the language.
+     *
      * @return  void
+     *
      * @since   10.7.8
      */
     protected function tearDown(): void
@@ -77,8 +85,12 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
     }
 
     /**
+     * Artwork picked with the media field is found and measured.
+     *
      * @return  void
+     *
      * @since   10.7.8
+     * @throws  \ReflectionException
      */
     #[TestDox('Artwork picked with the media field is found and measured')]
     public function testMediaFieldArtworkIsFoundAndMeasured(): void
@@ -99,8 +111,12 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
     }
 
     /**
+     * Missing artwork is reported by its path, without the media field fragment.
+     *
      * @return  void
+     *
      * @since   10.7.8
+     * @throws  \ReflectionException
      */
     #[TestDox('Missing artwork is reported by its path, without the media field fragment')]
     public function testMissingArtworkIsReportedByItsPath(): void
@@ -116,11 +132,14 @@ class CwmpodcastImageValidationTest extends ProclaimTestCase
     }
 
     /**
+     * Run the podcast's artwork check on a stored value.
+     *
      * @param   string  $value  The stored podcastimage value
      *
      * @return  array  The artwork check's result
      *
      * @since   10.7.8
+     * @throws  \ReflectionException
      */
     private function validate(string $value): array
     {

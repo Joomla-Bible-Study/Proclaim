@@ -30,19 +30,28 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * The empty asset a failed save leaves is removed, and removing an asset leaves
+ * no gap in the nested set.
+ *
+ * @since  10.5.8
  */
 class CwmassetsStripTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseInterface|null
-     * @since 10.5.8
+     * The database. A test deletes the rows it adds instead of rolling them back,
+     * because Table\Asset::store() takes a table lock, an implicit COMMIT in MySQL.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.5.8
      */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -56,8 +65,11 @@ class CwmassetsStripTest extends IntegrationTestCase
     }
 
     /**
+     * Delete any asset a test left behind.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function tearDown(): void
     {
@@ -77,7 +89,8 @@ class CwmassetsStripTest extends IntegrationTestCase
      * The highest right-hand bound in the tree.
      *
      * @return  int
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function maxRgt(): int
     {
@@ -86,6 +99,13 @@ class CwmassetsStripTest extends IntegrationTestCase
         )->loadResult();
     }
 
+    /**
+     * The asset a failed save leaves behind is removed, and the record detached from it.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the asset a failed save leaves behind is removed, and the record detached from it')]
     public function testOrphanAssetFromAFailedSaveIsRemoved(): void
     {
@@ -127,6 +147,13 @@ class CwmassetsStripTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Removing an empty asset closes its gap in the nested set.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('removing an empty asset closes its gap in the nested set')]
     public function testStrippingAnAssetLeavesNoGap(): void
     {

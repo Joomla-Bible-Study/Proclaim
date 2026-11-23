@@ -27,20 +27,25 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * Reparenting moves item assets under their section, corrects legacy names,
+ * and keeps the nested set valid.
+ *
+ * @since  10.5.8
  */
 class CwmassetsReparentTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseInterface|null
-     * @since 10.5.8
+     * The database.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.5.8
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * Asset ids this test created, removed again in tearDown.
      *
-     * @var list<int>
+     * @var    list<int>
      * @since 10.5.8
      */
     private array $created = [];
@@ -48,14 +53,17 @@ class CwmassetsReparentTest extends IntegrationTestCase
     /**
      * Section rules on the way in, so a deny written here is undone.
      *
-     * @var array<int, string>
+     * @var    array<int, string>
      * @since 10.5.8
      */
     private array $savedRules = [];
 
     /**
+     * Skip without a test database or a readable access.xml.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -79,7 +87,8 @@ class CwmassetsReparentTest extends IntegrationTestCase
      * implicit COMMIT in MySQL.
      *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function tearDown(): void
     {
@@ -114,7 +123,8 @@ class CwmassetsReparentTest extends IntegrationTestCase
      * @param   string  $rules     JSON rule set
      *
      * @return  int
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function makeAsset(string $name, int $parentId, string $rules = '{}'): int
     {
@@ -136,7 +146,8 @@ class CwmassetsReparentTest extends IntegrationTestCase
      * @param   string  $name  Asset name
      *
      * @return  string
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function parentNameOf(string $name): string
     {
@@ -147,6 +158,14 @@ class CwmassetsReparentTest extends IntegrationTestCase
         )->loadResult();
     }
 
+    /**
+     * A section rule reaches an item asset once it is reparented.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \JsonException
+     */
     #[TestDox('a section rule reaches an item asset once it is reparented')]
     public function testSectionDenyReachesAReparentedItemAsset(): void
     {
@@ -208,6 +227,13 @@ class CwmassetsReparentTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * An asset for record 0 is reported rather than reparented.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('an asset for record 0 is reported rather than reparented')]
     public function testRecordZeroAssetIsSkipped(): void
     {
@@ -231,6 +257,13 @@ class CwmassetsReparentTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Legacy asset names are corrected, and link-row assets removed.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('legacy asset names are corrected, and link-row assets removed')]
     public function testLegacyAssetNamesAreCorrected(): void
     {
@@ -263,6 +296,13 @@ class CwmassetsReparentTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A rename that would collide drops the stale row instead of failing.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a rename that would collide drops the stale row instead of failing')]
     public function testRenameCollisionDropsTheStaleRow(): void
     {
@@ -289,6 +329,13 @@ class CwmassetsReparentTest extends IntegrationTestCase
         $this->assertFalse($stale->loadByName('com_proclaim.message_type.999993'), 'The stale row survived.');
     }
 
+    /**
+     * Reparenting leaves the nested set valid.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('reparenting leaves the nested set valid')]
     public function testNestedSetSurvivesReparenting(): void
     {

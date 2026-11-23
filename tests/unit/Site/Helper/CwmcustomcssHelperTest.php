@@ -20,7 +20,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * CwmcustomcssHelper sanitises custom CSS so it cannot leave its style element,
+ * and scopes each section's sheet to that section.
+ *
+ * @since  10.5.8
  */
 class CwmcustomcssHelperTest extends ProclaimTestCase
 {
@@ -28,7 +31,8 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
      * Ways a browser's tokeniser will accept the end of a style element.
      *
      * @return  array<string, array{string}>
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     public static function breakoutProvider(): array
     {
@@ -43,6 +47,15 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * A closing style tag cannot survive sanitising.
+     *
+     * @param   string  $css  A sheet that tries to close the style element
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[DataProvider('breakoutProvider')]
     #[TestDox('a closing style tag cannot survive sanitising')]
     public function testClosingStyleTagIsNeutralised(string $css): void
@@ -56,6 +69,13 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Ordinary CSS is left alone.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('ordinary CSS is left alone')]
     public function testOrdinaryCssSurvives(): void
     {
@@ -64,6 +84,13 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         $this->assertSame($css, CwmcustomcssHelper::sanitise($css));
     }
 
+    /**
+     * url() is preserved: fetching a remote resource is inherent to CSS.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('url() is preserved: fetching a remote resource is inherent to CSS')]
     public function testUrlIsNotStripped(): void
     {
@@ -75,6 +102,13 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         $this->assertSame($css, CwmcustomcssHelper::sanitise($css));
     }
 
+    /**
+     * An empty or whitespace-only sheet yields nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('an empty or whitespace-only sheet yields nothing')]
     public function testEmptySheetYieldsNothing(): void
     {
@@ -110,6 +144,13 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         $this->assertFalse('0' === '', 'A "0" sheet passes an === \'\' check, which is how it reached the asset manager.');
     }
 
+    /**
+     * The template sheet stores under the documented param name.
+     *
+     * @return  void
+     *
+     * @since   10.6.3
+     */
     #[TestDox('the template sheet stores under the documented param name')]
     public function testParamName(): void
     {
@@ -127,9 +168,11 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
     /**
      * Section descriptors in the shape getSectionOrder() returns.
      *
-     * @param  list<array{0: string, 1?: bool}>  $spec
-     * @return list<object>
-     * @since 10.5.8
+     * @param   list<array{0: string, 1?: bool}>  $spec  Each section's id, and whether it is enabled
+     *
+     * @return  list<object>  The descriptors
+     *
+     * @since   10.5.8
      */
     private static function sections(array $spec): array
     {
@@ -139,6 +182,13 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Each section's CSS is wrapped in its own selector.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('each section\'s CSS is wrapped in its own selector')]
     public function testSectionCssIsScoped(): void
     {
@@ -155,6 +205,13 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         $this->assertStringContainsString('[data-section="series"] {' . "\n" . 'a { color: blue }', $css);
     }
 
+    /**
+     * A section with no CSS contributes no selector.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a section with no CSS contributes no selector')]
     public function testSectionWithoutCssIsSkipped(): void
     {
@@ -166,6 +223,13 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         $this->assertStringNotContainsString('series', $css);
     }
 
+    /**
+     * A disabled section is not styled.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a disabled section is not styled')]
     public function testDisabledSectionIsSkipped(): void
     {
@@ -177,8 +241,11 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string}>
-     * @since 10.5.8
+     * Section ids that are not plain slugs.
+     *
+     * @return  array<string, array{string}>  Each id
+     *
+     * @since   10.5.8
      */
     public static function unsafeSectionIdProvider(): array
     {
@@ -211,6 +278,13 @@ class CwmcustomcssHelperTest extends ProclaimTestCase
         $this->assertSame('', CwmcustomcssHelper::buildSectionCss($params, self::sections([[$id]])));
     }
 
+    /**
+     * A section sheet cannot break out of the style element either.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a section sheet cannot break out of the style element either')]
     public function testSectionCssIsSanitised(): void
     {

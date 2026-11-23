@@ -23,19 +23,27 @@ use Joomla\CMS\User\User;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * Cwmstats' date-range filters run with bound values.
+ *
+ * @since  10.7.1
  */
 class CwmstatsDateBindTest extends IntegrationTestCase
 {
     /**
-     * @var User|null
-     * @since 10.7.1
+     * The identity before the test switched to a guest.
+     *
+     * @var    User|null
+     * @since  10.7.1
      */
     private ?User $savedIdentity = null;
 
     /**
+     * Skip without a test database. Otherwise act as a guest.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -53,8 +61,12 @@ class CwmstatsDateBindTest extends IntegrationTestCase
     }
 
     /**
+     * Restore the identity the test replaced.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -70,7 +82,8 @@ class CwmstatsDateBindTest extends IntegrationTestCase
      * instead of returning a memoised count -- which is what reaches the bind.
      *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     #[TestDox('getTotalMessages()/getTotalTopics() date-range filter executes with bound values')]
     public function testDateRangeBindsExecute(): void

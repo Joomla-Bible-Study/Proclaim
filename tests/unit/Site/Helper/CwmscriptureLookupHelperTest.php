@@ -34,6 +34,9 @@ class CwmscriptureLookupHelperTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $method): string
     {
@@ -46,6 +49,14 @@ class CwmscriptureLookupHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * lookupPassage() is static, takes two strings and a Registry, and returns an
+     * array.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testLookupPassageSignature(): void
     {
         $method = new \ReflectionMethod(CwmscriptureLookupHelper::class, 'lookupPassage');
@@ -58,6 +69,14 @@ class CwmscriptureLookupHelperTest extends ProclaimTestCase
         $this->assertParamTypeName(Registry::class, $params[2]);
     }
 
+    /**
+     * lookupPassage() keeps its three-tier fallback chain.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testLookupPassagePreservesThreeTierFallbackChain(): void
     {
         $body = self::methodBody('lookupPassage');
@@ -67,6 +86,14 @@ class CwmscriptureLookupHelperTest extends ProclaimTestCase
         $this->assertStringContainsString('Fallback 3', $body, 'see #1445 — hard fallback to KJV');
     }
 
+    /**
+     * lookupPassage() catches a provider's exceptions and reports them.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testLookupPassageCatchesProviderExceptions(): void
     {
         $body = self::methodBody('lookupPassage');
@@ -75,6 +102,15 @@ class CwmscriptureLookupHelperTest extends ProclaimTestCase
         $this->assertStringContainsString('COM_PROCLAIM_SCRIPTURE_AJAX_PROVIDER_ERROR', $body);
     }
 
+    /**
+     * lookupPassage() reports the translation it used on success, and on both
+     * failure paths whether the failure is retryable.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testLookupPassageReturnsArrayContractForBothOutcomes(): void
     {
         $body = self::methodBody('lookupPassage');

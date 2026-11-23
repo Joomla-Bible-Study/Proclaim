@@ -32,7 +32,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * Retiring the legacy scripture columns moves a 9.x study's references into
+ * the junction table, tolerating the values 9.x really stores.
+ *
+ * @since  10.5.8
  */
 #[CoversClass(CwmscriptureMigration::class)]
 class CwmlegacyColumnRetirementTest extends IntegrationTestCase
@@ -40,7 +43,7 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
     /**
      * The columns a 9.x #__bsms_studies carries, as it declared them.
      *
-     * @var array<string, string>
+     * @var    array<string, string>
      * @since 10.5.8
      */
     private const LEGACY_COLUMNS = [
@@ -59,26 +62,36 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
     ];
 
     /**
-     * @var DatabaseDriver|null
-     * @since 10.5.8
+     * The database.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var int[]
-     * @since 10.5.8
+     * The studies a test created, deleted afterwards.
+     *
+     * @var    int[]
+     * @since  10.5.8
      */
     private array $studyIds = [];
 
     /**
-     * @var string
-     * @since 10.5.8
+     * The session's sql_mode before the test, restored afterwards.
+     *
+     * @var    string
+     * @since  10.5.8
      */
     private string $sqlMode = '';
 
     /**
+     * Skip without a test database. Otherwise force strict mode, which a site
+     * upgrading from 9.x very likely runs, and put the 9.x columns back on the table.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -106,8 +119,12 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
     }
 
     /**
+     * Delete the test's studies and their references, drop any 9.x column still on
+     * the table, and restore sql_mode.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function tearDown(): void
     {
@@ -133,7 +150,8 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
      * Put the 9.x columns back on the table.
      *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function addLegacyColumns(): void
     {
@@ -150,8 +168,11 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
     }
 
     /**
+     * Drop any 9.x column still on the table.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function dropLegacyColumns(): void
     {
@@ -168,10 +189,13 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
     }
 
     /**
+     * Whether the studies table has a column.
+     *
      * @param   string  $column  Column name
      *
-     * @return  bool
-     * @since 10.5.8
+     * @return  bool  True when it does
+     *
+     * @since   10.5.8
      */
     private function columnExists(string $column): bool
     {
@@ -220,11 +244,13 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
     }
 
     /**
+     * A study's rows in the junction table.
+     *
      * @param   int  $studyId  Study primary key
      *
      * @return  array<int, array{int, int}>  [booknumber, chapter_begin] by ordering
      *
-     * @since 10.5.8
+     * @since   10.5.8
      */
     private function junction(int $studyId): array
     {
@@ -245,6 +271,13 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
         return $out;
     }
 
+    /**
+     * A 9.x study keeps both references, and the columns go.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a 9.x study keeps both references, and the columns go')]
     public function testBothReferencesSurviveTheRetirement(): void
     {
@@ -274,6 +307,13 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
         $this->assertFalse($this->columnExists('booknumber'), 'The columns should be gone afterwards.');
     }
 
+    /**
+     * The sentinel values 9.x really stores do not abort the retirement.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox("the sentinel values 9.x really stores do not abort the retirement")]
     public function testSentinelSecondaryValuesAreTolerated(): void
     {
@@ -304,6 +344,13 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A real second reference with blank chapter fields still migrates.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a real second reference with blank chapter fields still migrates')]
     public function testBlankChapterFieldsBesideARealSecondBook(): void
     {
@@ -332,6 +379,13 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A study already in the junction table is not duplicated.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a study already in the junction is not duplicated')]
     public function testAlreadyMigratedStudiesAreLeftAlone(): void
     {
@@ -355,6 +409,13 @@ class CwmlegacyColumnRetirementTest extends IntegrationTestCase
         $this->assertCount(1, $this->junction($id), 'The backfill must skip studies the junction knows.');
     }
 
+    /**
+     * Running it again once the columns are gone does nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('running it again once the columns are gone does nothing')]
     public function testItIsSafeToRunRepeatedly(): void
     {
