@@ -21,7 +21,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since 10.6.0
+ * The Joomla minimum is declared the same everywhere, and is high enough for
+ * every Joomla API the code calls.
+ *
+ * @since  10.6.0
  */
 class JoomlaFloorTest extends TestCase
 {
@@ -37,7 +40,7 @@ class JoomlaFloorTest extends TestCase
      * Add a row when you reach for something newer than the floor, and the
      * test will tell you the floor has to move with it.
      *
-     * @var array<string, string>
+     * @var    array<string, string>
      * @since 10.6.0
      */
     private const array API_FLOOR = [
@@ -47,8 +50,10 @@ class JoomlaFloorTest extends TestCase
     ];
 
     /**
-     * @var string[]
-     * @since 10.6.0
+     * The folders scanned for Joomla API calls.
+     *
+     * @var    string[]
+     * @since  10.6.0
      */
     private const array SOURCE_ROOTS = ['admin', 'site', 'api', 'plugins', 'modules'];
 
@@ -60,7 +65,7 @@ class JoomlaFloorTest extends TestCase
      * what this repository develops against. They are pinned separately and
      * have drifted before.
      *
-     * @var string[]
+     * @var    string[]
      * @since 10.6.0
      */
     private const array LIBRARY_SCRIPTS = [
@@ -69,6 +74,8 @@ class JoomlaFloorTest extends TestCase
     ];
 
     /**
+     * The component and the package installer declare the same Joomla minimum.
+     *
      * @return  void
      *
      * @since   10.6.0
@@ -85,6 +92,8 @@ class JoomlaFloorTest extends TestCase
     }
 
     /**
+     * The README advertises the minimum the installers enforce.
+     *
      * @return  void
      *
      * @since   10.6.0
@@ -148,6 +157,8 @@ class JoomlaFloorTest extends TestCase
     }
 
     /**
+     * The floor is high enough for every Joomla API the code calls.
+     *
      * @return  void
      *
      * @since   10.6.0

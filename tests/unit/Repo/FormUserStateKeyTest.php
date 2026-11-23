@@ -63,9 +63,11 @@ class FormUserStateKeyTest extends ProclaimTestCase
     }
 
     /**
+     * Every model reads saved form data under the key its controller writes.
+     *
      * @return  void
      *
-     * @since 10.7.1
+     * @since   10.7.1
      */
     #[TestDox('Every model reads saved form data under the key its controller writes')]
     public function testUserStateKeyMatchesTheControllerContext(): void

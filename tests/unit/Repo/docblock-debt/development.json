@@ -1,10 +1,4 @@
 {
-    "tests/contract/Scripture/GetBibleContractTest.php": [
-        "const API_BASE: no @since",
-        "const API_BASE: no @var",
-        "const PROBE_REFERENCE: no @since",
-        "const PROBE_REFERENCE: no @var"
-    ],
     "tests/integration/Admin/Addons/CWMAddonStatsBindTest.php": [
         "class CWMAddonStatsBindTest: no description",
         "function setUp: no blank line between @return and @since",
@@ -1591,15 +1585,6 @@
         "function testCheckThrowsWhenTopicTextNull: no docblock",
         "function testCheckThrowsWhenTopicTextWhitespace: no docblock",
         "property $table: no docblock"
-    ],
-    "tests/integration/IntegrationTestCase.php": [
-        "function Send: no docblock",
-        "function __construct: no docblock",
-        "function createTableInstance: no @since",
-        "function resetStaticCache: no @since",
-        "function resolveDatabase: no @since",
-        "function resolveDispatcher: no @since",
-        "property $sends: no docblock"
     ],
     "tests/integration/Plugin/System/LegacyItemRedirectTest.php": [
         "function queryFor: no description",
@@ -3486,61 +3471,6 @@
         "function testSaveVariantsAreGrouped: no docblock",
         "function testToolbarImported: no docblock"
     ],
-    "tests/unit/Assets/AssetNameContractTest.php": [
-        "function assetObjectSections: no blank line between @return and @since",
-        "function codeWithoutComments: no blank line between @return and @since",
-        "function declaredSections: no blank line between @return and @since",
-        "function root: no blank line between @return and @since",
-        "function sourceFiles: no blank line between @return and @since",
-        "function testAuthoriseTargetsAreDeclaredSections: no docblock",
-        "function testControllerSectionsAreDeclaredSections: no docblock",
-        "function testDeclaredSectionsAreAllInAssetObjects: no blank line between @return and @since",
-        "function testEntitySectionMapMatchesTheControllers: no docblock",
-        "function testGetActionsIsNeverGivenASectionWithoutAnId: no docblock",
-        "function testKnownUndeclaredEntriesStillApply: no docblock",
-        "function testSectionActionsTargetsAreDeclaredSections: no docblock",
-        "function testSectionsWithoutRecordsAreDeclared: no docblock",
-        "function testStripEmptyAssetRowIsNotConditionalOnSuccess: no docblock",
-        "function testTableAssetNamesAreDeclaredSections: no docblock"
-    ],
-    "tests/unit/Assets/PermissionsFormSizeTest.php": [
-        "class PermissionsFormSizeTest: no description",
-        "function root: no blank line between @return and @since",
-        "function testAdministrationFormCarriesNoRulesGrid: no docblock",
-        "function testPermissionsFormHasASingleRulesField: no docblock",
-        "function testRulesFieldIsBoundToAnAssetField: no docblock"
-    ],
-    "tests/unit/Assets/ScriptOptionsKeysTest.php": [
-        "class ScriptOptionsKeysTest: no docblock",
-        "const ALLOWED_ORPHANS: no @since",
-        "const JS_ROOTS: no @since",
-        "const PHP_ROOTS: no @since",
-        "function consumedKeys: no @since",
-        "function publishedKeys: no @since",
-        "function root: no @return",
-        "function root: no @since",
-        "function skipWithoutLibrarySources: no @return",
-        "function skipWithoutLibrarySources: no @since",
-        "function testEveryPublishedKeyHasAReader: no docblock",
-        "function testScriptureOptionsUseTheLibraryKey: no @return",
-        "function testScriptureOptionsUseTheLibraryKey: no @since"
-    ],
-    "tests/unit/Language/PlaceholderParityTest.php": [
-        "class PlaceholderParityTest: no description",
-        "const HTML_TAG: no description",
-        "function testHtmlTagsMatchEnGb: no description",
-        "function testPlaceholdersMatchEnGb: no description"
-    ],
-    "tests/unit/Language/PluralKeyContractTest.php": [
-        "class PluralKeyContractTest: no description",
-        "const ROOTS: no description",
-        "function testPluralKeysResolve: no description"
-    ],
-    "tests/unit/Language/StringKeyExistsTest.php": [
-        "class StringKeyExistsTest: no description",
-        "const ROOTS: no description",
-        "function testOwnedKeysAreDefined: no description"
-    ],
     "tests/unit/Plugin/Schemaorg/ProclaimScriptEmbeddingTest.php": [
         "function sanitize: no @since",
         "function sanitize: no description",
@@ -3562,118 +3492,6 @@
         "function testDoesNotDuplicateANodeCoreFound: no docblock",
         "function testLeavesTheGraphAloneWithoutARow: no docblock",
         "function testSanitisesTheAddedNodeOfAnyType: no docblock"
-    ],
-    "tests/unit/ProclaimTestCase.php": [
-        "function assertArrayHasKeys: no @since",
-        "function assertParamTypeName: no @since",
-        "function assertReturnTypeName: no @since",
-        "function assertValidJson: no @since",
-        "function createMockDatabase: no @since",
-        "function createMockRegistry: no @since",
-        "function createTempFile: no @since",
-        "function getProtectedProperty: no @since",
-        "function invokeProtectedMethod: no @since",
-        "function removeTempFile: no @since",
-        "function setProtectedProperty: no @since",
-        "function setUp: no @since",
-        "function tearDown: no @since",
-        "property $serverBackup: no @since",
-        "property $serverBackup: no description"
-    ],
-    "tests/unit/Query/OrGroupShapeTest.php": [
-        "function testAndWhereAppendsAnOrGroup: no docblock",
-        "function testOrWhereListNeedsTheExplicitInnerGlue: no docblock",
-        "function testWhereOrWhereSeedsTheClause: no docblock",
-        "function whereOf: no @since",
-        "function whereOf: no description"
-    ],
-    "tests/unit/Query/OrderByWhitelistTest.php": [
-        "const FIELDS: no @since",
-        "function orderOf: no @since",
-        "function q: no @since",
-        "function testCompoundFullorderingIsSplit: no docblock",
-        "function testEmptyDirectionIsAscendingNotDefault: no docblock",
-        "function testGarbageDirectionIsNeutralised: no docblock",
-        "function testLowercaseDirection: no docblock",
-        "function testNonWhitelistedColumnFallsBack: no docblock",
-        "function testNullsGiveDefaults: no docblock",
-        "function testWhitelistedColumnDesc: no docblock"
-    ],
-    "tests/unit/Query/WhereClauseContractTest.php": [
-        "class WhereClauseContractTest: no description",
-        "const SKIP: no description",
-        "function sourceFiles: no description",
-        "function testNoCallReliesOnTheGlueArgument: no docblock",
-        "function testNoUnbracketedOrInAWhereCondition: no docblock",
-        "function testNoWhereIsGivenAnUnreadableArgument: no blank line between @return and @since",
-        "function testTheDetectorWorks: no docblock",
-        "function testUnverifiableEntriesAreStillAccurate: no docblock"
-    ],
-    "tests/unit/Repo/CommittedVendorMatchesLockTest.php": [
-        "function repoRoot: no blank line between @return and @since",
-        "function repoRoot: no description",
-        "function testCommittedVendorMatchesTheLock: no description",
-        "function testTheYoutubeAddonIsChecked: no description"
-    ],
-    "tests/unit/Repo/ContainerLookupsTest.php": [
-        "function sourceFiles: no description",
-        "function testEveryLookupIsRegistered: no description"
-    ],
-    "tests/unit/Repo/FormUserStateKeyTest.php": [
-        "function testUserStateKeyMatchesTheControllerContext: no description"
-    ],
-    "tests/unit/Repo/InstallScriptImportsTest.php": [
-        "function testEveryStaticCallTargetIsImported: no docblock"
-    ],
-    "tests/unit/Repo/JoomlaFloorTest.php": [
-        "class JoomlaFloorTest: no description",
-        "const SOURCE_ROOTS: no description",
-        "function testDeclarationsAgree: no description",
-        "function testFloorCoversTheApisUsed: no description",
-        "function testReadmeMatches: no description"
-    ],
-    "tests/unit/Repo/LoadFormDataShapeTest.php": [
-        "function testNoModelWrapsTheItem: no description"
-    ],
-    "tests/unit/Repo/NoCurlCloseContractTest.php": [
-        "class NoCurlCloseContractTest: no description",
-        "function callsCurlClose: no blank line between @return and @since",
-        "function sourceFiles: no blank line between @return and @since",
-        "function sourceFiles: no description",
-        "function testNothingCallsCurlClose: no blank line between @return and @since",
-        "function testNothingCallsCurlClose: no description",
-        "function testScanIsNotVacuous: no blank line between @return and @since"
-    ],
-    "tests/unit/Repo/ObsoletePathsTest.php": [
-        "function testNoShippedPathIsScheduledForDeletion: no docblock"
-    ],
-    "tests/unit/Repo/ServerAddonSimpleModeTest.php": [
-        "function addonXmlProvider: no blank line between @return and @since",
-        "function addonXmlProvider: no description",
-        "function testStylingFieldsAreHiddenInSimpleMode: no docblock"
-    ],
-    "tests/unit/Repo/SubmodulePinsTest.php": [
-        "function repoRoot: no blank line between @return and @since",
-        "function repoRoot: no description",
-        "function testScriptureLibraryPinsAgree: no docblock"
-    ],
-    "tests/unit/Repo/TestSuiteCoverageTest.php": [
-        "function repoRoot: no blank line between @return and @since",
-        "function repoRoot: no description",
-        "function testEveryTestFileIsReachable: no docblock"
-    ],
-    "tests/unit/Repo/TlsVerificationContractTest.php": [
-        "class TlsVerificationContractTest: no description",
-        "function sourceFiles: no blank line between @return and @since",
-        "function sourceFiles: no description",
-        "function testNothingDisablesTlsVerification: no blank line between @return and @since",
-        "function testNothingDisablesTlsVerification: no description",
-        "function testScanIsNotVacuous: no blank line between @return and @since"
-    ],
-    "tests/unit/Repo/UninstallOrderTest.php": [
-        "function testDroppingIsGatedOnTheStoredSetting: no docblock",
-        "function testRootAssetIsExcluded: no docblock",
-        "function testTablesAreDroppedBeforeAssetsAreDeleted: no docblock"
     ],
     "tests/unit/Site/Bible/BiblePassageResultTest.php": [
         "function testConstructorWithParams: no @since",
@@ -4073,34 +3891,5 @@
         "property $from: no description",
         "property $whereCalls: no @since",
         "property $whereCalls: no description"
-    ],
-    "tests/unit/Sql/MigrationStatementContractTest.php": [
-        "const CAN_FAIL_MARKER: no @since",
-        "const CAN_FAIL_MARKER: no @var",
-        "const UPDATES_DIR: no @since",
-        "const UPDATES_DIR: no @var",
-        "function addStatementProvider: no @since",
-        "function alterStatementProvider: no @since",
-        "function rawStatementsIn: no @since",
-        "function statementsIn: no @since",
-        "function testAdditiveAltersAreMarkedCanFail: no @since",
-        "function testAlterStatementsCarryOneClause: no @since",
-        "function testNoUnguardableIndexDrops: no @since",
-        "function topLevelClauses: no @since"
-    ],
-    "tests/unit/Sql/StudyColumnContractTest.php": [
-        "const INSTALL_SQL: no @since",
-        "const INSTALL_SQL: no @var",
-        "const MODEL_ADDED: no @since",
-        "const MODEL_ADDED: no @var",
-        "const TEMPLATE_DIR: no @since",
-        "const TEMPLATE_DIR: no @var",
-        "function itemPropertyProvider: no @since",
-        "function studyColumns: no @since",
-        "function testCsvImportColumnsExist: no @return",
-        "function testCsvImportColumnsExist: no @since",
-        "function testItemReadsNameSomethingTheItemCarries: no docblock",
-        "function testTheInputsAreNotEmpty: no @return",
-        "function testTheInputsAreNotEmpty: no @since"
     ]
 }

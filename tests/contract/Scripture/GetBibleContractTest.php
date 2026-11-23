@@ -49,12 +49,18 @@ class GetBibleContractTest extends TestCase
 {
     /**
      * Query endpoint, kept in step with GetBibleProvider::API_BASE.
+     *
+     * @var    string
+     * @since  10.7.1
      */
     private const API_BASE = 'https://query.getbible.net/v2/';
 
     /**
      * Reference to probe. One request, and one the fixture already carries so
      * the live response and the recorded one can be compared directly.
+     *
+     * @var    string
+     * @since  10.7.1
      */
     private const PROBE_REFERENCE = 'Colossians 3:1-25';
 

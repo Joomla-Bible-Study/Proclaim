@@ -62,6 +62,13 @@ class UninstallOrderTest extends ProclaimTestCase
         return substr($source, $start, $end - $start);
     }
 
+    /**
+     * The uninstall drops the tables before it deletes the permission rows.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('the uninstall drops the tables before it deletes the permission rows')]
     public function testTablesAreDroppedBeforeAssetsAreDeleted(): void
     {
@@ -113,6 +120,13 @@ class UninstallOrderTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The uninstall still refuses to drop tables unless the administrator asked for it.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('the uninstall still refuses unless the administrator asked for it')]
     public function testDroppingIsGatedOnTheStoredSetting(): void
     {
@@ -161,6 +175,13 @@ class UninstallOrderTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The ACL root is still excluded from the asset delete.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('the ACL root is still excluded from the asset delete')]
     public function testRootAssetIsExcluded(): void
     {

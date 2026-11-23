@@ -35,7 +35,8 @@ class OrderByWhitelistTest extends ProclaimTestCase
     /**
      * The columns a model would list in filter_fields.
      *
-     * @var string[]
+     * @var    string[]
+     * @since  10.7.1
      */
     private const FIELDS = ['study.studydate', 'teacher.teachername', 'ordering'];
 
@@ -47,6 +48,8 @@ class OrderByWhitelistTest extends ProclaimTestCase
      * @param   string   $default    The fallback column.
      *
      * @return  string
+     *
+     * @since   10.7.1
      */
     private function orderOf(?string $column, ?string $direction, string $default = 'study.studydate'): string
     {
@@ -66,18 +69,34 @@ class OrderByWhitelistTest extends ProclaimTestCase
      * @param   string  $column  Column name.
      *
      * @return  string
+     *
+     * @since   10.7.1
      */
     private function q(string $column): string
     {
         return Factory::getContainer()->get(DatabaseInterface::class)->createQuery()->quoteName($column);
     }
 
+    /**
+     * A whitelisted column with DESC is quoted and kept descending.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('A whitelisted column with DESC is quoted and kept descending')]
     public function testWhitelistedColumnDesc(): void
     {
         $this->assertSame('ORDER BY ' . $this->q('teacher.teachername') . ' DESC', $this->orderOf('teacher.teachername', 'DESC'));
     }
 
+    /**
+     * An empty direction sorts ASC, not the model's default.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox("An empty direction sorts ASC, not the model's default — the flip guard")]
     public function testEmptyDirectionIsAscendingNotDefault(): void
     {
@@ -87,6 +106,13 @@ class OrderByWhitelistTest extends ProclaimTestCase
         $this->assertSame('ORDER BY ' . $this->q('study.studydate') . ' ASC', $this->orderOf('study.studydate', ''));
     }
 
+    /**
+     * A lowercase direction is honoured.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('A lowercase direction is honoured')]
     public function testLowercaseDirection(): void
     {
@@ -94,18 +120,39 @@ class OrderByWhitelistTest extends ProclaimTestCase
         $this->assertSame('ORDER BY ' . $this->q('ordering') . ' DESC', $this->orderOf('ordering', 'desc'));
     }
 
+    /**
+     * A column not on the whitelist falls back to the default column.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('A column not on the whitelist falls back to the default column')]
     public function testNonWhitelistedColumnFallsBack(): void
     {
         $this->assertSame('ORDER BY ' . $this->q('study.studydate') . ' DESC', $this->orderOf("study.id); DROP TABLE x --", 'DESC'));
     }
 
+    /**
+     * A null column and null direction give the default column, ASC.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('A null column and null direction give the default column, ASC')]
     public function testNullsGiveDefaults(): void
     {
         $this->assertSame('ORDER BY ' . $this->q('study.studydate') . ' ASC', $this->orderOf(null, null));
     }
 
+    /**
+     * A combined "column direction" pair, as list.fullordering holds, is split and validated.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('A combined "column direction" pair (list.fullordering) is split and validated')]
     public function testCompoundFullorderingIsSplit(): void
     {
@@ -115,6 +162,13 @@ class OrderByWhitelistTest extends ProclaimTestCase
         $this->assertSame('ORDER BY ' . $this->q('study.studydate') . ' ASC', $this->orderOf('bogus.column ASC', ''));
     }
 
+    /**
+     * A garbage direction becomes ASC rather than reaching the SQL.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('A garbage direction becomes ASC rather than reaching the SQL')]
     public function testGarbageDirectionIsNeutralised(): void
     {

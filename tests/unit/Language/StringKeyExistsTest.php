@@ -22,7 +22,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since 10.6.0
+ * Every string key this component owns that the code asks for is defined in
+ * en-GB.
+ *
+ * @since  10.6.0
  */
 class StringKeyExistsTest extends TestCase
 {
@@ -38,14 +41,16 @@ class StringKeyExistsTest extends TestCase
      * Joomla's own pagebreak plugin. Ownership is the extension name in the
      * key, not the kind of extension.
      *
-     * @var string[]
+     * @var    string[]
      * @since 10.6.0
      */
     private const array OWNED_MARKERS = ['PROCLAIM', 'SCRIPTURELINKS'];
 
     /**
-     * @var string[]
-     * @since 10.6.0
+     * The folders scanned for string keys.
+     *
+     * @var    string[]
+     * @since  10.6.0
      */
     private const array ROOTS = ['admin', 'site', 'api', 'components', 'modules', 'plugins'];
 
@@ -148,9 +153,11 @@ class StringKeyExistsTest extends TestCase
     }
 
     /**
+     * Every Proclaim string key the code asks for is defined in en-GB.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('Every Proclaim string key the code asks for is defined in en-GB')]
     public function testOwnedKeysAreDefined(): void

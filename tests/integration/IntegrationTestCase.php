@@ -33,6 +33,8 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      * @param   string  $tblKey  Primary key column name (default: 'id')
      *
      * @return  object  Table instance
+     *
+     * @since   10.2.0
      */
     protected function createTableInstance(string $fqcn, string $tblKey = 'id'): object
     {
@@ -71,6 +73,8 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      * when PROCLAIM_TEST_DB_AVAILABLE, otherwise a typed stub.
      *
      * @return  \Joomla\Database\DatabaseInterface
+     *
+     * @since   10.3.2
      */
     private function resolveDatabase(): \Joomla\Database\DatabaseInterface
     {
@@ -109,6 +113,8 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      * available, otherwise a stub that returns an empty Event.
      *
      * @return  \Joomla\Event\DispatcherInterface
+     *
+     * @since   10.3.2
      */
     private function resolveDispatcher(): \Joomla\Event\DispatcherInterface
     {
@@ -193,13 +199,35 @@ abstract class IntegrationTestCase extends ProclaimTestCase
     protected function recordingMailer(bool $succeed = true): \Joomla\CMS\Mail\Mail
     {
         return new class ($succeed) extends \Joomla\CMS\Mail\Mail {
+            /**
+             * How many times Send() was called.
+             *
+             * @var    int
+             * @since  10.7.4
+             */
             public int $sends = 0;
 
+            /**
+             * Make a mailer whose Send() succeeds or fails.
+             *
+             * @param   bool  $succeed  Whether Send() succeeds
+             *
+             * @since   10.7.4
+             */
             public function __construct(private readonly bool $succeed)
             {
                 parent::__construct(true);
             }
 
+            /**
+             * Count the call instead of connecting, or fail as an unreachable SMTP
+             * server does.
+             *
+             * @return  bool  True, for a send that succeeds
+             *
+             * @since   10.7.4
+             * @throws  \RuntimeException  When the mailer was made to fail
+             */
             public function Send()
             {
                 $this->sends++;
@@ -240,6 +268,8 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      * @param   mixed   $value     Value to reset to
      *
      * @return  void
+     *
+     * @since   10.2.0
      */
     protected function resetStaticCache(string $class, string $property, mixed $value = []): void
     {
