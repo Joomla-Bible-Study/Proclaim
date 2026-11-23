@@ -30,8 +30,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmmigrationHelper::class)]
 class CwmmigrationHelperLegacyServersTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.3
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,6 +57,13 @@ class CwmmigrationHelperLegacyServersTest extends IntegrationTestCase
         $this->db->transactionStart(true);
     }
 
+    /**
+     * Roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -57,6 +77,16 @@ class CwmmigrationHelperLegacyServersTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * migrateLegacyServers() moves an MP3 and a PDF on a legacy server with a remote host to
+     * a Direct server, each with its full URL, and reports at least two migrated and no
+     * errors.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \JsonException
+     */
     #[TestDox('A plain file on a remote legacy host migrates to a Direct server with its full URL')]
     public function testRemoteHostFileKeepsItsUrl(): void
     {
@@ -77,6 +107,14 @@ class CwmmigrationHelperLegacyServersTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * A file on a legacy server with no host moves to a Local server, keeping its file name.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \JsonException
+     */
     #[TestDox('A plain file on a legacy server with no host migrates to a Local server unchanged')]
     public function testHostlessLegacyFileGoesToLocal(): void
     {
@@ -91,6 +129,14 @@ class CwmmigrationHelperLegacyServersTest extends IntegrationTestCase
         $this->assertSame('media/sermon.mp3', $row['filename']);
     }
 
+    /**
+     * A YouTube link on a legacy server moves to a YouTube server, and the legacy server is unpublished.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \JsonException
+     */
     #[TestDox('A platform link is unaffected by the legacy host and the legacy server is unpublished')]
     public function testPlatformLinkAndLegacyCleanup(): void
     {
@@ -107,9 +153,14 @@ class CwmmigrationHelperLegacyServersTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published legacy server with the given params.
+     *
      * @param   array<string, string>  $params  Legacy server params (path, protocol)
      *
-     * @return  int
+     * @return  int  The new server's id
+     *
+     * @since   10.7.3
+     * @throws  \JsonException
      */
     private function insertLegacyServer(array $params): int
     {
@@ -126,10 +177,15 @@ class CwmmigrationHelperLegacyServersTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published media file on the given server, with the given params.
+     *
      * @param   int                    $serverId  The legacy server
      * @param   array<string, string>  $params    Media file params
      *
-     * @return  int
+     * @return  int  The new media file's id
+     *
+     * @since   10.7.3
+     * @throws  \JsonException
      */
     private function insertMedia(int $serverId, array $params): int
     {
@@ -146,9 +202,15 @@ class CwmmigrationHelperLegacyServersTest extends IntegrationTestCase
     }
 
     /**
+     * Read a media file's server type and file name, failing the test when the file is
+     * missing.
+     *
      * @param   int  $id  Media file id
      *
-     * @return  array{type: string, filename: string}
+     * @return  array{type: string, filename: string}  Its server type and file name
+     *
+     * @since   10.7.3
+     * @throws  \JsonException
      */
     private function mediaRow(int $id): array
     {
