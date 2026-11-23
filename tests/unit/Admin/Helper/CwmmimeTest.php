@@ -27,6 +27,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Cwmmime::class)]
 class CwmmimeTest extends ProclaimTestCase
 {
+    /**
+     * Filenames and URLs, each with the MIME type fromExtension() should give, or null.
+     *
+     * @return  array<string, array{0: string, 1: string|null}>  Each case
+     *
+     * @since   10.3.3
+     */
     public static function extensionProvider(): array
     {
         return [
@@ -52,23 +59,55 @@ class CwmmimeTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * fromExtension() maps each extension to its MIME type in any case, through URLs and
+     * paths, and gives null for an unknown or missing extension.
+     *
+     * @param   string       $input     Filename, path or URL
+     * @param   string|null  $expected  The MIME type, or null
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[DataProvider('extensionProvider')]
     public function testFromExtension(string $input, ?string $expected): void
     {
         $this->assertSame($expected, Cwmmime::fromExtension($input));
     }
 
+    /**
+     * forDownload() uses a MIME type it is given, whatever the extension.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testForDownloadHonoursExplicitMimeType(): void
     {
         $this->assertSame('application/zip', Cwmmime::forDownload('application/zip', 'whatever.bin'));
     }
 
+    /**
+     * forDownload() derives the type from the extension when none is given.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testForDownloadDerivesFromExtensionWhenBlank(): void
     {
         $this->assertSame('application/zip', Cwmmime::forDownload('', 'backup.zip'));
         $this->assertSame('text/x-sql', Cwmmime::forDownload('', 'dump.sql'));
     }
 
+    /**
+     * forDownload() falls back to application/force-download for an unknown extension.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testForDownloadFallsBackToForceDownloadForUnknownExtension(): void
     {
         $this->assertSame('application/force-download', Cwmmime::forDownload('', 'mystery.xyz'));

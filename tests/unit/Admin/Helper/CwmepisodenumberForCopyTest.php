@@ -21,6 +21,9 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmepisodenumberForCopyTest extends ProclaimTestCase
 {
     /**
+     * A copy that keeps the original's series and number has its number cleared, so it is
+     * numbered next.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -32,6 +35,8 @@ class CwmepisodenumberForCopyTest extends ProclaimTestCase
     }
 
     /**
+     * Spaces around an unchanged number don't make it count as changed.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -43,6 +48,8 @@ class CwmepisodenumberForCopyTest extends ProclaimTestCase
     }
 
     /**
+     * A number the user changed is kept as it is.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -54,6 +61,8 @@ class CwmepisodenumberForCopyTest extends ProclaimTestCase
     }
 
     /**
+     * A copy moved to another series keeps its number.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -65,6 +74,8 @@ class CwmepisodenumberForCopyTest extends ProclaimTestCase
     }
 
     /**
+     * A message in no series keeps its number, even when unchanged.
+     *
      * @return  void
      *
      * @since   10.7.4

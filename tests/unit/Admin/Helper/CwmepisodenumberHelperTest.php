@@ -26,15 +26,46 @@ use Joomla\Database\DatabaseDriver;
  */
 class CwmepisodenumberHelperTest extends ProclaimTestCase
 {
+    /**
+     * The test database connection, or null when there is none.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * The fixture series.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $seriesId = 0;
 
-    /** @var int[] Message ids in the fixture series, one per episode number */
+    /**
+     * Message ids in the fixture series, one per episode number.
+     *
+     * @var    int[]
+     * @since  10.5.6
+     */
     private array $tiedIds = [];
 
+    /**
+     * The fixture message numbered 4.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $uniqueId = 0;
 
+    /**
+     * Skip without a test database; otherwise start a transaction and add a series with
+     * messages numbered 1, 2 and 4.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -62,6 +93,13 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
         $this->uniqueId = $this->insertSermon('Episode 4', $this->seriesId, '4');
     }
 
+    /**
+     * Roll back the transaction, if there is a connection.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -75,6 +113,15 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
         parent::tearDown();
     }
 
+    /**
+     * Add a published series.
+     *
+     * @param   string  $title  Its title
+     *
+     * @return  int  Its id
+     *
+     * @since   10.5.6
+     */
     private function insertSeries(string $title = 'Episode Number Test Series'): int
     {
         $row = (object) [
@@ -91,6 +138,17 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * Add a published message to a series.
+     *
+     * @param   string  $title        Its title
+     * @param   int     $seriesId     Its series
+     * @param   string  $studynumber  Its episode number
+     *
+     * @return  int  Its id
+     *
+     * @since   10.5.6
+     */
     private function insertSermon(string $title, int $seriesId, string $studynumber): int
     {
         $row = (object) [
@@ -118,22 +176,50 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * nextNumber() is one more than the series' highest number.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testNextNumberReturnsHighestPlusOne(): void
     {
         $this->assertSame(5, CwmepisodenumberHelper::nextNumber($this->db, $this->seriesId));
     }
 
+    /**
+     * nextNumber() ignores the excluded message: without the 4, the next number is 3.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testNextNumberHonoursExcludeId(): void
     {
         // Excluding the highest-numbered message (4) drops the max back to 2.
         $this->assertSame(3, CwmepisodenumberHelper::nextNumber($this->db, $this->seriesId, $this->uniqueId));
     }
 
+    /**
+     * nextNumber() is 1 for a series with no messages.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testNextNumberForSeriesWithNoMessagesReturnsOne(): void
     {
         $this->assertSame(1, CwmepisodenumberHelper::nextNumber($this->db, -999));
     }
 
+    /**
+     * findDuplicate() returns the message that already has the number.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testFindDuplicateReturnsAConflictingMessage(): void
     {
         $duplicate = CwmepisodenumberHelper::findDuplicate($this->db, $this->seriesId, '1');
@@ -145,6 +231,10 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
     /**
      * Editing a message must not report it as clashing with itself, which is
      * what $excludeId is for.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testFindDuplicateExcludesTheRecordBeingSaved(): void
     {
@@ -153,6 +243,13 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * findDuplicate() returns null for a number no message has.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testFindDuplicateReturnsNullWhenNoConflict(): void
     {
         $this->assertNull(CwmepisodenumberHelper::findDuplicate($this->db, $this->seriesId, '99'));
@@ -167,6 +264,10 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
      * the database now rejects the second row. What can be asserted is that it
      * does not report a series whose numbers are unique, which is the state
      * every constrained database should now be in.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testFindAllDuplicatesDoesNotReportAUniqueSeries(): void
     {
