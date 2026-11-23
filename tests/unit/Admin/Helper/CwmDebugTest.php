@@ -36,6 +36,8 @@ class CwmDebugTest extends ProclaimTestCase
      * Clear CwmDebug's static buffer before each test.
      *
      * @return  void
+     *
+     * @since   10.3.3
      */
     protected function setUp(): void
     {
@@ -46,12 +48,26 @@ class CwmDebugTest extends ProclaimTestCase
         $prop->setValue(null, []);
     }
 
+    /**
+     * Debug is off by default in the unit harness, where JBSMDEBUG is not defined.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[TestDox('Debug is off by default in the unit harness (no JBSMDEBUG)')]
     public function testDisabledByDefault(): void
     {
         $this->assertFalse(CwmDebug::isEnabled(), 'JBSMDEBUG must not be defined in the unit harness');
     }
 
+    /**
+     * logQuery() buffers nothing when JBSMDEBUG is off.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[TestDox('logQuery is a no-op when JBSMDEBUG is off')]
     public function testLogQueryNoopWhenDisabled(): void
     {
@@ -60,10 +76,24 @@ class CwmDebugTest extends ProclaimTestCase
         $this->assertSame([], CwmDebug::getBuffer(), 'Disabled logQuery must not buffer anything');
     }
 
+    /**
+     * logQuery() accepts any stringable query without error when JBSMDEBUG is off.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[TestDox('logQuery accepts any stringable query without error when disabled')]
     public function testLogQueryAcceptsQueryObjectWhenDisabled(): void
     {
         $queryObject = new class () {
+            /**
+             * Render the query.
+             *
+             * @return  string  The SQL
+             *
+             * @since   10.3.3
+             */
             public function __toString(): string
             {
                 return 'SELECT * FROM x';
@@ -76,6 +106,13 @@ class CwmDebugTest extends ProclaimTestCase
         $this->assertSame([], CwmDebug::getBuffer());
     }
 
+    /**
+     * logApi() buffers nothing when JBSMDEBUG is off.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[TestDox('logApi is a no-op when JBSMDEBUG is off')]
     public function testLogApiNoopWhenDisabled(): void
     {
@@ -84,6 +121,13 @@ class CwmDebugTest extends ProclaimTestCase
         $this->assertSame([], CwmDebug::getBuffer(), 'Disabled logApi must not buffer anything');
     }
 
+    /**
+     * log() buffers nothing, and the timer reads 0.0, when JBSMDEBUG is off.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[TestDox('log and error also no-op the buffer when disabled')]
     public function testLogAndTimerNoopWhenDisabled(): void
     {

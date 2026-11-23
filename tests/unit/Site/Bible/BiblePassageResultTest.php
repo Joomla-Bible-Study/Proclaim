@@ -24,7 +24,9 @@ class BiblePassageResultTest extends ProclaimTestCase
     /**
      * Test default constructor creates empty result
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testDefaultConstructor(): void
     {
@@ -40,7 +42,9 @@ class BiblePassageResultTest extends ProclaimTestCase
     /**
      * Test constructor with all parameters
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testConstructorWithParams(): void
     {
@@ -62,7 +66,9 @@ class BiblePassageResultTest extends ProclaimTestCase
     /**
      * Test hasText returns true when text is present
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testHasTextReturnsTrueWithText(): void
     {
@@ -73,7 +79,9 @@ class BiblePassageResultTest extends ProclaimTestCase
     /**
      * Test hasText returns false when text is empty
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testHasTextReturnsFalseWithoutText(): void
     {

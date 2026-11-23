@@ -38,7 +38,9 @@ class UnresolvableFieldTypeContractTest extends ProclaimTestCase
      * reading FormHelper::loadClass()'s resolution order and finding no
      * matching class or file anywhere in core or Proclaim.
      *
-     * @return array<string, array{0: string}>
+     * @return  array<string, array{0: string}>
+     *
+     * @since   10.7.3
      */
     public static function knownBadTypeProvider(): array
     {
@@ -57,6 +59,15 @@ class UnresolvableFieldTypeContractTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * No form field uses this type, which Joomla cannot resolve.
+     *
+     * @param   string  $badType  A field type that resolves to nothing
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('knownBadTypeProvider')]
     public function testNoFormUsesThisUnresolvableType(string $badType): void
     {

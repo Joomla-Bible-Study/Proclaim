@@ -23,14 +23,19 @@ use CWM\Library\Scripture\Bible\Provider\LocalProvider;
 class LocalProviderTest extends ProclaimTestCase
 {
     /**
-     * @var LocalProvider
+     * The provider under test.
+     *
+     * @var    LocalProvider
+     * @since  10.1.0
      */
     private LocalProvider $provider;
 
     /**
      * Set up test
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -41,7 +46,9 @@ class LocalProviderTest extends ProclaimTestCase
     /**
      * Test provider properties
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testProviderProperties(): void
     {
@@ -53,7 +60,9 @@ class LocalProviderTest extends ProclaimTestCase
     /**
      * Test proclaimToStandard mapping
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testProclaimToStandard(): void
     {
@@ -71,7 +80,9 @@ class LocalProviderTest extends ProclaimTestCase
     /**
      * Test standardToProclaim mapping
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testStandardToProclaim(): void
     {
@@ -83,7 +94,9 @@ class LocalProviderTest extends ProclaimTestCase
     /**
      * Test getBookName
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetBookName(): void
     {
@@ -97,7 +110,10 @@ class LocalProviderTest extends ProclaimTestCase
     /**
      * Test parseReference method via reflection
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
+     * @throws  \ReflectionException
      */
     public function testParseReference(): void
     {
@@ -145,7 +161,10 @@ class LocalProviderTest extends ProclaimTestCase
     /**
      * Test resolveBookNumber via reflection
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
+     * @throws  \ReflectionException
      */
     public function testResolveBookNumber(): void
     {

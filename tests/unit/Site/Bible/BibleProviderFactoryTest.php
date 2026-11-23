@@ -29,7 +29,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test getProvider returns LocalProvider
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetLocalProvider(): void
     {
@@ -46,7 +48,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test getProvider returns GetBibleProvider
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetGetBibleProvider(): void
     {
@@ -63,7 +67,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test getProvider returns ApiBibleProvider
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetApiBibleProvider(): void
     {
@@ -80,7 +86,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test getProvider throws for unknown provider
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetUnknownProviderThrows(): void
     {
@@ -93,7 +101,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test getProvider caches instances
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testProviderInstanceCaching(): void
     {
@@ -107,7 +117,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test getProviderNames returns all provider names
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetProviderNames(): void
     {
@@ -123,7 +135,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test reset clears cached instances
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testResetClearsCache(): void
     {
@@ -137,7 +151,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test getProviderForTranslation with only getbible enabled
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetProviderForTranslationGetbibleOnly(): void
     {
@@ -161,7 +177,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test getProviderForTranslation with getbible disabled falls back to local
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetProviderForTranslationLocalFallback(): void
     {
@@ -178,7 +196,9 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     /**
      * Test getProviderForTranslation with GDPR mode falls back to local
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetProviderForTranslationGdprMode(): void
     {

@@ -30,11 +30,25 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class ProclaimStoredItemTest extends ProclaimTestCase
 {
+    /**
+     * The site's domain in the test graph.
+     *
+     * @var    string
+     * @since  10.7.3
+     */
     private const DOMAIN = 'https://example.org/';
 
+    /**
+     * The id of the page's WebPage node in the test graph.
+     *
+     * @var    string
+     * @since  10.7.3
+     */
     private const WEBPAGE_ID = 'https://example.org/#/schema/WebPage/base';
 
     /**
+     * Load the schema.org plugin class, which composer's autoload map does not cover.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -49,12 +63,15 @@ class ProclaimStoredItemTest extends ProclaimTestCase
     }
 
     /**
-     * @param   array       $graph   The @graph core built
+     * Call the plugin's private appendStoredItem() for message 42.
+     *
+     * @param   array       $graph   The graph core built
      * @param   array|null  $stored  The form-context row's schema
      *
-     * @return  array
+     * @return  array  The graph, with the stored item when it was added
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     private function append(array $graph, ?array $stored): array
     {
@@ -79,6 +96,14 @@ class ProclaimStoredItemTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * A form-context row is added with the id and isPartOf core would have given it.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('a form-context row is added with the @id and isPartOf core would have given it')]
     public function testAppendsTheFormContextRow(): void
     {
@@ -90,6 +115,14 @@ class ProclaimStoredItemTest extends ProclaimTestCase
         $this->assertSame(['@id' => self::WEBPAGE_ID], $graph[3]['isPartOf']);
     }
 
+    /**
+     * Nothing is added when core already printed a node for the item.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('nothing is added when core already printed a node for the item')]
     public function testDoesNotDuplicateANodeCoreFound(): void
     {
@@ -105,12 +138,29 @@ class ProclaimStoredItemTest extends ProclaimTestCase
         $this->assertSame($graph, $result);
     }
 
+    /**
+     * The graph is unchanged when the item has no form-context row.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('the graph is unchanged when the item has no form-context row')]
     public function testLeavesTheGraphAloneWithoutARow(): void
     {
         $this->assertSame($this->coreGraph(), $this->append($this->coreGraph(), null));
     }
 
+    /**
+     * The added node is sanitised whatever its type, not only for the three item
+     * types.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('the added node is sanitised whatever its @type, not only the three item types')]
     public function testSanitisesTheAddedNodeOfAnyType(): void
     {
