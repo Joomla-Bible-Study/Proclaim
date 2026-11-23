@@ -42,9 +42,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(Cwmhelper::class)]
 class CwmhelperUrlTest extends IntegrationTestCase
 {
-    /** @var mixed */
+    /**
+     * The HTTP_HOST value when setUp() ran, null when it was unset.
+     *
+     * @var    mixed
+     * @since  10.5.6
+     */
     private mixed $savedHost = null;
 
+    /**
+     * Keep the HTTP_HOST value for tearDown() to restore.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,6 +64,13 @@ class CwmhelperUrlTest extends IntegrationTestCase
         $this->savedHost = $_SERVER['HTTP_HOST'] ?? null;
     }
 
+    /**
+     * Restore HTTP_HOST as setUp() found it, unsetting it if it was absent.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if ($this->savedHost === null) {
@@ -67,6 +86,14 @@ class CwmhelperUrlTest extends IntegrationTestCase
     // Finding 1 -- the null a live caller passes
     // -------------------------------------------------------------------------
 
+    /**
+     * mediaBuildUrl() joins the path and file when its params are null, as the legacy
+     * inline player's caller passes them.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('mediaBuildUrl accepts the null params its site caller passes')]
     public function testNullParamsIsAccepted(): void
     {
@@ -83,6 +110,14 @@ class CwmhelperUrlTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * With params giving https:// and the protocol asked for, mediaBuildUrl() puts it in
+     * front of the server path and file.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('mediaBuildUrl still works when params are supplied')]
     public function testRegistryParamsStillHonoured(): void
     {
@@ -100,6 +135,10 @@ class CwmhelperUrlTest extends IntegrationTestCase
     /**
      * With no Registry the protocol has to fall back rather than dereference
      * null, since $setProtocol is what reaches that branch.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('A null Registry falls back to a default protocol')]
     public function testNullParamsFallsBackToDefaultProtocol(): void
@@ -112,6 +151,13 @@ class CwmhelperUrlTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * mediaBuildUrl() returns an empty string, not false, for an empty file.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('An empty path yields an empty string, not false')]
     public function testEmptyPathReturnsAString(): void
     {
@@ -128,6 +174,10 @@ class CwmhelperUrlTest extends IntegrationTestCase
      * The podcast feed rebuild runs under the CLI scheduler, where there is no
      * request at all. A warning per media file is noise in the task log, and
      * phpunit.xml's failOnWarning would turn it into a failure here.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('mediaBuildUrl works with no HTTP_HOST, as under the CLI scheduler')]
     public function testWorksWithoutHttpHost(): void
@@ -149,6 +199,8 @@ class CwmhelperUrlTest extends IntegrationTestCase
      * Clear the per-request file-size cache.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function clearFileSizeCache(): void
     {
@@ -157,7 +209,11 @@ class CwmhelperUrlTest extends IntegrationTestCase
     }
 
     /**
+     * The per-request file-size cache, read by reflection.
+     *
      * @return  array<string, int>  Current contents of the cache.
+     *
+     * @since   10.5.6
      */
     private function fileSizeCache(): array
     {
@@ -176,6 +232,10 @@ class CwmhelperUrlTest extends IntegrationTestCase
      * was recognised and no request went out.
      *
      * @param   string  $url  Stored URL
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('streamingUrlProvider')]
     #[TestDox('Streaming platforms are skipped without a request, scheme or not')]
@@ -193,7 +253,12 @@ class CwmhelperUrlTest extends IntegrationTestCase
     }
 
     /**
-     * @return array<string, array{0: string}>
+     * YouTube URLs with a scheme, without one and protocol-relative, and schemeless youtu.be
+     * and Vimeo URLs.
+     *
+     * @return  array<string, array{0: string}>  Each URL
+     *
+     * @since   10.5.6
      */
     public static function streamingUrlProvider(): array
     {
@@ -206,6 +271,13 @@ class CwmhelperUrlTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * getRemoteFileSize() returns 0 for an empty URL.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('An empty URL is not looked up')]
     public function testEmptyUrlReturnsZero(): void
     {

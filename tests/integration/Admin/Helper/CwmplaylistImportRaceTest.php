@@ -39,12 +39,19 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmplaylistImportRaceTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database. Each test runs inside a transaction, and tearDown() also deletes the
+     * servers it created, with their playlists and the playlists' assets, by id.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  int
+     * The id of the YouTube server setUp() inserts.
+     *
+     * @var    int
+     * @since  10.5.6
      */
     private int $serverId = 0;
 
@@ -52,6 +59,7 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
      * Factory::$language as it was before silenceDateLanguageWarnings().
      *
      * @var  mixed
+     * @since  10.5.6
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -59,11 +67,17 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
      * Server rows this test created, for the explicit cleanup in tearDown().
      *
      * @var  int[]
+     * @since  10.5.6
      */
     private array $serverIds = [];
 
     /**
+     * Skip without a test database. Otherwise silence the date warnings the import's
+     * last_sync stamp would print, open a transaction, and insert a YouTube server.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -92,6 +106,8 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
      * the rows have to be deleted by hand.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function purgeCreatedRows(): void
     {
@@ -128,7 +144,12 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened, delete the servers the test created with
+     * their playlists, and put Factory's language back.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -151,6 +172,16 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * When the remote playlist is already stored, importChannelPlaylists() reports no error,
+     * creates nothing, includes the stored row among the ids it returns, and leaves one row
+     * for it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('A remote playlist already present is adopted, not inserted a second time')]
     public function testExistingRemotePlaylistIsNotDuplicated(): void
     {
@@ -169,6 +200,15 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Importing the same channel twice creates the playlist on the first run only, and both
+     * runs return the same playlist id.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('Importing the same channel twice creates the playlist once')]
     public function testRepeatedImportCreatesOnlyOneRow(): void
     {
@@ -189,6 +229,14 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Inserting a second playlist with the same remote id on the same server raises a
+     * RuntimeException.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('uq_server_remote_playlist rejects a duplicate (remote playlist, server) pair')]
     public function testConstraintRejectsDuplicatePair(): void
     {
@@ -198,6 +246,13 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
         $this->insertPlaylist('PLunique', $this->serverId, 'Second');
     }
 
+    /**
+     * Two hand-made playlists, with no remote id, can both be inserted on one server.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The constraint still allows several hand-made playlists, which carry no remote ID')]
     public function testConstraintAllowsManuallyCreatedPlaylists(): void
     {
@@ -212,6 +267,13 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
         $this->assertSame(2, $this->countPlaylists(''));
     }
 
+    /**
+     * The same remote playlist can be inserted once on each of two servers.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The constraint still allows the same remote playlist under a different server')]
     public function testConstraintIsScopedPerServer(): void
     {
@@ -225,10 +287,14 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
     }
 
     /**
+     * Count the playlists with a remote id on one server.
+     *
      * @param   string    $remoteId  Remote playlist ID ('' for a hand-made playlist).
      * @param   int|null  $serverId  Server to scope to; defaults to this test's server.
      *
      * @return  int  Number of playlist rows carrying that remote ID on that server.
+     *
+     * @since   10.5.6
      */
     private function countPlaylists(string $remoteId, ?int $serverId = null): int
     {
@@ -249,11 +315,15 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published, sync-enabled playlist with the given remote id, server and title.
+     *
      * @param   string  $remoteId  Remote playlist ID.
      * @param   int     $serverId  Server ID.
      * @param   string  $title     Playlist title.
      *
      * @return  int  The new playlist row ID.
+     *
+     * @since   10.5.6
      */
     private function insertPlaylist(string $remoteId, int $serverId, string $title): int
     {
@@ -275,7 +345,11 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published YouTube server, noting its id for tearDown() to delete.
+     *
      * @return  int  Server ID.
+     *
+     * @since   10.5.6
      */
     private function insertServer(): int
     {
@@ -303,48 +377,123 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
      * @param   array<int,array{playlistId:string,title:string}>  $playlists  Remote playlists to report.
      *
      * @return  CWMAddon
+     *
+     * @since   10.5.6
      */
     private function fakeAddon(array $playlists): CWMAddon
     {
         return new class ($playlists) extends CWMAddon {
-            /** @var array<int,array{playlistId:string,title:string}> */
+            /**
+             * The remote playlists the double reports.
+             *
+             * @var    array<int,array{playlistId:string,title:string}>
+             * @since  10.5.6
+             */
             private array $playlists;
 
+            /**
+             * Hold the remote playlists to report.
+             *
+             * @param   array<int,array{playlistId:string,title:string}>  $playlists  Remote playlists to report.
+             *
+             * @since   10.5.6
+             */
             public function __construct(array $playlists = [])
             {
                 $this->playlists = $playlists;
             }
 
+            /**
+             * Report that the double supports playlists.
+             *
+             * @return  bool  Always true
+             *
+             * @since   10.5.6
+             */
             public function supportsPlaylists(): bool
             {
                 return true;
             }
 
+            /**
+             * Report that the double can't write playlists back.
+             *
+             * @return  bool  Always false
+             *
+             * @since   10.5.6
+             */
             public function supportsPlaylistWriteback(): bool
             {
                 return false;
             }
 
+            /**
+             * Return the fixed playlists as a successful fetch.
+             *
+             * @param   \Joomla\Input\Input  $data  Request input, unused
+             *
+             * @return  array  A success flag and the playlists
+             *
+             * @since   10.5.6
+             */
             public function fetchRemotePlaylists(\Joomla\Input\Input $data): array
             {
                 return ['success' => true, 'playlists' => $this->playlists];
             }
 
+            /**
+             * Extract the media id the way the YouTube addon does.
+             *
+             * @param   string  $text  A media URL or bare ID.
+             *
+             * @return  string|null  The platform media ID, or null.
+             *
+             * @since   10.5.6
+             */
             public function extractRemoteMediaId(string $text): ?string
             {
                 return CWMAddonYoutube::extractMediaId($text);
             }
 
+            /**
+             * Render no general form.
+             *
+             * @param   object  $media_form  Media files form
+             * @param   bool    $new         If media is new
+             *
+             * @return  string  An empty string
+             *
+             * @since   10.5.6
+             */
             public function renderGeneral(object $media_form, bool $new): string
             {
                 return '';
             }
 
+            /**
+             * Render no form.
+             *
+             * @param   object  $media_form  Media files form
+             * @param   bool    $new         If media is new
+             *
+             * @return  string  An empty string
+             *
+             * @since   10.5.6
+             */
             public function render(object $media_form, bool $new): string
             {
                 return '';
             }
 
+            /**
+             * Upload nothing.
+             *
+             * @param   \Joomla\Input\Input  $data  Data to upload, unused
+             *
+             * @return  mixed  Always null
+             *
+             * @since   10.5.6
+             */
             protected function upload(\Joomla\Input\Input $data): mixed
             {
                 return null;

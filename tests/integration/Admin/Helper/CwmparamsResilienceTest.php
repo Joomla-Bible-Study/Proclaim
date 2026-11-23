@@ -49,8 +49,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(Cwmparams::class)]
 class CwmparamsResilienceTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -63,6 +76,13 @@ class CwmparamsResilienceTest extends IntegrationTestCase
         $this->db->transactionStart();
     }
 
+    /**
+     * Roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -87,7 +107,9 @@ class CwmparamsResilienceTest extends IntegrationTestCase
      * which is why the original "Registry tolerates malformed params" comment
      * looked true and was not.
      *
-     * @return array<string, array{0: string}>
+     * @return  array<string, array{0: string}>
+     *
+     * @since   10.5.6
      */
     public static function corruptParamsProvider(): array
     {
@@ -98,6 +120,17 @@ class CwmparamsResilienceTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * setCompParams() stores its value when the component params hold truncated or malformed
+     * JSON.
+     *
+     * @param   string  $corrupt  The corrupt params value
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[DataProvider('corruptParamsProvider')]
     #[TestDox('A corrupt params column is recovered rather than fatal')]
     public function testSetCompParamsRecoversFromCorruptParams(string $corrupt): void
@@ -119,6 +152,14 @@ class CwmparamsResilienceTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * setCompParams() adds its value to readable params, keeping the setting already stored.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('Valid params are merged, not replaced')]
     public function testSetCompParamsPreservesExistingValidParams(): void
     {
@@ -141,6 +182,13 @@ class CwmparamsResilienceTest extends IntegrationTestCase
     // Finding 2 -- a missing admin row must not be a TypeError
     // -------------------------------------------------------------------------
 
+    /**
+     * getAdmin() returns an object with a user_id, and a Registry as its params.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('getAdmin() always returns an object whose params is a Registry')]
     public function testGetAdminAlwaysReturnsAUsableShape(): void
     {
@@ -164,6 +212,14 @@ class CwmparamsResilienceTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * getAdmin()'s source checks for a missing admin row, with an empty Registry to fall back
+     * on, before it assigns the static.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('getAdmin() guards against assigning a falsy row to the typed static')]
     public function testGetAdminGuardsTheMissingRowCase(): void
     {
@@ -194,12 +250,26 @@ class CwmparamsResilienceTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Setting a static property typed object to null raises a TypeError.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('The typed static genuinely rejects null, so the guard is load-bearing')]
     public function testTypedStaticRejectsNull(): void
     {
         // Documents why the guard exists: this is the exact failure the
         // unguarded assignment produced.
         $probe = new class () {
+            /**
+             * A static typed object, left unset for the test to set to null.
+             *
+             * @var    object
+             * @since  10.5.6
+             */
             public static object $admin;
         };
 
@@ -213,10 +283,14 @@ class CwmparamsResilienceTest extends IntegrationTestCase
     // -------------------------------------------------------------------------
 
     /**
+     * Write a raw value to an extensions row's params column.
+     *
      * @param   int     $extensionId  Row to update
      * @param   string  $params       Raw params column value
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function writeParams(int $extensionId, string $params): void
     {
@@ -228,9 +302,13 @@ class CwmparamsResilienceTest extends IntegrationTestCase
     }
 
     /**
+     * Read an extensions row's params column as stored.
+     *
      * @param   int  $extensionId  Row to read
      *
-     * @return  string
+     * @return  string  The raw params value
+     *
+     * @since   10.5.6
      */
     private function readParams(int $extensionId): string
     {
@@ -248,6 +326,8 @@ class CwmparamsResilienceTest extends IntegrationTestCase
      * installer, so the row is absent there.
      *
      * @return  int  extension_id
+     *
+     * @since   10.5.6
      */
     private function ensureExtensionRow(): int
     {
