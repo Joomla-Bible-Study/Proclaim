@@ -25,6 +25,17 @@ use Joomla\Registry\Registry;
  */
 class MediaFileImagesFieldTest extends ProclaimTestCase
 {
+    /**
+     * Invoke the field's private builder for an option value's JSON.
+     *
+     * @param   Registry  $params      The media file's params
+     * @param   string    $mediaImage  The media image's path, if any
+     *
+     * @return  string  The option value's JSON
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private function buildOptionValueJson(Registry $params, string $mediaImage = ''): string
     {
         $field = (new \ReflectionClass(MediaFileImagesField::class))->newInstanceWithoutConstructor();
@@ -33,6 +44,14 @@ class MediaFileImagesFieldTest extends ProclaimTestCase
             ->invoke($field, $params, $mediaImage);
     }
 
+    /**
+     * Button text with a double quote still produces valid JSON.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testButtonTextContainingDoubleQuoteProducesValidJson(): void
     {
         $params = new Registry([
@@ -49,6 +68,14 @@ class MediaFileImagesFieldTest extends ProclaimTestCase
         $this->assertSame('Watch "Live"', $decoded['media_button_text']);
     }
 
+    /**
+     * A media image is embedded in the JSON when one is given.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testMediaImageIsEmbeddedWhenProvided(): void
     {
         $params = new Registry([

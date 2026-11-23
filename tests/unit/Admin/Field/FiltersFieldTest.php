@@ -52,7 +52,9 @@ class FiltersFieldTest extends ProclaimTestCase
     /**
      * Values the whole `filters` param has been seen or could plausibly arrive as.
      *
-     * @return array<string, array{0: mixed, 1: array<array-key, mixed>}>
+     * @return  array<string, array{0: mixed, 1: array<array-key, mixed>}>
+     *
+     * @since   10.3.5
      */
     public static function storedValueProvider(): array
     {
@@ -71,6 +73,16 @@ class FiltersFieldTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * A stored filters value of any shape is coerced to an array.
+     *
+     * @param   mixed  $input     The stored value
+     * @param   array  $expected  The array it should become
+     *
+     * @return  void
+     *
+     * @since   10.3.5
+     */
     #[DataProvider('storedValueProvider')]
     public function testStoredValueIsCoercedToArray(mixed $input, array $expected): void
     {
@@ -79,6 +91,10 @@ class FiltersFieldTest extends ProclaimTestCase
 
     /**
      * A stdClass from Registry must keep the site's saved filters, not reset them.
+     *
+     * @return  void
+     *
+     * @since   10.3.5
      */
     public function testObjectValueRetainsGroupKeys(): void
     {
@@ -100,7 +116,9 @@ class FiltersFieldTest extends ProclaimTestCase
     /**
      * Per-group entries, including the shape that caused the outage.
      *
-     * @return array<string, array{0: mixed}>
+     * @return  array<string, array{0: mixed}>
+     *
+     * @since   10.3.5
      */
     public static function brokenGroupEntryProvider(): array
     {
@@ -139,6 +157,10 @@ class FiltersFieldTest extends ProclaimTestCase
 
     /**
      * A valid entry is preserved exactly — the fix must not flatten real settings.
+     *
+     * @return  void
+     *
+     * @since   10.3.5
      */
     public function testValidGroupEntryIsPreserved(): void
     {
@@ -149,6 +171,10 @@ class FiltersFieldTest extends ProclaimTestCase
 
     /**
      * An object entry keeps its settings rather than being discarded.
+     *
+     * @return  void
+     *
+     * @since   10.3.5
      */
     public function testObjectGroupEntryIsConvertedNotDiscarded(): void
     {
@@ -161,6 +187,10 @@ class FiltersFieldTest extends ProclaimTestCase
 
     /**
      * A partial entry is as safe as an absent one.
+     *
+     * @return  void
+     *
+     * @since   10.3.5
      */
     public function testPartialGroupEntryIsCompleted(): void
     {
@@ -177,6 +207,10 @@ class FiltersFieldTest extends ProclaimTestCase
      * Mirrors what getInput() does per group — the exact sequence that fatalled,
      * with the normaliser in place. Without it, `$value[$groupId]['filter_tags']`
      * throws "Cannot access offset of type string on string".
+     *
+     * @return  void
+     *
+     * @since   10.3.5
      */
     public function testReportedFatalNoLongerOccurs(): void
     {
@@ -197,7 +231,9 @@ class FiltersFieldTest extends ProclaimTestCase
      * #__usergroups.title) directly into HTML with no escaping, unlike the
      * filter_tags/filter_attributes values two lines below it.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGroupTitleIsEscaped(): void
     {

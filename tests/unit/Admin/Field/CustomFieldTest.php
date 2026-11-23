@@ -28,7 +28,9 @@ class CustomFieldTest extends ProclaimTestCase
      * Confirms the actual JS content (event delegation, code insertion,
      * modal close logic) survived the WebAssetManager migration unchanged.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testScriptContentIsUnchanged(): void
     {

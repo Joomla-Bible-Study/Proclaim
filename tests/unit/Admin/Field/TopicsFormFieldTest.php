@@ -27,7 +27,11 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 class TopicsFormFieldTest extends ProclaimTestCase
 {
     /**
-     * @return void
+     * The hidden input uses the field's own computed name, not a hard-coded one.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testHiddenInputUsesFieldsOwnComputedName(): void
     {

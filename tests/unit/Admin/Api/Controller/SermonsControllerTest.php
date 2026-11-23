@@ -27,7 +27,9 @@ class SermonsControllerTest extends ProclaimTestCase
     /**
      * Test getModel method exists and is public
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testGetModelMethodExists(): void
     {
@@ -38,7 +40,9 @@ class SermonsControllerTest extends ProclaimTestCase
     /**
      * Test getModel maps API names to Cwm-prefixed model names
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testGetModelNameMapping(): void
     {
@@ -53,7 +57,9 @@ class SermonsControllerTest extends ProclaimTestCase
     /**
      * Test preprocessSaveData method exists and is protected
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testPreprocessSaveDataExists(): void
     {
@@ -64,7 +70,9 @@ class SermonsControllerTest extends ProclaimTestCase
     /**
      * Test preprocessSaveData normalizes scriptures array to keyed format
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testPreprocessNormalizesScriptures(): void
     {
@@ -77,7 +85,9 @@ class SermonsControllerTest extends ProclaimTestCase
     /**
      * Test preprocessSaveData normalizes teachers array to keyed format
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testPreprocessNormalizesTeachers(): void
     {
@@ -89,7 +99,9 @@ class SermonsControllerTest extends ProclaimTestCase
     /**
      * Test preprocessSaveData defaults image to empty string
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testPreprocessDefaultsImage(): void
     {

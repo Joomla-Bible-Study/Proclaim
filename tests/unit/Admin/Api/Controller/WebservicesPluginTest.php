@@ -21,11 +21,25 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class WebservicesPluginTest extends ProclaimTestCase
 {
+    /**
+     * The webservices plugin's class exists.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testPluginClassExists(): void
     {
         $this->assertTrue(class_exists(Proclaim::class));
     }
 
+    /**
+     * The plugin has a createWriteRoutes() method.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testCreateWriteRoutesMethodExists(): void
     {
         $ref = new \ReflectionClass(Proclaim::class);
@@ -34,6 +48,10 @@ class WebservicesPluginTest extends ProclaimTestCase
 
     /**
      * Write routes must always use public=false, regardless of api_access setting.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testWriteRoutesNeverPublic(): void
     {
@@ -67,6 +85,10 @@ class WebservicesPluginTest extends ProclaimTestCase
 
     /**
      * Verify both read and write route methods exist.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testCreateReadOnlyRoutesMethodExists(): void
     {
@@ -77,7 +99,9 @@ class WebservicesPluginTest extends ProclaimTestCase
     /**
      * Resources the API exposes, and whether each accepts writes.
      *
-     * @return array<string, array{0: string, 1: bool}>
+     * @return  array<string, array{0: string, 1: bool}>
+     *
+     * @since   10.3.4
      */
     public static function resourceProvider(): array
     {
@@ -123,6 +147,10 @@ class WebservicesPluginTest extends ProclaimTestCase
     /**
      * The registry must not grow silently — a new resource has to be a deliberate
      * change here, so nothing gets exposed without a matching decision on writes.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testNoUnexpectedResourcesRegistered(): void
     {
@@ -147,6 +175,10 @@ class WebservicesPluginTest extends ProclaimTestCase
      * no `access` column, so it cannot honour view levels. Adding that column
      * would fix the read side only — it would NOT make writes safe. Do not treat
      * this test as waiting on a schema change.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testTemplatecodesIsNotExposed(): void
     {
@@ -170,6 +202,10 @@ class WebservicesPluginTest extends ProclaimTestCase
      * Guards the loop in onBeforeApiRoute: the createWriteRoutes() call must stay
      * behind the writable flag, otherwise every read-only resource silently gains
      * POST/PATCH/DELETE.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testWriteRoutesGatedOnWritableFlag(): void
     {
@@ -196,6 +232,10 @@ class WebservicesPluginTest extends ProclaimTestCase
      * kind of API problem to diagnose from outside, and the answer is known in
      * the plugin. DEBUG keeps it free in production; CwmlogHelper::debug() is a
      * no-op unless debug mode is on.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testUnroutableWritesAreExplainedAtDebugLevel(): void
     {
@@ -226,6 +266,10 @@ class WebservicesPluginTest extends ProclaimTestCase
     /**
      * Only write verbs are explained. A GET that 404s is a missing record, which
      * the response already conveys.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testOnlyWriteVerbsAreExplained(): void
     {
@@ -248,6 +292,10 @@ class WebservicesPluginTest extends ProclaimTestCase
      * A writable resource must not be explained — its write route exists, so a
      * failure there is authentication or validation, not routing. Guards against
      * the diagnostic misattributing a 401 as a routing problem.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testWritableResourcesAreNotExplained(): void
     {
@@ -273,6 +321,10 @@ class WebservicesPluginTest extends ProclaimTestCase
      * Proclaim setting. So the read posture is decided entirely by one parameter,
      * and it has to default closed: an administrator who enables the plugin
      * without reading anything gets an authenticated API, not an open one.
+     *
+     * @return  void
+     *
+     * @since   10.3.6
      */
     public function testPublicReadsDefaultsToOff(): void
     {
@@ -294,6 +346,10 @@ class WebservicesPluginTest extends ProclaimTestCase
      * api_access was a tri-state in #__bsms_admin.params whose "disabled" third
      * duplicated the plugin's own enabled state, and which was never rendered in
      * any template — so the API could not be switched on at all (#1328).
+     *
+     * @return  void
+     *
+     * @since   10.3.6
      */
     public function testReadPostureComesFromThePluginParameter(): void
     {
@@ -316,6 +372,10 @@ class WebservicesPluginTest extends ProclaimTestCase
 
     /**
      * No api_access anywhere — a leftover would imply a second, invisible switch.
+     *
+     * @return  void
+     *
+     * @since   10.3.6
      */
     public function testApiAccessIsFullyRemoved(): void
     {

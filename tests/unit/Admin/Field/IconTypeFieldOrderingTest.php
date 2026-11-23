@@ -31,6 +31,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class IconTypeFieldOrderingTest extends ProclaimTestCase
 {
+    /**
+     * getInput() normalises the value before it collects the layout data.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testValueIsNormalizedBeforeLayoutDataIsCollected(): void
     {
         $ref   = new \ReflectionMethod(IconTypeField::class, 'getInput');

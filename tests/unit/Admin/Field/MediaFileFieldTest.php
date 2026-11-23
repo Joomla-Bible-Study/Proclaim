@@ -44,6 +44,13 @@ class MediaFileFieldTest extends ProclaimTestCase
         return $reflection->invoke(null, $id, $params);
     }
 
+    /**
+     * The label shows the file name when there is one.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testLabelShowsFilenameWhenPresent(): void
     {
         $params = new Registry(['filename' => 'sermon.mp3', 'mimetext' => 'audio/mpeg']);
@@ -51,6 +58,13 @@ class MediaFileFieldTest extends ProclaimTestCase
         $this->assertSame('sermon.mp3', self::buildOptionLabel(42, $params));
     }
 
+    /**
+     * Without a file name, the label falls back to the id and the MIME text.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testLabelFallsBackToIdAndMimetextWhenFilenameMissing(): void
     {
         $params = new Registry(['mimetext' => 'audio/mpeg']);
@@ -64,6 +78,10 @@ class MediaFileFieldTest extends ProclaimTestCase
      * the equivalent lookup in MediaPlaylistsField.php. Not a security fix
      * (the value was already (int)-cast) -- a consistency fix so this file
      * matches the project's established query-building convention.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetOptionsBindsStudyIdInsteadOfInterpolating(): void
     {

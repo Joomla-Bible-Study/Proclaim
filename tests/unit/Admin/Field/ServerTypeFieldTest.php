@@ -60,7 +60,11 @@ class ServerTypeFieldTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * ServerTypeField extends ModalSelectField and builds the right URLs.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testFieldExtendsModalSelectFieldAndBuildsCorrectUrls(): void
     {
@@ -83,7 +87,11 @@ class ServerTypeFieldTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * The field's value is normalised to lower case.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testValueIsNormalizedToLowercase(): void
     {
@@ -95,7 +103,11 @@ class ServerTypeFieldTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * getValueTitle() finds the title by reverse lookup, not an SQL query.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetValueTitleUsesReverseLookupNotSqlQuery(): void
     {

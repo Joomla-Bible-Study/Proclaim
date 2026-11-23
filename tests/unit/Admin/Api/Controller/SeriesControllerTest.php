@@ -24,6 +24,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class SeriesControllerTest extends ProclaimTestCase
 {
+    /**
+     * SeriesController has a public displayItem().
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testDisplayItemMethodExists(): void
     {
         $ref = new \ReflectionMethod(SeriesController::class, 'displayItem');
@@ -33,6 +40,10 @@ class SeriesControllerTest extends ProclaimTestCase
     /**
      * Series is special: singular and plural are both "series", so the
      * controller tracks context via $itemModelRequested flag.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testItemModelRequestedFlagExists(): void
     {
@@ -43,6 +54,13 @@ class SeriesControllerTest extends ProclaimTestCase
         $this->assertEquals(false, $prop->getDefaultValue());
     }
 
+    /**
+     * getModel() maps series to Cwmseries for a list and to Cwmserie for an item.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testGetModelNameMapping(): void
     {
         $ref    = new \ReflectionMethod(SeriesController::class, 'getModel');
@@ -62,6 +80,10 @@ class SeriesControllerTest extends ProclaimTestCase
      * inside it, which breaks every series write.
      *
      * @param   string  $method  Overridden write method name
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('writeMethodProvider')]
     public function testWriteMethodSetsItemModelFlag(string $method): void
@@ -83,7 +105,11 @@ class SeriesControllerTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string}>
+     * The write methods: add, edit and delete.
+     *
+     * @return  array<string, array{string}>  Each method's name
+     *
+     * @since   10.5.6
      */
     public static function writeMethodProvider(): array
     {

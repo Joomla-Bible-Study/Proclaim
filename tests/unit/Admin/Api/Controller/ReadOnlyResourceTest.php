@@ -21,6 +21,9 @@ use Joomla\CMS\Router\Exception\RouteNotFoundException;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
+ * The read-only API resources refuse writes, and their views withhold the
+ * fields that would expose credentials or personal data.
+ *
  * @since  10.3.4
  */
 class ReadOnlyResourceTest extends ProclaimTestCase
@@ -28,7 +31,9 @@ class ReadOnlyResourceTest extends ProclaimTestCase
     /**
      * Controllers that must never accept writes.
      *
-     * @return array<string, array{0: string}>
+     * @return  array<string, array{0: string}>
+     *
+     * @since   10.3.4
      */
     public static function readOnlyControllerProvider(): array
     {
@@ -64,6 +69,10 @@ class ReadOnlyResourceTest extends ProclaimTestCase
     /**
      * The writable controllers must NOT extend the read-only base, or their
      * legitimate write endpoints would 404.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testWritableControllersAreNotReadOnly(): void
     {
@@ -99,7 +108,11 @@ class ReadOnlyResourceTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{0: string}>
+     * The write verbs the read-only base refuses.
+     *
+     * @return  array<string, array{0: string}>  Each verb's method name
+     *
+     * @since   10.3.4
      */
     public static function writeVerbProvider(): array
     {
@@ -114,6 +127,10 @@ class ReadOnlyResourceTest extends ProclaimTestCase
      * The servers view must never render `params` — it holds api_key,
      * client_secret and access_token for every server addon, and the item query
      * loads the full row.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testServersViewWithholdsCredentialParams(): void
     {
@@ -132,6 +149,10 @@ class ReadOnlyResourceTest extends ProclaimTestCase
      * The comments view must never render `user_email` or `user_id`. The comments
      * list query does select user_email, so these lists are the only thing
      * keeping a commenter's address out of the response.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testCommentsViewWithholdsPersonalData(): void
     {
@@ -151,6 +172,10 @@ class ReadOnlyResourceTest extends ProclaimTestCase
     /**
      * Sanity check that the views expose something — a typo'd property name would
      * otherwise make the assertions above pass against an empty array.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testWithholdingTestsAreMeaningful(): void
     {
@@ -190,6 +215,10 @@ class ReadOnlyResourceTest extends ProclaimTestCase
      * constructor so no application or MVC factory is required. ServersController
      * stands in for the family — it already declares its own contentType, which
      * feeds the refusal message.
+     *
+     * @return  AbstractReadOnlyController  The controller
+     *
+     * @since   10.3.4
      */
     private function newReadOnlyController(): AbstractReadOnlyController
     {

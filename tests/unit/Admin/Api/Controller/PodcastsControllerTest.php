@@ -24,6 +24,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class PodcastsControllerTest extends ProclaimTestCase
 {
+    /**
+     * getModel() maps the podcasts content type to Cwmpodcasts.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testGetModelNameMapping(): void
     {
         $ref    = new \ReflectionMethod(PodcastsController::class, 'getModel');

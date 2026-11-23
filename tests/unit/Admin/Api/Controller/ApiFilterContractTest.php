@@ -37,7 +37,7 @@ class ApiFilterContractTest extends ProclaimTestCase
      * SermonsController maps 'sermons' to Cwmmessages, SeriesController maps
      * 'series' to Cwmseries or Cwmserie depending on route.
      *
-     * @var array<string, string>
+     * @var    array<string, string>
      * @since 10.5.8
      */
     private const CONTROLLER_MODELS = [
@@ -59,7 +59,10 @@ class ApiFilterContractTest extends ProclaimTestCase
     ];
 
     /**
-     * @return  string
+     * The repository root.
+     *
+     * @return  string  Its absolute path
+     *
      * @since   10.5.8
      */
     private static function repoRoot(): string
@@ -133,6 +136,15 @@ class ApiFilterContractTest extends ProclaimTestCase
         return (bool) preg_match("/'filter\.{$filter}'|\.filter\.{$filter}'/", $src);
     }
 
+    /**
+     * Every filter the controller accepts reaches a model that reads it.
+     *
+     * @param   string  $controller  The API controller's name
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[DataProvider('controllerProvider')]
     #[TestDox('every filter $controller accepts reaches a model that reads it')]
     public function testEveryFilterReachesAModelThatReadsIt(string $controller): void
@@ -173,6 +185,13 @@ class ApiFilterContractTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The filter scan finds filters, so the checks above are not vacuous.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the filter scan is finding filters, so the checks above are not vacuous')]
     public function testTheFilterScanIsNotVacuous(): void
     {
@@ -201,6 +220,13 @@ class ApiFilterContractTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * Every API controller on disk is covered by these checks.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('every API controller on disk is covered by these checks')]
     public function testEveryControllerIsCovered(): void
     {
