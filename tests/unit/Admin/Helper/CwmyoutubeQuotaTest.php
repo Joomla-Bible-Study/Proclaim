@@ -27,11 +27,27 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
     /**
      * A serverId well outside any real server range, used for every test so
      * fixtures never collide with real quota data on a dev DB.
+     *
+     * @var    int
+     * @since  10.5.6
      */
     private const TEST_SERVER_ID = 999999;
 
+    /**
+     * The quota file for the test server, at the path CwmyoutubeQuota uses.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $quotaFile;
 
+    /**
+     * Create the cache directory if needed and reset the test server's quota.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,6 +66,14 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
         CwmyoutubeQuota::resetQuota(self::TEST_SERVER_ID);
     }
 
+    /**
+     * Restore permissions, delete the quota file and its now-empty directories, and reset
+     * the quota.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         // Restore permissions before deleting -- a 0000-mode file/dir left
@@ -77,6 +101,13 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
         parent::tearDown();
     }
 
+    /**
+     * recordUsage() adds each call's units to the day's total.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testRecordUsageAccumulatesAcrossCalls(): void
     {
         CwmyoutubeQuota::recordUsage(self::TEST_SERVER_ID, 100);
@@ -85,6 +116,14 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
         $this->assertSame(150, CwmyoutubeQuota::getUsedToday(self::TEST_SERVER_ID));
     }
 
+    /**
+     * markExhausted() sets the day's usage to the default budget of 10,000 units, so no
+     * quota is left.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testMarkExhaustedSetsUsedToTheDailyBudget(): void
     {
         // No server row exists for this fake ID, so getDailyBudget() falls
@@ -95,6 +134,14 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
         $this->assertFalse(CwmyoutubeQuota::hasQuota(self::TEST_SERVER_ID, 1));
     }
 
+    /**
+     * hasQuota() is true while the remaining units cover the request, and false once
+     * they don't.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testHasQuotaReturnsFalseOnceRemainingIsBelowNeededUnits(): void
     {
         CwmyoutubeQuota::recordUsage(self::TEST_SERVER_ID, 9999);
@@ -116,6 +163,10 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
      * then flip the in-process fail-closed flag, and hasQuota() must
      * report false even though the (unwritable, stale) file still shows
      * plenty of remaining budget.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testHasQuotaFailsClosedAfterAWriteFailureInsteadOfStayingOpenForever(): void
     {
@@ -142,6 +193,10 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
      * still works safely; the logging itself isn't asserted since
      * CwmyoutubeLogHelper writes to a shared file-based log outside this
      * test's fixture scope.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testCorruptQuotaFileFallsBackToFreshRatherThanCrashing(): void
     {
@@ -159,6 +214,10 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
      * closes the TOCTOU lost-update race: recordUsage() now performs its
      * load+modify+save entirely inside one flock(LOCK_EX)-held critical
      * section (mutateQuotaFile()) instead of two separate file operations.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testSequentialRecordUsageCallsDoNotLoseEitherIncrement(): void
     {
@@ -169,6 +228,13 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
         $this->assertSame(50, CwmyoutubeQuota::getUsedToday(self::TEST_SERVER_ID));
     }
 
+    /**
+     * resetQuota() sets the day's usage back to 0.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testResetQuotaClearsUsageBackToZero(): void
     {
         CwmyoutubeQuota::recordUsage(self::TEST_SERVER_ID, 500);
@@ -184,6 +250,10 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
      * offset. Sanity-checks the format and that it's a real, parseable
      * calendar date -- exact value depends on "now", which the test can't
      * freeze (Date::now()-style calls aren't available in this harness).
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetUsedTodayIsScopedToTheCurrentPacificTimeQuotaDay(): void
     {

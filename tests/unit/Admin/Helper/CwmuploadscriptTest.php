@@ -45,7 +45,9 @@ class CwmuploadscriptTest extends ProclaimTestCase
     /**
      * Every addon that ships an upload() override, plus the abstract base.
      *
-     * @return array<string, array{0: class-string}>
+     * @return  array<string, array{0: class-string}>
+     *
+     * @since   10.5.6
      */
     public static function addonClassProvider(): array
     {
@@ -70,6 +72,11 @@ class CwmuploadscriptTest extends ProclaimTestCase
      * TypeError, so pin the declared type on every implementation.
      *
      * @param   class-string  $class  Addon class under test
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('addonClassProvider')]
     public function testUploadAcceptsAnInputObject(string $class): void
@@ -96,6 +103,10 @@ class CwmuploadscriptTest extends ProclaimTestCase
     /**
      * Cwmuploadscript is the shared implementation the three real handlers
      * delegate to, and its body only ever uses the Input API.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testCwmuploadscriptUploadAcceptsAnInputObject(): void
     {
@@ -111,6 +122,11 @@ class CwmuploadscriptTest extends ProclaimTestCase
      * surface must be exactly the three addons that genuinely accept uploads.
      * Everything else is a `return false;` stub that has no business being
      * callable from the generic dispatcher.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testOnlyRealUploadHandlersArePublic(): void
     {
@@ -143,6 +159,9 @@ class CwmuploadscriptTest extends ProclaimTestCase
      * @param   Registry  $params  Params to mutate
      *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private function applyConfiguredExtensions(Registry $params): void
     {
@@ -152,6 +171,11 @@ class CwmuploadscriptTest extends ProclaimTestCase
 
     /**
      * The admin's configured list must land on the key MediaHelper reads.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testConfiguredLegalExtensionsBecomeTheEnforcedList(): void
     {
@@ -174,6 +198,11 @@ class CwmuploadscriptTest extends ProclaimTestCase
     /**
      * Surrounding whitespace must not defeat the non-empty guard, and must not
      * reach the allow-list as a leading empty element.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testWhitespaceOnlyValueIsTreatedAsUnset(): void
     {
@@ -197,6 +226,7 @@ class CwmuploadscriptTest extends ProclaimTestCase
      * @return  void
      *
      * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('emptyExtensionProvider')]
     public function testEmptyConfigurationFallsBackToJoomlaDefaults(array $config): void
@@ -212,7 +242,11 @@ class CwmuploadscriptTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{0: array}>
+     * Configurations whose upload_extensions setting is absent or empty.
+     *
+     * @return  array<string, array{0: array}>  Each case
+     *
+     * @since   10.5.6
      */
     public static function emptyExtensionProvider(): array
     {

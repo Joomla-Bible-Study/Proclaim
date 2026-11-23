@@ -32,6 +32,10 @@ class CwmupgradeHelperTest extends ProclaimTestCase
      * rather than run live: DROP TABLE is DDL and causes an implicit commit
      * in MySQL, so this must never be exercised against a table any other
      * test or fixture might rely on existing.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testCleanup9xArtifactsLegacyTableListExcludesBsmsTimeset(): void
     {
@@ -55,6 +59,10 @@ class CwmupgradeHelperTest extends ProclaimTestCase
      * exist. Uses throwaway tables under the real prefix so getTableList()
      * sees them, and cleans up in finally regardless of outcome since DROP
      * TABLE is DDL and cannot be rolled back.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testCleanup9xArtifactsStillDropsGenuineLegacyTables(): void
     {
@@ -92,6 +100,10 @@ class CwmupgradeHelperTest extends ProclaimTestCase
      * hiding the wizard's re-entry point. Checked structurally against the
      * controller source since the method emits raw JSON + header()/close()
      * calls that aren't practical to exercise in a unit test.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testUpgradeVerifyXhrGatesCleanupOnVerifySuccess(): void
     {
@@ -123,6 +135,10 @@ class CwmupgradeHelperTest extends ProclaimTestCase
      * in CwmguidedtourHelper::registerGuidedTours() behind a "skipped"
      * label. Checked structurally: triggering a real exception from that
      * call deterministically isn't practical in a unit test.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testRunDataFixesReportsGuidedTourFailureInsteadOfHidingIt(): void
     {
