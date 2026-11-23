@@ -24,7 +24,9 @@ class CwmparamsTest extends ProclaimTestCase
     /**
      * Test extension name constant
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testExtensionNameIsCorrect(): void
     {

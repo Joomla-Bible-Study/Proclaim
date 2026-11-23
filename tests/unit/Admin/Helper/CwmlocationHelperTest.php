@@ -31,8 +31,9 @@ class CwmlocationHelperTest extends ProclaimTestCase
     /**
      * resetCache(null) should clear the entire per-request cache without error.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testResetCacheAll(): void
     {
@@ -43,8 +44,9 @@ class CwmlocationHelperTest extends ProclaimTestCase
     /**
      * resetCache(int) should clear only the specified user's cache entry.
      *
-     * @return void
-     * @since  10.1.0
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testResetCacheForUser(): void
     {
@@ -60,8 +62,9 @@ class CwmlocationHelperTest extends ProclaimTestCase
      * getTeacherLocations() returns empty for zero or negative user IDs
      * without hitting the database.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testGetTeacherLocationsReturnsEmptyForInvalidUserId(): void
     {
@@ -73,8 +76,9 @@ class CwmlocationHelperTest extends ProclaimTestCase
      * userIsTeacher() returns false for zero or negative IDs without
      * hitting the database.
      *
-     * @return void
-     * @since  10.3.0
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function testUserIsTeacherReturnsFalseForInvalidIds(): void
     {

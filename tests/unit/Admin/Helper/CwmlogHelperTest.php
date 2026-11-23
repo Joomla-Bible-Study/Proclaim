@@ -16,12 +16,20 @@ use Joomla\CMS\Log\Log;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
+ * CwmlogHelper writes each severity at its own core priority, registers Proclaim's
+ * namespaced logger once and in one place, keeps a logging failure from breaking a
+ * request, and records routine levels only in debug mode.
+ *
  * @since  10.3.4
  */
 class CwmlogHelperTest extends ProclaimTestCase
 {
     /**
-     * @return array<string, array{0: string, 1: int}>
+     * Each severity helper, with the core Log priority it should write.
+     *
+     * @return  array<string, array{0: string, 1: int}>  Each case
+     *
+     * @since   10.3.4
      */
     public static function levelProvider(): array
     {
@@ -80,6 +88,10 @@ class CwmlogHelperTest extends ProclaimTestCase
      * so an unregistered category is silently discarded — the entry is built and
      * dropped. Without this call the whole helper would be a no-op that looks like
      * it works.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testWriteRegistersALogger(): void
     {
@@ -96,6 +108,10 @@ class CwmlogHelperTest extends ProclaimTestCase
 
     /**
      * Registration happens once per request, not per entry.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testRegistrationIsGuarded(): void
     {
@@ -113,6 +129,10 @@ class CwmlogHelperTest extends ProclaimTestCase
 
     /**
      * The category is namespaced so a site can route it to its own file.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testCategoryAndFileAreNamespaced(): void
     {
@@ -124,6 +144,11 @@ class CwmlogHelperTest extends ProclaimTestCase
 
     /**
      * Logging must never break a request — every write is guarded.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
+     * @throws  \ReflectionException
      */
     public function testFailuresAreSwallowed(): void
     {
@@ -150,6 +175,10 @@ class CwmlogHelperTest extends ProclaimTestCase
      * admin/api.php used to call Log::addLogger() itself. Registering a category
      * twice gives it two loggers and writes every entry twice, so that file now
      * delegates here. If it ever registers its own again, this fails.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testApiPhpDelegatesRegistration(): void
     {
@@ -173,6 +202,10 @@ class CwmlogHelperTest extends ProclaimTestCase
      * for CwmlogHelper there would be a bet on load order.
      *
      * Anything else that appears in this list is centralisation leaking away.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testHelperIsTheOnlyRegistrar(): void
     {
@@ -234,6 +267,11 @@ class CwmlogHelperTest extends ProclaimTestCase
      * The API plugin emits a DEBUG line on every request. Ungated, that is one
      * line per request saying the same thing — measured at 10 lines per 10
      * requests before this guard existed.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
+     * @throws  \ReflectionException
      */
     public function testRoutineLevelsAreGatedBehindDebugMode(): void
     {
@@ -257,6 +295,11 @@ class CwmlogHelperTest extends ProclaimTestCase
     /**
      * Problems are never gated — an error must record whether or not anyone
      * switched debug on.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
+     * @throws  \ReflectionException
      */
     public function testProblemLevelsAreNotGated(): void
     {
@@ -279,6 +322,10 @@ class CwmlogHelperTest extends ProclaimTestCase
 
     /**
      * The production priority mask records problems and nothing routine.
+     *
+     * @return  void
+     *
+     * @since   10.3.4
      */
     public function testProductionPrioritiesExcludeRoutineLevels(): void
     {

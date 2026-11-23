@@ -25,7 +25,9 @@ class CwmhelperTest extends ProclaimTestCase
     /**
      * Test extension name constant
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testExtensionNameIsCorrect(): void
     {
@@ -35,7 +37,9 @@ class CwmhelperTest extends ProclaimTestCase
     /**
      * Test getRemoteFileSize returns 0 for empty URL
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetRemoteFileSizeReturnsZeroForEmptyUrl(): void
     {
@@ -46,7 +50,9 @@ class CwmhelperTest extends ProclaimTestCase
     /**
      * Test getRemoteFileSize returns 0 for YouTube URLs
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetRemoteFileSizeReturnsZeroForYoutubeUrls(): void
     {
@@ -57,7 +63,9 @@ class CwmhelperTest extends ProclaimTestCase
     /**
      * Test removeHttp removes http protocol
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testRemoveHttpRemovesHttpProtocol(): void
     {
@@ -67,7 +75,9 @@ class CwmhelperTest extends ProclaimTestCase
     /**
      * Test removeHttp removes https protocol
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testRemoveHttpRemovesHttpsProtocol(): void
     {
@@ -77,7 +87,9 @@ class CwmhelperTest extends ProclaimTestCase
     /**
      * Test removeHttp leaves non-http URLs unchanged
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testRemoveHttpLeavesNonHttpUrlsUnchanged(): void
     {
@@ -92,6 +104,7 @@ class CwmhelperTest extends ProclaimTestCase
      * made a Simple Mode message form read as a broken editor.
      *
      * @return  void
+     *
      * @since   10.6.0
      */
     public function testSimpleModeIndicatorDefaultsOnWhenUnset(): void
@@ -107,6 +120,7 @@ class CwmhelperTest extends ProclaimTestCase
      * absent case only.
      *
      * @return  void
+     *
      * @since   10.6.0
      */
     public function testSimpleModeIndicatorRespectsAnExplicitOff(): void
@@ -121,6 +135,7 @@ class CwmhelperTest extends ProclaimTestCase
      * treats as set and so would not fall back.
      *
      * @return  void
+     *
      * @since   10.6.0
      */
     public function testSimpleModeIndicatorTreatsAnEmptyStringAsUnset(): void

@@ -23,19 +23,15 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 class CwmcsvimportHelperTest extends ProclaimTestCase
 {
     /**
-     * parseDate() tried 'm/d/Y' before 'd/m/Y' using createFromFormat()
-     * non-strictly and without checking getLastErrors(). PHP's lenient
-     * component overflow means a clearly non-US date like "25/03/2024"
-     * (day > 12) was silently accepted by the 'm/d/Y' branch -- month 25
-     * rolls over into a different year/month entirely -- instead of falling
-     * through to 'd/m/Y', silently corrupting the imported studydate.
-     */
-    /**
      * PHP 8.4 deprecates calling fputcsv() without $escape, so every template
      * download raised a deprecation on 8.4 and 8.5 sites. This collects the
      * deprecations raised while the template is built. PHP 8.3 raises none
      * either way, so the test only bites on the 8.4 and 8.5 CI jobs. Passing
      * '\\', the old default, must not change a byte of the template.
+     *
+     * @return  void
+     *
+     * @since   10.7.8
      */
     public function testGenerateTemplateRaisesNoDeprecationAndIsUnchanged(): void
     {
@@ -66,6 +62,20 @@ class CwmcsvimportHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * A day above 12 falls through to d/m/Y instead of overflowing m/d/Y.
+     *
+     * parseDate() tried 'm/d/Y' before 'd/m/Y' using createFromFormat()
+     * non-strictly and without checking getLastErrors(). PHP's lenient
+     * component overflow means a clearly non-US date like "25/03/2024"
+     * (day > 12) was silently accepted by the 'm/d/Y' branch -- month 25
+     * rolls over into a different year/month entirely -- instead of falling
+     * through to 'd/m/Y', silently corrupting the imported studydate.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testParseDateFallsThroughToDayMonthYearWhenMonthOverflows(): void
     {
         $this->assertSame(
@@ -75,6 +85,13 @@ class CwmcsvimportHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * parseDate() still reads 01/15/2024 month first, as 15 January.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testParseDateStillPrefersMonthDayYearForGenuinelyAmbiguousDates(): void
     {
         // Both m/d/Y and d/m/Y could parse this; the fix must not change the
@@ -82,11 +99,25 @@ class CwmcsvimportHelperTest extends ProclaimTestCase
         $this->assertSame('2024-01-15', CwmcsvimportHelper::parseDate('01/15/2024'));
     }
 
+    /**
+     * parseDate() reads 15/01/2024 day first, as 15 January.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testParseDateAcceptsValidDayMonthYear(): void
     {
         $this->assertSame('2024-01-15', CwmcsvimportHelper::parseDate('15/01/2024'));
     }
 
+    /**
+     * parseDate() returns null for 13/13/2024, which no format can read without rolling over.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testParseDateRejectsAnOutOfRangeDateInEveryFormat(): void
     {
         // Neither m/d/Y nor d/m/Y can make sense of month=13; must not silently
@@ -94,16 +125,37 @@ class CwmcsvimportHelperTest extends ProclaimTestCase
         $this->assertNull(CwmcsvimportHelper::parseDate('13/13/2024'));
     }
 
+    /**
+     * parseDate() accepts an ISO date.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testParseDateAcceptsIsoFormat(): void
     {
         $this->assertSame('2024-01-15', CwmcsvimportHelper::parseDate('2024-01-15'));
     }
 
+    /**
+     * parseDate() accepts a date with a named month, such as Jan 15, 2024.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testParseDateAcceptsNamedMonthFormat(): void
     {
         $this->assertSame('2024-01-15', CwmcsvimportHelper::parseDate('Jan 15, 2024'));
     }
 
+    /**
+     * parseDate() returns null for null, an empty string or whitespace.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testParseDateReturnsNullForEmptyInput(): void
     {
         $this->assertNull(CwmcsvimportHelper::parseDate(null));
@@ -119,6 +171,10 @@ class CwmcsvimportHelperTest extends ProclaimTestCase
      * processLocation()'s own docblock. A restricted (non-core.admin) user's
      * CSV update could silently move a study to a campus/location they
      * aren't authorized to write to.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testUpdateExistingRowUsesProcessLocationForAccessControl(): void
     {

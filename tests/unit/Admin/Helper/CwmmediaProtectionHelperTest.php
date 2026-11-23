@@ -21,15 +21,24 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmmediaProtectionHelperTest extends ProclaimTestCase
 {
-    /** What a logged-out visitor holds. */
+    /**
+     * What a logged-out visitor holds.
+     *
+     * @var    int[]
+     * @since  10.5.8
+     */
     private const GUEST = [1, 5];
 
     /**
+     * A media row with the access levels of the file, its message and its series.
+     *
      * @param   int|null  $file    Media file's own level.
      * @param   int|null  $study   Message's level.
      * @param   int|null  $series  Series' level.
      *
-     * @return object
+     * @return  object  The row
+     *
+     * @since   10.5.8
      */
     private function media(?int $file, ?int $study = null, ?int $series = null): object
     {
@@ -40,6 +49,13 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
     // restricted-from-guests
     // -----------------------------------------------------------------
 
+    /**
+     * Media that is public at every level of the chain is not restricted from guests.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAFullyPublicChainIsNotRestricted(): void
     {
         self::assertFalse(
@@ -47,7 +63,13 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
         );
     }
 
-    /** Restriction anywhere in the chain counts, which is the #1777 rule. */
+    /**
+     * Restriction anywhere in the chain counts, which is the #1777 rule.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testRestrictionAnywhereInTheChainCounts(): void
     {
         self::assertTrue(
@@ -64,7 +86,13 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
         );
     }
 
-    /** LEFT joins yield null for an absent link; that must not read as restricted. */
+    /**
+     * LEFT joins yield null for an absent link; that must not read as restricted.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAbsentChainLinksAreNotRestrictions(): void
     {
         self::assertFalse(
@@ -76,6 +104,10 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
      * Asked as "would a guest be refused" rather than "is the level 1", so a
      * site that grants its logged-out visitors more than Public is answered
      * correctly rather than warned at spuriously.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testItAsksWhatGuestsHoldRatherThanAssumingLevelOne(): void
     {
@@ -92,6 +124,13 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
     // served-by-web-server
     // -----------------------------------------------------------------
 
+    /**
+     * isServedByWebServer() is true for a URL under the site root.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAUrlUnderTheSiteRootIsServedByTheWebServer(): void
     {
         self::assertTrue(
@@ -99,7 +138,13 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
         );
     }
 
-    /** Another host's file is that host's problem, not a leak of ours. */
+    /**
+     * Another host's file is that host's problem, not a leak of ours.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAUrlOnAnotherHostIsNotOurs(): void
     {
         self::assertFalse(
@@ -107,6 +152,13 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * isServedByWebServer() is false for an empty URL.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAnEmptyUrlIsNotALeak(): void
     {
         self::assertFalse(CwmmediaProtectionHelper::isServedByWebServer(''));
@@ -116,6 +168,14 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
     // the combination — only both halves together are a problem
     // -----------------------------------------------------------------
 
+    /**
+     * isRestrictedButReachable() is true only for media that is both restricted and on
+     * this site's web server.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testOnlyRestrictedAndReachableTogetherWarrantAWarning(): void
     {
         $local  = \Joomla\CMS\Uri\Uri::root() . 'images/biblestudy/a.mp3';
@@ -139,7 +199,13 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
     // the canary: does the web server actually refuse this directory?
     // -----------------------------------------------------------------
 
-    /** A 200 handing back the canary is the whole point: the file is public. */
+    /**
+     * A 200 handing back the canary is the whole point: the file is public.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testTheCanaryComingBackMeansExposed(): void
     {
         self::assertSame(
@@ -148,7 +214,13 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
         );
     }
 
-    /** A client error is the web server declining. 404 counts as much as 403. */
+    /**
+     * A client error is the web server declining. 404 counts as much as 403.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAClientErrorMeansProtected(): void
     {
         foreach ([401, 403, 404, 410] as $status) {
@@ -164,6 +236,10 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
      * The rule that matters most. A deny rule that silently does nothing and a
      * network failure look identical from here, so anything we cannot read as
      * a refusal must not be reported as protection.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testAnythingInconclusiveIsNeverReportedAsProtected(): void
     {
@@ -188,6 +264,10 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
      * A 500 is not a refusal. Treating every non-2xx as protection would call
      * a broken server a secure one, which is the failure this check exists to
      * prevent.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testAServerErrorIsNotMistakenForARefusal(): void
     {
@@ -201,7 +281,14 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
     // the deny files
     // -----------------------------------------------------------------
 
-    /** Apache 2.2 and 2.4 both, plus IIS — the pair Proclaim already ships. */
+    /**
+     * Apache 2.2 and 2.4 both, plus IIS — the pair Proclaim already ships.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Random\RandomException
+     */
     public function testItWritesGuardsForApacheAndIis(): void
     {
         $dir = sys_get_temp_dir() . '/cwm-deny-' . bin2hex(random_bytes(6));
@@ -225,7 +312,14 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
         }
     }
 
-    /** Never clobber a guard an administrator has customised. */
+    /**
+     * Never clobber a guard an administrator has customised.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Random\RandomException
+     */
     public function testItLeavesAnExistingGuardAlone(): void
     {
         $dir = sys_get_temp_dir() . '/cwm-deny-' . bin2hex(random_bytes(6));
@@ -243,7 +337,13 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
         }
     }
 
-    /** An unwritable or missing directory cannot be verified, so it is not. */
+    /**
+     * An unwritable or missing directory cannot be verified, so it is not.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testAnUnusableDirectoryIsUnverifiedRatherThanProtected(): void
     {
         self::assertSame(

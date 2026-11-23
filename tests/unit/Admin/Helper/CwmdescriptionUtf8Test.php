@@ -26,7 +26,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * The description template's separator cleanup leaves multibyte characters whole,
+ * still strips a real trailing separator, and keeps text that is already invalid UTF-8.
+ *
+ * @since  10.7.1
  */
 class CwmdescriptionUtf8Test extends ProclaimTestCase
 {
@@ -34,7 +37,8 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      * Characters whose encoding ends in one of the bytes the dash class held.
      *
      * @return  array<string, array{0: string}>
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     public static function trailingByteProvider(): array
     {
@@ -48,10 +52,15 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
     }
 
     /**
+     * A title ending in a multibyte character comes through unchanged and still valid
+     * UTF-8.
+     *
      * @param   string  $title  A title ending in a vulnerable character.
      *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     #[DataProvider('trailingByteProvider')]
     #[TestDox('A title ending in a multibyte character survives the separator cleanup')]
@@ -64,8 +73,12 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
     }
 
     /**
+     * A trailing em dash, hyphen or en dash after the title is still removed.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     #[TestDox('A genuine trailing separator is still removed')]
     public function testTrailingSeparatorIsStillStripped(): void
@@ -81,7 +94,9 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      * than blank the description.
      *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     #[TestDox('Input that is already invalid UTF-8 is preserved, not blanked')]
     public function testInvalidUtf8InputIsNotBlanked(): void
@@ -96,11 +111,15 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
     }
 
     /**
-     * @param   string                $format  Template format string.
-     * @param   array<string, string> $data    Placeholder values.
+     * Call the helper's private applyTemplate().
      *
-     * @return  string
-     * @since 10.7.1
+     * @param   string                 $format  Template format string.
+     * @param   array<string, string>  $data    Placeholder values.
+     *
+     * @return  string  The filled-in description
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     private function applyTemplate(string $format, array $data): string
     {

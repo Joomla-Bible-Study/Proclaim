@@ -29,6 +29,13 @@ use Joomla\Database\DatabaseInterface;
  */
 class CwmmediafilesHelperTest extends ProclaimTestCase
 {
+    /**
+     * findFilesForDelete() returns an empty array when given no ids.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testFindFilesForDeleteReturnsEmptyArrayForEmptyIds(): void
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
@@ -36,6 +43,13 @@ class CwmmediafilesHelperTest extends ProclaimTestCase
         $this->assertSame([], CwmmediafilesHelper::findFilesForDelete($db, [], 'id'));
     }
 
+    /**
+     * findFilesForDelete() throws InvalidArgumentException for an unknown column.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testFindFilesForDeleteRejectsUnknownColumn(): void
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
@@ -53,7 +67,9 @@ class CwmmediafilesHelperTest extends ProclaimTestCase
      * column/table name would fail here even though a mock could never
      * catch it).
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testFindFilesForDeleteRunsRealQueryById(): void
     {
@@ -64,6 +80,14 @@ class CwmmediafilesHelperTest extends ProclaimTestCase
         $this->assertSame([], $result);
     }
 
+    /**
+     * The real query by study_id runs against the real schema, and finds nothing for an
+     * id no message has.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testFindFilesForDeleteRunsRealQueryByStudyId(): void
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
