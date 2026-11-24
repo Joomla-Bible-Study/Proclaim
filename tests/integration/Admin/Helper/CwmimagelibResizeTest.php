@@ -36,11 +36,30 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(Cwmimagelib::class)]
 class CwmimagelibResizeTest extends IntegrationTestCase
 {
+    /**
+     * The test's image folder, under images/biblestudy.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $dir = '';
 
-    /** @var string[] */
+    /**
+     * The folders setUp() created, for tearDown() to remove.
+     *
+     * @var    string[]
+     * @since  10.5.6
+     */
     private array $created = [];
 
+    /**
+     * Skip without GD. Otherwise create the test's image folder when it's missing, noting it
+     * for removal.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -57,6 +76,14 @@ class CwmimagelibResizeTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * Delete the files in the test's image folder, and remove the folder if setUp() created
+     * it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         foreach (glob($this->dir . '/*') ?: [] as $file) {
@@ -78,6 +105,8 @@ class CwmimagelibResizeTest extends IntegrationTestCase
      * @param   int     $height  Height
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function writePng(string $path, int $width = 200, int $height = 150): void
     {
@@ -92,6 +121,8 @@ class CwmimagelibResizeTest extends IntegrationTestCase
      * @param   string  $path  Destination
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function writeTruncatedPng(string $path): void
     {
@@ -108,6 +139,15 @@ class CwmimagelibResizeTest extends IntegrationTestCase
     // Finding 1 -- a failed decode must not escape as an Error
     // -------------------------------------------------------------------------
 
+    /**
+     * resizeImage() raises a RuntimeException that mentions decoding, not a TypeError, for a
+     * PNG whose header reads but whose data is cut short.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('A truncated image raises a catchable exception, not a TypeError')]
     public function testTruncatedImageRaisesACatchableException(): void
     {
@@ -136,6 +176,11 @@ class CwmimagelibResizeTest extends IntegrationTestCase
     /**
      * The behaviour the page actually depends on: one bad thumbnail falls back
      * to the original rather than aborting the request.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     #[TestDox('A corrupted thumbnail falls back to the original image')]
     public function testCorruptedImageFallsBackToTheOriginal(): void
@@ -152,6 +197,15 @@ class CwmimagelibResizeTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * getSeriesPodcast() resizes an 800 by 600 PNG onto a 300 by 169 canvas, saved beside
+     * it with -fit added to its name, and returns that path.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('A valid image is resized and the resized path returned')]
     public function testValidImageIsResized(): void
     {
@@ -175,6 +229,11 @@ class CwmimagelibResizeTest extends IntegrationTestCase
     /**
      * Decoding is what allocates the memory, so the check has to happen first.
      * Exceeding memory_limit is a raw fatal that no catch can reach.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[TestDox('An image beyond the dimension cap is refused before decoding')]
     public function testOversizedImageIsRefusedBeforeDecoding(): void
@@ -202,6 +261,14 @@ class CwmimagelibResizeTest extends IntegrationTestCase
         $ref->invoke(null, $this->dir . '/out.png', $source);
     }
 
+    /**
+     * resizeImage() raises a RuntimeException for a file that isn't an image.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('An unreadable file is refused rather than decoded')]
     public function testUnreadableFileIsRefused(): void
     {

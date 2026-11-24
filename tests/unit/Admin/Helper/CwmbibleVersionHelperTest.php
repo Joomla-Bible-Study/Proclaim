@@ -35,6 +35,9 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
      * @param   string                 $currentLang
      *
      * @return  array<int, array{value: string, text: string}>
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function buildOptions(array $rows, bool $servableOnly, array $enabledSources, string $currentLang): array
     {
@@ -44,13 +47,17 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @param   string  $abbreviation
-     * @param   string  $name
-     * @param   string  $language
-     * @param   bool    $installed
-     * @param   string  $source
+     * A catalogue row.
      *
-     * @return  \stdClass
+     * @param   string  $abbreviation  Abbreviation
+     * @param   string  $name          Translation name
+     * @param   string  $language      Language code
+     * @param   bool    $installed     Whether it is installed locally
+     * @param   string  $source        Provider source
+     *
+     * @return  \stdClass  The row
+     *
+     * @since   10.5.6
      */
     private static function row(string $abbreviation, string $name, string $language, bool $installed = true, string $source = 'getbible'): \stdClass
     {
@@ -63,6 +70,14 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * Versions in the site language come first, sorted by name, and other languages follow.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testNativeLanguageVersionsSortBeforeOthersAndByName(): void
     {
         $rows = [
@@ -80,6 +95,14 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * A version in the site language shows its name and abbreviation, with no language suffix.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testNativeOptionLabelHasNoLanguageSuffix(): void
     {
         $rows = [self::row('esv', 'English Standard Version', 'en')];
@@ -89,6 +112,15 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
         $this->assertSame('English Standard Version (ESV)', $options[0]['text']);
     }
 
+    /**
+     * A version in another language shows the language's name after its name and
+     * abbreviation.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testOtherLanguageOptionLabelIncludesLanguageName(): void
     {
         $rows = [self::row('lsg', 'Louis Segond', 'fr')];
@@ -98,6 +130,14 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
         $this->assertSame('Louis Segond (LSG) — French', $options[0]['text']);
     }
 
+    /**
+     * When two rows share an abbreviation, only the first is offered.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testFirstOccurrenceWinsOnDuplicateAbbreviation(): void
     {
         $rows = [
@@ -111,6 +151,14 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
         $this->assertSame('King James Version (first) (KJV)', $options[0]['text']);
     }
 
+    /**
+     * Servable-only leaves out a version that is neither installed nor from an enabled source.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testServableOnlyExcludesUninstalledVersionsFromDisabledSources(): void
     {
         $rows = [
@@ -123,6 +171,14 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
         $this->assertSame(['kjv'], array_column($options, 'value'), 'niv must be excluded — not installed and its source is not enabled');
     }
 
+    /**
+     * Servable-only keeps an installed version even when its source is not enabled.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testServableOnlyIncludesInstalledVersionsRegardlessOfSource(): void
     {
         $rows = [
@@ -134,6 +190,14 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
         $this->assertSame(['niv'], array_column($options, 'value'), 'Installed translations must be included even if their source is not in the enabled list');
     }
 
+    /**
+     * With no rows, the four common fallback versions are offered, sorted by name.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testEmptyRowsFallBackToCommonDefaults(): void
     {
         $options = self::buildOptions([], false, [], 'en');
@@ -147,6 +211,14 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * getDefaultVersion() returns the default version set in the scripture parameters, or
+     * exactly kjv when none is set.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testGetDefaultVersionFallsBackToKjv(): void
     {
         // The contract is: plugin default_version when configured, 'kjv'

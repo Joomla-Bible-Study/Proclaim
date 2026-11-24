@@ -24,7 +24,9 @@ class CwmmediaTest extends ProclaimTestCase
     /**
      * Test isExternal method
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
      */
     public function testIsExternal(): void
     {
@@ -46,7 +48,9 @@ class CwmmediaTest extends ProclaimTestCase
      * Joomla's shim `.fa.fa-youtube { font-family: "Font Awesome 6 Brands" }`,
      * which keys on the bare `.fa` class the rewrite removed.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.4.1
      */
     public function testFa4BrandIconGetsBrandFamily(): void
     {
@@ -61,7 +65,9 @@ class CwmmediaTest extends ProclaimTestCase
      * `fa-solid fa-youtube` on disk. Normalizing must repair it rather than
      * faithfully reproduce it.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.4.1
      */
     public function testAlreadyBrokenSolidBrandIsRepaired(): void
     {
@@ -72,7 +78,9 @@ class CwmmediaTest extends ProclaimTestCase
     /**
      * fa-vimeo is a prefix of fa-vimeo-v, so token-wise matching matters.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.4.1
      */
     public function testPrefixOverlappingBrandNamesAreNotCorrupted(): void
     {
@@ -87,7 +95,9 @@ class CwmmediaTest extends ProclaimTestCase
      * `.fa.fa-video-camera` — so `fa-solid fa-video-camera` is tofu. Affected
      * ~181 media rows.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.4.1
      */
     public function testShimOnlyFa4NamesAreRenamedToFa6(): void
     {
@@ -100,7 +110,9 @@ class CwmmediaTest extends ProclaimTestCase
      * Non-brand icons must keep the solid family, and already-FA6 values must be
      * returned untouched.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.4.1
      */
     public function testNonBrandIconsAndIdempotence(): void
     {
@@ -122,7 +134,9 @@ class CwmmediaTest extends ProclaimTestCase
      * getIcons() maps 'JBS_MED_CUSTOM' => '1', and the caller branches on it to
      * read media_custom_icon instead. It is a marker, not a class.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.4.1
      */
     public function testCustomIconSentinelIsUntouched(): void
     {

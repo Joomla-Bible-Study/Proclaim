@@ -26,6 +26,14 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class SeriesModalCheckinTest extends ProclaimTestCase
 {
+    /**
+     * setup() builds a check-in URL for the series modal.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \ReflectionException
+     */
     public function testSetupBuildsACheckinUrl(): void
     {
         $field = (new \ReflectionClass(SeriesField::class))->newInstanceWithoutConstructor();

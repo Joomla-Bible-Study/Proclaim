@@ -35,10 +35,20 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
      */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,6 +61,13 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
         $this->db->transactionStart();
     }
 
+    /**
+     * Roll back the test's rows.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -71,6 +88,8 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      * @param   int     $published  Published state
      *
      * @return  int
+     *
+     * @since   10.5.6
      */
     private function insertSeries(string $title, int $published = 1): int
     {
@@ -94,8 +113,11 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      * @param   string  $title      Sermon title
      * @param   int     $published  Published state
      * @param   int     $seriesId   Series ID (0 = seriesless)
+     * @param   int     $access     Access level
      *
-     * @return  int
+     * @return  int  The new row's id
+     *
+     * @since   10.5.6
      */
     private function insertSermon(string $title, int $published = 1, int $seriesId = 0, int $access = 1): int
     {
@@ -129,6 +151,8 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      * @param   string  $title  Podcast title
      *
      * @return  int
+     *
+     * @since   10.5.2
      */
     private function insertPodcast(string $title = 'Test Podcast'): int
     {
@@ -153,8 +177,11 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      *
      * @param   int  $studyId    Owning study ID
      * @param   int  $podcastId  Podcast ID to tag via the CSV podcast_id column
+     * @param   int  $access     Access level
      *
-     * @return  int
+     * @return  int  The new row's id
+     *
+     * @since   10.5.2
      */
     private function insertMediaFile(int $studyId, int $podcastId, int $access = 1): int
     {
@@ -173,6 +200,13 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * A published message with no series (series_id = 0) appears in the podcast feed.
+     *
+     * @return  void
+     *
+     * @since   10.5.2
+     */
     #[TestDox('A published message with no series (series_id = 0) appears in the podcast feed')]
     public function testSeriesLessMessageAppearsInEpisodes(): void
     {
@@ -192,6 +226,13 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A message in an unpublished series is excluded from the podcast feed.
+     *
+     * @return  void
+     *
+     * @since   10.5.2
+     */
     #[TestDox('A message in an unpublished series is still excluded from the podcast feed')]
     public function testUnpublishedSeriesMessageStillExcluded(): void
     {
@@ -212,6 +253,14 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The feed lists what a guest may see, and not a Registered-only message or
+     * media file.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     #[TestDox('The feed lists what a guest may see, and not a Registered-only message or media file')]
     public function testRestrictedItemsAreNotListed(): void
     {
@@ -231,6 +280,14 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
         $this->assertNotContains($mediaId, $sids, 'A Registered-only media file must not be listed in a public feed.');
     }
 
+    /**
+     * A Super User building the feed does not widen it.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \Exception
+     */
     #[TestDox('A Super User building the feed does not widen it')]
     public function testASuperUserBuildingTheFeedDoesNotWidenIt(): void
     {

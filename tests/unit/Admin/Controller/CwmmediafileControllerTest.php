@@ -27,7 +27,10 @@ class CwmmediafileControllerTest extends ProclaimTestCase
      * (and its checkout/check() validation) and the action-log entry every
      * other media file edit produces.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testSaveChaptersRoutesThroughTableSave(): void
     {
@@ -77,6 +80,9 @@ class CwmmediafileControllerTest extends ProclaimTestCase
      * @param   string        $method  The method name.
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private function getMethodSource(string $class, string $method): string
     {

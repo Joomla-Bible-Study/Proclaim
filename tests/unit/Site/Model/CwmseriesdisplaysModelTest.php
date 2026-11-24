@@ -36,6 +36,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmseriesdisplaysModelTest extends ProclaimTestCase
 {
+    /**
+     * The source of the model's populateState().
+     *
+     * @return  string  Its source lines
+     *
+     * @since   10.5.6
+     */
     private static function methodBody(): string
     {
         $reflection = new \ReflectionMethod(CwmseriesdisplaysModel::class, 'populateState');
@@ -47,6 +54,13 @@ class CwmseriesdisplaysModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * populateState() stores the params after merging in the template's.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testSetStateParamsFiresAfterTheTemplateMergeReassignment(): void
     {
         $body = self::methodBody();
@@ -64,6 +78,13 @@ class CwmseriesdisplaysModelTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * populateState() stores the params once, after the merge.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testSetStateParamsIsNotAlsoCalledBeforeTheMerge(): void
     {
         $body = self::methodBody();

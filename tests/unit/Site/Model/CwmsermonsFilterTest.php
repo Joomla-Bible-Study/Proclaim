@@ -34,6 +34,9 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      * @param   array   $args        Arguments to pass
      *
      * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
      */
     private function invokeFilter(string $methodName, array $args): void
     {
@@ -46,13 +49,20 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $method->invokeArgs($instance, $args);
     }
 
-    /** @var array Tracks where() calls on the mock query */
+    /**
+     * The conditions the stub query's where() and whereIn() received.
+     *
+     * @var    array
+     * @since  10.3.2
+     */
     private array $whereCalls = [];
 
     /**
      * Create a PHPUnit stub of QueryInterface that tracks where() calls.
      *
      * @return  QueryInterface&\PHPUnit\Framework\MockObject\Stub
+     *
+     * @since   10.3.2
      */
     private function createMockQuery(): QueryInterface
     {
@@ -82,10 +92,22 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      * Create a mock database driver with quoteName() and getQuery().
      *
      * @return  object  Mock database object
+     *
+     * @since   10.3.2
      */
     private function createMockDb(): object
     {
         return new class () {
+            /**
+             * Quote a name, or each name in a list, with backticks.
+             *
+             * @param   mixed  $name  The name, or a list of names
+             * @param   mixed  $as    The alias, ignored here
+             *
+             * @return  string|array  The quoted name or names
+             *
+             * @since   10.3.2
+             */
             public function quoteName($name, $as = null): string|array
             {
                 if (\is_array($name)) {
@@ -97,28 +119,74 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
             // The component builds queries with createQuery() (#1394); this
             // delegates so the double keeps satisfying both spellings.
+            /**
+             * Return a subquery double, as getQuery() does.
+             *
+             * @return  object  The subquery double
+             *
+             * @since   10.5.0
+             */
             public function createQuery(): object
             {
                 return $this->getQuery();
             }
 
+            /**
+             * A subquery double that records the table and conditions it is given, and
+             * renders them.
+             *
+             * @param   bool  $new  Ignored here
+             *
+             * @return  object  The subquery double
+             *
+             * @since   10.3.2
+             */
             public function getQuery(bool $new = false): object
             {
                 // A subquery double for the EXISTS clauses in addTeacherFilter and
                 // addBookFilter. It records what it is given and renders it, so a
                 // test can assert on the conditions rather than on a placeholder.
                 return new class () {
-                    /** @var string */
+                    /**
+                     * The table the subquery selects from.
+                     *
+                     * @var    string
+                     * @since  10.5.8
+                     */
                     private string $from = '';
 
-                    /** @var string[] */
+                    /**
+                     * The subquery's conditions, in the order given.
+                     *
+                     * @var    string[]
+                     * @since  10.5.8
+                     */
                     private array $conditions = [];
 
+                    /**
+                     * Accept the columns, which the double does not record.
+                     *
+                     * @param   mixed  $columns  The columns
+                     *
+                     * @return  static  The double
+                     *
+                     * @since   10.3.2
+                     */
                     public function select($columns): static
                     {
                         return $this;
                     }
 
+                    /**
+                     * Record the table the subquery selects from.
+                     *
+                     * @param   mixed  $tables         The table, or a list of tables
+                     * @param   mixed  $subQueryAlias  Ignored here
+                     *
+                     * @return  static  The double
+                     *
+                     * @since   10.3.2
+                     */
                     public function from($tables, $subQueryAlias = null): static
                     {
                         $this->from = \is_array($tables) ? implode(', ', $tables) : (string) $tables;
@@ -126,6 +194,15 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                         return $this;
                     }
 
+                    /**
+                     * Record a condition, joining a list of them with AND.
+                     *
+                     * @param   mixed  $condition  The condition, or a list of conditions
+                     *
+                     * @return  static  The double
+                     *
+                     * @since   10.3.2
+                     */
                     public function where($condition): static
                     {
                         $this->conditions[] = \is_array($condition)
@@ -135,6 +212,17 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                         return $this;
                     }
 
+                    /**
+                     * Record an IN condition.
+                     *
+                     * @param   string  $keyName    The column
+                     * @param   array   $keyValues  The values
+                     * @param   mixed   $dataType   Ignored here
+                     *
+                     * @return  static  The double
+                     *
+                     * @since   10.3.2
+                     */
                     public function whereIn(string $keyName, array $keyValues, $dataType = 'int'): static
                     {
                         $this->conditions[] = $keyName . ' IN (' . implode(',', $keyValues) . ')';
@@ -142,6 +230,13 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                         return $this;
                     }
 
+                    /**
+                     * Render the subquery from what it recorded.
+                     *
+                     * @return  string  The SQL
+                     *
+                     * @since   10.3.2
+                     */
                     public function __toString(): string
                     {
                         return 'SELECT 1 FROM ' . $this->from
@@ -150,11 +245,28 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                 };
             }
 
+            /**
+             * Wrap text in single quotes, without escaping it.
+             *
+             * @param   mixed  $text    The text
+             * @param   mixed  $escape  Ignored here
+             *
+             * @return  string  The quoted text
+             *
+             * @since   10.3.2
+             */
             public function quote($text, $escape = true): string
             {
                 return "'" . $text . "'";
             }
 
+            /**
+             * The null date MySQL uses.
+             *
+             * @return  string  The null date
+             *
+             * @since   10.3.2
+             */
             public function getNullDate(): string
             {
                 return '0000-00-00 00:00:00';
@@ -166,6 +278,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
     // addParamFilter tests
     // =========================================================================
 
+    /**
+     * addParamFilter() adds no WHERE clause for null params.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addParamFilter: null params adds no WHERE clause')]
     public function testAddParamFilterNullNoFilter(): void
     {
@@ -177,6 +297,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, 'null param + no user filter should add no WHERE');
     }
 
+    /**
+     * addParamFilter() adds no WHERE clause for the ['-1'] sentinel.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox("addParamFilter: ['-1'] sentinel adds no WHERE clause")]
     public function testAddParamFilterSentinelNoFilter(): void
     {
@@ -188,6 +316,15 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '["-1"] sentinel should add no WHERE');
     }
 
+    /**
+     * addParamFilter() adds no WHERE clause for [''], the shape an unset module param
+     * sends.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox("addParamFilter: [''] empty string adds no WHERE clause (module param bug)")]
     public function testAddParamFilterEmptyStringNoFilter(): void
     {
@@ -199,6 +336,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[""] empty string should add no WHERE — this was the module bug');
     }
 
+    /**
+     * addParamFilter() adds no WHERE clause for [null].
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addParamFilter: [null] adds no WHERE clause')]
     public function testAddParamFilterNullElementNoFilter(): void
     {
@@ -210,6 +355,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[null] should add no WHERE');
     }
 
+    /**
+     * addParamFilter() adds an = clause for a single value.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addParamFilter: single valid value adds = clause')]
     public function testAddParamFilterSingleValue(): void
     {
@@ -222,6 +375,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('= 5', $this->whereCalls[0]);
     }
 
+    /**
+     * addParamFilter() adds an IN clause for several values.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addParamFilter: multiple values adds IN clause')]
     public function testAddParamFilterMultipleValues(): void
     {
@@ -234,6 +395,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('IN (5,10)', $this->whereCalls[0]);
     }
 
+    /**
+     * addParamFilter() adds an = clause for a user filter alone.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addParamFilter: user filter only adds = clause')]
     public function testAddParamFilterUserFilterOnly(): void
     {
@@ -246,6 +415,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('= 7', $this->whereCalls[0]);
     }
 
+    /**
+     * addParamFilter() adds one clause for the params and another for the user filter.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addParamFilter: param + user filter adds both clauses')]
     public function testAddParamFilterParamAndUserFilter(): void
     {
@@ -257,6 +434,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertCount(2, $this->whereCalls, 'Param + user filter should add two WHERE clauses');
     }
 
+    /**
+     * addParamFilter() applies only the user filter when the param is an empty string.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addParamFilter: empty string param + user filter only applies user filter')]
     public function testAddParamFilterEmptyStringWithUserFilter(): void
     {
@@ -273,6 +458,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
     // addTeacherFilter tests
     // =========================================================================
 
+    /**
+     * addTeacherFilter() adds no WHERE clause for null params.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addTeacherFilter: null params adds no WHERE clause')]
     public function testAddTeacherFilterNullNoFilter(): void
     {
@@ -284,6 +477,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls);
     }
 
+    /**
+     * addTeacherFilter() adds no WHERE clause for [''].
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox("addTeacherFilter: [''] empty string adds no WHERE clause")]
     public function testAddTeacherFilterEmptyStringNoFilter(): void
     {
@@ -295,6 +496,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[""] should not create EXISTS subquery');
     }
 
+    /**
+     * addTeacherFilter() adds an EXISTS clause for a valid teacher id.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addTeacherFilter: valid teacher ID adds EXISTS clause')]
     public function testAddTeacherFilterValidId(): void
     {
@@ -307,6 +516,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('EXISTS', $this->whereCalls[0]);
     }
 
+    /**
+     * addTeacherFilter() adds no WHERE clause for the ['-1'] sentinel.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \ReflectionException
+     */
     #[TestDox("addTeacherFilter: ['-1'] sentinel adds no WHERE clause")]
     public function testAddTeacherFilterSentinelNoFilter(): void
     {
@@ -318,6 +535,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '["-1"] sentinel should add no EXISTS subquery');
     }
 
+    /**
+     * addTeacherFilter() adds no WHERE clause for [null].
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('addTeacherFilter: [null] adds no WHERE clause')]
     public function testAddTeacherFilterNullElementNoFilter(): void
     {
@@ -329,6 +554,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[null] should add no EXISTS subquery');
     }
 
+    /**
+     * addTeacherFilter() adds one EXISTS clause for several teacher ids.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('addTeacherFilter: multiple teacher IDs adds one EXISTS clause')]
     public function testAddTeacherFilterMultipleIds(): void
     {
@@ -341,6 +574,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('EXISTS', $this->whereCalls[0]);
     }
 
+    /**
+     * addTeacherFilter() adds one EXISTS clause for a user filter alone.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('addTeacherFilter: user filter only adds one EXISTS clause')]
     public function testAddTeacherFilterUserFilterOnly(): void
     {
@@ -353,6 +594,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('EXISTS', $this->whereCalls[0]);
     }
 
+    /**
+     * addTeacherFilter() adds two EXISTS clauses for params and a user filter.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('addTeacherFilter: param + user filter adds two EXISTS clauses')]
     public function testAddTeacherFilterParamAndUserFilter(): void
     {
@@ -368,6 +617,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
     // addBookFilter tests
     // =========================================================================
 
+    /**
+     * addBookFilter() adds no WHERE clause for null params.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox('addBookFilter: null params adds no WHERE clause')]
     public function testAddBookFilterNullNoFilter(): void
     {
@@ -379,6 +636,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls);
     }
 
+    /**
+     * addBookFilter() adds no WHERE clause for [''].
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox("addBookFilter: [''] empty string adds no WHERE clause")]
     public function testAddBookFilterEmptyStringNoFilter(): void
     {
@@ -390,6 +655,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[""] should not filter by book');
     }
 
+    /**
+     * addBookFilter() adds no WHERE clause for the ['-1'] sentinel.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     * @throws  \ReflectionException
+     */
     #[TestDox("addBookFilter: ['-1'] sentinel adds no WHERE clause")]
     public function testAddBookFilterSentinelNoFilter(): void
     {
@@ -401,6 +674,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls);
     }
 
+    /**
+     * addBookFilter() adds no WHERE clause for [null].
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('addBookFilter: [null] adds no WHERE clause')]
     public function testAddBookFilterNullElementNoFilter(): void
     {
@@ -412,6 +693,14 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[null] should not filter by book');
     }
 
+    /**
+     * addBookFilter() adds one EXISTS clause over the junction for several books.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \ReflectionException
+     */
     #[TestDox('addBookFilter: multiple values adds one EXISTS clause over the junction')]
     public function testAddBookFilterMultipleValues(): void
     {

@@ -23,6 +23,10 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
 {
     /**
      * Test that the class extends BaseController.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testExtendsBaseController(): void
     {
@@ -34,6 +38,10 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
 
     /**
      * Test that the default view is set correctly.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testDefaultView(): void
     {
@@ -45,6 +53,10 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
 
     /**
      * Test that the view_list prevents pluralization.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testViewListProperty(): void
     {
@@ -56,6 +68,10 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
 
     /**
      * Test that execute only allows known tasks.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testExecuteMethodExists(): void
     {
@@ -73,6 +89,10 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
 
     /**
      * Test that apply method exists and checks token.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testApplyMethodExists(): void
     {
@@ -93,6 +113,10 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
 
     /**
      * Test that apply sanitizes ministry_style input.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
      */
     public function testApplySanitizesMinistryStyle(): void
     {

@@ -36,8 +36,22 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmcsvimportHelper::class)]
 class CsvImportWritePathTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.0
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction and reset the importer's
+     * state.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,6 +65,13 @@ class CsvImportWritePathTest extends IntegrationTestCase
         CwmcsvimportHelper::resetState();
     }
 
+    /**
+     * Roll back the transaction setUp() opened and reset the importer's state.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -70,6 +91,8 @@ class CsvImportWritePathTest extends IntegrationTestCase
      * A row whose values carry the characters quoting exists for.
      *
      * @return  array<string, string>
+     *
+     * @since   10.7.0
      */
     private static function row(): array
     {
@@ -87,6 +110,14 @@ class CsvImportWritePathTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * importRow() imports a new row: the stored title keeps its quotes, the intro keeps its
+     * quotes and commas, and the auto-created series is linked.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('a new row imports, and every quoted character survives')]
     public function testInsertNewRow(): void
     {
@@ -107,6 +138,14 @@ class CsvImportWritePathTest extends IntegrationTestCase
         $this->assertGreaterThan(0, (int) $stored->series_id, 'The auto-created series was not linked.');
     }
 
+    /**
+     * With duplicate_handling set to update, importing the same row again reports it
+     * imported and replaces the stored intro.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('a duplicate row takes the update branch and the fields land')]
     public function testUpdateExistingRow(): void
     {
@@ -134,6 +173,15 @@ class CsvImportWritePathTest extends IntegrationTestCase
         $this->assertSame($second['studyintro'], $intro);
     }
 
+    /**
+     * Each resolve-or-create lookup, for teacher, series, location, message type and topic,
+     * creates a row for a name holding an apostrophe, then returns the same id when asked
+     * again with creation off.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('each lookup creates once and then finds what it created')]
     public function testResolveOrCreateRoundTrips(): void
     {

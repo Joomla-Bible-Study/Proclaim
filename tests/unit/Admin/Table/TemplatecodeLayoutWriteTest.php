@@ -29,7 +29,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * Writing template code to a layout file: an unsafe filename or an unknown
+ * type composes no path, nothing outside the table builds one, and the file's
+ * guard stops it running outside Joomla without changing what it renders.
+ *
+ * @since  10.7.1
  */
 class TemplatecodeLayoutWriteTest extends ProclaimTestCase
 {
@@ -42,9 +46,11 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
     private string $tmpDir = '';
 
     /**
+     * Make a temporary folder for the written files.
+     *
      * @return  void
      *
-     * @since 10.7.1
+     * @since   10.7.1
      */
     protected function setUp(): void
     {
@@ -55,9 +61,11 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
     }
 
     /**
+     * Remove the temporary folder and its files.
+     *
      * @return  void
      *
-     * @since 10.7.1
+     * @since   10.7.1
      */
     protected function tearDown(): void
     {
@@ -216,11 +224,13 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
     }
 
     /**
+     * An unsafe filename is refused, and composes no path.
+     *
      * @param   string  $filename  A filename that must be refused
      *
      * @return  void
      *
-     * @since 10.7.1
+     * @since   10.7.1
      */
     #[DataProvider('rejectedFilenameProvider')]
     #[TestDox('A filename that could leave the layout directory is refused')]
@@ -259,11 +269,14 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
     }
 
     /**
+     * An ordinary filename is accepted, and composes into a path in its type's
+     * directory under the name the front end loads.
+     *
      * @param   string  $filename  A filename that must still work
      *
      * @return  void
      *
-     * @since 10.7.1
+     * @since   10.7.1
      */
     #[DataProvider('acceptedFilenameProvider')]
     #[TestDox('An ordinary layout filename still composes')]

@@ -79,6 +79,12 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
     /**
      * A unique-enough alias suffix so parallel runs, or a prior failed
      * rollback, never collide with an existing row.
+     *
+     * @param   string  $base  The alias to make unique.
+     *
+     * @return  string  The base alias with a random and a sequence suffix.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function alias(string $base): string
     {

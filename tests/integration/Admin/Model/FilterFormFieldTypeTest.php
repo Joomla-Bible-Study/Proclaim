@@ -29,13 +29,19 @@ use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.6.3
+ * A filter form that uses a custom field type declares the namespace to find
+ * it in, or the field falls back to a plain text input.
+ *
+ * @since  10.6.3
  */
 class FilterFormFieldTypeTest extends IntegrationTestCase
 {
     /**
+     * A form using a custom field type declares where to find it.
+     *
      * @return  void
-     * @since 10.6.3
+     *
+     * @since   10.6.3
      */
     #[TestDox('A form using a custom field type declares where to find it')]
     public function testFilterFormsDeclareTheirFieldPrefix(): void

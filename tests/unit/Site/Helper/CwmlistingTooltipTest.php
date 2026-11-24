@@ -32,6 +32,9 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      * @param   int     $v_e   Verse end
      *
      * @return  string
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     private function callBuildApiReference(string $book, int $ch_b, int $ch_e, int $v_b, int $v_e): string
     {
@@ -51,6 +54,9 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      * @param   ?object   $elementConfig  Per-element config
      *
      * @return  string
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     private function callWrapTooltip(
         string $text,
@@ -68,7 +74,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test buildApiReference with single verse
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testBuildApiReferenceSingleVerse(): void
     {
@@ -80,7 +89,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test buildApiReference with verse range in same chapter
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testBuildApiReferenceSameChapterRange(): void
     {
@@ -92,7 +104,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test buildApiReference with cross-chapter range
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testBuildApiReferenceCrossChapter(): void
     {
@@ -104,7 +119,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test buildApiReference with chapters only
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testBuildApiReferenceChaptersOnly(): void
     {
@@ -116,7 +134,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test buildApiReference with single chapter
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testBuildApiReferenceSingleChapter(): void
     {
@@ -128,7 +149,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test buildApiReference returns empty for zero chapter
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testBuildApiReferenceZeroChapter(): void
     {
@@ -140,7 +164,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test wrapScriptureTooltip wraps when enabled via per-element config
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testWrapTooltipEnabled(): void
     {
@@ -160,7 +187,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test wrapScriptureTooltip returns plain text when disabled via per-element config
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testWrapTooltipDisabledByElement(): void
     {
@@ -175,7 +205,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test wrapScriptureTooltip defaults to off when no element config
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testWrapTooltipDefaultsToOff(): void
     {
@@ -189,7 +222,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test wrapScriptureTooltip returns plain text when no API reference
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testWrapTooltipEmptyRef(): void
     {
@@ -203,7 +239,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test wrapScriptureTooltip returns empty for empty text
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testWrapTooltipEmptyText(): void
     {
@@ -217,7 +256,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test wrapScriptureTooltip defaults version to kjv
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testWrapTooltipDefaultsVersion(): void
     {
@@ -231,7 +273,10 @@ class CwmlistingTooltipTest extends ProclaimTestCase
     /**
      * Test wrapScriptureTooltip escapes HTML in reference
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \ReflectionException
      */
     public function testWrapTooltipEscapesHtml(): void
     {

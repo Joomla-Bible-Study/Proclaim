@@ -35,7 +35,10 @@ class BibleVersionFieldTest extends ProclaimTestCase
      * language's metadata via reflection (no public setter exists). See
      * memory note integration-test-getdate-language-warning.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -50,6 +53,14 @@ class BibleVersionFieldTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * A field built without its constructor, which needs a full form.
+     *
+     * @return  BibleVersionField  The field
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private function makeField(): BibleVersionField
     {
         $field = (new \ReflectionClass(BibleVersionField::class))->newInstanceWithoutConstructor();
@@ -58,6 +69,14 @@ class BibleVersionFieldTest extends ProclaimTestCase
         return $field;
     }
 
+    /**
+     * setup() sets a default version when none is given.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testSetupSetsDefaultValueWhenNoneProvided(): void
     {
         $field = $this->makeField();
@@ -70,6 +89,14 @@ class BibleVersionFieldTest extends ProclaimTestCase
         $this->assertNotEmpty($value, 'setup() must set a default version when none is provided — see #1484');
     }
 
+    /**
+     * setup() keeps a version that is given.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testSetupPreservesExplicitValue(): void
     {
         $field = $this->makeField();
@@ -82,6 +109,14 @@ class BibleVersionFieldTest extends ProclaimTestCase
         $this->assertSame('esv', $value, 'setup() must not overwrite an explicitly provided value');
     }
 
+    /**
+     * setup() adds the searchable CSS class.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testSetupAddsSearchableCssClass(): void
     {
         $field = $this->makeField();
@@ -94,6 +129,14 @@ class BibleVersionFieldTest extends ProclaimTestCase
         $this->assertStringContainsString('bible-version-searchable', $class);
     }
 
+    /**
+     * getOptions() returns option objects through the shared helper, not a query of its own.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testGetOptionsDelegatesToHelper(): void
     {
         $field = $this->makeField();

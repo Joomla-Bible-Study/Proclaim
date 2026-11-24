@@ -25,7 +25,10 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.6.0
+ * Template code is written to the directories the front end reads layouts
+ * from, and only the table's map names them.
+ *
+ * @since  10.6.0
  */
 class TemplatecodeLayoutPathTest extends ProclaimTestCase
 {
@@ -58,9 +61,11 @@ class TemplatecodeLayoutPathTest extends ProclaimTestCase
     }
 
     /**
+     * Every directory the map writes to is one the package actually ships.
+     *
      * @return  void
      *
-     * @since 10.6.0
+     * @since   10.6.0
      */
     #[TestDox('Every directory the map writes to is one the package actually ships')]
     public function testEveryMappedDirectoryIsShipped(): void

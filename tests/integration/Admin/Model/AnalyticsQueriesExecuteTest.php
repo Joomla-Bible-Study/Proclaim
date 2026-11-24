@@ -39,20 +39,71 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmanalyticsModel::class)]
 class AnalyticsQueriesExecuteTest extends IntegrationTestCase
 {
+    /**
+     * The first day of the window, in 2030 so that no real event falls inside it.
+     *
+     * @var    string
+     * @since  10.7.1
+     */
     private const START = '2030-06-01';
 
+    /**
+     * The last day of the window.
+     *
+     * @var    string
+     * @since  10.7.1
+     */
     private const END = '2030-06-30';
 
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.1
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * The analytics model under test, constructed directly.
+     *
+     * @var    CwmanalyticsModel|null
+     * @since  10.7.1
+     */
     private ?CwmanalyticsModel $model = null;
 
+    /**
+     * The id of the seeded series.
+     *
+     * @var    int
+     * @since  10.7.1
+     */
     private int $seriesId = 0;
 
+    /**
+     * The id of the seeded message.
+     *
+     * @var    int
+     * @since  10.7.1
+     */
     private int $studyId = 0;
 
+    /**
+     * The id of the seeded media file.
+     *
+     * @var    int
+     * @since  10.7.1
+     */
     private int $mediaId = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction, construct the
+     * model directly, and seed one of everything the windowed queries join.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \Exception
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -73,6 +124,13 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
         $this->seed();
     }
 
+    /**
+     * Roll back the seed.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -93,6 +151,8 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      * already in the table cannot satisfy an assertion the seed was meant to.
      *
      * @return  void
+     *
+     * @since   10.7.1
      */
     private function seed(): void
     {
@@ -154,6 +214,13 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * The KPI totals count the seeded events.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('the KPI totals count the seeded events')]
     public function testKpiTotals(): void
     {
@@ -164,6 +231,13 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
         $this->assertSame(1, (int) ($kpi['downloads'] ?? 0));
     }
 
+    /**
+     * The time series buckets the seeded day.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('the time series buckets the seeded day')]
     public function testTimeSeries(): void
     {
@@ -174,6 +248,13 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The study rankings find the seeded message.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('the study rankings find the seeded message')]
     public function testTopStudies(): void
     {
@@ -192,6 +273,13 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Every breakdown finds the seeded event.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('every breakdown finds the seeded event')]
     public function testBreakdowns(): void
     {
@@ -216,6 +304,13 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * The drill-down queries find the seeded rows.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('the drill-down queries find the seeded rows')]
     public function testDrillDowns(): void
     {
@@ -227,6 +322,13 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
         $this->assertSame(1, (int) ($kpi['views'] ?? 0));
     }
 
+    /**
+     * The raw-SQL lists find the seeded rows.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('the raw-SQL lists still find the seeded rows')]
     public function testRawSqlLists(): void
     {
@@ -240,6 +342,13 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
         $this->assertContains((string) $this->studyId, array_map('strval', $studies));
     }
 
+    /**
+     * The CSV export carries the seeded rows.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('the CSV export carries the seeded rows')]
     public function testCsvExport(): void
     {

@@ -38,7 +38,11 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 class ProclaimScriptEmbeddingTest extends ProclaimTestCase
 {
     /**
-     * @return void
+     * Load the schema.org plugin class, which composer's autoload map does not cover.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -50,9 +54,14 @@ class ProclaimScriptEmbeddingTest extends ProclaimTestCase
     }
 
     /**
+     * Call the plugin's private sanitizeForScriptEmbedding().
+     *
      * @param   mixed  $value  Value to sanitize.
      *
-     * @return  mixed
+     * @return  mixed  The sanitized value
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private function sanitize(mixed $value): mixed
     {
@@ -62,7 +71,12 @@ class ProclaimScriptEmbeddingTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * A string that tries to close the script element is escaped.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testNeutralizesScriptBreakoutInString(): void
     {
@@ -75,7 +89,12 @@ class ProclaimScriptEmbeddingTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * Strings nested in arrays are escaped too, and safe values pass unchanged.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testRecursivelySanitizesNestedArrays(): void
     {
@@ -98,7 +117,12 @@ class ProclaimScriptEmbeddingTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * Numbers, booleans and null pass through unchanged.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testNonStringScalarsAndNullPassThroughUnchanged(): void
     {

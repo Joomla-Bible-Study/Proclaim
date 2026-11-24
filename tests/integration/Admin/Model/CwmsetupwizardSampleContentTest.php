@@ -23,25 +23,35 @@ use Joomla\Database\ParameterType;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.8
+ * The setup wizard's sample message is credited to a teacher the way a saved
+ * message is: through the message-teacher junction table.
+ *
+ * @since  10.7.8
  */
 class CwmsetupwizardSampleContentTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseInterface|null
-     * @since 10.7.8
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.8
      */
     private ?DatabaseInterface $db = null;
 
     /**
-     * @var mixed
-     * @since 10.7.8
+     * Factory's language before the test replaced it to silence date warnings.
+     *
+     * @var    mixed
+     * @since  10.7.8
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
+     * Skip without a test database. Otherwise silence date language warnings, and open a transaction.
+     *
      * @return  void
-     * @since 10.7.8
+     *
+     * @since   10.7.8
      */
     protected function setUp(): void
     {
@@ -60,8 +70,11 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back, and restore the language.
+     *
      * @return  void
-     * @since 10.7.8
+     *
+     * @since   10.7.8
      */
     protected function tearDown(): void
     {
@@ -79,8 +92,12 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
     }
 
     /**
+     * The sample message is credited to the teacher the wizard created.
+     *
      * @return  void
-     * @since 10.7.8
+     *
+     * @since   10.7.8
+     * @throws  \ReflectionException
      */
     #[TestDox('The sample message is credited to the teacher the wizard created')]
     public function testSampleMessageCreditsTheWizardsTeacher(): void
@@ -93,8 +110,13 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
     }
 
     /**
+     * With no teacher handed over, the sample message is credited to the teacher
+     * the wizard picks.
+     *
      * @return  void
-     * @since 10.7.8
+     *
+     * @since   10.7.8
+     * @throws  \ReflectionException
      */
     #[TestDox('With no teacher handed over, the sample message is credited to the teacher the wizard picks')]
     public function testSampleMessageCreditsThePickedTeacher(): void
@@ -109,11 +131,14 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
     }
 
     /**
+     * Run the wizard's createSampleContent() with these defaults.
+     *
      * @param   array  $defaults  IDs from the wizard's essential defaults
      *
      * @return  array  IDs of the sample content created
      *
-     * @since 10.7.8
+     * @since   10.7.8
+     * @throws  \ReflectionException
      */
     private function createSampleContent(array $defaults = []): array
     {
@@ -127,11 +152,13 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
     }
 
     /**
+     * The teachers credited on a message, read from the junction table.
+     *
      * @param   int  $messageId  The message id
      *
      * @return  int[]  The ids of the teachers credited on the message, in order
      *
-     * @since 10.7.8
+     * @since   10.7.8
      */
     private function creditedTeachers(int $messageId): array
     {
@@ -146,9 +173,11 @@ class CwmsetupwizardSampleContentTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published teacher.
+     *
      * @return  int  The new teacher id
      *
-     * @since 10.7.8
+     * @since   10.7.8
      */
     private function seedTeacher(): int
     {

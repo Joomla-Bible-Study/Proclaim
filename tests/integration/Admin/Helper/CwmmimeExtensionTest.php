@@ -37,7 +37,12 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmmimeExtensionTest extends IntegrationTestCase
 {
     /**
-     * @return array<string, array{0: string, 1: string}>
+     * Filenames, paths and URLs with the extension extensionOf() should find: names holding #
+     * or ?, URLs with a query or fragment, and plain names, one with no extension.
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each input and its extension
+     *
+     * @since   10.5.6
      */
     public static function extensionProvider(): array
     {
@@ -61,6 +66,17 @@ class CwmmimeExtensionTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * extensionOf() finds the extension of a name holding # or ?, drops a URL's query and
+     * fragment, lower-cases the result, and returns an empty string when there is none.
+     *
+     * @param   string  $input     Filename or URL
+     * @param   string  $expected  Expected extension
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[DataProvider('extensionProvider')]
     #[TestDox('The extension survives characters parse_url() would treat as delimiters')]
     public function testExtensionOf(string $input, string $expected): void
@@ -73,7 +89,12 @@ class CwmmimeExtensionTest extends IntegrationTestCase
     }
 
     /**
-     * @return array<string, array{0: string, 1: ?string}>
+     * Filenames, a path and a URL with the MIME type fromExtension() should give, null for
+     * an unknown extension.
+     *
+     * @return  array<string, array{0: string, 1: ?string}>  Each input and its MIME type
+     *
+     * @since   10.5.6
      */
     public static function mimeProvider(): array
     {
@@ -94,6 +115,10 @@ class CwmmimeExtensionTest extends IntegrationTestCase
      *
      * @param   string   $input     Filename or URL
      * @param   ?string  $expected  Expected MIME type
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('mimeProvider')]
     #[TestDox('MIME detection works for filenames containing # or ?')]
@@ -110,6 +135,10 @@ class CwmmimeExtensionTest extends IntegrationTestCase
      * The tracked enclosure URL is built from an extension and returns null
      * without one, which is precisely what Apple refuses to ingest. It must
      * derive that extension the same way.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The tracked enclosure builder uses the shared extension helper')]
     public function testEnclosureBuilderUsesTheSharedHelper(): void

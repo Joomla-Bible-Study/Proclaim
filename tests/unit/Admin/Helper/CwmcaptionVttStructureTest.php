@@ -37,8 +37,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmcaptionValidator::class)]
 class CwmcaptionVttStructureTest extends ProclaimTestCase
 {
+    /**
+     * The validator under test.
+     *
+     * @var    CwmcaptionValidator
+     * @since  10.5.6
+     */
     private CwmcaptionValidator $validator;
 
+    /**
+     * Create the validator.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,7 +63,9 @@ class CwmcaptionVttStructureTest extends ProclaimTestCase
      * Files that must be accepted, including every WebVTT feature the
      * lossy converter would have discarded.
      *
-     * @return array<string, array{0: string}>
+     * @return  array<string, array{0: string}>
+     *
+     * @since   10.5.6
      */
     public static function validProvider(): array
     {
@@ -77,6 +92,10 @@ class CwmcaptionVttStructureTest extends ProclaimTestCase
      * A valid caption file must still be accepted and stored unchanged.
      *
      * @param   string  $body  Caption file contents
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('validProvider')]
     #[TestDox('A structurally valid WebVTT file is accepted')]
@@ -89,7 +108,12 @@ class CwmcaptionVttStructureTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{0: string}>
+     * Files that must be refused: content after the header that isn't WebVTT, files
+     * that aren't VTT at all, and malformed timestamps.
+     *
+     * @return  array<string, array{0: string}>  Each case
+     *
+     * @since   10.5.6
      */
     public static function invalidProvider(): array
     {
@@ -113,7 +137,13 @@ class CwmcaptionVttStructureTest extends ProclaimTestCase
     }
 
     /**
+     * isStructurallyVtt() rejects each invalid file.
+     *
      * @param   string  $body  Caption file contents
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('invalidProvider')]
     #[TestDox('Content past the header that is not WebVTT is rejected')]
@@ -128,6 +158,10 @@ class CwmcaptionVttStructureTest extends ProclaimTestCase
     /**
      * The specific upload described in the issue: a valid-looking header
      * followed by a payload well past the 64 bytes detectFormat() reads.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('A large payload hidden past the sniff window is rejected')]
     public function testPayloadBeyondTheSniffWindowIsRejected(): void
@@ -148,6 +182,10 @@ class CwmcaptionVttStructureTest extends ProclaimTestCase
     /**
      * The upload path must actually call the validator; detecting the format
      * is not the same as trusting the file.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The upload endpoint validates the whole body before storing')]
     public function testUploadPathValidatesBeforeStoring(): void

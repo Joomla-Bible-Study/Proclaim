@@ -29,7 +29,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * The table's shipped-layout list matches what the package ships, and a
+ * template code record cannot be named after a shipped or long-reserved layout.
+ *
+ * @since  10.7.1
  */
 class ShippedLayoutsTest extends ProclaimTestCase
 {
@@ -155,12 +158,15 @@ class ShippedLayoutsTest extends ProclaimTestCase
     }
 
     /**
+     * A layout the package ships is known to the table as shipped, and its
+     * name is refused for a new record.
+     *
      * @param   int     $type  Template type
      * @param   string  $name  A layout the package ships for it
      *
      * @return  void
      *
-     * @since 10.7.1
+     * @since   10.7.1
      */
     #[DataProvider('shippedNameProvider')]
     #[TestDox('A shipped layout name is refused for a new record')]

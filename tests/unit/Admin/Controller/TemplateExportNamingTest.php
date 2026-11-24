@@ -30,7 +30,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * A template's title cannot choose the path an export is staged at, nor put
+ * path or header characters into the download name.
+ *
+ * @since  10.7.1
  */
 class TemplateExportNamingTest extends ProclaimTestCase
 {

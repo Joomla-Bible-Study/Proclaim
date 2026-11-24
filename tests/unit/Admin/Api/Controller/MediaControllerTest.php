@@ -24,6 +24,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class MediaControllerTest extends ProclaimTestCase
 {
+    /**
+     * getModel() maps the media content type to Cwmmediafiles.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testGetModelNameMapping(): void
     {
         $ref    = new \ReflectionMethod(MediaController::class, 'getModel');
@@ -35,12 +42,26 @@ class MediaControllerTest extends ProclaimTestCase
         $this->assertStringContainsString("'mediafiles' => 'Cwmmediafiles'", $source);
     }
 
+    /**
+     * preprocessSaveData() exists and is protected.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testPreprocessSaveDataExists(): void
     {
         $ref = new \ReflectionMethod(MediaController::class, 'preprocessSaveData');
         $this->assertTrue($ref->isProtected());
     }
 
+    /**
+     * preprocessSaveData() splits a comma-separated podcast_id into a list.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
     public function testPreprocessNormalizesPodcastId(): void
     {
         $source = file_get_contents((new \ReflectionClass(MediaController::class))->getFileName());

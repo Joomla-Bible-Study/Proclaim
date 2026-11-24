@@ -24,7 +24,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class DarkModeCurrencyTest extends ProclaimTestCase
 {
     /**
-     * @return array<string, array{0: string}>
+     * The field source files checked.
+     *
+     * @return  array<string, array{0: string}>  Each field's file path
+     *
+     * @since   10.5.6
      */
     public static function fieldFileProvider(): array
     {
@@ -39,6 +43,15 @@ class DarkModeCurrencyTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * The field uses no CSS classes that break in dark mode.
+     *
+     * @param   string  $file  The field's source file
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[DataProvider('fieldFileProvider')]
     public function testFieldDoesNotUseDarkModeUnsafeClasses(string $file): void
     {

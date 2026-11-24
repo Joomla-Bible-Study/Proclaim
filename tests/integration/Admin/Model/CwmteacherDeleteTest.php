@@ -41,12 +41,19 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmteacherDeleteTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database. Tests run inside a transaction, but asset bookkeeping commits
+     * it, so tearDown also deletes the rows they created.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  mixed
+     * Factory's language before the test replaced it to silence date warnings.
+     *
+     * @var    mixed
+     * @since  10.5.6
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -54,11 +61,19 @@ class CwmteacherDeleteTest extends IntegrationTestCase
      * Rows this test created, as table => ids.
      *
      * @var  array<string, int[]>
+     * @since  10.5.6
      */
     private array $created = [];
 
     /**
+     * Skip without a test database. Otherwise silence date language warnings,
+     * load the repository's own com_proclaim language so messages carry names,
+     * and open a transaction.
+     *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -83,7 +98,11 @@ class CwmteacherDeleteTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back, delete the rows the test created, and restore the language.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -106,6 +125,15 @@ class CwmteacherDeleteTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * A teacher a study still credits is pruned from the batch, and the rest of
+     * the batch still deletes.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Throwable
+     */
     #[TestDox('A teacher a study still credits is pruned from the batch, and the rest of the batch still deletes')]
     public function testInUseTeacherIsPrunedAndOthersProceed(): void
     {
@@ -137,6 +165,14 @@ class CwmteacherDeleteTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A batch of only in-use teachers deletes nothing and still reports success.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('A batch of only in-use teachers deletes nothing and still reports success')]
     public function testBatchOfOnlyInUseTeachersDeletesNothing(): void
     {
@@ -154,6 +190,14 @@ class CwmteacherDeleteTest extends IntegrationTestCase
         $this->assertSame(1, $this->teacherExists($inUse));
     }
 
+    /**
+     * Deleting an in-use teacher reports which studies credit them.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('Deleting an in-use teacher reports which studies credit them')]
     public function testInUseRefusalNamesTheStudies(): void
     {
@@ -190,6 +234,15 @@ class CwmteacherDeleteTest extends IntegrationTestCase
         $this->assertStringContainsString('Reported study', $joined, 'The blocking study should be named');
     }
 
+    /**
+     * canDelete() refuses a teacher that has not been trashed first.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('canDelete() refuses a teacher that has not been trashed first')]
     public function testCanDeleteRequiresTrashed(): void
     {
@@ -209,6 +262,15 @@ class CwmteacherDeleteTest extends IntegrationTestCase
         $this->assertIsBool($method->invoke($model, $trashed));
     }
 
+    /**
+     * canDelete() refuses a record with no id.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('canDelete() refuses a record with no id')]
     public function testCanDeleteRefusesMissingId(): void
     {
@@ -236,6 +298,9 @@ class CwmteacherDeleteTest extends IntegrationTestCase
      * @param   int[]            $pks    Batch, modified in place.
      *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Throwable
      */
     private function runDelete(CwmteacherModel $model, array &$pks): void
     {
@@ -249,7 +314,12 @@ class CwmteacherDeleteTest extends IntegrationTestCase
     }
 
     /**
-     * @return  CwmteacherModel
+     * A CwmteacherModel built through the MVC factory, ignoring the request.
+     *
+     * @return  CwmteacherModel  The model under test
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     private function createModel(): CwmteacherModel
     {
@@ -276,6 +346,8 @@ class CwmteacherDeleteTest extends IntegrationTestCase
      * COMMIT in MySQL -- so earlier writes are already durable by then.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function purgeCreatedRows(): void
     {
@@ -319,9 +391,13 @@ class CwmteacherDeleteTest extends IntegrationTestCase
     }
 
     /**
+     * Whether a teacher row is still present.
+     *
      * @param   int  $teacherId  Teacher ID.
      *
      * @return  int  1 when the row is still present, 0 otherwise.
+     *
+     * @since   10.5.6
      */
     private function teacherExists(int $teacherId): int
     {
@@ -332,9 +408,13 @@ class CwmteacherDeleteTest extends IntegrationTestCase
     }
 
     /**
+     * Count a teacher's rows in the study-teacher junction table.
+     *
      * @param   int  $teacherId  Teacher ID.
      *
      * @return  int  Junction row count for the teacher.
+     *
+     * @since   10.5.6
      */
     private function junctionRows(int $teacherId): int
     {
@@ -345,10 +425,14 @@ class CwmteacherDeleteTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a teacher in a given published state.
+     *
      * @param   string  $name       Teacher name.
      * @param   int     $published  Published state (-2 = trashed).
      *
      * @return  int  Teacher ID.
+     *
+     * @since   10.5.6
      */
     private function insertTeacher(string $name, int $published): int
     {
@@ -370,9 +454,13 @@ class CwmteacherDeleteTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published study.
+     *
      * @param   string  $title  Study title.
      *
      * @return  int  Study ID.
+     *
+     * @since   10.5.6
      */
     private function insertStudy(string $title = 'Delete-test study'): int
     {
@@ -398,10 +486,14 @@ class CwmteacherDeleteTest extends IntegrationTestCase
     }
 
     /**
+     * Credit a teacher on a study through the junction table.
+     *
      * @param   int  $studyId    Study ID.
      * @param   int  $teacherId  Teacher ID.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function linkTeacher(int $studyId, int $teacherId): void
     {

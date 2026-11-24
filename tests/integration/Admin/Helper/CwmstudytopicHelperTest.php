@@ -37,12 +37,39 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmstudytopicHelper::class)]
 class CwmstudytopicHelperTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back. tearDown() checks that the
+     * rollback restored the study-topic links.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * The id of the unpublished study setUp() inserts, which the topics are linked to.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $studyId = 0;
 
+    /**
+     * How many study-topic links there were when setUp() ran.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $rowsAtStart = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction, count the study-topic
+     * links, and insert an unpublished study.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -66,6 +93,14 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
         $this->studyId = (int) $this->db->insertid();
     }
 
+    /**
+     * Roll back the transaction setUp() opened, then fail the test if the study-topic links
+     * don't number what they did at setUp().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         $leaked = null;
@@ -95,7 +130,11 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
     }
 
     /**
+     * The number of study-topic links, across every study.
+     *
      * @return  int  Total rows in the junction table.
+     *
+     * @since   10.5.6
      */
     private function countAllRows(): int
     {
@@ -105,7 +144,11 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
     }
 
     /**
+     * The topic ids linked to the test's study, in id order.
+     *
      * @return  int[]  topic_ids currently associated with the fixture study.
+     *
+     * @since   10.5.6
      */
     private function topicIds(): array
     {
@@ -124,6 +167,8 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
      * @param   int[]  $topicIds  Topic ids to associate
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function seedTopics(array $topicIds): void
     {
@@ -147,6 +192,11 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
     /**
      * The guarantee that was missing: a failure partway through must leave the
      * study with the associations it had.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     #[TestDox('A failed save leaves the original topics intact')]
     public function testFailedSaveRollsBack(): void
@@ -172,6 +222,15 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * saveTopics() returns false, rather than failing fatally, when it can't create a table
+     * object, as in this harness, and leaves the study with no topics.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('An unresolvable table object is handled, not fatal')]
     public function testUnresolvableTableIsHandled(): void
     {
@@ -188,6 +247,13 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
     // Finding 3 -- the missing delete cascade
     // -------------------------------------------------------------------------
 
+    /**
+     * deleteTopics() removes all three topics linked to the study.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('deleteTopics removes every association for a study')]
     public function testDeleteTopicsRemovesAssociations(): void
     {
@@ -203,6 +269,10 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
      * The cascade only helps if the table actually calls it. Deleting a real
      * message needs far more scaffolding than this fixture, so the wiring is
      * pinned in the source next to the sibling cleanup calls it belongs with.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('CwmmessageTable::delete() cleans up topic associations')]
     public function testDeleteCascadeIsWiredIn(): void
@@ -221,6 +291,14 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
     // Finding 2 -- the missing unique constraint
     // -------------------------------------------------------------------------
 
+    /**
+     * The install SQL declares uq_study_topic on study_id and topic_id, and an update
+     * migration adds it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The schema declares a unique constraint on (study_id, topic_id)')]
     public function testSchemaDeclaresTheUniqueConstraint(): void
     {
@@ -250,6 +328,10 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
     /**
      * The de-duplication has to run before the index is added, or the ALTER
      * fails on any site that already has duplicates -- which is most of them.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The migration de-duplicates before adding the constraint')]
     public function testMigrationDeduplicatesFirst(): void

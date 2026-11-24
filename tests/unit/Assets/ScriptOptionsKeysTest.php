@@ -24,10 +24,20 @@ namespace CWM\Component\Proclaim\Tests\Assets;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Script-options keys are a contract between PHP and JS: every key PHP
+ * publishes has a JS reader, and the scripture options use the library's key.
+ *
+ * @since  10.4.1
+ */
 class ScriptOptionsKeysTest extends TestCase
 {
     /**
      * Repository root.
+     *
+     * @return  string  Its absolute path
+     *
+     * @since   10.4.1
      */
     private static function root(): string
     {
@@ -39,7 +49,8 @@ class ScriptOptionsKeysTest extends TestCase
      * repository. Add sparingly, with a reason — each entry is a hole in the
      * check.
      *
-     * @var array<string, string>
+     * @var    array<string, string>
+     * @since  10.4.1
      */
     private const ALLOWED_ORPHANS = [
         // Read by Joomla core's own scripts, not ours.
@@ -51,7 +62,8 @@ class ScriptOptionsKeysTest extends TestCase
     /**
      * PHP roots that publish options.
      *
-     * @var string[]
+     * @var    string[]
+     * @since  10.4.1
      */
     private const PHP_ROOTS = ['site', 'admin', 'modules', 'plugins'];
 
@@ -59,7 +71,8 @@ class ScriptOptionsKeysTest extends TestCase
      * JS roots that consume them: our own sources, plus the library's, since the
      * library's scripts are the ones com_proclaim enqueues.
      *
-     * @var string[]
+     * @var    string[]
+     * @since  10.4.1
      */
     private const JS_ROOTS = [
         'build/media_source/js',
@@ -70,7 +83,9 @@ class ScriptOptionsKeysTest extends TestCase
     /**
      * Every key passed to addScriptOptions() in PHP, mapped to the files doing it.
      *
-     * @return array<string, list<string>>
+     * @return  array<string, list<string>>
+     *
+     * @since   10.4.1
      */
     private static function publishedKeys(): array
     {
@@ -119,7 +134,9 @@ class ScriptOptionsKeysTest extends TestCase
     /**
      * Every key read via Joomla.getOptions() in JS.
      *
-     * @return list<string>
+     * @return  list<string>
+     *
+     * @since   10.4.1
      */
     private static function consumedKeys(): array
     {
@@ -213,6 +230,10 @@ class ScriptOptionsKeysTest extends TestCase
      * copy without `git submodule update` would report every cwmscripture.* key as
      * an orphan — a failure that reads like a broken feature rather than a missing
      * checkout. Skip instead of lying.
+     *
+     * @return  string|null  Why the test is skipped, or null when the library's sources are present
+     *
+     * @since   10.4.1
      */
     private static function skipWithoutLibrarySources(): ?string
     {
@@ -225,6 +246,13 @@ class ScriptOptionsKeysTest extends TestCase
         return 'lib_cwmscripture sources are not checked out — run: git submodule update --init --recursive';
     }
 
+    /**
+     * Every script-options key PHP publishes has a JS reader.
+     *
+     * @return  void
+     *
+     * @since   10.4.1
+     */
     public function testEveryPublishedKeyHasAReader(): void
     {
         if (($reason = self::skipWithoutLibrarySources()) !== null) {
@@ -266,6 +294,10 @@ class ScriptOptionsKeysTest extends TestCase
     /**
      * The switcher's specific contract, spelled out so a rename cannot quietly
      * reintroduce the original bug.
+     *
+     * @return  void
+     *
+     * @since   10.4.1
      */
     public function testScriptureOptionsUseTheLibraryKey(): void
     {

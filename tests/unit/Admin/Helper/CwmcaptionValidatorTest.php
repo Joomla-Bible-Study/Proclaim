@@ -28,24 +28,58 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(CwmcaptionValidator::class)]
 class CwmcaptionValidatorTest extends ProclaimTestCase
 {
+    /**
+     * The validator under test.
+     *
+     * @var    CwmcaptionValidator
+     * @since  10.3.0
+     */
     private CwmcaptionValidator $validator;
 
+    /**
+     * Create the validator.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
         $this->validator = new CwmcaptionValidator();
     }
 
+    /**
+     * The allowed caption extensions are exactly vtt, srt and sbv, in that order.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testAllowedExtensionsConstantContainsVttSrtAndSbv(): void
     {
         $this->assertSame(['vtt', 'srt', 'sbv'], CwmcaptionValidator::ALLOWED_EXTENSIONS);
     }
 
+    /**
+     * The size limit is exactly 2 MB.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testMaxSizeIsTwoMegabytes(): void
     {
         $this->assertSame(2 * 1024 * 1024, CwmcaptionValidator::MAX_SIZE_BYTES);
     }
 
+    /**
+     * Extensions, each with whether a caption may have it.
+     *
+     * @return  array<string, array{0: string, 1: bool}>  Each case
+     *
+     * @since   10.3.0
+     */
     public static function extensionProvider(): array
     {
         return [
@@ -62,12 +96,30 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * isAllowedExtension() accepts vtt, srt and sbv in any case, and rejects anything
+     * else, an empty string or a leading dot included.
+     *
+     * @param   string  $ext       Extension
+     * @param   bool    $expected  Whether it is allowed
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     #[DataProvider('extensionProvider')]
     public function testIsAllowedExtension(string $ext, bool $expected): void
     {
         $this->assertSame($expected, $this->validator->isAllowedExtension($ext));
     }
 
+    /**
+     * Sizes in bytes, each with whether a caption may be that size.
+     *
+     * @return  array<string, array{0: int, 1: bool}>  Each case
+     *
+     * @since   10.3.0
+     */
     public static function sizeProvider(): array
     {
         return [
@@ -80,63 +132,152 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * isAllowedSize() accepts 1 byte up to exactly 2 MB, and rejects zero, negative and
+     * larger sizes.
+     *
+     * @param   int   $bytes     Size in bytes
+     * @param   bool  $expected  Whether it is allowed
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     #[DataProvider('sizeProvider')]
     public function testIsAllowedSize(int $bytes, bool $expected): void
     {
         $this->assertSame($expected, $this->validator->isAllowedSize($bytes));
     }
 
+    /**
+     * detectFormat() reads a WEBVTT header as vtt.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatReturnsVttForWebvttHeader(): void
     {
         $this->assertSame('vtt', $this->validator->detectFormat("WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello"));
     }
 
+    /**
+     * detectFormat() reads a WEBVTT header behind a UTF-8 byte order mark as vtt.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatStripsUtf8Bom(): void
     {
         $this->assertSame('vtt', $this->validator->detectFormat("\xEF\xBB\xBFWEBVTT\n"));
     }
 
+    /**
+     * detectFormat() reads a WEBVTT header after leading blank lines and spaces as vtt.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatTrimsLeadingWhitespace(): void
     {
         $this->assertSame('vtt', $this->validator->detectFormat("\n\n  WEBVTT\n"));
     }
 
+    /**
+     * detectFormat() reads a numbered cue with comma timestamps and LF line endings as srt.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatReturnsSrtForNumericCueWithUnixNewline(): void
     {
         $this->assertSame('srt', $this->validator->detectFormat("1\n00:00:01,000 --> 00:00:02,000\nHello"));
     }
 
+    /**
+     * detectFormat() reads a numbered cue with comma timestamps and CRLF line endings as srt.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatReturnsSrtForNumericCueWithCrlfNewline(): void
     {
         $this->assertSame('srt', $this->validator->detectFormat("1\r\n00:00:01,000 --> 00:00:02,000\r\nHello"));
     }
 
+    /**
+     * detectFormat() reads a numbered cue behind a byte order mark as srt.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatReturnsSrtForBomThenSrt(): void
     {
         $this->assertSame('srt', $this->validator->detectFormat("\xEF\xBB\xBF1\n00:00:01,000 --> 00:00:02,000"));
     }
 
+    /**
+     * detectFormat() returns null for plain text.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatRejectsPlainText(): void
     {
         $this->assertNull($this->validator->detectFormat("This is just a regular text file."));
     }
 
+    /**
+     * detectFormat() returns null for an empty string.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatRejectsEmptyString(): void
     {
         $this->assertNull($this->validator->detectFormat(''));
     }
 
+    /**
+     * detectFormat() returns null for binary data.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatRejectsBinaryData(): void
     {
         // Random binary that doesn't match either header
         $this->assertNull($this->validator->detectFormat("\x00\x01\x02\x03\xFF\xFE binary garbage"));
     }
 
+    /**
+     * detectFormat() returns null for HTML that contains WEBVTT but doesn't start with it.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testDetectFormatRejectsHtmlPretendingToBeCaption(): void
     {
         $this->assertNull($this->validator->detectFormat("<html>WEBVTT</html>"));
     }
 
+    /**
+     * detectFormat() reads a cue with single-digit hours and a comma between its
+     * timestamps as sbv.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testDetectFormatReturnsSbvForSingleDigitHourCue(): void
     {
         // Canonical YouTube SBV download — single-digit hour, comma between timestamps.
@@ -146,6 +287,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * detectFormat() reads an sbv cue with zero-padded hours as sbv too.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testDetectFormatReturnsSbvForDoubleDigitHourCue(): void
     {
         // Defensive: SBV parsers commonly accept zero-padded hours too.
@@ -155,6 +303,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * detectFormat() reads an sbv cue behind a byte order mark as sbv.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testDetectFormatReturnsSbvWithBom(): void
     {
         $this->assertSame(
@@ -163,6 +318,14 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * A file that opens with an sbv timestamp line, and no cue number, is detected as
+     * sbv rather than srt.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testDetectFormatPrefersSbvOverSrtWhenBothCouldMatch(): void
     {
         // SBV's first line is also the timestamp line — no leading numeric counter.
@@ -173,6 +336,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * SBV inputs, each with the VTT convertSbvToVtt() should produce.
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each case
+     *
+     * @since   10.3.3
+     */
     public static function convertSbvToVttProvider(): array
     {
         return [
@@ -203,18 +373,42 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * convertSbvToVtt() produces exactly the expected VTT for each case.
+     *
+     * @param   string  $sbv          SBV input
+     * @param   string  $expectedVtt  The VTT it should become
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[DataProvider('convertSbvToVttProvider')]
     public function testConvertSbvToVtt(string $sbv, string $expectedVtt): void
     {
         $this->assertSame($expectedVtt, $this->validator->convertSbvToVtt($sbv));
     }
 
+    /**
+     * convertSbvToVtt() output starts with the WEBVTT header and a blank line.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testConvertSbvToVttAlwaysStartsWithWebvttHeader(): void
     {
         $vtt = $this->validator->convertSbvToVtt("0:00:01.000,0:00:02.000\nHello");
         $this->assertStringStartsWith("WEBVTT\n\n", $vtt);
     }
 
+    /**
+     * convertSbvToVtt() drops a block with no timestamp line and keeps the cues around it.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testConvertSbvToVttSkipsBlocksWithoutTimestampLine(): void
     {
         // A garbage block in the middle should not crash conversion.
@@ -226,6 +420,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertStringNotContainsString('garbage', $vtt);
     }
 
+    /**
+     * SRT inputs, each with the VTT convertSrtToVtt() should produce.
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each case
+     *
+     * @since   10.3.3
+     */
     public static function convertSrtToVttProvider(): array
     {
         return [
@@ -256,18 +457,43 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * convertSrtToVtt() produces exactly the expected VTT for each case.
+     *
+     * @param   string  $srt          SRT input
+     * @param   string  $expectedVtt  The VTT it should become
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[DataProvider('convertSrtToVttProvider')]
     public function testConvertSrtToVtt(string $srt, string $expectedVtt): void
     {
         $this->assertSame($expectedVtt, $this->validator->convertSrtToVtt($srt));
     }
 
+    /**
+     * convertSrtToVtt() output starts with the WEBVTT header and a blank line.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testConvertSrtToVttAlwaysStartsWithWebvttHeader(): void
     {
         $vtt = $this->validator->convertSrtToVtt("1\n00:00:01,000 --> 00:00:02,000\nHi");
         $this->assertStringStartsWith("WEBVTT\n\n", $vtt);
     }
 
+    /**
+     * convertSrtToVtt() drops a block with no valid timestamp line and keeps the cues
+     * around it.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testConvertSrtToVttSkipsBlocksWithoutValidTimestampLine(): void
     {
         // Garbage block in the middle should not crash conversion.
@@ -279,6 +505,14 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertStringNotContainsString('garbage', $vtt);
     }
 
+    /**
+     * convertSrtToVtt() turns the commas in timestamps into periods but leaves the commas
+     * in cue text alone.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testConvertSrtToVttDoesNotTouchCommasInsideText(): void
     {
         // Property test: commas inside body text must round-trip verbatim.
@@ -289,6 +523,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertStringContainsString('00:00:01.000 --> 00:00:02.000', $vtt);
     }
 
+    /**
+     * VTT inputs, each with the SRT convertVttToSrt() should produce.
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each case
+     *
+     * @since   10.3.3
+     */
     public static function convertVttToSrtProvider(): array
     {
         return [
@@ -327,12 +568,29 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * convertVttToSrt() produces exactly the expected SRT for each case.
+     *
+     * @param   string  $vtt          VTT input
+     * @param   string  $expectedSrt  The SRT it should become
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[DataProvider('convertVttToSrtProvider')]
     public function testConvertVttToSrt(string $vtt, string $expectedSrt): void
     {
         $this->assertSame($expectedSrt, $this->validator->convertVttToSrt($vtt));
     }
 
+    /**
+     * VTT inputs, each with the SBV convertVttToSbv() should produce.
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each case
+     *
+     * @since   10.3.3
+     */
     public static function convertVttToSbvProvider(): array
     {
         return [
@@ -367,22 +625,54 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * convertVttToSbv() produces exactly the expected SBV for each case.
+     *
+     * @param   string  $vtt          VTT input
+     * @param   string  $expectedSbv  The SBV it should become
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[DataProvider('convertVttToSbvProvider')]
     public function testConvertVttToSbv(string $vtt, string $expectedSbv): void
     {
         $this->assertSame($expectedSbv, $this->validator->convertVttToSbv($vtt));
     }
 
+    /**
+     * convertVttToSrt() returns an empty string for a VTT file with no cues.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testConvertVttToSrtReturnsEmptyForHeaderOnly(): void
     {
         $this->assertSame('', $this->validator->convertVttToSrt("WEBVTT\n\n"));
     }
 
+    /**
+     * convertVttToSbv() returns an empty string for a VTT file with no cues.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testConvertVttToSbvReturnsEmptyForHeaderOnly(): void
     {
         $this->assertSame('', $this->validator->convertVttToSbv("WEBVTT\n\n"));
     }
 
+    /**
+     * Converting SRT to VTT and back keeps each cue's timestamps and text, commas in
+     * the text included.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testRoundTripSrtToVttToSrtPreservesCues(): void
     {
         // Property test: SRT → VTT → SRT round-trip yields equivalent
@@ -396,6 +686,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertStringContainsString("00:01:00,000 --> 00:01:05,000\nLater", $rebuilt);
     }
 
+    /**
+     * Converting SBV to VTT and back keeps each cue's timestamps and text.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testRoundTripSbvToVttToSbvPreservesCues(): void
     {
         $original = "0:00:01.500,0:00:02.750\nFirst\n\n1:23:45.000,1:23:46.500\nLater";
@@ -406,11 +703,25 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertStringContainsString("1:23:45.000,1:23:46.500\nLater", $rebuilt);
     }
 
+    /**
+     * The only transcript extension is txt.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testTranscriptExtensionsConstantContainsTxt(): void
     {
         $this->assertSame(['txt'], CwmcaptionValidator::TRANSCRIPT_EXTENSIONS);
     }
 
+    /**
+     * Extensions, each with whether a transcript may have it.
+     *
+     * @return  array<string, array{0: string, 1: bool}>  Each case
+     *
+     * @since   10.3.3
+     */
     public static function transcriptExtensionProvider(): array
     {
         return [
@@ -425,12 +736,31 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * isTranscriptExtension() accepts txt in any case, and rejects the caption
+     * extensions, an empty string and a leading dot.
+     *
+     * @param   string  $ext       Extension
+     * @param   bool    $expected  Whether it is a transcript extension
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[DataProvider('transcriptExtensionProvider')]
     public function testIsTranscriptExtension(string $ext, bool $expected): void
     {
         $this->assertSame($expected, $this->validator->isTranscriptExtension($ext));
     }
 
+    /**
+     * No caption extension counts as a transcript extension, and no transcript
+     * extension as a caption one.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testTranscriptAndCaptionExtensionsAreDisjoint(): void
     {
         // Property: a single extension should never satisfy both checks —
@@ -450,6 +780,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * Filenames, each with what sanitizeFilename() should make of it.
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each case
+     *
+     * @since   10.3.0
+     */
     public static function sanitizeFilenameProvider(): array
     {
         return [
@@ -468,12 +805,30 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * sanitizeFilename() keeps only ASCII letters, digits, hyphens and underscores, and
+     * falls back to caption when nothing is left.
+     *
+     * @param   string  $input     Filename
+     * @param   string  $expected  What it should become
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     #[DataProvider('sanitizeFilenameProvider')]
     public function testSanitizeFilename(string $input, string $expected): void
     {
         $this->assertSame($expected, $this->validator->sanitizeFilename($input));
     }
 
+    /**
+     * buildFilename() returns caption_TIMESTAMP_BASE.EXT for an ordinary filename.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testBuildFilenameProducesExpectedShape(): void
     {
         $name = $this->validator->buildFilename('lecture-01.vtt', 'vtt', 1735689600);
@@ -481,6 +836,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertSame('caption_1735689600_lecture-01.vtt', $name);
     }
 
+    /**
+     * buildFilename() uses the extension it is given, not the original filename's.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testBuildFilenameUsesProvidedExtensionNotOriginal(): void
     {
         // Caller may pass a normalized lowercase ext separately
@@ -489,6 +851,14 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertSame('caption_1735689600_Subtitles.srt', $name);
     }
 
+    /**
+     * buildFilename() drops the directories from a traversal path and keeps only the
+     * file's own name.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testBuildFilenameStripsPathComponentsThenSanitizes(): void
     {
         // pathinfo() strips the directory portion before sanitization runs —
@@ -499,6 +869,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertSame('caption_1735689600_passwd.vtt', $name);
     }
 
+    /**
+     * buildFilename() strips unsafe characters from the base name.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testBuildFilenameSanitizesUnsafeCharsInBaseName(): void
     {
         $name = $this->validator->buildFilename('hello world;rm.vtt', 'vtt', 1735689600);
@@ -506,6 +883,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertSame('caption_1735689600_helloworldrm.vtt', $name);
     }
 
+    /**
+     * buildFilename() cuts a long base name to 50 characters.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testBuildFilenameTruncatesLongBaseNameToFiftyChars(): void
     {
         $longBase = str_repeat('a', 200);
@@ -514,6 +898,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertSame('caption_1735689600_' . str_repeat('a', 50) . '.vtt', $name);
     }
 
+    /**
+     * buildFilename() uses caption as the base name when nothing survives sanitizing.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testBuildFilenameFallsBackWhenNothingSurvivesSanitization(): void
     {
         $name = $this->validator->buildFilename('😀😀😀.vtt', 'vtt', 1735689600);
@@ -521,6 +912,13 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertSame('caption_1735689600_caption.vtt', $name);
     }
 
+    /**
+     * Without a timestamp, buildFilename() uses the current time.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function testBuildFilenameDefaultsTimestampToCurrentTime(): void
     {
         $before = time();

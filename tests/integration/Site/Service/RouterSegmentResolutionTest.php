@@ -27,14 +27,30 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class RouterSegmentResolutionTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.3
+     */
     private ?DatabaseInterface $db = null;
 
+    /**
+     * The router under test, which counts its redirect flags.
+     *
+     * @var    TaintRecordingRouter
+     * @since  10.7.3
+     */
     private TaintRecordingRouter $router;
 
     /**
+     * Skip without a test database. Otherwise open a transaction, and build the
+     * router without its constructor, with the database and "Remove IDs" set.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     protected function setUp(): void
     {
@@ -55,6 +71,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the seeded rows.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -73,6 +91,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * An alias that starts with another record's id resolves to its own record.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -89,6 +109,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * An id-alias segment resolves to that record and is flagged for a redirect.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -104,6 +126,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * A bare id segment resolves to that record and is flagged for a redirect.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -118,6 +142,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * An id-alias segment for a trashed record is not found.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -133,6 +159,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * A segment that starts with an id but carries a different alias is not found.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -147,6 +175,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * An unknown alias is not found.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -158,6 +188,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * A series resolves by alias, and by id-alias with a redirect flag.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -176,6 +208,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * A teacher resolves by alias, and by id-alias with a redirect flag.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -199,6 +233,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a message.
+     *
      * @param   string  $alias      The message alias
      * @param   int     $published  The message state
      *
@@ -219,6 +255,8 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a row, public and for all languages unless the values say otherwise.
+     *
      * @param   string                $table   The table
      * @param   array<string, mixed>  $values  Column values; access and language default to public and all
      *
@@ -244,9 +282,17 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
  */
 final class TaintRecordingRouter extends Router
 {
+    /**
+     * How many times the router flagged a URL for a redirect.
+     *
+     * @var    int
+     * @since  10.7.3
+     */
     public int $taints = 0;
 
     /**
+     * Count a redirect flag instead of setting it on the site router.
+     *
      * @return  void
      *
      * @since   10.7.3

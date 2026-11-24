@@ -29,6 +29,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class ServerListFieldTest extends ProclaimTestCase
 {
+    /**
+     * getInput() reads data attributes rather than parsing with a regex.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testGetInputUsesDataAttributesNotRegex(): void
     {
         $ref   = new \ReflectionMethod(ServerListField::class, 'getInput');

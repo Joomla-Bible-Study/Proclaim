@@ -21,12 +21,17 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
+ * The package installer retires the component's own update sites only while
+ * a working package update site remains.
+ *
  * @since  10.5.10
  */
 class PackageUpdateSiteGuardTest extends ProclaimTestCase
 {
     /**
-     * @return  string  The package manifest script's source
+     * The package installer script's source.
+     *
+     * @return  string  Its source
      *
      * @since   10.5.10
      */
@@ -36,6 +41,8 @@ class PackageUpdateSiteGuardTest extends ProclaimTestCase
     }
 
     /**
+     * The update-site retirement method's source.
+     *
      * @return  string  Just the retirement method
      *
      * @since   10.5.10
@@ -52,6 +59,13 @@ class PackageUpdateSiteGuardTest extends ProclaimTestCase
         return substr($source, $start, $end - $start);
     }
 
+    /**
+     * The guard requires a package row on the current stream, not merely any row.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('The guard requires a package row on the current stream, not merely any row')]
     public function testGuardTestsForAWorkingChannel(): void
     {
@@ -70,6 +84,13 @@ class PackageUpdateSiteGuardTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The current stream is identified allowing for HTML-escaped locations.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('The current stream is identified allowing for HTML-escaped locations')]
     public function testStreamMatchAllowsEscapedLocations(): void
     {
@@ -83,6 +104,14 @@ class PackageUpdateSiteGuardTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Nothing is deleted unless a working package update site remains, so a site
+     * is never left without a channel.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('A site is never left without a channel')]
     public function testNothingIsDeletedWithoutAWorkingPackageRow(): void
     {

@@ -45,6 +45,9 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
      * @param   string[]               $enabledSources  Enabled providers
      *
      * @return  array<int, array{value: string, text: string}>
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private function build(array $rows, bool $servableOnly, array $enabledSources = []): array
     {
@@ -53,11 +56,15 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
     }
 
     /**
+     * A catalogue row for an English translation named after its abbreviation.
+     *
      * @param   string  $abbr       Abbreviation
      * @param   int     $installed  1 when installed locally
      * @param   string  $source     Provider source
      *
-     * @return  \stdClass
+     * @return  \stdClass  The row
+     *
+     * @since   10.5.6
      */
     private function row(string $abbr, int $installed = 0, string $source = 'getbible'): \stdClass
     {
@@ -71,9 +78,13 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
     }
 
     /**
+     * The values of the built options, in order.
+     *
      * @param   array<int, array{value: string, text: string}>  $options  Built options
      *
-     * @return  string[]
+     * @return  string[]  Their values
+     *
+     * @since   10.5.6
      */
     private function values(array $options): array
     {
@@ -84,6 +95,14 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
     // The case the fallback exists for
     // -------------------------------------------------------------------------
 
+    /**
+     * An empty catalogue falls back to the common defaults, kjv and web among them.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('An empty catalogue still falls back to the common defaults')]
     public function testEmptyCatalogueFallsBack(): void
     {
@@ -93,6 +112,15 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
         $this->assertContains('web', $values);
     }
 
+    /**
+     * An empty catalogue falls back to the defaults even in servable-only mode with no
+     * provider enabled.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('An empty catalogue falls back even in servable-only mode')]
     public function testEmptyCatalogueFallsBackWhenServableOnly(): void
     {
@@ -112,6 +140,11 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
     /**
      * The reported scenario: a catalogue exists, GDPR mode has disabled every
      * provider, and nothing is installed locally.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[TestDox('Filtering everything out yields nothing, not the hardcoded defaults')]
     public function testServableFilteringToEmptyReturnsEmpty(): void
@@ -130,6 +163,15 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * In servable-only mode with no provider enabled, only the locally installed
+     * translation is offered.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('A locally installed translation survives servable-only filtering')]
     public function testInstalledTranslationIsOffered(): void
     {
@@ -143,6 +185,14 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
         $this->assertSame(['kjv'], $values, 'Installed translations are servable regardless of providers');
     }
 
+    /**
+     * In servable-only mode, only the translation from the enabled provider is offered.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('A translation from an enabled provider survives filtering')]
     public function testEnabledProviderTranslationIsOffered(): void
     {
@@ -159,6 +209,11 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
     /**
      * Without servable-only the catalogue is offered as-is, and the fallback
      * must not appear alongside it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[TestDox('A populated catalogue is never padded with the defaults')]
     public function testPopulatedCatalogueIsNotPadded(): void

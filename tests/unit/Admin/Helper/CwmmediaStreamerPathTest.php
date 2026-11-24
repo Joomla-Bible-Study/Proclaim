@@ -43,7 +43,12 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmmediaStreamerPathTest extends ProclaimTestCase
 {
     /**
-     * @return  array<string, array{0: string, 1: string, 2: string, 3: string}>
+     * Targets with the site's base path and web root, each with the path candidatePath()
+     * should produce.
+     *
+     * @return  array<string, array{0: string, 1: string, 2: string, 3: string}>  Each case
+     *
+     * @since   10.7.0
      */
     public static function joins(): array
     {
@@ -107,12 +112,17 @@ class CwmmediaStreamerPathTest extends ProclaimTestCase
     }
 
     /**
+     * candidatePath() puts each target at the expected place on disk, however the site is
+     * installed.
+     *
      * @param   string  $target    Target passed to the streamer.
      * @param   string  $base      Site base path.
      * @param   string  $root      Web root.
      * @param   string  $expected  Path the join must produce.
      *
      * @return  void
+     *
+     * @since   10.7.0
      */
     #[DataProvider('joins')]
     #[TestDox('A URL lands at the same place on disk however the site is installed')]
@@ -121,6 +131,13 @@ class CwmmediaStreamerPathTest extends ProclaimTestCase
         $this->assertSame($expected, CwmmediaStreamer::candidatePath($target, $base, $root));
     }
 
+    /**
+     * On a subdirectory install, the joined path doesn't repeat the site's base path.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A subdirectory install does not repeat its own base path')]
     public function testSubdirectoryBaseIsNotDoubled(): void
     {
@@ -140,6 +157,14 @@ class CwmmediaStreamerPathTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * candidatePath() returns an empty string, not the bare web root, for a target with
+     * no path.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A target with no path yields nothing rather than the bare web root')]
     public function testPathlessTargetYieldsEmpty(): void
     {
@@ -150,6 +175,14 @@ class CwmmediaStreamerPathTest extends ProclaimTestCase
         $this->assertSame('', CwmmediaStreamer::candidatePath('', '', '/var/www/html'));
     }
 
+    /**
+     * candidatePath() leaves a traversal path intact, for realpath() to collapse and the
+     * caller to reject.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('Traversal survives the join intact, for realpath to collapse and the caller to reject')]
     public function testTraversalIsLeftForRealpathToResolve(): void
     {

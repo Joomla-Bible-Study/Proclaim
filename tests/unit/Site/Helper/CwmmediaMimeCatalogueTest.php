@@ -35,6 +35,8 @@ class CwmmediaMimeCatalogueTest extends ProclaimTestCase
      * Expand the catalogue's pipe-keyed groups into one entry per extension.
      *
      * @return  array<string, string>  extension => MIME type
+     *
+     * @since   10.5.0
      */
     private function catalogueByExtension(): array
     {
@@ -53,6 +55,8 @@ class CwmmediaMimeCatalogueTest extends ProclaimTestCase
      * Read Cwmmime's private canonical map.
      *
      * @return  array<string, string>
+     *
+     * @since   10.5.0
      */
     private function detectionMap(): array
     {
@@ -65,6 +69,8 @@ class CwmmediaMimeCatalogueTest extends ProclaimTestCase
      * Every extension both maps know must resolve to the same type.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     public function testCatalogueAgreesWithDetectionOnSharedExtensions(): void
     {
@@ -93,6 +99,8 @@ class CwmmediaMimeCatalogueTest extends ProclaimTestCase
      * unambiguous rather than buried in the sweep above.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     public function testMp3AndM4aUseRegisteredTypes(): void
     {
@@ -107,6 +115,8 @@ class CwmmediaMimeCatalogueTest extends ProclaimTestCase
      * No unregistered type should be selectable at all.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     public function testUnregisteredTypesAreNotOffered(): void
     {

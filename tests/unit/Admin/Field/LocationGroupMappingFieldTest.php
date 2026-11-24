@@ -26,7 +26,11 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 class LocationGroupMappingFieldTest extends ProclaimTestCase
 {
     /**
-     * @return string
+     * The source of the field's getInput().
+     *
+     * @return  string  Its lines
+     *
+     * @since   10.5.6
      */
     private function getInputMethodBody(): string
     {
@@ -40,7 +44,11 @@ class LocationGroupMappingFieldTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * getInput() runs no usage query per location.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetInputDoesNotRunPerRowUsageQuery(): void
     {
@@ -52,7 +60,11 @@ class LocationGroupMappingFieldTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * getInput() reads each location's message count from the main query.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetInputUsesMessageCountFromTheMainQuery(): void
     {
@@ -70,7 +82,9 @@ class LocationGroupMappingFieldTest extends ProclaimTestCase
      * WebAssetManager::addInlineScript() instead, with the JS body itself
      * unchanged (verified byte-for-byte against the pre-fix heredoc).
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testSerialisationScriptIsRegisteredViaWebAssetManagerNotRawTag(): void
     {
@@ -114,7 +128,9 @@ class LocationGroupMappingFieldTest extends ProclaimTestCase
      * enough to catch a mangled escape sequence or broken interpolation,
      * which a check on method names alone would not.
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testSerialisationScriptBodyMatchesExpectedContentExactly(): void
     {

@@ -26,6 +26,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
+ * The migration report the install script shows uses only markup Joomla's
+ * message sanitiser keeps, and is wired into postflight.
+ *
  * @since  10.5.9
  */
 class MigrationReportTest extends ProclaimTestCase
@@ -34,6 +37,7 @@ class MigrationReportTest extends ProclaimTestCase
      * Tags Joomla's message sanitiser accepts, from
      * media/system/js/core.js `DefaultAllowlist` (Joomla 6.1).
      *
+     * @var    list<string>
      * @since  10.5.9
      */
     private const ALLOWED_TAGS = [
@@ -43,7 +47,9 @@ class MigrationReportTest extends ProclaimTestCase
     ];
 
     /**
-     * @return  string  The manifest script's source
+     * The install script's source.
+     *
+     * @return  string  Its source
      *
      * @since   10.5.9
      */
@@ -72,7 +78,9 @@ class MigrationReportTest extends ProclaimTestCase
     }
 
     /**
-     * @return  array<string, array{0: string}>
+     * Markup the sanitiser strips.
+     *
+     * @return  array<string, array{0: string}>  Each opening tag
      *
      * @since   10.5.9
      */
@@ -88,6 +96,8 @@ class MigrationReportTest extends ProclaimTestCase
     }
 
     /**
+     * The report uses none of the markup the sanitiser strips.
+     *
      * @param   string  $needle  Markup the sanitiser would strip
      *
      * @return  void
@@ -108,6 +118,8 @@ class MigrationReportTest extends ProclaimTestCase
     }
 
     /**
+     * Every tag the report emits is on the sanitiser's allowlist.
+     *
      * @return  void
      *
      * @since   10.5.9
@@ -182,6 +194,8 @@ class MigrationReportTest extends ProclaimTestCase
     }
 
     /**
+     * The report is called from postflight, and every step is timed.
+     *
      * @return  void
      *
      * @since   10.5.9

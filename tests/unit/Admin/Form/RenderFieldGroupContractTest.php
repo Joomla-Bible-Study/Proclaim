@@ -35,7 +35,9 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.6.3
+ * An admin template only renders fields its own form declares.
+ *
+ * @since  10.6.3
  */
 class RenderFieldGroupContractTest extends ProclaimTestCase
 {
@@ -98,6 +100,9 @@ class RenderFieldGroupContractTest extends ProclaimTestCase
     }
 
     /**
+     * Every renderField() call in an admin template names a field its view's
+     * form declares, in the group the call asks for.
+     *
      * @return  void
      *
      * @since   10.6.3

@@ -38,6 +38,8 @@ class CwmplaylistCapabilityTest extends IntegrationTestCase
      * Every shipped server type and whether it can host playlists.
      *
      * @return  array<string, array{0: string, 1: bool}>
+     *
+     * @since   10.5.0
      */
     public static function serverTypeProvider(): array
     {
@@ -68,6 +70,8 @@ class CwmplaylistCapabilityTest extends IntegrationTestCase
      * @param   bool    $expected  Whether the platform hosts playlists.
      *
      * @return  void
+     *
+     * @since   10.5.0
      */
     #[Test]
     #[DataProvider('serverTypeProvider')]
@@ -86,6 +90,9 @@ class CwmplaylistCapabilityTest extends IntegrationTestCase
      * addon cannot pick up a picker it has no way to fill.
      *
      * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \ReflectionException
      */
     #[Test]
     public function capabilityIsOptInAtTheBaseClass(): void

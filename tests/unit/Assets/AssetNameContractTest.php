@@ -48,7 +48,7 @@ class AssetNameContractTest extends TestCase
      * This list must only ever shrink. Adding to it means shipping a section
      * whose permissions govern nothing.
      *
-     * @var array<string, string>
+     * @var    array<string, string>
      * @since 10.5.8
      */
     private const KNOWN_UNDECLARED = [];
@@ -57,7 +57,8 @@ class AssetNameContractTest extends TestCase
      * Section names declared in admin/access.xml.
      *
      * @return  list<string>
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private static function declaredSections(): array
     {
@@ -77,7 +78,8 @@ class AssetNameContractTest extends TestCase
      * Repository root.
      *
      * @return  string
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private static function root(): string
     {
@@ -88,7 +90,8 @@ class AssetNameContractTest extends TestCase
      * Every PHP file that could carry an asset name.
      *
      * @return  list<string>
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private static function sourceFiles(): array
     {
@@ -121,7 +124,8 @@ class AssetNameContractTest extends TestCase
      * @param   string  $file  Absolute path to a PHP file
      *
      * @return  string
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private static function codeWithoutComments(string $file): string
     {
@@ -144,6 +148,13 @@ class AssetNameContractTest extends TestCase
         return $code;
     }
 
+    /**
+     * Every section passed to authorise() is declared in access.xml.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('every section passed to authorise() is declared in access.xml')]
     public function testAuthoriseTargetsAreDeclaredSections(): void
     {
@@ -179,6 +190,13 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    /**
+     * Every section passed to Cwmassets::sectionActions() is declared in access.xml.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('every section passed to Cwmassets::sectionActions() is declared in access.xml')]
     public function testSectionActionsTargetsAreDeclaredSections(): void
     {
@@ -206,6 +224,14 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    /**
+     * Nothing passes a section to ContentHelper::getActions() without an item
+     * id, because core ignores a section that comes without one.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('nothing passes a section to ContentHelper::getActions() without an item id')]
     public function testGetActionsIsNeverGivenASectionWithoutAnId(): void
     {
@@ -242,6 +268,13 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    /**
+     * Every controller's $aclSection is declared in access.xml.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('every controller $aclSection is declared in access.xml')]
     public function testControllerSectionsAreDeclaredSections(): void
     {
@@ -270,6 +303,14 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    /**
+     * Cwmassets' entity section map matches the controllers' $aclSection, so an
+     * edit form and its save are gated on the same section.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox("Cwmassets' entity section map matches the controllers' \$aclSection")]
     public function testEntitySectionMapMatchesTheControllers(): void
     {
@@ -319,6 +360,15 @@ class AssetNameContractTest extends TestCase
         $this->assertSame([], $mismatches, 'The edit form and its save are gated on different sections.');
     }
 
+    /**
+     * No Table strips its empty asset row only after a successful save.
+     * Table::store() runs its asset block even when the insert throws, so a
+     * failed save would leave an asset for a record that never existed.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('no Table strips its empty asset only when the save succeeded')]
     public function testStripEmptyAssetRowIsNotConditionalOnSuccess(): void
     {
@@ -351,6 +401,13 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    /**
+     * Every asset name a Table writes is declared in access.xml.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('every asset name written by a Table is declared in access.xml')]
     public function testTableAssetNamesAreDeclaredSections(): void
     {
@@ -385,6 +442,13 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    /**
+     * The list of known undeclared sections only shrinks, and it is empty now.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the known-undeclared list only shrinks')]
     public function testKnownUndeclaredEntriesStillApply(): void
     {
@@ -418,7 +482,7 @@ class AssetNameContractTest extends TestCase
      * Anything else added here is a section whose permissions are shown in the
      * UI while nothing enforces them per record, so it needs a reason.
      *
-     * @var array<string, string>
+     * @var    array<string, string>
      * @since 10.5.8
      */
     private const SECTIONS_WITHOUT_RECORDS = [
@@ -431,7 +495,8 @@ class AssetNameContractTest extends TestCase
      * Read from source rather than called, so the test needs no Joomla runtime.
      *
      * @return  list<string>
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private static function assetObjectSections(): array
     {
@@ -461,7 +526,8 @@ class AssetNameContractTest extends TestCase
      * whose table is plural, `#__bsms_playlists`, which is the likeliest reason.
      *
      * @return  void
-     * @since 10.6.0
+     *
+     * @since   10.6.0
      */
     #[TestDox('every declared section with records behind it is in getAssetObjects()')]
     public function testDeclaredSectionsAreAllInAssetObjects(): void
@@ -485,6 +551,13 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    /**
+     * The sections-without-records list names only declared sections.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('the sections-without-records list only names declared sections')]
     public function testSectionsWithoutRecordsAreDeclared(): void
     {

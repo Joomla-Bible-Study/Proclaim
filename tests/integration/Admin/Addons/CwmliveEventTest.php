@@ -37,7 +37,10 @@ use PHPUnit\Framework\Attributes\Test;
 class CwmliveEventTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver
+     * @since  10.4.0
      */
     private DatabaseDriver $db;
 
@@ -45,6 +48,8 @@ class CwmliveEventTest extends IntegrationTestCase
      * Begin a transaction so seeded servers roll back.
      *
      * @return  void
+     *
+     * @since   10.4.0
      */
     protected function setUp(): void
     {
@@ -62,6 +67,8 @@ class CwmliveEventTest extends IntegrationTestCase
      * Roll the seeded rows back.
      *
      * @return  void
+     *
+     * @since   10.4.0
      */
     protected function tearDown(): void
     {
@@ -75,6 +82,13 @@ class CwmliveEventTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * The base addon does not support live events, and refuses to create one with a reason.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     */
     #[Test]
     public function theBaseAddonDeclinesLiveEvents(): void
     {
@@ -88,12 +102,29 @@ class CwmliveEventTest extends IntegrationTestCase
         $this->assertNotSame('', (string) ($result['error'] ?? ''), 'A refusal must say why');
     }
 
+    /**
+     * The YouTube addon declares the live-events capability.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function youtubeDeclaresTheCapability(): void
     {
         $this->assertTrue($this->youtubeAddon()->supportsLiveEvents());
     }
 
+    /**
+     * A request with an empty title is refused for missing input before any gate is
+     * checked.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function missingTitleOrStartIsRefusedBeforeAnyGate(): void
     {
@@ -109,6 +140,14 @@ class CwmliveEventTest extends IntegrationTestCase
         $this->assertStringContainsString('JBS_ADDON_YOUTUBE_LIVE_MISSING_INPUT', $this->keyOf($result));
     }
 
+    /**
+     * A server in External stream mode is refused, even with complete input.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function anExternalRestreamerServerIsRefusedEvenWithFullInput(): void
     {
@@ -122,6 +161,14 @@ class CwmliveEventTest extends IntegrationTestCase
         $this->assertStringContainsString('JBS_ADDON_YOUTUBE_LIVE_NOT_DIRECT', $this->keyOf($result));
     }
 
+    /**
+     * A server with no stream mode is treated as External, and refused.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function aServerWithoutStreamModeDefaultsToExternal(): void
     {
@@ -135,6 +182,14 @@ class CwmliveEventTest extends IntegrationTestCase
         $this->assertStringContainsString('JBS_ADDON_YOUTUBE_LIVE_NOT_DIRECT', $this->keyOf($result));
     }
 
+    /**
+     * A Direct-mode server without OAuth is refused with the message asking to connect.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function aDirectServerWithoutOauthIsRefusedWithTheConnectMessage(): void
     {
@@ -146,6 +201,13 @@ class CwmliveEventTest extends IntegrationTestCase
         $this->assertStringContainsString('JBS_ADDON_YOUTUBE_LIVE_OAUTH_REQUIRED', $this->keyOf($result));
     }
 
+    /**
+     * The base addon refuses to cancel a live event too, with a reason.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     */
     #[Test]
     public function theBaseAddonDeclinesCancellationToo(): void
     {
@@ -155,6 +217,14 @@ class CwmliveEventTest extends IntegrationTestCase
         $this->assertNotSame('', (string) ($result['error'] ?? ''));
     }
 
+    /**
+     * A cancellation without a broadcast id is refused.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function cancellingWithoutABroadcastIdIsRefused(): void
     {
@@ -169,6 +239,14 @@ class CwmliveEventTest extends IntegrationTestCase
         $this->assertStringContainsString('JBS_ADDON_YOUTUBE_LIVE_MISSING_INPUT', $this->keyOf($result));
     }
 
+    /**
+     * A cancellation without OAuth is refused before any status check.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function cancellingWithoutOauthIsRefusedBeforeAnyStatusCheck(): void
     {
@@ -185,6 +263,15 @@ class CwmliveEventTest extends IntegrationTestCase
         $this->assertStringContainsString('JBS_ADDON_YOUTUBE_LIVE_OAUTH_REQUIRED', $this->keyOf($result));
     }
 
+    /**
+     * A server that already carries its persistent stream gets those details back
+     * without any API call.
+     *
+     * @return  void
+     *
+     * @since   10.4.0
+     * @throws  \ReflectionException
+     */
     #[Test]
     public function anAlreadyProvisionedStreamIsReusedWithoutAnyApiCall(): void
     {
@@ -216,6 +303,8 @@ class CwmliveEventTest extends IntegrationTestCase
      * @param   int  $serverId  The seeded server ID.
      *
      * @return  Input
+     *
+     * @since   10.4.0
      */
     private function fullInput(int $serverId): Input
     {
@@ -237,6 +326,8 @@ class CwmliveEventTest extends IntegrationTestCase
      * @param   array  $result  A createLiveEvent result.
      *
      * @return  string
+     *
+     * @since   10.4.0
      */
     private function keyOf(array $result): string
     {
@@ -263,6 +354,8 @@ class CwmliveEventTest extends IntegrationTestCase
      * @param   array  $params  Server params to store.
      *
      * @return  int  Server ID.
+     *
+     * @since   10.4.0
      */
     private function insertServer(array $params): int
     {
@@ -285,6 +378,9 @@ class CwmliveEventTest extends IntegrationTestCase
      * effects the production constructor performs.
      *
      * @return  CWMAddonYoutube
+     *
+     * @since   10.4.0
+     * @throws  \ReflectionException
      */
     private function youtubeAddon(): CWMAddonYoutube
     {
@@ -298,24 +394,60 @@ class CwmliveEventTest extends IntegrationTestCase
      * A minimal concrete CWMAddon exposing only the base implementations.
      *
      * @return  CWMAddon
+     *
+     * @since   10.4.0
      */
     private function minimalAddon(): CWMAddon
     {
         return new class () extends CWMAddon {
+            /**
+             * Skip the base addon's construction work.
+             *
+             * @since   10.4.0
+             */
             public function __construct()
             {
             }
 
+            /**
+             * Render nothing.
+             *
+             * @param   object  $media_form  The media form
+             * @param   bool    $new         Whether the media file is new
+             *
+             * @return  string  An empty string
+             *
+             * @since   10.4.0
+             */
             public function renderGeneral(object $media_form, bool $new): string
             {
                 return '';
             }
 
+            /**
+             * Render nothing.
+             *
+             * @param   object  $media_form  The media form
+             * @param   bool    $new         Whether the media file is new
+             *
+             * @return  string  An empty string
+             *
+             * @since   10.4.0
+             */
             public function render(object $media_form, bool $new): string
             {
                 return '';
             }
 
+            /**
+             * Accept no upload.
+             *
+             * @param   Input  $data  The request data
+             *
+             * @return  mixed  Always null
+             *
+             * @since   10.4.0
+             */
             protected function upload(\Joomla\Input\Input $data): mixed
             {
                 return null;

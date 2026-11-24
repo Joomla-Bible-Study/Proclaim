@@ -27,6 +27,17 @@ class CwmanalyticsHelperTest extends ProclaimTestCase
     // classifyReferrer() tests
     // -------------------------------------------------------------------------
 
+    /**
+     * classifyReferrer() sorts a referrer into its traffic type.
+     *
+     * @param   string  $url           The referrer URL
+     * @param   string  $utmMedium     The utm_medium value
+     * @param   string  $expectedType  The type it should get
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('referrerProvider')]
     public function testClassifyReferrer(string $url, string $utmMedium, string $expectedType): void
     {
@@ -35,7 +46,11 @@ class CwmanalyticsHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, string, string}>
+     * Referrers, each with its utm_medium and the traffic type it should get.
+     *
+     * @return  array<string, array{string, string, string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function referrerProvider(): array
     {
@@ -62,12 +77,26 @@ class CwmanalyticsHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * classifyReferrer() returns the referrer's domain without its www prefix.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testClassifyReferrerReturnsDomain(): void
     {
         $result = CwmanalyticsHelper::classifyReferrer('https://www.google.com/search?q=test');
         self::assertSame('google.com', $result['domain']);
     }
 
+    /**
+     * classifyReferrer() returns an empty domain for direct traffic.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testClassifyReferrerEmptyDomainForDirect(): void
     {
         $result = CwmanalyticsHelper::classifyReferrer('');
@@ -78,6 +107,18 @@ class CwmanalyticsHelperTest extends ProclaimTestCase
     // classifyUserAgent() tests
     // -------------------------------------------------------------------------
 
+    /**
+     * classifyUserAgent() reads the device, browser and OS from a user agent.
+     *
+     * @param   string  $ua       The user agent
+     * @param   string  $device   The device it should report
+     * @param   string  $browser  The browser it should report
+     * @param   string  $os       The OS it should report
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('userAgentProvider')]
     public function testClassifyUserAgent(string $ua, string $device, string $browser, string $os): void
     {
@@ -88,7 +129,11 @@ class CwmanalyticsHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{string, string, string, string}>
+     * User agents, each with the device, browser and OS it should report.
+     *
+     * @return  array<string, array{string, string, string, string}>  Each case
+     *
+     * @since   10.1.0
      */
     public static function userAgentProvider(): array
     {
@@ -136,6 +181,13 @@ class CwmanalyticsHelperTest extends ProclaimTestCase
     // isOptedOut() tests
     // -------------------------------------------------------------------------
 
+    /**
+     * isOptedOut() answers without throwing when no opt-out signal is set.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testIsOptedOutDoesNotThrow(): void
     {
         unset($_SERVER['HTTP_DNT'], $_COOKIE['proclaim_analytics_optout']);
@@ -144,6 +196,13 @@ class CwmanalyticsHelperTest extends ProclaimTestCase
         self::assertIsBool(CwmanalyticsHelper::isOptedOut());
     }
 
+    /**
+     * isOptedOut() answers without throwing when the DNT header is set.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testIsOptedOutDoesNotThrowWithDntHeader(): void
     {
         $_SERVER['HTTP_DNT'] = '1';

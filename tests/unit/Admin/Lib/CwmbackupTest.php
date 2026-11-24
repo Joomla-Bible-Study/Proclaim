@@ -33,26 +33,61 @@ use Joomla\Database\DatabaseInterface;
  */
 class CwmbackupTest extends ProclaimTestCase
 {
+    /**
+     * getTableRowCount() refuses a table that is not Proclaim's.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testGetTableRowCountRejectsANonProclaimTable(): void
     {
         $this->assertSame(0, (new Cwmbackup())->getTableRowCount('#__users'));
     }
 
+    /**
+     * getExportTableStructure() refuses a table that is not Proclaim's.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testGetExportTableStructureRejectsANonProclaimTable(): void
     {
         $this->assertSame('', (new Cwmbackup())->getExportTableStructure('#__users'));
     }
 
+    /**
+     * getExportTableRows() refuses a table that is not Proclaim's.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testGetExportTableRowsRejectsANonProclaimTable(): void
     {
         $this->assertSame('', (new Cwmbackup())->getExportTableRows('#__users', 0, 10));
     }
 
+    /**
+     * getExportTableData() refuses a table that is not Proclaim's.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testGetExportTableDataRejectsANonProclaimTable(): void
     {
         $this->assertSame('', (new Cwmbackup())->getExportTableData('#__users'));
     }
 
+    /**
+     * getTableRowCount() accepts a real Proclaim table.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testGetTableRowCountAcceptsARealProclaimTable(): void
     {
         $tables = array_column(CwmdbHelper::getObjects(), 'name');
@@ -70,16 +105,19 @@ class CwmbackupTest extends ProclaimTestCase
     }
 
     /**
-     * Regression tests for #1524.
+     * The source of one Cwmbackup method, for the tests that read it.
      *
-     * exportdb()'s per-table loop called getExportTable(), which ran an
-     * unbounded `SELECT *` (loadObjectList() with no LIMIT) and buffered the
-     * generated SQL for the entire database into $this->data_cache before a
-     * single write -- doubling peak memory (row objects + generated SQL
-     * text) across the whole dump at once, and risking memory/timeout
-     * exhaustion on large tables. exportdb() now streams each table through
-     * the already-existing chunked pair (getExportTableStructure() +
-     * repeated getExportTableRows() calls) and flushes to disk per chunk.
+     * The tests below hold exportdb() to streaming each table through
+     * getExportTableStructure() and repeated getExportTableRows() calls,
+     * flushing to disk per chunk, instead of reading every table whole and
+     * buffering the generated SQL for the entire database before the first
+     * write.
+     *
+     * @param   string  $method  The method's name
+     *
+     * @return  string  Its source, from the signature to the closing brace
+     *
+     * @since   10.5.6
      */
     private static function methodBody(string $method): string
     {
@@ -92,6 +130,13 @@ class CwmbackupTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The unbounded getExportTable() and its data cache are gone.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testGetExportTableAndDataCacheAreRemoved(): void
     {
         $this->assertFalse(
@@ -106,6 +151,13 @@ class CwmbackupTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * exportdb() reads through the chunked pair instead of loading a table whole.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testExportdbUsesTheChunkedReadPathInsteadOfAnUnboundedLoad(): void
     {
         $body = self::methodBody('exportdb');
@@ -124,6 +176,13 @@ class CwmbackupTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * getExportTableData() delegates to the chunked pair instead of building its own DDL.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testGetExportTableDataDelegatesToTheChunkedPairInsteadOfDuplicatingDdlLogic(): void
     {
         $body = self::methodBody('getExportTableData');
@@ -141,6 +200,10 @@ class CwmbackupTest extends ProclaimTestCase
      * Live, read-only proof that a bounded getExportTableRows() call really
      * is bounded -- exercised against a real table with more rows than the
      * requested limit.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetExportTableRowsReturnsExactlyTheRequestedLimit(): void
     {
@@ -161,6 +224,10 @@ class CwmbackupTest extends ProclaimTestCase
      * This compares the actual set of primary-key ids extracted from each
      * chunk against the set from an unbounded read, on a table large enough
      * to span multiple chunks at the real chunk size used by exportdb().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testChunkedRowsCoverTheExactSameRowsAsAnUnboundedRead(): void
     {
@@ -200,6 +267,8 @@ class CwmbackupTest extends ProclaimTestCase
      * @param   callable  $test     The assertions to run
      *
      * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function withStudyRowsAbove(int $minimum, callable $test): void
     {
@@ -251,6 +320,10 @@ class CwmbackupTest extends ProclaimTestCase
      * than the base install, so it may not exist on a DB seeded from
      * install SQL alone (e.g. a fresh CI fixture) -- each table is checked
      * independently rather than asserted as a fixed set.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetExportTableRowsHandlesTablesWithoutAnIdColumn(): void
     {
@@ -290,6 +363,10 @@ class CwmbackupTest extends ProclaimTestCase
      * reason the fix is needed for cases where that assumption doesn't
      * hold. This exercises the clause builder directly against real
      * `SHOW KEYS` output, including a composite primary key.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetPrimaryKeyOrderClauseBuildsFromTheRealPrimaryKey(): void
     {
@@ -313,6 +390,13 @@ class CwmbackupTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * fileSizeHeader() reads the Range header through Joomla's input, not $_SERVER.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testFileSizeHeaderReadsRangeViaJoomlaInputNotSuperglobal(): void
     {
         $body = self::methodBody('fileSizeHeader');

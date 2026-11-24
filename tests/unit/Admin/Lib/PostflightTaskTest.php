@@ -31,12 +31,17 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
+ * Postflight runs its work as timed tasks, which report a failure without
+ * rolling back the install.
+ *
  * @since  10.5.10
  */
 class PostflightTaskTest extends ProclaimTestCase
 {
     /**
-     * @return  string  The manifest script's source
+     * The install script's source.
+     *
+     * @return  string  Its source
      *
      * @since   10.5.10
      */
@@ -68,6 +73,13 @@ class PostflightTaskTest extends ProclaimTestCase
         return substr($source, $start, $end - $start);
     }
 
+    /**
+     * A failing task does not roll back an install that already happened.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('A failing task does not roll back an install that already happened')]
     public function testTaskDoesNotAbortTheInstall(): void
     {
@@ -88,6 +100,13 @@ class PostflightTaskTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * A failing task is reported, logged and left visible to the release gate.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('A failing task is reported, logged and left visible to the release gate')]
     public function testTaskFailureIsNotSilent(): void
     {
@@ -117,6 +136,13 @@ class PostflightTaskTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The release gate fails the build when a postflight task did not complete.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('The release gate fails the build when a postflight task did not complete')]
     public function testGateChecksForFailedTasks(): void
     {
@@ -136,6 +162,13 @@ class PostflightTaskTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Every timed task is recorded and logged.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('Every timed task is recorded and logged')]
     public function testTaskRecordsAndLogs(): void
     {
@@ -153,6 +186,13 @@ class PostflightTaskTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The migration steps and the postflight tasks stay separate.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('The migration steps and the postflight tasks stay separate')]
     public function testTaskLogIsNotTheStepLog(): void
     {
@@ -166,6 +206,13 @@ class PostflightTaskTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Postflight times more than just the migrations.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('Postflight times more than just the migrations')]
     public function testPostflightIsInstrumented(): void
     {
@@ -189,6 +236,13 @@ class PostflightTaskTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The summary line still leads with the field the release gate parses.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[TestDox('The summary line still leads with the field the release gate parses')]
     public function testSummaryLineKeepsTheParsedPrefix(): void
     {

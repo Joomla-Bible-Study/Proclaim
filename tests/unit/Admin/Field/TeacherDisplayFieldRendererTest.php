@@ -27,6 +27,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class TeacherDisplayFieldRendererTest extends ProclaimTestCase
 {
+    /**
+     * getRenderer() pins the layout search path to com_proclaim.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testGetRendererPinsComProclaim(): void
     {
         $this->assertTrue(

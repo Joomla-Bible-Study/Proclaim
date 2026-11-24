@@ -8,7 +8,7 @@
     "url": "https://github.com/Joomla-Bible-Study/Proclaim.git"
   },
   "engines": {
-    "node": ">=24.0.0",
+    "node": "^24.15.0 || >=26.0.0",
     "npm": ">=10.1.0"
   },
   "devDependencies": {
@@ -20,11 +20,11 @@
     "eslint": "^10.14.0",
     "globals": "^17.14.0",
     "intl-tel-input": "^29.5.11",
-    "jsdom": "^26.1.0",
-    "rollup": "^4.68.3",
+    "jsdom": "^31.0.1",
+    "rollup": "^4.68.7",
     "rollup-plugin-gzip": "^4.2.1",
     "sortablejs": "^1.15.7",
-    "terser": "^5.51.2"
+    "terser": "^5.51.4"
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css && npm run build:assets",

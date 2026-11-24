@@ -33,12 +33,39 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmscriptureHelper::class)]
 class CwmscriptureSaveTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back. tearDown() checks that the
+     * rollback restored the scripture references.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * The id of the unpublished study setUp() inserts, which the references belong to.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $studyId = 0;
 
+    /**
+     * How many scripture references there were when setUp() ran.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $rowsAtStart = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction, count the scripture
+     * references, and insert an unpublished study.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -63,6 +90,14 @@ class CwmscriptureSaveTest extends IntegrationTestCase
         $this->studyId = (int) $this->db->insertid();
     }
 
+    /**
+     * Roll back the transaction setUp() opened, then fail the test if the scripture
+     * references don't number what they did at setUp().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         $leaked = null;
@@ -93,7 +128,11 @@ class CwmscriptureSaveTest extends IntegrationTestCase
     }
 
     /**
+     * The number of scripture references, across every study.
+     *
      * @return  int  Total rows in the junction table.
+     *
+     * @since   10.5.6
      */
     private function countAllReferences(): int
     {
@@ -103,7 +142,11 @@ class CwmscriptureSaveTest extends IntegrationTestCase
     }
 
     /**
+     * The number of scripture references the test's study has.
+     *
      * @return  int  Reference rows for the fixture study.
+     *
+     * @since   10.5.6
      */
     private function countReferences(): int
     {
@@ -125,6 +168,8 @@ class CwmscriptureSaveTest extends IntegrationTestCase
      *                        provoked without mocking the driver.
      *
      * @return  object
+     *
+     * @since   10.5.6
      */
     private function ref(int $book, mixed $verse = 1): object
     {
@@ -139,6 +184,15 @@ class CwmscriptureSaveTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * saveScriptures() stores two references, then replaces them with the one it's given
+     * next.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Throwable
+     */
     #[TestDox('A successful save replaces the reference set')]
     public function testSuccessfulSaveReplacesReferences(): void
     {
@@ -152,6 +206,11 @@ class CwmscriptureSaveTest extends IntegrationTestCase
     /**
      * The core guarantee: a failure partway through must leave the study with
      * the references it had, not a half-written set.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Throwable
      */
     #[TestDox('A failure mid-loop leaves the original references intact')]
     public function testFailedSaveRollsBackToTheOriginalReferences(): void
@@ -188,6 +247,13 @@ class CwmscriptureSaveTest extends IntegrationTestCase
         $this->assertSame(['1', '2', '3'], array_map('strval', $books), 'The original set must be exactly restored');
     }
 
+    /**
+     * saveScriptures() lets the failure an invalid reference causes reach its caller.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The exception still reaches the caller after rollback')]
     public function testFailureStillPropagates(): void
     {
@@ -200,6 +266,14 @@ class CwmscriptureSaveTest extends IntegrationTestCase
     // The junction table and the flat columns must not diverge
     // -------------------------------------------------------------------------
 
+    /**
+     * saveScriptures() stores the reference it's given.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Throwable
+     */
     #[TestDox('Saving writes the references')]
     public function testSaveWritesTheJunction(): void
     {
@@ -211,6 +285,11 @@ class CwmscriptureSaveTest extends IntegrationTestCase
     /**
      * The divergence this issue is really about: references written, flat
      * columns left describing the previous set.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Throwable
      */
     #[TestDox('A failed save restores the references it replaced')]
     public function testFailedSaveLeavesTheJunctionIntact(): void

@@ -42,10 +42,30 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmanalyticsHelper::class)]
 class CwmanalyticsRollupTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back. tearDown() checks that the
+     * rollback restored the raw events.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * How many raw analytics events there were when setUp() ran.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $eventCountAtStart = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction and count the raw events.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,6 +80,14 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         $this->eventCountAtStart = $this->countEvents();
     }
 
+    /**
+     * Roll back the transaction setUp() opened, then fail the test if the raw events don't
+     * number what they did at setUp().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         $leaked = null;
@@ -99,7 +127,11 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
     }
 
     /**
+     * The number of raw analytics events.
+     *
      * @return  int  Total rows in the raw events table.
+     *
+     * @since   10.5.6
      */
     private function countEvents(): int
     {
@@ -115,7 +147,12 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
     // -------------------------------------------------------------------------
 
     /**
-     * @return array<string, array{0: string, 1: string}>
+     * Hostnames with what stripWwwPrefix() should return: w-initial hosts whole, a leading
+     * www. removed, and other hosts unchanged.
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each host and the expected result
+     *
+     * @since   10.5.6
      */
     public static function hostProvider(): array
     {
@@ -136,6 +173,17 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * stripWwwPrefix() removes only a literal leading www., leaving a host that merely
+     * starts with w whole.
+     *
+     * @param   string  $host      The hostname
+     * @param   string  $expected  The hostname expected back
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[DataProvider('hostProvider')]
     #[TestDox('Only a literal leading "www." is stripped from a hostname')]
     public function testStripWwwPrefix(string $host, string $expected): void
@@ -147,6 +195,13 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * classifyReferrer() reports the domain of a worship.example.org referrer whole.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('classifyReferrer reports a w-initial domain uncorrupted')]
     public function testClassifyReferrerKeepsWInitialDomainsIntact(): void
     {
@@ -170,6 +225,8 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
      * @param   int     $studyId  Study id (0 = NULL dimension)
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function insertOldEvent(string $type = 'page_view', int $studyId = 0): void
     {
@@ -190,6 +247,8 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
      * produces, for the month the fixture lands in.
      *
      * @return  array{rows: int, total: int}
+     *
+     * @since   10.5.6
      */
     private function monthlyStateForFixture(): array
     {
@@ -210,6 +269,14 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         return ['rows' => (int) $row->rows_found, 'total' => (int) $row->total];
     }
 
+    /**
+     * The first rollup writes one monthly row counting both old events, and a second rollup
+     * of three more old events for that month adds no row.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Re-running the rollup consolidates instead of inserting duplicate rows')]
     public function testRollupConsolidatesAcrossRuns(): void
     {
@@ -245,6 +312,13 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * rollupAndPurge(90) leaves no raw event older than its 90-day cutoff.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Rolled-up raw events are purged in the same operation')]
     public function testRollupPurgesTheRawEventsItAggregated(): void
     {
@@ -270,6 +344,13 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * An event from a day ago is still in the raw events table after rollupAndPurge(90).
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Recent events are left alone by the rollup')]
     public function testRecentEventsAreNotRolledUp(): void
     {
@@ -299,7 +380,12 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
     // -------------------------------------------------------------------------
 
     /**
-     * @return array<string, array{0: int, 1: bool}>
+     * Retention windows in days, with whether each may delete raw events: none below the
+     * 7-day floor may, and each from it up may.
+     *
+     * @return  array<string, array{0: int, 1: bool}>  Each window and the expected result
+     *
+     * @since   10.5.6
      */
     public static function retentionProvider(): array
     {
@@ -321,6 +407,13 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
     /**
      * Exercised as a pure function deliberately: proving this guard by calling
      * rollupAndPurge(0) would run the real DELETE if the guard were wrong.
+     *
+     * @param   int   $days      The retention window in days
+     * @param   bool  $expected  Whether that window may delete raw events
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('retentionProvider')]
     #[TestDox('Only a retention window at or above the floor permits deletion')]
@@ -338,6 +431,10 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
      * Pinned in both places because they are independent: the form default
      * governs a task created through the UI, while the plugin's fallback
      * governs the tasks the setup wizard seeds with params '{}'.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The task form ships with the purge switched off')]
     public function testPurgeIsOffByDefaultInTheTaskForm(): void
@@ -356,6 +453,14 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * The task plugin's source reads enable_purge with a fallback of false, which is what a
+     * task saved with no params gets.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A task with no saved params does not purge')]
     public function testPurgeFallbackIsOffForWizardSeededTasks(): void
     {
@@ -372,6 +477,13 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * rollupAndPurge(0) deletes no raw event, and reports nothing purged or rolled up.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A below-floor retention deletes nothing and reports nothing rolled')]
     public function testUnsafeRetentionIsARefusalNotAWipe(): void
     {
@@ -394,6 +506,14 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * rollupAndPurge(90, false) deletes no raw event and reports nothing purged, but still
+     * rolls events up.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Disabling the purge keeps the raw events but still aggregates')]
     public function testPurgeCanBeDisabled(): void
     {
@@ -415,6 +535,10 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
     /**
      * With the purge disabled the raw events stay put, so every run re-reads
      * the same rows. Finding 3 arriving through a different door.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Re-running with the purge disabled does not double the monthly totals')]
     public function testDisabledPurgeIsIdempotentAcrossRuns(): void
@@ -440,6 +564,15 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * rollupAndPurge()'s source opens a savepoint-aware transaction before the purge and
+     * commits it after, has a savepoint-aware rollback, and makes no transaction call without
+     * the savepoint flag.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The rollup brackets both statements in one transaction')]
     public function testRollupIsTransactional(): void
     {

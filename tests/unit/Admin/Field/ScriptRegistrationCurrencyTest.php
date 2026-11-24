@@ -36,7 +36,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class ScriptRegistrationCurrencyTest extends ProclaimTestCase
 {
     /**
-     * @return array<string, array{0: string}>
+     * The fields that register JavaScript.
+     *
+     * @return  array<string, array{0: string}>  Each field's class name
+     *
+     * @since   10.5.6
      */
     public static function fieldClassProvider(): array
     {
@@ -47,6 +51,16 @@ class ScriptRegistrationCurrencyTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * The field emits no raw script tag.
+     *
+     * @param   string  $class  The field's class name
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('fieldClassProvider')]
     public function testDoesNotEmitRawScriptTag(string $class): void
     {
@@ -63,6 +77,16 @@ class ScriptRegistrationCurrencyTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The field registers its script through the Web Asset Manager.
+     *
+     * @param   string  $class  The field's class name
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('fieldClassProvider')]
     public function testRegistersScriptViaWebAssetManager(string $class): void
     {
@@ -80,6 +104,13 @@ class ScriptRegistrationCurrencyTest extends ProclaimTestCase
      * getInput() still calls it. Without this wiring assertion, deleting the
      * `$this->registerJavaScript();` line ships the field with no JS at all
      * while every other test stays green.
+     *
+     * @param   string  $class  The field's fully qualified class name
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('fieldClassProvider')]
     public function testGetInputWiresUpTheScriptRegistration(string $class): void

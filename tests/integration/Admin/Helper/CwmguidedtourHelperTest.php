@@ -43,14 +43,48 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmguidedtourHelper::class)]
 class CwmguidedtourHelperTest extends IntegrationTestCase
 {
+    /**
+     * The uid of the synthetic tour the fixtures use.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private const string UID = 'com_proclaim_test_1572';
 
+    /**
+     * The database, inside a transaction each test rolls back. tearDown() checks that the
+     * rollback restored the tours and the Guided Tours plugin's state.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * How many tours there were when setUp() ran.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $toursAtStart = 0;
 
+    /**
+     * The Guided Tours plugin's enabled flag when setUp() ran, or null when the plugin isn't
+     * installed.
+     *
+     * @var    int|null
+     * @since  __DEPLOY_VERSION__
+     */
     private ?int $pluginStateAtStart = null;
 
+    /**
+     * Skip without a test database or the core tours table. Otherwise open a transaction,
+     * count the tours, and note the Guided Tours plugin's state.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -70,6 +104,15 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
         $this->pluginStateAtStart = $this->guidedToursPluginState();
     }
 
+    /**
+     * Roll back the transaction setUp() opened and clear PluginHelper's cached plugin list.
+     * Fail the test if the tours don't number what they did at setUp(), or if the Guided
+     * Tours plugin's state changed, which is put back first.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         $leaked = null;
@@ -117,7 +160,11 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     }
 
     /**
+     * The number of tours.
+     *
      * @return  int  Total rows in the core tours table.
+     *
+     * @since   10.5.6
      */
     private function countTours(): int
     {
@@ -134,6 +181,8 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * @param   int     $published  Published state
      *
      * @return  int  Inserted id
+     *
+     * @since   10.5.6
      */
     private function insertRawTour(string $uid, string $title = 'Local title', int $published = 1): int
     {
@@ -163,6 +212,8 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * values resolve against rows each test creates.
      *
      * @return  CwmguidedtourHelper
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function startTourHelper(): CwmguidedtourHelper
     {
@@ -185,6 +236,8 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * @param   string  $uid  Tour uid
      *
      * @return  int
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function rowsForUid(string $uid): int
     {
@@ -197,7 +250,11 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     }
 
     /**
+     * Read the System - Guided Tours plugin's enabled flag from the extensions table.
+     *
      * @return  int|null  The Guided Tours plugin's enabled flag, or null when it is not installed.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function guidedToursPluginState(): ?int
     {
@@ -220,6 +277,8 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * @param   bool  $enabled  Wanted state
      *
      * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function setGuidedToursPlugin(bool $enabled): void
     {
@@ -232,9 +291,13 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     }
 
     /**
+     * Write the Guided Tours plugin's enabled flag to the extensions table.
+     *
      * @param   int  $enabled  Value to store in #__extensions.enabled
      *
      * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function writeGuidedToursPluginState(int $enabled): void
     {
@@ -249,7 +312,11 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     }
 
     /**
+     * Clear PluginHelper's cached plugin list, so a changed plugin state is read afresh.
+     *
      * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function resetPluginCache(): void
     {
@@ -266,6 +333,8 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * the list keeps each test dependent only on its own fixture.
      *
      * @return  CwmguidedtourHelper
+     *
+     * @since   10.5.6
      */
     private function helper(): CwmguidedtourHelper
     {
@@ -304,6 +373,14 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     // Finding 1 -- an existing tour is not rewritten on update
     // -------------------------------------------------------------------------
 
+    /**
+     * Registering leaves an existing tour's admin-edited title and unpublished state as they
+     * were.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Registering leaves an existing tour untouched')]
     public function testRegisterPreservesAnExistingTour(): void
     {
@@ -330,6 +407,13 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Registering keeps an existing tour's step, here an admin-authored de-DE one.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Registering does not delete the steps of an existing tour')]
     public function testRegisterPreservesExistingSteps(): void
     {
@@ -371,6 +455,10 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
 
     /**
      * The destructive refresh must still be reachable, just not by accident.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('An explicit reset does rewrite the tour')]
     public function testResetRewritesTheTour(): void
@@ -393,6 +481,14 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     // Finding 2 -- duplicate uids
     // -------------------------------------------------------------------------
 
+    /**
+     * With two tours sharing a uid, getTourId() returns the earlier, and getTourIds() returns
+     * both in id order.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Lookups return the earliest row when duplicates exist')]
     public function testLookupIsDeterministicAcrossDuplicates(): void
     {
@@ -411,6 +507,10 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * Without ORDER BY, MySQL happens to return rows in primary-key order, so
      * a runtime assertion here passes whether or not the clause is present.
      * Pin it in the source instead rather than claim coverage we do not have.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The duplicate lookup orders explicitly rather than relying on storage order')]
     public function testLookupOrdersExplicitly(): void
@@ -426,6 +526,13 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * removeAllTours() deletes all three tours sharing the uid.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Uninstall removes every duplicate, not just one')]
     public function testRemoveAllToursDeletesEveryDuplicate(): void
     {
@@ -445,6 +552,11 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     /**
      * Registering into a database that already carries duplicates should leave
      * exactly one behind, so existing damage heals rather than persisting.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[TestDox('Registration collapses pre-existing duplicates')]
     public function testRegistrationIsSelfHealingForExistingDuplicates(): void
@@ -463,6 +575,14 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
         $this->assertCount(1, $helper->getTourIds(self::UID), 'One row must remain');
     }
 
+    /**
+     * pruneDuplicateTours() removes nothing for a uid with only one tour.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('Pruning a uid with no duplicates is a no-op')]
     public function testPruneIsANoOpWithoutDuplicates(): void
     {
@@ -478,7 +598,9 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * other bound query — the post-install message existence check by title_key.
      *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
      */
     #[TestDox("postInstallMessageExists() runs its bound title_key query")]
     public function testPostInstallMessageExistsBindExecutes(): void
@@ -495,6 +617,14 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     // Start Tour needs Joomla's Guided Tours plugin
     // -------------------------------------------------------------------------
 
+    /**
+     * canStartTours() is true while the Guided Tours plugin is enabled and false once it's
+     * disabled. Skipped without the plugin.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     #[TestDox('canStartTours() follows the System - Guided Tours plugin')]
     public function testCanStartToursFollowsThePlugin(): void
     {
@@ -511,6 +641,10 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     /**
      * Turning the plugin back on has to find the tours already in place, so
      * registration must not share the check that hides the button.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     #[TestDox('Registering still writes a tour while the plugin is disabled')]
     public function testRegisterIgnoresThePlugin(): void
@@ -526,6 +660,13 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * removeAllTours() deletes the tour while the Guided Tours plugin is disabled. Skipped without the plugin.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     #[TestDox('Uninstall still removes a tour while the plugin is disabled')]
     public function testRemoveAllToursIgnoresThePlugin(): void
     {
@@ -546,6 +687,14 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
     // startTour links resolve to the tour they name
     // -------------------------------------------------------------------------
 
+    /**
+     * resolveStartTour() maps the legacy 1 and the whats_new_10_1 key to the What's New tour,
+     * and getting_started to the Getting Started tour. Skipped without the plugin.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     #[TestDox('resolveStartTour() maps the legacy "1" and the tour keys to their tour ids')]
     public function testResolveStartTourMapsAliasAndKeys(): void
     {
@@ -564,6 +713,15 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * resolveStartTour() returns 0 for an empty or unknown value and for a key whose tour
+     * doesn't exist, and returns 0 for getting_started, whose tour exists, once the Guided
+     * Tours plugin is disabled. Skipped without the plugin.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     #[TestDox('resolveStartTour() starts nothing for an unknown value, a missing tour or a disabled plugin')]
     public function testResolveStartTourRefuses(): void
     {

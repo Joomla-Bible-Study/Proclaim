@@ -29,6 +29,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
+ * What Proclaim needs from lib_cwmscripture, asserted against the pinned library.
+ *
  * @since  10.5.9
  */
 class ScriptureLibraryContractTest extends ProclaimTestCase
@@ -36,6 +38,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
     /**
      * Trees that may call into the library.
      *
+     * @var    list<string>
      * @since  10.5.9
      */
     private const SOURCE_ROOTS = ['site/src', 'admin/src', 'api/src'];
@@ -45,6 +48,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      * carries google/apiclient — 598 of the 956 files a naive walk reads, and
      * none of them ours.
      *
+     * @var    list<string>
      * @since  10.5.9
      */
     private const SKIP = ['/vendor/', '/node_modules/'];
@@ -58,6 +62,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      * only on AbstractBibleProvider has nothing holding it in place, which is
      * the shape that went missing in 1.1.13.
      *
+     * @var    array<string, class-string>
      * @since  10.5.9
      */
     private const UNGUARDED_CALLS = [
@@ -74,6 +79,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      * asserted is that the guard is still there, because deleting it turns a
      * graceful degradation into a fatal.
      *
+     * @var    list<string>
      * @since  10.5.9
      */
     private const GUARDED_CALLS = ['setCacheTtl', 'getPassageFor'];
@@ -245,6 +251,9 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
     }
 
     /**
+     * Each library class and symbol Proclaim references exists in the pinned
+     * library.
+     *
      * @param   string  $class   Library class
      * @param   string  $symbol  Method or constant Proclaim references
      *
@@ -266,6 +275,8 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
     }
 
     /**
+     * Every unguarded provider call exists on the type it is called against.
+     *
      * @return  void
      *
      * @since   10.5.9
@@ -283,6 +294,8 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
     }
 
     /**
+     * Every guarded call keeps its method_exists() guard.
+     *
      * @return  void
      *
      * @since   10.5.9

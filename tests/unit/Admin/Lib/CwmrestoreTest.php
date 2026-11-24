@@ -29,6 +29,16 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class CwmrestoreTest extends ProclaimTestCase
 {
+    /**
+     * Invoke Cwmrestore's private safety check.
+     *
+     * @param   string  $statement  The SQL statement
+     *
+     * @return  bool  Whether the restore may run it
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private static function isSafeRestoreStatement(string $statement): bool
     {
         $reflection = new \ReflectionMethod(Cwmrestore::class, 'isSafeRestoreStatement');
@@ -36,6 +46,13 @@ class CwmrestoreTest extends ProclaimTestCase
         return $reflection->invoke(null, $statement);
     }
 
+    /**
+     * Statement shapes Cwmbackup produces, which the check must accept.
+     *
+     * @return  array<string, array{0: string}>  Each statement
+     *
+     * @since   10.5.6
+     */
     public static function legitimateStatementProvider(): array
     {
         return [
@@ -63,12 +80,29 @@ class CwmrestoreTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * Every statement shape Cwmbackup produces is accepted.
+     *
+     * @param   string  $statement  A statement Cwmbackup produces
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('legitimateStatementProvider')]
     public function testAcceptsStatementShapesCwmbackupActuallyGenerates(string $statement): void
     {
         $this->assertTrue(self::isSafeRestoreStatement($statement), 'rejected a statement shape Cwmbackup legitimately produces: ' . $statement);
     }
 
+    /**
+     * Statements outside what Cwmbackup produces, which the check must refuse.
+     *
+     * @return  array<string, array{0: string}>  Each statement
+     *
+     * @since   10.5.6
+     */
     public static function maliciousStatementProvider(): array
     {
         return [
@@ -85,12 +119,32 @@ class CwmrestoreTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * A statement outside Cwmbackup's known shapes is refused.
+     *
+     * @param   string  $statement  A statement the check must refuse
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('maliciousStatementProvider')]
     public function testRejectsStatementsOutsideCwmbackupsKnownShapes(string $statement): void
     {
         $this->assertFalse(self::isSafeRestoreStatement($statement), 'accepted a statement that should have been rejected: ' . $statement);
     }
 
+    /**
+     * The source of one Cwmrestore method.
+     *
+     * @param   string  $method  The method's name
+     *
+     * @return  string  Its source, from the signature to the closing brace
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private static function methodBody(string $method): string
     {
         $reflection = new \ReflectionMethod(Cwmrestore::class, $method);
@@ -102,6 +156,14 @@ class CwmrestoreTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * restoreDB() runs the safety check before it executes a statement.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testRestoreDbCallsTheSafetyCheckBeforeExecuting(): void
     {
         $body = self::methodBody('restoreDB');
@@ -109,6 +171,14 @@ class CwmrestoreTest extends ProclaimTestCase
         $this->assertMatchesRegularExpression('/isSafeRestoreStatement\(/', $body);
     }
 
+    /**
+     * installdb() runs the safety check before it executes a statement.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testInstalldbCallsTheSafetyCheckBeforeExecuting(): void
     {
         $body = self::methodBody('installdb');
@@ -128,6 +198,11 @@ class CwmrestoreTest extends ProclaimTestCase
      * top of importdb() was permanently false, making "restore from
      * server backup folder" dead on arrival. getCmd()'s 'cmd' filter
      * allows [A-Za-z0-9_.-], which matches the actual filename format.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testImportdbReadsBackupRestoreViaGetCmdNotGetWord(): void
     {
@@ -150,6 +225,10 @@ class CwmrestoreTest extends ProclaimTestCase
      * Proves the actual bug, not just the code shape: Joomla's 'word' filter
      * mangles a realistic backup filename into something that can never
      * contain '.sql', while 'cmd' passes it through unchanged.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testWordFilterCannotSurviveARealBackupFilenameButCmdFilterCan(): void
     {
@@ -164,6 +243,13 @@ class CwmrestoreTest extends ProclaimTestCase
         $this->assertSame($filename, $filter->clean($filename, 'cmd'));
     }
 
+    /**
+     * importdb() and restoreDB() declare typed parameters.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testImportdbAndRestoreDbHaveTypedParameters(): void
     {
         $importdb = new \ReflectionMethod(Cwmrestore::class, 'importdb');
@@ -176,6 +262,10 @@ class CwmrestoreTest extends ProclaimTestCase
     /**
      * tablesToBlob()/tablesToText() were grep-confirmed unused anywhere in
      * the repo -- dead code found during the same review as #1523.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testDeadTableConversionMethodsAreRemoved(): void
     {
@@ -187,6 +277,11 @@ class CwmrestoreTest extends ProclaimTestCase
      * importdb() and restoreDB() built the com_installer DatabaseModel via
      * `new DatabaseModel()`, inconsistent with the MVCFactory-based
      * UpdateModel creation three lines below it in the same method.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testDatabaseModelIsCreatedViaMvcFactory(): void
     {
@@ -208,6 +303,10 @@ class CwmrestoreTest extends ProclaimTestCase
      * The shared scripture tables belong to lib_cwmscripture, not to this
      * component. They are swept into the prefix-driven table list only because
      * the library inherited Proclaim's `bsms_` naming.
+     *
+     * @return  array<string, array{0: string}>  Each shared table's name
+     *
+     * @since   10.5.10
      */
     public static function preservedTableProvider(): array
     {
@@ -219,6 +318,15 @@ class CwmrestoreTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * The shared scripture tables are left out of the drop phase.
+     *
+     * @param   string  $table  A shared scripture table
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     #[DataProvider('preservedTableProvider')]
     public function testSharedScriptureTablesAreExcludedFromTheDropPhase(string $table): void
     {
@@ -239,6 +347,10 @@ class CwmrestoreTest extends ProclaimTestCase
      * and replaced from the backup. That made the Local Translations panel wrong
      * in both directions -- orphaned verses reported as not installed, or
      * translations reported installed with no verses behind them.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
      */
     public function testTheVerseTableAndItsCatalogueArePreservedTogether(): void
     {
@@ -256,6 +368,10 @@ class CwmrestoreTest extends ProclaimTestCase
      * INSERT statements for it. isSafeRestoreStatement() is a security
      * allow-list -- it asks whether the target is a Proclaim table, not whether
      * it is preserved -- so those rows landed in the "preserved" table anyway.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
      */
     public function testStatementsTargetingAPreservedTableAreSkipped(): void
     {
@@ -274,6 +390,11 @@ class CwmrestoreTest extends ProclaimTestCase
     /**
      * Both execution loops must skip preserved tables. Guarding only one leaves
      * the other restore path overwriting the rows.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     * @throws  \ReflectionException
      */
     public function testBothRestorePathsSkipPreservedTables(): void
     {
@@ -292,6 +413,11 @@ class CwmrestoreTest extends ProclaimTestCase
      * CwmdbHelper::getObjects() was corrected to an anchored prefix match after
      * an unanchored substr_count() matched a sibling install's table on shared
      * hosting and yielded a mangled `#__s_bsms_studies`. This copy kept the bug.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     * @throws  \ReflectionException
      */
     public function testTableDiscoveryIsAnchoredToThePrefix(): void
     {

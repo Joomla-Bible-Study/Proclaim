@@ -31,12 +31,22 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class AliasUniquenessCheckTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.4
+     */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database. Otherwise load the component's language, so a
+     * refusal reads as text, and open a transaction for the test's rows.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -55,6 +65,8 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the test's rows.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -76,6 +88,8 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     }
 
     /**
+     * A new message with an alias another message holds is refused, naming and linking that message.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -93,6 +107,8 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     }
 
     /**
+     * When the holder is trashed, the refusal says so.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -110,6 +126,9 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     }
 
     /**
+     * A holder the user cannot see in the admin list is not named; the refusal
+     * says only that the alias is taken.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -128,6 +147,8 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     }
 
     /**
+     * Outside the administrator the holder is not named, even to a super user.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -146,6 +167,8 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     }
 
     /**
+     * Re-saving a message with the alias it already has passes.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -163,6 +186,8 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     }
 
     /**
+     * A new series with an alias another series holds is refused, naming and linking that series.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -230,10 +255,12 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     }
 
     /**
+     * A message table holding the given title and alias, ready to check.
+     *
      * @param   string  $title  Message title
      * @param   string  $alias  Message alias
      *
-     * @return  CwmmessageTable
+     * @return  CwmmessageTable  The table
      *
      * @since   10.7.4
      */
@@ -248,6 +275,8 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a row straight into a table.
+     *
      * @param   string                $table   The table
      * @param   array<string, mixed>  $values  Column values; access and language default to public and all
      *

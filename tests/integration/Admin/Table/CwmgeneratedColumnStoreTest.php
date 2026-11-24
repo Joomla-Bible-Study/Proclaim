@@ -37,24 +37,36 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmgeneratedColumnStoreTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  mixed
+     * The language Factory held before the test replaced it.
+     *
+     * @var    mixed
+     * @since  10.5.6
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
      * Rows this test created, as table => ids, for the explicit cleanup below.
      *
-     * @var  array<string, int[]>
+     * @var    array<string, int[]>
+     * @since  10.5.6
      */
     private array $created = [];
 
     /**
+     * Skip without a test database. Otherwise silence the date-language
+     * warnings and open a transaction for the test's rows.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -71,7 +83,12 @@ class CwmgeneratedColumnStoreTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the test's rows and remove any it created outside the
+     * transaction.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -94,6 +111,14 @@ class CwmgeneratedColumnStoreTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * A message that has both a series and an episode number can still be re-stored.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Throwable
+     */
     #[TestDox('A message that has both a series and an episode number can still be re-stored')]
     public function testMessageWithGeneratedUniquenessValueStores(): void
     {
@@ -114,6 +139,13 @@ class CwmgeneratedColumnStoreTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A playlist that has a remote ID can still be re-stored.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A playlist that has a remote ID can still be re-stored')]
     public function testPlaylistWithGeneratedUniquenessValueStores(): void
     {
@@ -152,6 +184,8 @@ class CwmgeneratedColumnStoreTest extends IntegrationTestCase
      * before that point is already durable when the rollback runs.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function purgeCreatedRows(): void
     {
@@ -194,6 +228,8 @@ class CwmgeneratedColumnStoreTest extends IntegrationTestCase
      * @param   string  $column  Column name.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function requireColumn(string $table, string $column): void
     {
@@ -210,6 +246,8 @@ class CwmgeneratedColumnStoreTest extends IntegrationTestCase
      * Seed a published study inside a real series, carrying an episode number.
      *
      * @return  int  Study ID.
+     *
+     * @since   10.5.6
      */
     private function seedNumberedStudy(): int
     {

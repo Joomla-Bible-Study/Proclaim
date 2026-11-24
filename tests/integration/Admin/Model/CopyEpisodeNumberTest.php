@@ -34,12 +34,22 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CopyEpisodeNumberTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.4
+     */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database. Otherwise load the component's language, so
+     * the refusal reads as text rather than its key, and open a transaction.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -58,6 +68,8 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the seeded rows.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -76,6 +88,9 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     }
 
     /**
+     * A copy that keeps its series and episode number is numbered next in the
+     * series, and passes check().
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -94,6 +109,9 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     }
 
     /**
+     * An episode number the user typed that another message in the series holds
+     * is refused.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -156,6 +174,8 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published series.
+     *
      * @return  int  The new series id
      *
      * @since   10.7.4
@@ -176,6 +196,8 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published message in a series, with an episode number.
+     *
      * @param   int     $series  The message's series
      * @param   string  $number  Its episode number
      *

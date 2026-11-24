@@ -156,6 +156,12 @@ class CwmimportremoverTest extends IntegrationTestCase
     /**
      * A minimal server row, only for exercising the "location used by a
      * server" external-reference check — not a real, playable server.
+     *
+     * @param   int  $locationId  The location the server row points at.
+     *
+     * @return  int  The new server's id.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function seedServerAtLocation(int $locationId): int
     {
@@ -173,8 +179,16 @@ class CwmimportremoverTest extends IntegrationTestCase
     }
 
     /**
-     * @return  string  A fresh, manifest-recorded tag for teacher/series/study
-     *                   ids created together, with the study crediting the teacher.
+     * Record a teacher, a series and a study under one fresh manifest tag, with
+     * the study crediting the teacher.
+     *
+     * @param   int  $teacherId  The teacher's id.
+     * @param   int  $seriesId   The series' id.
+     * @param   int  $studyId    The study's id.
+     *
+     * @return  string  The manifest tag the three rows were recorded under.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function seedCleanSet(int $teacherId, int $seriesId, int $studyId): string
     {
@@ -190,7 +204,15 @@ class CwmimportremoverTest extends IntegrationTestCase
     }
 
     /**
-     * @param   array  $plan  As returned by {@see Cwmimportremover::plan()}.
+     * The action a removal plan takes for one row.
+     *
+     * @param   array   $plan   A plan, as Cwmimportremover::plan() returns it.
+     * @param   string  $table  The row's table.
+     * @param   int     $id     The row's id.
+     *
+     * @return  ?string  The planned action, or null when the plan doesn't include the row.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function actionFor(array $plan, string $table, int $id): ?string
     {
@@ -204,7 +226,15 @@ class CwmimportremoverTest extends IntegrationTestCase
     }
 
     /**
-     * @param   array  $plan  As returned by {@see Cwmimportremover::plan()}.
+     * A removal plan's entry for one row.
+     *
+     * @param   array   $plan   A plan, as Cwmimportremover::plan() returns it.
+     * @param   string  $table  The row's table.
+     * @param   int     $id     The row's id.
+     *
+     * @return  ?array  The entry, or null when the plan doesn't include the row.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function entryFor(array $plan, string $table, int $id): ?array
     {

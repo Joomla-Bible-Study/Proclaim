@@ -23,19 +23,28 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * The setup wizard's default-creation loops bind the row type in each
+ * existence check, and those checks execute against the real database.
+ *
+ * @since  10.7.1
  */
 class CwmsetupwizardModelBindTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseInterface|null
-     * @since 10.7.1
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database. Otherwise open a transaction, since both
+     * methods insert when nothing exists yet.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     protected function setUp(): void
     {
@@ -51,8 +60,11 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back anything the wizard inserted.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     protected function tearDown(): void
     {
@@ -87,8 +99,11 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
     }
 
     /**
+     * createDefaultServers()'s bound per-type existence check executes.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     #[TestDox("createDefaultServers()'s bound per-type existence check executes")]
     public function testCreateDefaultServersBoundTypeCheckExecutes(): void
@@ -102,8 +117,11 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
     }
 
     /**
+     * registerScheduledTasks()'s bound per-type existence check executes.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     #[TestDox("registerScheduledTasks()'s bound per-type existence check executes")]
     public function testRegisterScheduledTasksBoundTypeCheckExecutes(): void

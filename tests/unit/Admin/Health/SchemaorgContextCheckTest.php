@@ -76,6 +76,13 @@ class SchemaorgContextCheckTest extends ProclaimTestCase
         return (array) $reflection->getConstant('NON_CANONICAL');
     }
 
+    /**
+     * The health check knows every non-canonical context the plugin maps.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('The health check knows every non-canonical context the plugin maps')]
     public function testCheckListMatchesThePlugin(): void
     {
@@ -96,6 +103,13 @@ class SchemaorgContextCheckTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Every non-canonical context names a component Proclaim owns.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('Every non-canonical context names a component Proclaim owns')]
     public function testContextsAreProclaimContexts(): void
     {

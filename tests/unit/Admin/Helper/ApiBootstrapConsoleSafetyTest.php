@@ -41,6 +41,8 @@ class ApiBootstrapConsoleSafetyTest extends TestCase
      * @param   string  $line  A line of source.
      *
      * @return  bool
+     *
+     * @since   10.5.8
      */
     private static function isUnguardedCall(string $line): bool
     {
@@ -54,7 +56,11 @@ class ApiBootstrapConsoleSafetyTest extends TestCase
     }
 
     /**
-     * @return string
+     * The source of admin/api.php.
+     *
+     * @return  string  Its contents
+     *
+     * @since   10.5.8
      */
     private static function source(): string
     {
@@ -66,6 +72,10 @@ class ApiBootstrapConsoleSafetyTest extends TestCase
      *
      * Checked by indentation: this file is a procedural bootstrap, so anything
      * at column zero runs unconditionally. A `getDocument()` there is the bug.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testNoUnconditionalDocumentAccess(): void
     {
@@ -86,7 +96,14 @@ class ApiBootstrapConsoleSafetyTest extends TestCase
         );
     }
 
-    /** And the guard has to be the one that actually implies a document. */
+    /**
+     * The guard is the interface that actually implies a document:
+     * CMSWebApplicationInterface, which declares getDocument().
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testTheGuardIsTheInterfaceThatDeclaresGetDocument(): void
     {
         $this->assertStringContainsString(
@@ -100,6 +117,10 @@ class ApiBootstrapConsoleSafetyTest extends TestCase
     /**
      * Guards the scan above. A test that finds nothing proves nothing unless it
      * is known to find something.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testTheDetectorWorks(): void
     {

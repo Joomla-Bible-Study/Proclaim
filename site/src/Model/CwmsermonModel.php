@@ -19,11 +19,13 @@ namespace CWM\Component\Proclaim\Site\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Joomla\CMS\Captcha\Captcha;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\User\User;
 use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
@@ -36,6 +38,15 @@ use Joomla\Registry\Registry;
  */
 class CwmsermonModel extends FormModel
 {
+    /**
+     * Name of the comment form, which is also the namespace of its captcha.
+     *
+     * @var    string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private const string COMMENT_FORM = 'com_proclaim.comment';
+
     /**
      * Model context string.
      *
@@ -385,6 +396,52 @@ class CwmsermonModel extends FormModel
     }
 
     /**
+     * The captcha plugin that guards the comment form, chosen as Joomla's captcha
+     * field chooses it: Proclaim's Captcha option, then the site's default captcha.
+     *
+     * ⚠️ A plugin that isn't enabled counts as none, so a comment is never refused
+     * for a captcha the form can't show.
+     *
+     * @return  string  The plugin name, or an empty string when comments need no captcha.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Exception  When the application can't be loaded.
+     */
+    public function getCommentCaptcha(): string
+    {
+        $app    = Factory::getApplication();
+        $plugin = $app->get('captcha', '0');
+
+        if ($app->isClient('site')) {
+            $plugin = $app->getParams()->get('captcha', $plugin);
+        }
+
+        $plugin = (string) $plugin;
+
+        if ($plugin === '' || $plugin === '0' || !PluginHelper::isEnabled('captcha', $plugin)) {
+            return '';
+        }
+
+        return $plugin;
+    }
+
+    /**
+     * Check a comment's captcha answer with the plugin that displayed the captcha.
+     *
+     * @param   string  $plugin  The captcha plugin, from getCommentCaptcha().
+     * @param   string  $answer  The value posted for the comment form's captcha field.
+     *
+     * @return  bool  True when the plugin accepts the answer.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \RuntimeException  When the plugin can't be loaded or reports an error.
+     */
+    public function checkCommentCaptcha(string $plugin, string $answer): bool
+    {
+        return (bool) Captcha::getInstance($plugin, ['namespace' => self::COMMENT_FORM])->checkAnswer($answer);
+    }
+
+    /**
      * Method to store a record
      *
      * @return    bool    True on success
@@ -444,7 +501,7 @@ class CwmsermonModel extends FormModel
      */
     public function getForm($data = [], $loadData = true): Form
     {
-        return $this->loadForm('com_proclaim.comment', 'comment', ['control' => 'jform', 'load_data' => $loadData]);
+        return $this->loadForm(self::COMMENT_FORM, 'comment', ['control' => 'jform', 'load_data' => $loadData]);
     }
 
     /**

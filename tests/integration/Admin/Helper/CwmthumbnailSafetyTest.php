@@ -46,10 +46,30 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(Cwmthumbnail::class)]
 class CwmthumbnailSafetyTest extends IntegrationTestCase
 {
+    /**
+     * The studies image folder under the site root.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $studiesDir;
 
+    /**
+     * The folders setUp() created, for tearDown() to remove.
+     *
+     * @var    string[]
+     * @since  10.5.6
+     */
     private array $createdDirs = [];
 
+    /**
+     * Create whichever of the images, biblestudy and studies folders are missing, noting each
+     * for removal.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -64,6 +84,14 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * Delete the test's source and thumbnail files, then remove the folders setUp() created,
+     * deepest first, when they are empty.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         // Both the sources and the thumb_-prefixed variants the helper writes.
@@ -86,6 +114,8 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
      * @param   string  $path  Destination
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function writeJpeg(string $path): void
     {
@@ -108,6 +138,10 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
      * takes the path from request input, so this is the boundary.
      *
      * @param   string  $path  Attacker-shaped path
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('outOfScopePathProvider')]
     #[TestDox('resize() refuses a path outside the allowed image directories')]
@@ -120,7 +154,12 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
     }
 
     /**
-     * @return array<string, array{0: string}>
+     * Paths resize() must refuse: a traversal out of the image tree, an unrelated images
+     * folder, an absolute path outside the site, and the administrator directory.
+     *
+     * @return  array<string, array{0: string}>  Each path
+     *
+     * @since   10.5.6
      */
     public static function outOfScopePathProvider(): array
     {
@@ -136,6 +175,10 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
      * deleteFolder() previously used str_starts_with() + Path::clean(), and
      * Path::clean() leaves '..' intact — so a path that merely *started* with
      * an allowed prefix could still resolve elsewhere.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('deleteFolder() refuses a traversal that starts with an allowed prefix')]
     public function testDeleteFolderRefusesTraversalBehindAnAllowedPrefix(): void
@@ -146,6 +189,13 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * deleteFolder() returns true for a studies folder that doesn't exist.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('deleteFolder() still accepts a legitimate in-scope folder')]
     public function testDeleteFolderStillAcceptsInScopePaths(): void
     {
@@ -159,6 +209,14 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
     // Findings 2 & 3 -- resize() reports truthfully and keeps the old thumbnail
     // -------------------------------------------------------------------------
 
+    /**
+     * resize() returns true for a real JPEG, keeps the source, and writes a thumb_ thumbnail
+     * beside it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('resize() produces a thumbnail and reports success for a real image')]
     public function testResizeSucceedsForARealImage(): void
     {
@@ -179,6 +237,10 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
     /**
      * The ordering guarantee: an unusable source must not cost the existing
      * thumbnail. Pre-fix, old thumbnails were deleted before the encode.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('A failed resize leaves the previous thumbnail intact')]
     public function testFailedResizeKeepsThePreviousThumbnail(): void
@@ -212,6 +274,10 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
      * and a writable destination tree), so the ordering contract is pinned
      * structurally: the superseded files must be collected, and deleted only
      * after the thumbnail write is confirmed.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('create() defers deletion of superseded files until after the writes')]
     public function testCreateDeletesSupersededFilesOnlyAfterWriting(): void
@@ -244,6 +310,10 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
     /**
      * Every Image::toFile() call must have its return value considered; the
      * bug was that none of them did.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Image::toFile() return values are checked, not discarded')]
     public function testToFileReturnValuesAreChecked(): void

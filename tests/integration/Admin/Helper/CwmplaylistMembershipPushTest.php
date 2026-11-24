@@ -35,7 +35,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class CwmplaylistMembershipPushTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.3.3
      */
     private ?DatabaseDriver $db = null;
 
@@ -44,16 +47,23 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * replaced it, so tearDown() can restore process-wide state.
      *
      * @var mixed
+     * @since  10.5.6
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
-     * @var  int
+     * The id of the YouTube server setUp() inserts.
+     *
+     * @var    int
+     * @since  10.3.3
      */
     private int $serverId = 0;
 
     /**
-     * @var  int
+     * The id of the series setUp() inserts, which the test's studies and playlists link to.
+     *
+     * @var    int
+     * @since  10.3.3
      */
     private int $seriesId = 0;
 
@@ -61,6 +71,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * Begin a transaction and seed a YouTube server + a linked series.
      *
      * @return  void
+     *
+     * @since   10.3.3
      */
     protected function setUp(): void
     {
@@ -83,6 +95,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * Roll back everything this test inserted.
      *
      * @return  void
+     *
+     * @since   10.3.3
      */
     protected function tearDown(): void
     {
@@ -105,6 +119,9 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * video is left alone.
      *
      * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
      */
     public function testPushAddsMissingSeriesVideosAndBackfillsJunction(): void
     {
@@ -150,6 +167,9 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * touching the junction table.
      *
      * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
      */
     public function testDryRunReportsWithoutWriting(): void
     {
@@ -171,6 +191,9 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * A playlist not opted in to write-back is a no-op.
      *
      * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
      */
     public function testWritebackDisabledIsNoOp(): void
     {
@@ -189,6 +212,9 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * A playlist with no linked series has nothing to drive membership from.
      *
      * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
      */
     public function testNoLinkedSeriesIsNoOp(): void
     {
@@ -207,6 +233,9 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * Unpublished media and media on a different server are not candidates.
      *
      * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
      */
     public function testOnlyPublishedSameServerMediaAreCandidates(): void
     {
@@ -234,6 +263,9 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * A quota error stops the run early instead of hammering the failing API.
      *
      * @return  void
+     *
+     * @since   10.3.3
+     * @throws  \Exception
      */
     public function testQuotaErrorStopsRunEarly(): void
     {
@@ -264,36 +296,90 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * @param   array<string,array{success:bool,error?:string,fatal?:bool}>  $results  Result map.
      *
      * @return  CWMAddon
+     *
+     * @since   10.3.3
      */
     private function fakeAddon(array $results = []): CWMAddon
     {
         return new class ($results) extends CWMAddon {
-            /** @var array<int,array{videoId:string,playlistId:string}> */
+            /**
+             * Each membership push the double received, as its video id and playlist id.
+             *
+             * @var    array<int,array{videoId:string,playlistId:string}>
+             * @since  10.3.3
+             */
             public array $calls = [];
 
-            /** @var array<string,array{success:bool,error?:string,fatal?:bool}> */
+            /**
+             * The result to give each video's push, by video id, with __default__ for any other.
+             *
+             * @var    array<string,array{success:bool,error?:string,fatal?:bool}>
+             * @since  10.3.3
+             */
             private array $results;
 
+            /**
+             * Hold the results to give each push.
+             *
+             * @param   array<string,array{success:bool,error?:string,fatal?:bool}>  $results  Result map.
+             *
+             * @since   10.3.3
+             */
             public function __construct(array $results = [])
             {
                 $this->results = $results;
             }
 
+            /**
+             * Report that the double supports playlists.
+             *
+             * @return  bool  Always true
+             *
+             * @since   10.3.3
+             */
             public function supportsPlaylists(): bool
             {
                 return true;
             }
 
+            /**
+             * Report that the double can write playlists back.
+             *
+             * @return  bool  Always true
+             *
+             * @since   10.3.3
+             */
             public function supportsPlaylistWriteback(): bool
             {
                 return true;
             }
 
+            /**
+             * Extract the media id the way the YouTube addon does.
+             *
+             * @param   string  $text  A media URL or bare ID.
+             *
+             * @return  string|null  The platform media ID, or null.
+             *
+             * @since   10.3.3
+             */
             public function extractRemoteMediaId(string $text): ?string
             {
                 return CWMAddonYoutube::extractMediaId($text);
             }
 
+            /**
+             * Record the push, and return the result given for its video, else the __default__
+             * result, else success.
+             *
+             * @param   int     $serverId          The server record ID.
+             * @param   string  $remotePlaylistId  The platform playlist ID.
+             * @param   string  $remoteVideoId     The platform video ID to add.
+             *
+             * @return  array{success: bool, error?: string, fatal?: bool}  The push result
+             *
+             * @since   10.3.3
+             */
             public function addPlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
             {
                 $this->calls[] = ['videoId' => $remoteVideoId, 'playlistId' => $remotePlaylistId];
@@ -303,16 +389,45 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
                     ?? ['success' => true];
             }
 
+            /**
+             * Render no general form.
+             *
+             * @param   object  $media_form  Media files form
+             * @param   bool    $new         If media is new
+             *
+             * @return  string  An empty string
+             *
+             * @since   10.3.3
+             */
             public function renderGeneral(object $media_form, bool $new): string
             {
                 return '';
             }
 
+            /**
+             * Render no form.
+             *
+             * @param   object  $media_form  Media files form
+             * @param   bool    $new         If media is new
+             *
+             * @return  string  An empty string
+             *
+             * @since   10.3.3
+             */
             public function render(object $media_form, bool $new): string
             {
                 return '';
             }
 
+            /**
+             * Upload nothing.
+             *
+             * @param   \Joomla\Input\Input  $data  Data to upload, unused
+             *
+             * @return  mixed  Always null
+             *
+             * @since   10.3.3
+             */
             protected function upload(\Joomla\Input\Input $data): mixed
             {
                 return null;
@@ -324,6 +439,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * Insert a published YouTube server.
      *
      * @return  int  Server ID.
+     *
+     * @since   10.3.3
      */
     private function insertServer(): int
     {
@@ -345,6 +462,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * Insert a published series.
      *
      * @return  int  Series ID.
+     *
+     * @since   10.3.3
      */
     private function insertSeries(): int
     {
@@ -371,6 +490,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * @param   int|null $serverId   Override server (defaults to the seeded one).
      *
      * @return  int  The media file ID.
+     *
+     * @since   10.3.3
      */
     private function insertSeriesMedia(string $url, string $title, int $published = 1, ?int $serverId = null): int
     {
@@ -412,6 +533,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * @param   int       $writebackEnabled   Write-back opt-in flag.
      *
      * @return  int  Playlist ID.
+     *
+     * @since   10.3.3
      */
     private function insertPlaylist(?int $seriesId, int $writebackEnabled): int
     {
@@ -443,6 +566,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * @param   int     $position     Position in the playlist.
      *
      * @return  void
+     *
+     * @since   10.3.3
      */
     private function insertJunction(int $playlistId, string $videoId, int $mediafileId, int $position): void
     {
@@ -463,6 +588,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * @param   int  $playlistId  Playlist ID.
      *
      * @return  object[]
+     *
+     * @since   10.3.3
      */
     private function junctionRows(int $playlistId): array
     {
