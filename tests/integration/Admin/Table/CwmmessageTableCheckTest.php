@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * CwmmessageTable::check() requires a title, and refuses an episode number
  * another message in the series already holds.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmmessageTable::class)]
 class CwmmessageTableCheckTest extends IntegrationTestCase
@@ -28,7 +28,7 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmmessageTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmmessageTable $table;
 
@@ -70,7 +70,7 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -170,7 +170,7 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPassesWithValidData(): void
     {
@@ -183,7 +183,7 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenStudytitleNull(): void
     {
@@ -197,7 +197,7 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenStudytitleEmpty(): void
     {
@@ -211,7 +211,7 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenStudytitleWhitespace(): void
     {

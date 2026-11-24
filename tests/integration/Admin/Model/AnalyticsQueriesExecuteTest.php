@@ -34,7 +34,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * every breakdown column populated. A query that executes must find them; a
  * query that died cannot.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 #[CoversClass(CwmanalyticsModel::class)]
 class AnalyticsQueriesExecuteTest extends IntegrationTestCase
@@ -43,7 +43,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      * The first day of the window, in 2030 so that no real event falls inside it.
      *
      * @var    string
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private const START = '2030-06-01';
 
@@ -51,7 +51,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      * The last day of the window.
      *
      * @var    string
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private const END = '2030-06-30';
 
@@ -59,7 +59,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseDriver|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?DatabaseDriver $db = null;
 
@@ -67,7 +67,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      * The analytics model under test, constructed directly.
      *
      * @var    CwmanalyticsModel|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?CwmanalyticsModel $model = null;
 
@@ -75,7 +75,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      * The id of the seeded series.
      *
      * @var    int
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private int $seriesId = 0;
 
@@ -83,7 +83,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      * The id of the seeded message.
      *
      * @var    int
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private int $studyId = 0;
 
@@ -91,7 +91,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      * The id of the seeded media file.
      *
      * @var    int
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private int $mediaId = 0;
 
@@ -101,7 +101,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \Exception
      */
     protected function setUp(): void
@@ -129,7 +129,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     protected function tearDown(): void
     {
@@ -152,7 +152,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     private function seed(): void
     {
@@ -219,7 +219,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('the KPI totals count the seeded events')]
     public function testKpiTotals(): void
@@ -236,7 +236,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('the time series buckets the seeded day')]
     public function testTimeSeries(): void
@@ -253,7 +253,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('the study rankings find the seeded message')]
     public function testTopStudies(): void
@@ -278,7 +278,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('every breakdown finds the seeded event')]
     public function testBreakdowns(): void
@@ -309,7 +309,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('the drill-down queries find the seeded rows')]
     public function testDrillDowns(): void
@@ -327,7 +327,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('the raw-SQL lists still find the seeded rows')]
     public function testRawSqlLists(): void
@@ -347,7 +347,7 @@ class AnalyticsQueriesExecuteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('the CSV export carries the seeded rows')]
     public function testCsvExport(): void

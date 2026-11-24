@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * does not exist on the versions Proclaim supports, so the wizard fataled and
  * no test noticed, because nothing ran the method.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class CwmsetupwizardPodcastTest extends IntegrationTestCase
 {
@@ -32,7 +32,7 @@ class CwmsetupwizardPodcastTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseInterface|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?DatabaseInterface $db = null;
 
@@ -40,7 +40,7 @@ class CwmsetupwizardPodcastTest extends IntegrationTestCase
      * Factory::$language as it was before setUp() pinned it, for tearDown() to restore.
      *
      * @var    mixed
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -48,7 +48,7 @@ class CwmsetupwizardPodcastTest extends IntegrationTestCase
      * The site's live_site setting, which setUp() empties and tearDown() restores.
      *
      * @var    mixed
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private mixed $previousLiveSite = null;
 
@@ -58,7 +58,7 @@ class CwmsetupwizardPodcastTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \Exception
      */
     protected function setUp(): void
@@ -89,7 +89,7 @@ class CwmsetupwizardPodcastTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \Exception
      */
     protected function tearDown(): void
@@ -113,7 +113,7 @@ class CwmsetupwizardPodcastTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \ReflectionException
      */
     #[TestDox('createPodcastRecord() falls back to the site root when live_site is empty')]

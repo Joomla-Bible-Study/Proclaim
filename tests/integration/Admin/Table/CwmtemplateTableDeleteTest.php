@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * CwmtemplateTable::delete() refuses the default template.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmtemplateTable::class)]
 class CwmtemplateTableDeleteTest extends IntegrationTestCase
@@ -26,7 +26,7 @@ class CwmtemplateTableDeleteTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmtemplateTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmtemplateTable $table;
 
@@ -35,7 +35,7 @@ class CwmtemplateTableDeleteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -48,7 +48,7 @@ class CwmtemplateTableDeleteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testDeleteBlocksDefaultTemplateId1(): void
     {
@@ -62,7 +62,7 @@ class CwmtemplateTableDeleteTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testDeleteAllowsNonDefaultTemplate(): void
     {

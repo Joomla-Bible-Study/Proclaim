@@ -166,7 +166,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('An old item URL refers to the message, with no menu item: the router picks one as for any message link')]
@@ -186,7 +186,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('An old item URL with a bare id, with or without a template id, refers to the message')]
@@ -204,7 +204,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('An old item URL means the same at the site root, in a subfolder and behind index.php')]
@@ -223,7 +223,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('Old teacher and series URLs refer to the teacher and the series')]
@@ -247,7 +247,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('On a list view a bare number may be a template id, so only <id>-<alias> is read as a record')]
@@ -269,7 +269,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('A missing, unpublished or trashed record is left to the router; an archived one is redirected')]
@@ -291,7 +291,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('Addresses the router builds are not read as old URLs')]
@@ -337,7 +337,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('A bare number under a published menu item aliased "sermon" is left to the router')]
@@ -355,7 +355,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.5
      * @throws  \ReflectionException
      */
     #[TestDox('A current task URL under a menu item aliased "sermons" is left to the router')]
@@ -371,7 +371,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.5
      * @throws  \ReflectionException
      */
     #[TestDox('An old download URL still redirects, naming its controller once')]
@@ -389,7 +389,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.5
      * @throws  \ReflectionException
      */
     #[TestDox('A task that is not an old one, or a media id with no task, is left to the router')]
@@ -404,7 +404,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('An old landing URL under a message list keeps that list, filter applied')]
@@ -421,7 +421,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     #[TestDox('An old landing URL anywhere else leaves the choice of message list to the router')]
@@ -448,7 +448,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  ?string  The internal URL the plugin would redirect an old URL to, or null
      *
-     * @since   10.7.5
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     private function targetFor(string $path, string $task = '', int $mid = 0): ?string
@@ -466,7 +466,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  array<string, string>  The query of the internal URL the plugin would redirect to
      *
-     * @since   10.7.3
+     * @since   10.7.7
      * @throws  \ReflectionException
      */
     private function queryFor(string $path, string $task = '', int $mid = 0): array
@@ -489,7 +489,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      *
      * @return  array<string, string>  The query of a record's internal URL, with no menu item
      *
-     * @since   10.7.5
+     * @since   10.7.7
      */
     private function recordQuery(string $view, int $id): array
     {

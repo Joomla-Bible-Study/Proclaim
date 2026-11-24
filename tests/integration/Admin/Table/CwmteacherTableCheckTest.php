@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * CwmteacherTable::check() requires a name.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmteacherTable::class)]
 class CwmteacherTableCheckTest extends IntegrationTestCase
@@ -26,7 +26,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmteacherTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmteacherTable $table;
 
@@ -35,7 +35,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -48,7 +48,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPassesWithValidData(): void
     {
@@ -61,7 +61,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenTeachernameNull(): void
     {
@@ -75,7 +75,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenTeachernameEmpty(): void
     {
@@ -89,7 +89,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenTeachernameWhitespace(): void
     {
@@ -103,7 +103,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPassesWithUniqueAlias(): void
     {
@@ -117,7 +117,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckAutoPrependsHttpsToUrls(): void
     {
@@ -132,7 +132,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPreservesExistingHttpsUrls(): void
     {
@@ -147,7 +147,7 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPreservesExistingHttpUrls(): void
     {

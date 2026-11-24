@@ -20,7 +20,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 /**
  * The settings a podcast can't be stored without, and the error naming each one.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmpodcastTable::class)]
 class CwmpodcastTableCheckTest extends IntegrationTestCase
@@ -41,7 +41,7 @@ class CwmpodcastTableCheckTest extends IntegrationTestCase
      * The table under test, holding a complete podcast when each test starts.
      *
      * @var    CwmpodcastTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmpodcastTable $table;
 
@@ -52,7 +52,7 @@ class CwmpodcastTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -69,7 +69,7 @@ class CwmpodcastTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \Exception
      */
     public function testCheckPassesWithValidData(): void

@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * CwmtopicTable::check() requires a topic name.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmtopicTable::class)]
 class CwmtopicTableCheckTest extends IntegrationTestCase
@@ -26,7 +26,7 @@ class CwmtopicTableCheckTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmtopicTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmtopicTable $table;
 
@@ -35,7 +35,7 @@ class CwmtopicTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -48,7 +48,7 @@ class CwmtopicTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPassesWithValidData(): void
     {
@@ -61,7 +61,7 @@ class CwmtopicTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenTopicTextNull(): void
     {
@@ -75,7 +75,7 @@ class CwmtopicTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenTopicTextEmpty(): void
     {
@@ -89,7 +89,7 @@ class CwmtopicTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenTopicTextWhitespace(): void
     {

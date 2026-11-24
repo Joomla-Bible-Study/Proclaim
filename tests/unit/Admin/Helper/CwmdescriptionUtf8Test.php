@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * The description template's separator cleanup leaves multibyte characters whole,
  * still strips a real trailing separator, and keeps text that is already invalid UTF-8.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class CwmdescriptionUtf8Test extends ProclaimTestCase
 {
@@ -38,7 +38,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      *
      * @return  array<string, array{0: string}>
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     public static function trailingByteProvider(): array
     {
@@ -59,7 +59,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \ReflectionException
      */
     #[DataProvider('trailingByteProvider')]
@@ -77,7 +77,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \ReflectionException
      */
     #[TestDox('A genuine trailing separator is still removed')]
@@ -95,7 +95,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \ReflectionException
      */
     #[TestDox('Input that is already invalid UTF-8 is preserved, not blanked')]
@@ -118,7 +118,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
      *
      * @return  string  The filled-in description
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \ReflectionException
      */
     private function applyTemplate(string $format, array $data): string

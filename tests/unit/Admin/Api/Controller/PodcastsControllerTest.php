@@ -29,7 +29,7 @@ class PodcastsControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testGetModelNameMapping(): void
     {

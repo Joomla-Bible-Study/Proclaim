@@ -29,7 +29,7 @@ class SeriesControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testDisplayItemMethodExists(): void
     {
@@ -43,7 +43,7 @@ class SeriesControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testItemModelRequestedFlagExists(): void
     {
@@ -59,7 +59,7 @@ class SeriesControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testGetModelNameMapping(): void
     {

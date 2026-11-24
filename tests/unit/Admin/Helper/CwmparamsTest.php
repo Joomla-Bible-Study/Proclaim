@@ -17,7 +17,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * Test class for Cwmparams helper
  *
- * @since  10.0.0
+ * @since  10.1.0
  */
 class CwmparamsTest extends ProclaimTestCase
 {

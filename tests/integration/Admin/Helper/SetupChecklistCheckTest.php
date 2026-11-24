@@ -34,7 +34,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Exercised against the real settings row because the flag lives in
  * `#__bsms_admin` and the failure is entirely about reading it.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 #[CoversClass(SetupChecklistCheck::class)]
 class SetupChecklistCheckTest extends IntegrationTestCase

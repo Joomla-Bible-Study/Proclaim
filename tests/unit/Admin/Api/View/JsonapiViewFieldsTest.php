@@ -125,7 +125,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: class-string}>
      *
-     * @since   10.5.8
+     * @since   10.5.6
      */
     public static function viewProvider(): array
     {
