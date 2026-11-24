@@ -14,6 +14,13 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * validate() accepts a real image, and refuses a missing file, a file over the size or
+ * dimension limit, a type it doesn't allow, and an extension that doesn't match the
+ * content, giving each refusal its reason.
+ *
+ * @since  10.1.0
+ */
 #[CoversClass(Cwmthumbnail::class)]
 class CwmthumbnailValidateTest extends IntegrationTestCase
 {
@@ -21,9 +28,17 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
      * Temp files created during tests, cleaned up in tearDown.
      *
      * @var string[]
+     * @since  10.1.0
      */
     private array $tempFiles = [];
 
+    /**
+     * Remove the temporary files the test created.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     protected function tearDown(): void
     {
         foreach ($this->tempFiles as $file) {
@@ -53,6 +68,13 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         return $path;
     }
 
+    /**
+     * validate() refuses a file that doesn't exist, with an error saying it was not found.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testValidateReturnsErrorForNonexistentFile(): void
     {
         $result = Cwmthumbnail::validate('/nonexistent/path/image.png');
@@ -61,6 +83,13 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         $this->assertStringContainsString('not found', $result['error']);
     }
 
+    /**
+     * validate() accepts a small PNG, with no error.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testValidateReturnsValidForGoodImage(): void
     {
         $path   = $this->createTempPng();
@@ -70,6 +99,13 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         $this->assertNull($result['error']);
     }
 
+    /**
+     * validate() refuses a PNG over a 1-byte size limit, saying the size exceeds it.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testValidateReturnsErrorForOversizedFile(): void
     {
         $path   = $this->createTempPng();
@@ -79,6 +115,13 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         $this->assertStringContainsString('size exceeds', $result['error']);
     }
 
+    /**
+     * validate() refuses a text file as an invalid file type.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testValidateReturnsErrorForDisallowedMimeType(): void
     {
         $path = sys_get_temp_dir() . '/proclaim_test_' . uniqid() . '.txt';
@@ -91,6 +134,14 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         $this->assertStringContainsString('Invalid file type', $result['error']);
     }
 
+    /**
+     * validate() refuses a PNG saved with a .jpg extension, saying the extension does not
+     * match.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testValidateReturnsErrorForMismatchedExtension(): void
     {
         // Create a PNG but save with .jpg extension
@@ -105,6 +156,14 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         $this->assertStringContainsString('extension does not match', $result['error']);
     }
 
+    /**
+     * validate() refuses a PNG over a 1-pixel dimension limit, saying the dimensions exceed
+     * it.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testValidateReturnsErrorForOversizedDimensions(): void
     {
         $path   = $this->createTempPng();
@@ -114,6 +173,13 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         $this->assertStringContainsString('dimensions exceed', $result['error']);
     }
 
+    /**
+     * validate() returns an array with a valid key holding a boolean, and an error key.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testValidateReturnsCorrectArrayStructure(): void
     {
         $path   = $this->createTempPng();
@@ -124,6 +190,13 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         $this->assertIsBool($result['valid']);
     }
 
+    /**
+     * validate() refuses a PNG as an invalid file type when only JPEG is allowed.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testValidateWithCustomAllowedTypes(): void
     {
         $path   = $this->createTempPng();
