@@ -37,22 +37,38 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmproclaimFilterTextTest extends IntegrationTestCase
 {
     /**
-     * @var  mixed
+     * The application's identity before setUp() replaced it.
+     *
+     * @var    mixed
+     * @since  10.5.6
      */
     private mixed $savedIdentity = null;
 
     /**
-     * @var  mixed
+     * The component's filters param before the test changed it, for tearDown() to put back.
+     *
+     * @var    mixed
+     * @since  10.5.6
      */
     private mixed $savedFilters = null;
 
     /**
-     * @var  int
+     * The first group of the user setUp() made the identity.
+     *
+     * @var    int
+     * @since  10.5.6
      */
     private int $groupId = 0;
 
     /**
+     * Skip without a test database, or without a user in a group. Otherwise make the first
+     * user found in a group the application's identity, keeping the one it replaces, and
+     * note that user's first group and the component's filters param.
+     *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -94,7 +110,12 @@ class CwmproclaimFilterTextTest extends IntegrationTestCase
     }
 
     /**
+     * Put back the component's filters param and the identity setUp() replaced.
+     *
      * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -104,6 +125,15 @@ class CwmproclaimFilterTextTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * With script and iframe blacklisted for the user's group, filterText() strips the
+     * script tag and keeps the paragraph's text.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('A configured blacklist filters text instead of raising a TypeError')]
     public function testBlacklistFiltersWithoutCrashing(): void
     {
@@ -115,6 +145,15 @@ class CwmproclaimFilterTextTest extends IntegrationTestCase
         $this->assertStringContainsString('Keep', $result, 'Non-blacklisted content must survive');
     }
 
+    /**
+     * With only p whitelisted for the user's group, filterText() strips the script tag and
+     * keeps the paragraph's text.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('A configured whitelist filters text instead of raising a TypeError')]
     public function testWhitelistFiltersWithoutCrashing(): void
     {
@@ -126,6 +165,16 @@ class CwmproclaimFilterTextTest extends IntegrationTestCase
         $this->assertStringContainsString('Keep', $result);
     }
 
+    /**
+     * With script blacklisted for one of the user's groups and iframe for another,
+     * filterText() strips both tags and keeps the paragraph's text. Skipped when the user is
+     * in only one group.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Exception
+     */
     #[TestDox('Tags from every one of the user\'s groups accumulate rather than overwrite')]
     public function testListsAccumulateAcrossGroups(): void
     {
@@ -152,11 +201,15 @@ class CwmproclaimFilterTextTest extends IntegrationTestCase
     }
 
     /**
+     * Set the component's filters param to one entry, for the user's group.
+     *
      * @param   string  $type        Filter type (BL / WL).
      * @param   string  $tags        Comma-separated tags.
      * @param   string  $attributes  Comma-separated attributes.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function stageFilters(string $type, string $tags, string $attributes): void
     {
