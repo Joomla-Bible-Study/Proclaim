@@ -36,8 +36,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(ProtectedPodcastCheck::class)]
 class ProtectedPodcastCheckTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.0
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,6 +63,13 @@ class ProtectedPodcastCheckTest extends IntegrationTestCase
         $this->db->transactionStart(true);
     }
 
+    /**
+     * Roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -70,6 +90,8 @@ class ProtectedPodcastCheckTest extends IntegrationTestCase
      * @param   string  $podcastId  Raw podcast_id column value.
      *
      * @return  int
+     *
+     * @since   10.7.0
      */
     private function makeMedia(string $filename, string $podcastId): int
     {
@@ -89,6 +111,13 @@ class ProtectedPodcastCheckTest extends IntegrationTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * The check reports Ok on the test database before any fixture is added.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A clean site reports Ok')]
     public function testBaselineIsOk(): void
     {
@@ -98,6 +127,14 @@ class ProtectedPodcastCheckTest extends IntegrationTestCase
         $this->assertSame(HealthStatus::Ok, (new ProtectedPodcastCheck())->run()->status);
     }
 
+    /**
+     * A protected file a podcast references makes the check report a Warning, with the media
+     * file's id in its fingerprint and a detail.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A protected file a podcast references is reported by name')]
     public function testConflictIsReported(): void
     {
@@ -118,6 +155,13 @@ class ProtectedPodcastCheckTest extends IntegrationTestCase
         $this->assertNotSame('', $result->detail);
     }
 
+    /**
+     * Protected files whose podcast_id is 0 or -1 leave the check at Ok.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A protected file no podcast references is not a finding')]
     public function testUnreferencedProtectedFileIsFine(): void
     {
@@ -127,6 +171,13 @@ class ProtectedPodcastCheckTest extends IntegrationTestCase
         $this->assertSame(HealthStatus::Ok, (new ProtectedPodcastCheck())->run()->status);
     }
 
+    /**
+     * A podcast media file outside protected storage leaves the check at Ok.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('Podcast media outside protected storage is not a finding')]
     public function testOrdinaryPodcastMediaIsFine(): void
     {

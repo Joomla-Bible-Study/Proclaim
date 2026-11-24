@@ -30,8 +30,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmmigrationHelper::class)]
 class MigrationBindingsTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.0
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,6 +57,13 @@ class MigrationBindingsTest extends IntegrationTestCase
         $this->db->transactionStart(true);
     }
 
+    /**
+     * Roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -57,6 +77,13 @@ class MigrationBindingsTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * seedBibleTranslations() leaves the Bible translations table with at least one row.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('the translation seed and its bound renames run to completion')]
     public function testSeedBibleTranslations(): void
     {
@@ -73,6 +100,14 @@ class MigrationBindingsTest extends IntegrationTestCase
         $this->assertGreaterThan(0, $count, 'The catalogue is empty after seeding.');
     }
 
+    /**
+     * With three verses stored for KJV, reconcileBibleTranslations() marks KJV installed and
+     * records at least three verses for it.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('reconciliation writes a bound verse count for an installed translation')]
     public function testReconcileBibleTranslations(): void
     {
@@ -109,6 +144,14 @@ class MigrationBindingsTest extends IntegrationTestCase
         $this->assertGreaterThanOrEqual(3, (int) $kjv->verse_count, 'The bound verse count did not land.');
     }
 
+    /**
+     * fixMediafileLegacyPaths() rewrites a media file's legacy com_biblestudy path to one
+     * naming com_proclaim.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('the legacy-path fixer rewrites through its bound REPLACE')]
     public function testFixMediafileLegacyPaths(): void
     {
@@ -143,6 +186,14 @@ class MigrationBindingsTest extends IntegrationTestCase
         $this->assertStringContainsString('com_proclaim', $stored);
     }
 
+    /**
+     * createLocationFromAccess() creates a location for an access level whose title holds an
+     * apostrophe, and returns the same id when called again.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('a location created from an access level is found again by its bound name')]
     public function testCreateLocationFromAccess(): void
     {
