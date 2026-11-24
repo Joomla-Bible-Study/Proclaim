@@ -55,7 +55,7 @@ class PlaceholderParityTest extends TestCase
      * @var    string[]
      * @since 10.6.0
      */
-    private const SKIP = ['/libraries/', '/vendor/', '/node_modules/', '/tests/Backupfiles/'];
+    private const SKIP = ['/libraries/', '/vendor/', '/node_modules/'];
 
     /**
      * Every shipped locale file paired with the en-GB file it translates.
