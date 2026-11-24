@@ -68,9 +68,6 @@ placeholder sits anywhere it doesn't. ⚠️ Never write the literal token as a
 string in a stamped file. The release rewrites every occurrence, so assemble it
 from two halves.
 
-⚠️ Many existing tests still use a compact `@return void` / `@since` pair with
-no description, or no docblock at all. Don't copy it from the file next door.
-
 `TestDocblocksTest` holds the suite to this layout:
 - **It fails on any gap that `tests/unit/Repo/docblock-debt/` doesn't list,** so
   new and changed tests are written in full.
@@ -82,7 +79,9 @@ no description, or no docblock at all. Don't copy it from the file next door.
   own in that folder,** so no two branches edit the same list. ⚠️ Shrink mode
   rewrites every list there, so on such a branch, edit its own list by hand.
 
-#2370 tracks clearing the list.
+On `development` the list is empty, so any gap there fails the test. The test
+skips `tests/fixtures/` and the archived add-on in `tests/Backupfiles/`, so
+don't take either as a model.
 
 ### Naming Conventions
 
