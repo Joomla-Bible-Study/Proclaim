@@ -322,13 +322,14 @@ class HtmlView extends BaseHtmlView
             }
         }
 
-        $captchaSet = $temp->get('captcha', $app->get('captcha', '0'));
+        /** @var CwmsermonModel $sermonModel */
+        $sermonModel          = $this->getModel();
+        $captcha              = $sermonModel->getCommentCaptcha();
+        $this->captchaEnabled = $captcha !== '';
 
-        foreach (PluginHelper::getPlugin('captcha') as $plugin) {
-            if ($captchaSet === $plugin->name) {
-                $this->captchaEnabled = true;
-                break;
-            }
+        // The comment controller checks the answer with this same plugin.
+        if ($this->captchaEnabled) {
+            $this->form->setFieldAttribute('captcha', 'plugin', $captcha);
         }
 
         $offset = (int)$this->state->get('list.offset');

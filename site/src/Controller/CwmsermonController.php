@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Site\Controller;
 use CWM\Component\Proclaim\Administrator\Helper\CwmnotificationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
-use Joomla\CMS\Captcha\Captcha;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
@@ -176,33 +175,25 @@ class CwmsermonController extends FormController
         $model = $this->getModel();
         $t     = $input->getInt('t', 1);
 
-        // ⚠️ This read $model->_template[0]->params, a property nothing ever
-        // sets. Behind !empty() that is silent, so $params was always empty and
-        // every setting below took its default: the captcha was never checked
-        // however the template was configured, and no notification was sent.
-        $params = $model->getCommentParams();
+        $params  = $model->getCommentParams();
+        $captcha = $model->getCommentCaptcha();
 
-        // Check captcha if enabled (Joomla 5/6 compatible Captcha API)
-        if ($params->get('use_captcha') > 0) {
-            $captchaPlugin = $params->get('captcha', $app->get('captcha', ''));
+        if ($captcha !== '') {
+            $jform  = $input->post->get('jform', [], 'array');
+            $answer = \is_string($jform['captcha'] ?? null) ? $jform['captcha'] : '';
 
-            if ($captchaPlugin) {
-                try {
-                    $captcha         = Captcha::getInstance($captchaPlugin);
-                    $captchaResponse = $input->get('recaptcha_response_field', '', 'string');
+            try {
+                $passed = $model->checkCommentCaptcha($captcha, $answer);
+            } catch (\RuntimeException $e) {
+                $app->enqueueMessage($e->getMessage(), 'error');
+                $passed = false;
+            }
 
-                    if (!$captcha->checkAnswer($captchaResponse)) {
-                        $app->enqueueMessage(Text::_('JBS_STY_INCORRECT_KEY'), 'error');
-                        $this->redirectBack($input, $t);
+            if (!$passed) {
+                $app->enqueueMessage(Text::_('JBS_STY_INCORRECT_KEY'), 'error');
+                $this->redirectBack($input, $t);
 
-                        return;
-                    }
-                } catch (\RuntimeException $e) {
-                    $app->enqueueMessage(Text::_('JBS_STY_INCORRECT_KEY'), 'error');
-                    $this->redirectBack($input, $t);
-
-                    return;
-                }
+                return;
             }
         }
 

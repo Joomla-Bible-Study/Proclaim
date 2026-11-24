@@ -85,6 +85,27 @@ class CwmsermonControllerTest extends ProclaimTestCase
     }
 
     /**
+     * comment() checks the answer posted for the comment form's captcha field,
+     * with the plugin the model chose for that form, and nothing else switches
+     * the captcha on or off.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testCommentChecksTheCaptchaTheFormShows(): void
+    {
+        $body = $this->getMethodSource(new \ReflectionMethod(CwmsermonController::class, 'comment'));
+
+        $this->assertStringContainsString('getCommentCaptcha()', $body);
+        $this->assertStringContainsString("\$input->post->get('jform'", $body);
+        $this->assertStringContainsString("['captcha']", $body);
+        $this->assertStringContainsString('checkCommentCaptcha(', $body);
+        $this->assertStringNotContainsString('recaptcha_response_field', $body);
+        $this->assertStringNotContainsString('use_captcha', $body);
+    }
+
+    /**
      * Extract a reflected method's source, including its body.
      *
      * @param   \ReflectionMethod  $reflection  The method to read.
