@@ -28,10 +28,31 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Cwmimportremover::class)]
 class CwmimportremoverTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * A running count that unique() appends to each suffix it makes.
+     *
+     * @var    int
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private int $seq = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction for the test's rows.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,6 +65,13 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->db->transactionStart(true);
     }
 
+    /**
+     * Roll back the test's rows.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -61,13 +89,26 @@ class CwmimportremoverTest extends IntegrationTestCase
      * A unique-enough suffix per row this test seeds, so parallel runs (or a
      * failed prior rollback) never collide on a UNIQUE alias.
      *
-     * @return  string
+     * @return  string  A fixed prefix, eight random hex digits and a running count.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     private function unique(): string
     {
         return 'cwm2174-' . bin2hex(random_bytes(4)) . '-' . $this->seq++;
     }
 
+    /**
+     * Insert a teacher with a unique name and alias.
+     *
+     * @param   bool  $modified  Whether to mark the row edited since import (a nonzero modified_by).
+     *
+     * @return  int  The new teacher's id.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     private function seedTeacher(bool $modified = false): int
     {
         $alias = $this->unique();
@@ -83,6 +124,17 @@ class CwmimportremoverTest extends IntegrationTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * Insert a series with a unique title and alias, whose teacher is the one given.
+     *
+     * @param   int   $teacherId  The series' teacher.
+     * @param   bool  $modified   Whether to mark the row edited since import (a nonzero modified_by).
+     *
+     * @return  int  The new series' id.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     private function seedSeries(int $teacherId, bool $modified = false): int
     {
         $alias = $this->unique();
@@ -98,6 +150,17 @@ class CwmimportremoverTest extends IntegrationTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * Insert a study with a unique title and alias, in the given series.
+     *
+     * @param   int   $seriesId  The series the study belongs to.
+     * @param   bool  $modified  Whether to mark the row edited since import (a nonzero modified_by).
+     *
+     * @return  int  The new study's id.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     private function seedStudy(int $seriesId, bool $modified = false): int
     {
         $alias = $this->unique();
@@ -113,12 +176,32 @@ class CwmimportremoverTest extends IntegrationTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * Credit a teacher on a study, through the study-teachers junction table.
+     *
+     * @param   int  $studyId    The study's id.
+     * @param   int  $teacherId  The teacher's id.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     private function seedStudyTeacher(int $studyId, int $teacherId): void
     {
         $row = (object) ['study_id' => $studyId, 'teacher_id' => $teacherId, 'ordering' => 0];
         $this->db->insertObject('#__bsms_study_teachers', $row);
     }
 
+    /**
+     * Insert a media file on the given study.
+     *
+     * @param   int   $studyId   The study the media file belongs to.
+     * @param   bool  $modified  Whether to mark the row edited since import (a nonzero modified_by).
+     *
+     * @return  int  The new media file's id.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     private function seedMediafile(int $studyId, bool $modified = false): int
     {
         $row = (object) [
@@ -132,6 +215,16 @@ class CwmimportremoverTest extends IntegrationTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * Insert a location with a unique name.
+     *
+     * @param   bool  $modified  Whether to mark the row edited since import (a nonzero modified_by).
+     *
+     * @return  int  The new location's id.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     private function seedLocation(bool $modified = false): int
     {
         $text = $this->unique();
@@ -162,6 +255,7 @@ class CwmimportremoverTest extends IntegrationTestCase
      * @return  int  The new server's id.
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     private function seedServerAtLocation(int $locationId): int
     {
@@ -189,6 +283,7 @@ class CwmimportremoverTest extends IntegrationTestCase
      * @return  string  The manifest tag the three rows were recorded under.
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     private function seedCleanSet(int $teacherId, int $seriesId, int $studyId): string
     {
@@ -247,6 +342,14 @@ class CwmimportremoverTest extends IntegrationTestCase
         return null;
     }
 
+    /**
+     * Planning a tag that no import has used throws a RuntimeException saying
+     * no import is tagged with it.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     public function testPlanRejectsAnUnknownTag(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -255,6 +358,15 @@ class CwmimportremoverTest extends IntegrationTestCase
         (new Cwmimportremover())->plan('cwm2174-does-not-exist');
     }
 
+    /**
+     * An untouched teacher, series and study, recorded under one tag with the
+     * study crediting the teacher, are all planned for deletion.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     public function testPlanDeletesACleanSet(): void
     {
         $teacherId = $this->seedTeacher();
@@ -269,6 +381,15 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->assertSame('delete', $this->actionFor($plan, '#__bsms_studies', $studyId));
     }
 
+    /**
+     * A series edited since import is kept, with the reason "edited since
+     * import", while its untouched study is still planned for deletion.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     public function testPlanKeepsAnEditedSeriesButDeletesItsUntouchedMessage(): void
     {
         $teacherId = $this->seedTeacher();
@@ -294,6 +415,15 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->assertSame('delete', $this->actionFor($plan, '#__bsms_studies', $studyId));
     }
 
+    /**
+     * When an edited series is kept, its teacher is kept too, with the reason
+     * "used by a series outside this import".
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     public function testPlanKeepsATeacherPinnedByAKeptSeries(): void
     {
         $teacherId = $this->seedTeacher();
@@ -316,6 +446,15 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->assertSame('used by a series outside this import', $teacherEntry['reason']);
     }
 
+    /**
+     * A study with a media file the import didn't record is kept, with the
+     * reason "has media files", and so are its series and teacher.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     public function testPlanKeepsAStudyAndItsAncestorsWhenAMediaFileIsAttached(): void
     {
         $teacherId = $this->seedTeacher();
@@ -346,12 +485,17 @@ class CwmimportremoverTest extends IntegrationTestCase
     }
 
     /**
-     * The regression case #2187 introduced: before {@see Cwmimportremover}
+     * The regression case #2187 introduced: before Cwmimportremover
      * could tell its own imported media files apart from ones outside the
      * import, ANY media file on a study — including one this same import
      * created — permanently pinned that study. This is the "clean set"
      * case: the media file is manifest-recorded and untouched, so both it
      * and its study must be deletable.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     public function testPlanDeletesAMediaFileAndItsStudyWhenBothWereImportedTogether(): void
     {
@@ -370,10 +514,15 @@ class CwmimportremoverTest extends IntegrationTestCase
     }
 
     /**
-     * Mirrors {@see testPlanKeepsATeacherPinnedByAKeptSeries()} one level
+     * Mirrors testPlanKeepsATeacherPinnedByAKeptSeries() one level
      * down the hierarchy: a media file edited since import is real content
      * now, so the study it references must not be deleted out from under it
      * — even though both were created by the same import.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     public function testPlanKeepsAStudyPinnedByAModifiedMediaFileOfItsOwn(): void
     {
@@ -402,6 +551,14 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->assertSame('keep', $this->actionFor($plan, '#__bsms_studies', $studyId));
     }
 
+    /**
+     * A study with a comment is kept, with the reason "has comments".
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     public function testPlanKeepsAStudyWithAComment(): void
     {
         $teacherId = $this->seedTeacher();
@@ -435,6 +592,14 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->assertSame('has comments', $studyEntry['reason']);
     }
 
+    /**
+     * A file recorded under the tag is in the plan as a delete, with no table.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     public function testPlanIncludesManifestFilesAsDeletable(): void
     {
         $teacherId = $this->seedTeacher();
@@ -459,6 +624,15 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->assertNull($fileEntry['table']);
     }
 
+    /**
+     * A location used only by a study recorded under the same tag is planned
+     * for deletion, and so is that study.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     public function testPlanDeletesALocationAndItsStudyWhenBothWereImportedTogether(): void
     {
         $teacherId  = $this->seedTeacher();
@@ -482,10 +656,14 @@ class CwmimportremoverTest extends IntegrationTestCase
     }
 
     /**
-     * The regression case this issue exists for: before locationHasExternalContent()
-     * excluded this import's own deletable studies, a location referenced by
-     * ANY study — including one this same import created — would have looked
-     * identical to a location a real site admin depends on.
+     * A location the import recorded is kept, with the reason "used by a
+     * server", when a server outside the import points at it. The import's
+     * teacher, series and study still delete.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     public function testPlanKeepsALocationUsedByAServerOutsideTheImport(): void
     {
@@ -513,6 +691,17 @@ class CwmimportremoverTest extends IntegrationTestCase
         $this->assertSame('delete', $this->actionFor($plan, '#__bsms_teachers', $teacherId));
     }
 
+    /**
+     * A location whose id is a key in the component's location group mapping is
+     * kept, with the reason "referenced in the location group mapping". The test
+     * writes the mapping to com_proclaim's #__extensions row, and inserts that
+     * row when the harness has none.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
     public function testPlanKeepsALocationInTheGroupMapping(): void
     {
         $locationId = $this->seedLocation();

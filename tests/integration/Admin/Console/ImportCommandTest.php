@@ -43,8 +43,22 @@ use Symfony\Component\Console\Output\BufferedOutput;
 #[CoversClass(ImportCommand::class)]
 class ImportCommandTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction for the test's rows.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -57,6 +71,14 @@ class ImportCommandTest extends IntegrationTestCase
         $this->db->transactionStart(true);
     }
 
+    /**
+     * Roll back the test's rows, then reset the user-group caches, which the
+     * rollback doesn't reach, so no later test sees a group that is gone.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -77,6 +99,14 @@ class ImportCommandTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * Discard UserGroupsHelper's singleton, which has no public reset, and call
+     * Access::clearStatics().
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     private static function resetGroupCaches(): void
     {
         $property = new \ReflectionProperty(\Joomla\CMS\Helper\UserGroupsHelper::class, 'instance');
@@ -110,6 +140,13 @@ class ImportCommandTest extends IntegrationTestCase
         return (int) $row->id;
     }
 
+    /**
+     * The path of the demo-import sample fixture's payload.
+     *
+     * @return  string  The payload file's path.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     private function fixturePayloadPath(): string
     {
         return \dirname(__DIR__, 3) . '/fixtures/demo-import-sample/payload.json';
@@ -126,6 +163,7 @@ class ImportCommandTest extends IntegrationTestCase
      * @return  ImportCommand  The command, wired to the harness's console application.
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     private function newCommand(Cwmcontentimporter $importer): ImportCommand
     {
@@ -135,6 +173,15 @@ class ImportCommandTest extends IntegrationTestCase
         return $command;
     }
 
+    /**
+     * A payload path that doesn't exist makes the command return INVALID and
+     * print "Cannot read payload".
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
+     */
     public function testFailsCleanlyWhenPayloadPathIsUnreadable(): void
     {
         $command = $this->newCommand($this->createStub(Cwmcontentimporter::class));
@@ -149,6 +196,15 @@ class ImportCommandTest extends IntegrationTestCase
         $this->assertStringContainsString('Cannot read payload', $output->fetch());
     }
 
+    /**
+     * A payload file that isn't valid JSON makes the command return INVALID and
+     * print "not valid JSON".
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
+     */
     public function testFailsCleanlyOnInvalidJson(): void
     {
         $badFile = tempnam(sys_get_temp_dir(), 'proclaim-import-command-test-');
@@ -167,6 +223,15 @@ class ImportCommandTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * A --user that names no existing user makes the command return INVALID and
+     * print "No active user matches".
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
+     */
     public function testFailsCleanlyWhenNamedUserDoesNotExist(): void
     {
         $command = $this->newCommand($this->createStub(Cwmcontentimporter::class));
@@ -181,6 +246,15 @@ class ImportCommandTest extends IntegrationTestCase
         $this->assertStringContainsString('No active user matches', $output->fetch());
     }
 
+    /**
+     * A --user that names a blocked account makes the command return INVALID.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \Exception
+     */
     public function testFailsCleanlyWhenNamedUserIsBlocked(): void
     {
         $username = 'cwm2188blocked' . bin2hex(random_bytes(3));
@@ -197,6 +271,17 @@ class ImportCommandTest extends IntegrationTestCase
         $this->assertSame(Command::INVALID, $exit);
     }
 
+    /**
+     * A username passed as --user resolves to that user. The command prints the
+     * user's id, calls the importer once with the tag, the payload as an array
+     * and the payload's folder, and returns SUCCESS.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \Exception
+     */
     public function testResolvesAnExplicitUserByUsernameAndCallsTheImporter(): void
     {
         $username = 'cwm2188user' . bin2hex(random_bytes(3));
@@ -220,6 +305,16 @@ class ImportCommandTest extends IntegrationTestCase
         $this->assertStringContainsString('user #' . $userId, $output->fetch());
     }
 
+    /**
+     * A user id passed as --user resolves to that user: the command prints that
+     * id and returns SUCCESS.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \Exception
+     */
     public function testResolvesAnExplicitUserById(): void
     {
         $userId = $this->createUser('cwm2188userid' . bin2hex(random_bytes(3)));
@@ -239,6 +334,16 @@ class ImportCommandTest extends IntegrationTestCase
         $this->assertStringContainsString('user #' . $userId, $output->fetch());
     }
 
+    /**
+     * When the importer throws, the command returns FAILURE and prints the
+     * exception's message.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \Exception
+     */
     public function testPrintsTheErrorAndReturnsFailureWhenTheImporterThrows(): void
     {
         $userId = $this->createUser('cwm2188fail' . bin2hex(random_bytes(3)));
@@ -258,6 +363,16 @@ class ImportCommandTest extends IntegrationTestCase
         $this->assertStringContainsString('boom', $output->fetch());
     }
 
+    /**
+     * When the import succeeds, the command returns SUCCESS and prints each count
+     * in the importer's summary.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \Exception
+     */
     public function testPrintsTheSummaryOnSuccess(): void
     {
         $userId = $this->createUser('cwm2188summary' . bin2hex(random_bytes(3)));
@@ -291,10 +406,16 @@ class ImportCommandTest extends IntegrationTestCase
      * The point of this test is that the query runs and finds a candidate
      * at all, not which one.
      *
-     * Cannot rely on the environment already having one: a CI disposable
-     * database has none at all (caught live — this test originally assumed
+     * Cannot rely on the environment already having one: a disposable
+     * database need not have one (caught live — this test originally assumed
      * ambient state and failed only in CI), so a group carrying core.admin
      * and a user in it are created here, self-contained.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \Exception
      */
     public function testResolvesADefaultUserWhenNoneIsGiven(): void
     {
@@ -319,7 +440,12 @@ class ImportCommandTest extends IntegrationTestCase
      * Grants core.admin, on the root asset, to a freshly created group, then
      * puts a freshly created active user in it — everything inside this
      * test's own rolled-back transaction, so it never touches real ACL
-     * state and needs nothing pre-existing in the database.
+     * state. It needs nothing in the database beyond the root asset.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     private function ensureASuperAdminGroupExists(): void
     {

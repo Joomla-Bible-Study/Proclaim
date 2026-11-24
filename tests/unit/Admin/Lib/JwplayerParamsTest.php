@@ -29,10 +29,12 @@ class JwplayerParamsTest extends ProclaimTestCase
 {
     /**
      * Load the install script class so its private static helpers can be
-     * reflected. The file is a plain named-class definition with no top-level
-     * side effects, so requiring it only declares the class.
+     * reflected. Besides declaring the class, the file only checks _JEXEC,
+     * which this method defines first, so requiring it only declares the class.
      *
      * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     public static function setUpBeforeClass(): void
     {
@@ -50,9 +52,12 @@ class JwplayerParamsTest extends ProclaimTestCase
     /**
      * Invoke the private static sweep on the install script.
      *
-     * @param   array<string, mixed>  $params
+     * @param   array<string, mixed>  $params  The display-settings params to sweep.
      *
-     * @return  array<string, mixed>
+     * @return  array<string, mixed>  The swept params.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
      */
     private static function strip(array $params): array
     {
@@ -60,6 +65,15 @@ class JwplayerParamsTest extends ProclaimTestCase
             ->invoke(null, $params);
     }
 
+    /**
+     * A jwplayer_mute value is copied onto an unset player_mute and its own key
+     * removed, while an unrelated key keeps its value.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('A read jwplayer value is carried onto its player_* key when that is unset')]
     public function testCarriesReadValueWhenTargetUnset(): void
     {
@@ -70,6 +84,15 @@ class JwplayerParamsTest extends ProclaimTestCase
         $this->assertSame('1', $out['controls'], 'Unrelated keys are untouched.');
     }
 
+    /**
+     * An existing player_mute keeps its own value over jwplayer_mute's, and
+     * jwplayer_mute is still removed.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('An existing player_* value wins over the jwplayer_* value')]
     public function testDoesNotOverwriteExistingTarget(): void
     {
@@ -79,6 +102,15 @@ class JwplayerParamsTest extends ProclaimTestCase
         $this->assertArrayNotHasKey('jwplayer_mute', $out);
     }
 
+    /**
+     * The jwplayer_ image, mute, logo and logolink values each land on the
+     * matching player_ key.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('All four read keys are carried across')]
     public function testCarriesAllFourReadKeys(): void
     {
@@ -95,6 +127,15 @@ class JwplayerParamsTest extends ProclaimTestCase
         $this->assertSame('https://example.test', $out['player_logolink']);
     }
 
+    /**
+     * Sweeping five jwplayer_ keys the front end never read leaves no jwplayer_
+     * key behind, and the unrelated rtmp key keeps its value.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('Every jwplayer_* key is removed, including the ten the front end never read')]
     public function testRemovesAllJwplayerKeys(): void
     {
@@ -118,6 +159,15 @@ class JwplayerParamsTest extends ProclaimTestCase
         $this->assertSame('Comming Soon', $out['rtmp']);
     }
 
+    /**
+     * Sweeping the params a second time returns them exactly as the first sweep
+     * left them.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('Running the sweep twice changes nothing the second time')]
     public function testIdempotent(): void
     {
@@ -127,6 +177,14 @@ class JwplayerParamsTest extends ProclaimTestCase
         $this->assertSame($once, $twice);
     }
 
+    /**
+     * Params without a jwplayer_ key come back exactly as they went in.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('Params with no jwplayer_* keys are returned unchanged')]
     public function testNoJwplayerKeysIsUnchanged(): void
     {
@@ -135,6 +193,14 @@ class JwplayerParamsTest extends ProclaimTestCase
         $this->assertSame($in, self::strip($in));
     }
 
+    /**
+     * An empty param array comes back empty.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('An empty param set stays empty')]
     public function testEmptyStaysEmpty(): void
     {

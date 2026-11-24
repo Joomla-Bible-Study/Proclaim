@@ -45,15 +45,53 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Cwmimportmanifest::class)]
 class CwmcontentimporterTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * An MVC factory from the component's own service provider, which the importer
+     * creates its models through.
+     *
+     * @var    MVCFactoryInterface|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private ?MVCFactoryInterface $factory = null;
 
+    /**
+     * The application's user before setUp() replaced it, for tearDown() to restore.
+     *
+     * @var    mixed
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private mixed $savedIdentity = null;
 
-    /** @var string[] */
+    /**
+     * The import tags whose recorded files tearDown() deletes from disk.
+     *
+     * @var    string[]
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private array $filesToClean = [];
 
+    /**
+     * Skip without a test database. Otherwise open a transaction, make a test user the
+     * current one for the saves' created_by, and build an MVC factory from the component's
+     * own service provider.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -84,6 +122,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->factory = $container->get(MVCFactoryInterface::class);
     }
 
+    /**
+     * Delete the files the manifest records under each tag in filesToClean, and any folders
+     * under images/ that the deletions leave empty, then roll back the transaction and, when
+     * setUp() saved a user, restore it.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -123,7 +171,12 @@ class CwmcontentimporterTest extends IntegrationTestCase
     }
 
     /**
-     * @return  array{payload: array, dir: string}
+     * The demo import sample: its decoded payload.json and the folder it sits in.
+     *
+     * @return  array{payload: array, dir: string}  The payload and the folder's path.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \JsonException
      */
     private function fixture(): array
     {
@@ -133,6 +186,13 @@ class CwmcontentimporterTest extends IntegrationTestCase
         return ['payload' => $payload, 'dir' => $dir];
     }
 
+    /**
+     * The repository's root folder.
+     *
+     * @return  string  The root's absolute path.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     private static function root(): string
     {
         return \dirname(__DIR__, 4);
@@ -144,6 +204,8 @@ class CwmcontentimporterTest extends IntegrationTestCase
      * depending on the seeded install data being present or unmodified.
      *
      * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function seedFixtureTopic(): void
     {
@@ -168,6 +230,8 @@ class CwmcontentimporterTest extends IntegrationTestCase
      * itself is extended to cover full model saves.
      *
      * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function skipUnlessContentPluginsResolve(): void
     {
@@ -181,6 +245,18 @@ class CwmcontentimporterTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * Importing the demo sample creates one teacher, series and message, copies one image to
+     * disk and records each in the manifest. The series and message point at the new teacher
+     * and series ids, and the message gets at least one scripture reference, exactly one topic
+     * and non-null params.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testImportsTeacherSeriesMessageAndFile(): void
     {
         $this->skipUnlessContentPluginsResolve();
@@ -241,6 +317,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFileExists(JPATH_ROOT . '/images/biblestudy/teachers/cwm2173-demo-teacher.png');
     }
 
+    /**
+     * A second import under the same tag throws a RuntimeException whose message contains
+     * "already exists".
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRefusesASecondImportUnderTheSameTag(): void
     {
         $this->skipUnlessContentPluginsResolve();
@@ -260,6 +346,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $importer->import($tag, $fixture['payload'], $fixture['dir']);
     }
 
+    /**
+     * A payload with a section the importer doesn't recognize, here template code, is refused,
+     * and nothing is recorded under its tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAnUnrecognisedSectionBeforeCreatingAnything(): void
     {
         $tag = 'cwm2173-test-' . bin2hex(random_bytes(4));
@@ -279,6 +375,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A file destination that climbs out of the allowed image paths with ../ is refused,
+     * nothing is recorded under the tag, and no file appears where it pointed.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAFileDestinationOutsideTheAllowedImagePathsBeforeCreatingAnything(): void
     {
         $tag     = 'cwm2173-test-' . bin2hex(random_bytes(4));
@@ -301,6 +407,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFileDoesNotExist(JPATH_ROOT . '/administrator/evil.png');
     }
 
+    /**
+     * A file destination with a disallowed extension, .php, is refused, nothing is recorded
+     * under the tag, and the file isn't written.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsADisallowedFileExtensionBeforeCreatingAnything(): void
     {
         $tag     = 'cwm2173-test-' . bin2hex(random_bytes(4));
@@ -323,6 +439,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFileDoesNotExist(JPATH_ROOT . '/images/biblestudy/teachers/evil.php');
     }
 
+    /**
+     * A file source that climbs out of the import package with ../ is refused as not found in
+     * the package, and nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAFileSourceOutsideTheImportPackageBeforeCreatingAnything(): void
     {
         $tag     = 'cwm2173-test-' . bin2hex(random_bytes(4));
@@ -344,6 +470,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A message naming a topic the site doesn't have is refused, and nothing is recorded under
+     * the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAnUnknownTopicBeforeCreatingAnything(): void
     {
         // Deliberately not seeding the fixture topic this time.
@@ -362,6 +498,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A teacher with the same name as one already on the site, though a different alias, is
+     * refused, and nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsANameCollisionBeforeCreatingAnything(): void
     {
         $this->seedFixtureTopic();
@@ -386,6 +532,14 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A malformed import tag, with capitals, spaces and a "!", throws an
+     * InvalidArgumentException.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     public function testRejectsAnInvalidTag(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -393,6 +547,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         (new Cwmcontentimporter($this->factory))->import('Not A Valid Tag!', [], sys_get_temp_dir());
     }
 
+    /**
+     * A teacher alias with capitals, spaces and a "!" is refused for not matching the alias
+     * pattern, and nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \JsonException
+     * @throws  \Random\RandomException
+     */
     public function testRejectsAnInvalidAliasBeforeCreatingAnything(): void
     {
         $payload = $this->fixture()['payload'];
@@ -411,6 +575,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * Two file entries with the same destination are refused, nothing is recorded under the
+     * tag, and the file isn't written.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \JsonException
+     * @throws  \Random\RandomException
+     */
     public function testRejectsTwoFilesClaimingTheSameDestination(): void
     {
         $fixture = $this->fixture();
@@ -434,6 +608,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFileDoesNotExist(JPATH_ROOT . '/images/biblestudy/teachers/cwm2173-dupe.png');
     }
 
+    /**
+     * A destination extension that differs from the source's, .png copied to .gif, is refused
+     * even though .gif is itself allowed, and nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \JsonException
+     * @throws  \Random\RandomException
+     */
     public function testRejectsAMismatchedFileExtension(): void
     {
         $fixture = $this->fixture();
@@ -464,6 +648,12 @@ class CwmcontentimporterTest extends IntegrationTestCase
      * content plugin fails after the row itself is already written. Needs no
      * plugin dispatch and no full app boot: a stub model's save() does the
      * insert directly and throws, standing in for that shape of failure.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
      */
     public function testAnOrphanedRowIsStillRecordedInTheManifestWhenSaveFails(): void
     {
@@ -521,7 +711,12 @@ class CwmcontentimporterTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published legacy server under a unique name.
+     *
      * @return  string  The name of a freshly seeded, uniquely-named server row.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     private function seedFixtureServer(): string
     {
@@ -541,8 +736,13 @@ class CwmcontentimporterTest extends IntegrationTestCase
     }
 
     /**
-     * @return  array  A `messages[]` entry with a fresh, collision-free alias/title,
-     *                  and its source id (always `1`).
+     * A messages section holding one message: source id 1, a unique title and alias, and an
+     * explicit study date.
+     *
+     * @return  array  A list holding that one `messages[]` entry.
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     private function fixtureMessageOnly(): array
     {
@@ -559,6 +759,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         ]];
     }
 
+    /**
+     * A media file whose study_id matches no message in the payload is refused, and nothing is
+     * recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMediaFileWithAnUnknownStudyId(): void
     {
         $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
@@ -581,6 +791,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A media file whose server name matches no server on the site is refused, and nothing is
+     * recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMediaFileWhenTheServerNameMatchesNoServer(): void
     {
         $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
@@ -603,6 +823,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A media file whose server name is shared by two servers on the site is refused, and
+     * nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMediaFileWhenTheServerNameMatchesMoreThanOneServer(): void
     {
         $duplicateName = 'cwm2187-dupe-server-' . bin2hex(random_bytes(4));
@@ -639,6 +869,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A media file on a local server is refused, since only legacy servers are importable, and
+     * nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMediaFileOnAServerTypeOtherThanLegacy(): void
     {
         $name   = 'cwm2187-local-server-' . bin2hex(random_bytes(4));
@@ -672,6 +912,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * Media file params with a key the importer doesn't recognize, docMan_id, are refused, and
+     * nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMediaFileParamsWithAnUnrecognisedKey(): void
     {
         $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
@@ -700,6 +950,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A media file naming a podcast id the site doesn't have is refused, and nothing is recorded
+     * under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMediaFileReferencingAnUnknownPodcast(): void
     {
         $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
@@ -723,6 +983,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * Media file params that include create_live_broadcast are refused, and nothing is recorded
+     * under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMediaFileParamsWithACreateLiveBroadcastKey(): void
     {
         $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
@@ -751,6 +1021,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * Media file params with a live_ key, here live_privacy, are refused, and nothing is
+     * recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMediaFileParamsWithALivePrefixedKey(): void
     {
         $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
@@ -779,6 +1059,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * Media file params with a size under 1000, which would leave the save to detect metadata
+     * remotely, are refused, and nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMediaFileParamsThatWouldTriggerRemoteMetadataDetection(): void
     {
         $tag     = 'cwm2187-test-' . bin2hex(random_bytes(4));
@@ -805,13 +1095,19 @@ class CwmcontentimporterTest extends IntegrationTestCase
 
     /**
      * The mediafiles equivalent of
-     * {@see testAnOrphanedRowIsStillRecordedInTheManifestWhenSaveFails()} —
+     * testAnOrphanedRowIsStillRecordedInTheManifestWhenSaveFails() —
      * `#__bsms_mediafiles` has no `alias` column, so recovery here is
-     * exercised via {@see Cwmcontentimporter::recordOrphanedMediaFiles()}'s
+     * exercised via Cwmcontentimporter::recordOrphanedMediaFiles()'s
      * study_id lookup instead. Two different stub models are needed (one per
      * `createModel()` call) because, unlike the teacher-only fixture above,
      * a real study source-id => target-id mapping is required for
      * `mediafiles[].study_id` to resolve at all.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
      */
     public function testAnOrphanedMediaFileRowIsStillRecordedInTheManifestWhenSaveFails(): void
     {
@@ -874,6 +1170,15 @@ class CwmcontentimporterTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A location without location_text is refused, and nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsALocationMissingLocationText(): void
     {
         $tag     = 'cwm2196-test-' . bin2hex(random_bytes(4));
@@ -889,6 +1194,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * Two locations in one payload with the same location_text are refused, and nothing is
+     * recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsALocationThatReusesLocationTextWithinThePayload(): void
     {
         $tag     = 'cwm2196-test-' . bin2hex(random_bytes(4));
@@ -909,6 +1224,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A location whose location_text matches a location already on the site is refused, and
+     * nothing is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsALocationThatCollidesWithAnExistingSiteLocation(): void
     {
         $locationText = 'cwm2196-existing-' . bin2hex(random_bytes(4));
@@ -939,6 +1264,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
         $this->assertFalse(Cwmimportmanifest::exists($tag));
     }
 
+    /**
+     * A message whose location_id matches no location in the payload is refused, and nothing
+     * is recorded under the tag.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
+     */
     public function testRejectsAMessageLocationIdThatDoesNotMatchAnyLocation(): void
     {
         $tag             = 'cwm2196-test-' . bin2hex(random_bytes(4));
@@ -958,9 +1293,15 @@ class CwmcontentimporterTest extends IntegrationTestCase
     }
 
     /**
-     * The mirror of {@see testAnOrphanedRowIsStillRecordedInTheManifestWhenSaveFails()}
+     * The mirror of testAnOrphanedRowIsStillRecordedInTheManifestWhenSaveFails()
      * for the one other entity with no `alias` column — `location_text` is the
-     * lookup key here instead, per {@see Cwmcontentimporter::importLocation()}.
+     * lookup key here instead, per Cwmcontentimporter::importLocation().
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     * @throws  \JsonException
      */
     public function testAnOrphanedLocationRowIsStillRecordedInTheManifestWhenSaveFails(): void
     {
@@ -1023,12 +1364,16 @@ class CwmcontentimporterTest extends IntegrationTestCase
     }
 
     /**
+     * Read one column from the first row where another column equals the given integer.
+     *
      * @param   string  $table       `#__`-prefixed table name.
      * @param   string  $column      Column to select.
      * @param   string  $whereCol    Column to match on.
      * @param   int     $whereValue  Value to match.
      *
-     * @return  mixed
+     * @return  mixed  The column's value, or null when no row matches.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function scalar(string $table, string $column, string $whereCol, int $whereValue): mixed
     {
@@ -1042,11 +1387,15 @@ class CwmcontentimporterTest extends IntegrationTestCase
     }
 
     /**
+     * Count the rows where a column equals the given integer.
+     *
      * @param   string  $table       `#__`-prefixed table name.
      * @param   string  $whereCol    Column to match on.
      * @param   int     $whereValue  Value to match.
      *
-     * @return  int
+     * @return  int  The number of matching rows.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function countRows(string $table, string $whereCol, int $whereValue): int
     {

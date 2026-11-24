@@ -54,8 +54,24 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
         'location_system_dismissed',
     ];
 
+    /**
+     * The database, inside a transaction each test rolls back; null when no test database is
+     * available.
+     *
+     * @var    DatabaseDriver|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Open a transaction when a test database is available. Without one, $db stays null,
+     * and the one test that uses it skips itself.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -68,6 +84,13 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
         $this->db->transactionStart(true);
     }
 
+    /**
+     * Roll back the transaction setUp() opened, if it opened one.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -89,6 +112,7 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
      * @return  int  A freshly-inserted study's id.
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     private function seedStudy(bool $manifestTracked): int
     {
@@ -317,6 +341,10 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
      * The alias only ever caught one specific source of sample content. A
      * second source (an imported demo set, #2145) would never match it and
      * would be counted as a real message the moment it existed.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     #[TestDox('The first-message step no longer special-cases the welcome-to-proclaim alias')]
     public function testFirstMessageStepDoesNotSpecialCaseTheOldAlias(): void
@@ -344,6 +372,11 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
      * guaranteed — this proves the checklist's live answer agrees with an
      * independent, from-scratch computation of the same manifest exclusion,
      * after adding one more manifest-tracked row it must not be swayed by.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     #[TestDox('The first-message step excludes manifest-tracked studies, however many exist')]
     public function testFirstMessageStepExcludesManifestTrackedStudies(): void
