@@ -28,6 +28,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(CwmpodcastTrackHelper::class)]
 class CwmpodcastTrackHelperTest extends ProclaimTestCase
 {
+    /**
+     * User agents, each with whether isBot() should treat it as a bot.
+     *
+     * @return  array<string, array{0: string, 1: bool}>  Each case
+     *
+     * @since   10.3.3
+     */
     public static function userAgentProvider(): array
     {
         return [
@@ -54,12 +61,31 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * isBot() excludes empty agents, crawlers, monitors, link previews and scripted
+     * fetches, and counts podcast clients and browsers.
+     *
+     * @param   string  $userAgent  User agent
+     * @param   bool    $expected   Whether it is a bot
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     #[DataProvider('userAgentProvider')]
     public function testIsBotClassifiesUserAgents(string $userAgent, bool $expected): void
     {
         $this->assertSame($expected, CwmpodcastTrackHelper::isBot($userAgent));
     }
 
+    /**
+     * clientHash() returns the same 40-character SHA-1 for the same IP and agent, and a
+     * different one when either changes.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testClientHashIsDeterministicAndDistinct(): void
     {
         $a = CwmpodcastTrackHelper::clientHash('203.0.113.7', 'Apple Podcasts/1580.5');
@@ -76,6 +102,13 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
         $this->assertNotSame($a, $d);
     }
 
+    /**
+     * clientHash() ignores spaces around the IP and the agent.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testClientHashIgnoresSurroundingWhitespace(): void
     {
         $this->assertSame(
@@ -84,6 +117,13 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * resolveGuid() returns a stored guid as it is, ignoring the legacy value.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testResolveGuidReturnsStoredWithoutTouchingDatabase(): void
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
@@ -101,6 +141,13 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * With no stored guid and no media id, resolveGuid() returns the legacy value.
+     *
+     * @return  void
+     *
+     * @since   10.3.3
+     */
     public function testResolveGuidFallsBackToLegacyWhenNothingToStamp(): void
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
@@ -116,6 +163,17 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
     // Regression tests for #1552
     // -------------------------------------------------------------------------
 
+    /**
+     * Call the streamer's private isLocalHost().
+     *
+     * @param   string  $siteHost  This site's host
+     * @param   string  $target    Media URL
+     *
+     * @return  bool  Whether the URL is on this site
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private function invokeIsLocalHost(string $siteHost, string $target): bool
     {
         $method = new \ReflectionMethod(CwmmediaStreamer::class, 'isLocalHost');
@@ -123,16 +181,41 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
         return $method->invoke(null, $siteHost, $target);
     }
 
+    /**
+     * isLocalHost() is true for a URL on the site's configured host.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testIsLocalHostMatchesOnSiteConfiguredHostname(): void
     {
         $this->assertTrue($this->invokeIsLocalHost('nfsda.org', 'https://nfsda.org/media/sermon.mp3'));
     }
 
+    /**
+     * isLocalHost() still matches when the site's host carries a port and the URL's
+     * doesn't.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testIsLocalHostStripsPortFromBothSidesBeforeComparing(): void
     {
         $this->assertTrue($this->invokeIsLocalHost('nfsda.org:8890', 'https://nfsda.org/media/sermon.mp3'));
     }
 
+    /**
+     * isLocalHost() is false for a URL on another host.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testIsLocalHostReturnsFalseForAGenuinelyExternalHost(): void
     {
         $this->assertFalse($this->invokeIsLocalHost('nfsda.org', 'https://cdn.otherhost.com/media/sermon.mp3'));
@@ -146,6 +229,10 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
      * remote-proxy path on a benign hostname-form mismatch (e.g.
      * "site.com" vs "www.site.com"), with no attacker involved. Checked
      * structurally against the controller source. See #1552.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testTrackDerivesHostFromUriRootNotTheRequestHostHeader(): void
     {
@@ -182,6 +269,10 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
      * the pre-#1424 behavior. Checked structurally: exercising the real
      * header-relay closure requires a live HTTP fetch this suite doesn't
      * perform. See #1552.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testStreamRemoteFileRelaysTheLocationHeader(): void
     {
@@ -211,6 +302,10 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
      * LOW_SPEED guard (not a hard total-time cap) must be present so a
      * stalled transfer aborts while a large legitimately-slow episode
      * download can still complete. See #1552.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testStreamRemoteFileSetsALowSpeedStallGuard(): void
     {

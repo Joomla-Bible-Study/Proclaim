@@ -40,7 +40,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 class ApiFilterQueryTest extends IntegrationTestCase
 {
     /**
+     * Skip without a test database.
+     *
      * @return  void
+     *
      * @since   10.5.8
      */
     protected function setUp(): void
@@ -55,8 +58,9 @@ class ApiFilterQueryTest extends IntegrationTestCase
     /**
      * model, filter key, filter value, and a pattern the WHERE must gain.
      *
-     * @return array<string, array{0: string, 1: string, 2: mixed, 3: string}>
-     * @since  10.5.8
+     * @return  array<string, array{0: string, 1: string, 2: mixed, 3: string}>
+     *
+     * @since   10.5.8
      */
     public static function filterProvider(): array
     {
@@ -108,6 +112,18 @@ class ApiFilterQueryTest extends IntegrationTestCase
         return (string) $query;
     }
 
+    /**
+     * Each model applies its filter to the list query.
+     *
+     * @param   string  $model    Model name without the Model suffix
+     * @param   string  $filter   The filter's state key
+     * @param   mixed   $value    The value to filter by
+     * @param   string  $pattern  A pattern the WHERE must gain
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[DataProvider('filterProvider')]
     #[TestDox('$model applies $filter to the query')]
     public function testTheFilterReachesTheQuery(string $model, string $filter, mixed $value, string $pattern): void
@@ -126,6 +142,19 @@ class ApiFilterQueryTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Each model leaves its filter's predicate out of the list query when the
+     * filter is unset.
+     *
+     * @param   string  $model    Model name without the Model suffix
+     * @param   string  $filter   The filter's state key
+     * @param   mixed   $value    The value to filter by, unused here
+     * @param   string  $pattern  A pattern the WHERE must gain
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[DataProvider('filterProvider')]
     #[TestDox('$model omits the $filter predicate when the filter is unset')]
     public function testThePredicateIsAbsentWithoutTheFilter(string $model, string $filter, mixed $value, string $pattern): void

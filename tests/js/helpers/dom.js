@@ -13,7 +13,9 @@
  * - the window *is* the global object, so `window.Joomla` and a bare `Joomla`
  *   are one variable, as in a browser — the sources use both forms;
  * - an exception thrown inside an event listener fails the running test, rather
- *   than being swallowed by dispatchEvent() and leaving it green.
+ *   than being swallowed by dispatchEvent() and leaving it green;
+ * - the page has finished loading before the first test runs: readyState is
+ *   'complete', and the real DOMContentLoaded and load events have fired.
  *
  * Each test file runs in its own process under `node --test`, so each gets a
  * fresh window, as each got a fresh environment under Jest.
@@ -23,7 +25,7 @@
  */
 
 const vm = require('node:vm');
-const { after } = require('node:test');
+const { after, before } = require('node:test');
 const { JSDOM, VirtualConsole } = require('jsdom');
 
 // Captured before setup.js replaces console.log and console.warn with mocks, so
@@ -31,7 +33,7 @@ const { JSDOM, VirtualConsole } = require('jsdom');
 const realConsole = globalThis.console;
 
 const virtualConsole = new VirtualConsole();
-virtualConsole.sendTo(realConsole, { omitJSDOMErrors: true });
+virtualConsole.forwardTo(realConsole, { jsdomErrors: 'none' });
 virtualConsole.on('jsdomError', (error) => {
     realConsole.error(error);
 });
@@ -203,6 +205,17 @@ install('removeEventListener', {
         return window.removeEventListener(type, ...rest);
     },
 });
+
+// jsdom loads the page a few tasks after the window is built. The tests wait
+// for its load event, so none sees readyState 'interactive' or a real
+// DOMContentLoaded arriving mid-test.
+before(() => new Promise((resolve) => {
+    if (window.document.readyState === 'complete') {
+        resolve();
+    } else {
+        window.addEventListener('load', () => resolve(), { once: true });
+    }
+}));
 
 after(() => {
     started.forEach((handle) => nodeClearTimeout(handle));

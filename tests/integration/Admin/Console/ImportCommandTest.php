@@ -85,9 +85,14 @@ class ImportCommandTest extends IntegrationTestCase
     }
 
     /**
-     * @param   bool  $blocked
+     * Insert a user account straight into the users table.
+     *
+     * @param   string  $username  The username, also used as the name and the email's local part.
+     * @param   bool    $blocked   Whether the account is blocked.
      *
      * @return  int  The new user's id.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function createUser(string $username, bool $blocked = false): int
     {
@@ -115,6 +120,12 @@ class ImportCommandTest extends IntegrationTestCase
      * console-commands reference's own example command never calls it, but
      * this one does (to guard the CMS-only identity/language loading), so
      * the harness's own bare console application has to be wired in by hand.
+     *
+     * @param   Cwmcontentimporter  $importer  The importer the command runs.
+     *
+     * @return  ImportCommand  The command, wired to the harness's console application.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function newCommand(Cwmcontentimporter $importer): ImportCommand
     {

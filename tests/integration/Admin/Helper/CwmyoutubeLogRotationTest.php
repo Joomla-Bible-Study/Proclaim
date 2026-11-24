@@ -34,13 +34,38 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmyoutubeLogHelper::class)]
 class CwmyoutubeLogRotationTest extends IntegrationTestCase
 {
+    /**
+     * The path of the YouTube log file, under the cache folder.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $file = '';
 
+    /**
+     * The path of its rotated backup: the log file's path with .1 added.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $backup = '';
 
-    /** @var array<string, string|false> */
+    /**
+     * What each log file held when setUp() ran, false for one that didn't exist.
+     *
+     * @var    array<string, string|false>
+     * @since  10.5.6
+     */
     private array $saved = [];
 
+    /**
+     * Find the log file and its backup, create the log folder when it's missing, and keep
+     * both files' contents for tearDown() to restore.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -61,6 +86,13 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * Restore both log files as setUp() found them, deleting one that didn't exist.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         foreach ($this->saved as $path => $contents) {
@@ -75,10 +107,14 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
     }
 
     /**
+     * Build one log line as JSON, with a fixed date.
+     *
      * @param   string  $message  Message text
      * @param   string  $level    Log level
      *
      * @return  string  One JSON log line
+     *
+     * @since   10.5.6
      */
     private function line(string $message, string $level = 'info'): string
     {
@@ -86,9 +122,13 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
     }
 
     /**
+     * The message of each entry, in order.
+     *
      * @param   array<int, array>  $entries  Entries returned by getEntries()
      *
-     * @return  string[]
+     * @return  string[]  Each entry's message
+     *
+     * @since   10.5.6
      */
     private function messages(array $entries): array
     {
@@ -99,6 +139,14 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
     // Finding 2 -- history survives rotation
     // -------------------------------------------------------------------------
 
+    /**
+     * getEntries() reads past the active file into the backup, newest first: the active
+     * file's entry, then the backup's in reverse.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Entries are read from the rotated backup once the active file runs out')]
     public function testRotatedBackupIsRead(): void
     {
@@ -119,6 +167,14 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * getEntries(2) returns the active file's two entries, newest first, without the
+     * backup's.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The backup is not read when the active file already satisfies the limit')]
     public function testBackupNotReadWhenLimitMet(): void
     {
@@ -128,6 +184,14 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
         $this->assertSame(['b', 'a'], $this->messages(CwmyoutubeLogHelper::getEntries(2)));
     }
 
+    /**
+     * With an error filter, getEntries() collects the error entries from both the active
+     * file and the backup.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A level filter keeps drawing from the backup to reach the limit')]
     public function testLevelFilterSpansBothFiles(): void
     {
@@ -147,6 +211,13 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * getEntries() returns the active file's entry when there is no backup.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A missing backup is not an error')]
     public function testMissingBackupIsHarmless(): void
     {
@@ -156,6 +227,14 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
         $this->assertSame(['only'], $this->messages(CwmyoutubeLogHelper::getEntries(10)));
     }
 
+    /**
+     * getEntries() skips a line that isn't JSON and one holding a bare string, one in each
+     * file.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Corrupt lines are skipped in both files')]
     public function testCorruptLinesSkipped(): void
     {
@@ -169,6 +248,15 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
     // Finding 1 -- rotation reports, and bounds growth, when rename fails
     // -------------------------------------------------------------------------
 
+    /**
+     * rotate() moves a file over the size limit to the backup, leaving the active file under
+     * the limit.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('Rotation moves an oversized file to the backup')]
     public function testRotationMovesTheFile(): void
     {
@@ -187,6 +275,14 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * rotate() leaves a file under the size limit in place, and creates no backup.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('A file under the threshold is left alone')]
     public function testSmallFileIsNotRotated(): void
     {
@@ -204,6 +300,10 @@ class CwmyoutubeLogRotationTest extends IntegrationTestCase
      * the normal case and forcing it to fail needs a filesystem this test
      * cannot rely on. What is pinned instead is that the result is acted upon
      * at all, and that growth is bounded rather than left to continue silently.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('A failed rename is reported and growth is still bounded')]
     public function testRenameFailureIsHandled(): void

@@ -31,14 +31,46 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmImageMigrationTest extends ProclaimTestCase
 {
+    /**
+     * The images/biblestudy folder under the test Joomla root.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $biblestudyDir;
 
+    /**
+     * Whether setUp created that folder, so tearDown removes it again.
+     *
+     * @var    bool
+     * @since  10.5.6
+     */
     private bool $createdBiblestudyDir = false;
 
+    /**
+     * A folder outside the allowed base, holding a file a traversal must not reach.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $traversalTargetDir;
 
+    /**
+     * A folder inside the allowed base, holding a file, which may be deleted.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $legitTargetDir;
 
+    /**
+     * Create the biblestudy folder if it is missing, a folder outside it holding a
+     * file, and a folder inside it holding another.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -59,6 +91,14 @@ class CwmImageMigrationTest extends ProclaimTestCase
         file_put_contents($this->legitTargetDir . '/photo.jpg', 'not really an image');
     }
 
+    /**
+     * Remove the folders setUp made, and the biblestudy folder too when setUp created
+     * it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if (is_dir($this->traversalTargetDir)) {
@@ -84,6 +124,13 @@ class CwmImageMigrationTest extends ProclaimTestCase
         parent::tearDown();
     }
 
+    /**
+     * deleteLegacyFiles() deletes nothing reached through ../ outside the allowed base.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testDeleteLegacyFilesRejectsPathTraversalEscapingAllowedBase(): void
     {
         $payload = 'images/biblestudy/../../' . basename($this->traversalTargetDir);
@@ -98,6 +145,13 @@ class CwmImageMigrationTest extends ProclaimTestCase
         $this->assertNotEmpty($result['errors']);
     }
 
+    /**
+     * deleteLegacyFiles() deletes a folder inside the allowed base.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testDeleteLegacyFilesStillDeletesWithinAllowedBase(): void
     {
         $payload = 'images/biblestudy/' . basename($this->legitTargetDir);
@@ -108,6 +162,14 @@ class CwmImageMigrationTest extends ProclaimTestCase
         $this->assertFileDoesNotExist($this->legitTargetDir . '/photo.jpg');
     }
 
+    /**
+     * recoverBareIdFolders() looks the folders up in one batched query, not one per
+     * folder.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testRecoverBareIdFoldersQueriesTheDatabaseOnceNotOncePerFolder(): void
     {
         $reflection = new \ReflectionMethod(CwmImageMigration::class, 'recoverBareIdFolders');

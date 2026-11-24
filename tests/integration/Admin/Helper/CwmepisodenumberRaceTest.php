@@ -37,10 +37,30 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CwmepisodenumberRaceTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back. tearDown() checks that the
+     * rollback restored the studies table.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * How many rows the studies table had when setUp() ran.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $rowsAtStart = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction and count the studies.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -54,6 +74,14 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
         $this->rowsAtStart = $this->countStudies();
     }
 
+    /**
+     * Roll back the transaction setUp() opened, then fail the test if the studies don't
+     * number what they did at setUp().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         $leaked = null;
@@ -83,7 +111,11 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
     }
 
     /**
+     * The number of studies.
+     *
      * @return  int  Total rows in the studies table.
+     *
+     * @since   10.5.6
      */
     private function countStudies(): int
     {
@@ -100,6 +132,8 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
      * against a table that has not been migrated.
      *
      * @return  bool
+     *
+     * @since   10.5.6
      */
     private function constraintPresent(): bool
     {
@@ -120,6 +154,8 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
      * @param   string  $number    Episode number
      *
      * @return  bool  True if the row was accepted
+     *
+     * @since   10.5.6
      */
     private function insert(int $seriesId, string $number): bool
     {
@@ -141,6 +177,14 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * In a real series, a second message numbered 1 is refused, while 1 and 2 are accepted.
+     * Skipped when the uq_series_studynumber index is missing.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Two messages cannot take the same number in the same series')]
     public function testDuplicateInARealSeriesIsRejected(): void
     {
@@ -162,6 +206,10 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
      * The constraint must not bind where episode numbers are meaningless, or a
      * database where most messages are unnumbered could not be written to at
      * all.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Unnumbered and seriesless messages are left unconstrained')]
     public function testUnconstrainedCases(): void
@@ -183,6 +231,14 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
     // Schema and migration shape
     // -------------------------------------------------------------------------
 
+    /**
+     * The install SQL declares uq_series_studynumber, with the expression that leaves
+     * seriesless and unnumbered messages NULL.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The install schema carries the constraint')]
     public function testInstallSchemaDeclaresTheConstraint(): void
     {
@@ -199,6 +255,10 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
     /**
      * ADD UNIQUE fails outright on any site with existing duplicates, and a
      * development database had eight such groups.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The migration resolves duplicates before adding the constraint')]
     public function testMigrationResolvesDuplicatesFirst(): void
@@ -223,6 +283,14 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
         $this->fail('No migration adds uq_series_studynumber');
     }
 
+    /**
+     * CwmmessageTable's source holds isDuplicateEpisodeNumber() and names the
+     * uq_series_studynumber index.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A losing race is reported as a message, not a fatal')]
     public function testRaceLoserIsReportedNotFatal(): void
     {

@@ -36,7 +36,7 @@ class ServerAddonSimpleModeTest extends ProclaimTestCase
      * their component-level counterparts are: choosing whether to offer media
      * is not the same decision as styling the button.
      *
-     * @var  string[]
+     * @var    string[]
      * @since  10.6.0
      */
     private const STYLING_FIELDS = [
@@ -50,7 +50,10 @@ class ServerAddonSimpleModeTest extends ProclaimTestCase
     ];
 
     /**
-     * @return  array<string, array{0: string}>
+     * Every server addon's manifest.
+     *
+     * @return  array<string, array{0: string}>  Each manifest's path, keyed by addon folder and file name
+     *
      * @since   10.6.0
      */
     public static function addonXmlProvider(): array
@@ -72,6 +75,15 @@ class ServerAddonSimpleModeTest extends ProclaimTestCase
         return $cases;
     }
 
+    /**
+     * Every server addon hides its media button styling in Simple Mode.
+     *
+     * @param   string  $file  The addon's manifest
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('every server addon hides its media button styling in Simple Mode')]
     #[\PHPUnit\Framework\Attributes\DataProvider('addonXmlProvider')]
     public function testStylingFieldsAreHiddenInSimpleMode(string $file): void

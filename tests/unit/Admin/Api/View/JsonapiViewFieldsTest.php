@@ -41,7 +41,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      * A view with no entry fails the coverage test below rather than being
      * skipped, so a new resource cannot join the API unchecked.
      *
-     * @var array<string, string>
+     * @var    array<string, string>
      * @since 10.5.8
      */
     private const VIEW_TABLES = [
@@ -66,7 +66,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
     /**
      * Declared names that come from a join rather than the view's own table.
      *
-     * @var array<string, string[]>
+     * @var    array<string, string[]>
      * @since 10.5.8
      */
     private const JOIN_ALIASES = [
@@ -109,7 +109,10 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
     }
 
     /**
-     * @return  string
+     * The repository root.
+     *
+     * @return  string  Its absolute path
+     *
      * @since   10.5.8
      */
     private static function repoRoot(): string
@@ -155,6 +158,16 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * The view declares only fields its table actually has.
+     *
+     * @param   string  $view       The view's name
+     * @param   string  $viewClass  Its JsonapiView class
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[DataProvider('viewProvider')]
     #[TestDox('$view declares only fields its table actually has')]
     public function testDeclaredFieldsAreRealColumns(string $view, string $viewClass): void
@@ -225,6 +238,16 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
         return $ref->hasConstant('LIST_SELECT') ? (array) $ref->getConstant('LIST_SELECT') : null;
     }
 
+    /**
+     * The view's list route selects everything the view declares.
+     *
+     * @param   string  $view       The view's name
+     * @param   string  $viewClass  Its JsonapiView class
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[DataProvider('viewProvider')]
     #[TestDox('$view list route selects everything it declares')]
     public function testListRouteSelectsWhatItDeclares(string $view, string $viewClass): void
@@ -270,6 +293,16 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The view keeps heavy fields out of list responses.
+     *
+     * @param   string  $view       The view's name
+     * @param   string  $viewClass  Its JsonapiView class
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[DataProvider('viewProvider')]
     #[TestDox('$view keeps heavy fields out of list responses')]
     public function testHeavyFieldsStayOutOfListResponses(string $view, string $viewClass): void
@@ -283,6 +316,16 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * The view exposes no internal bookkeeping columns.
+     *
+     * @param   string  $view       The view's name
+     * @param   string  $viewClass  Its JsonapiView class
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[DataProvider('viewProvider')]
     #[TestDox('$view exposes no internal bookkeeping columns')]
     public function testSensitiveFieldsExcludedFromView(string $view, string $viewClass): void
@@ -295,6 +338,13 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * The schema parser finds columns, so the checks above are not vacuous.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the schema parser finds columns, so the checks above are not vacuous')]
     public function testTheSchemaParserWorks(): void
     {
@@ -309,6 +359,14 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
         $this->assertContains('teacher_id', $columns['bsms_study_teachers']);
     }
 
+    /**
+     * The controllers that widen the list select are actually read, so the
+     * list-route check is not vacuous.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the controllers that widen the list select are actually being read')]
     public function testTheListSelectCheckIsNotVacuous(): void
     {
@@ -324,6 +382,13 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * Every JsonapiView on disk is covered by these checks.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('every JsonapiView on disk is covered by these checks')]
     public function testEveryViewIsCovered(): void
     {

@@ -31,6 +31,8 @@ class CwmmediafileRedetectTest extends ProclaimTestCase
      * Old params, new params, and whether a re-detect should be triggered.
      *
      * @return  array<string, array{0: array, 1: array, 2: bool}>
+     *
+     * @since   10.5.0
      */
     public static function clearedProvider(): array
     {
@@ -101,6 +103,9 @@ class CwmmediafileRedetectTest extends ProclaimTestCase
      * @param   bool   $expected  Whether detection should re-run.
      *
      * @return  void
+     *
+     * @since   10.5.0
+     * @throws  \ReflectionException
      */
     #[DataProvider('clearedProvider')]
     public function testClearingADetectedFieldRequestsRedetection(array $old, array $new, bool $expected): void

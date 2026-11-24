@@ -15,20 +15,63 @@ use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use Joomla\Database\DatabaseDriver;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * CwmmessageTable::check() requires a title, and refuses an episode number
+ * another message in the series already holds.
+ *
+ * @since  10.2.0
+ */
 #[CoversClass(CwmmessageTable::class)]
 class CwmmessageTableCheckTest extends IntegrationTestCase
 {
+    /**
+     * The table under test.
+     *
+     * @var    CwmmessageTable
+     * @since  10.2.0
+     */
     private CwmmessageTable $table;
 
+    /**
+     * The test database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
-    /** @var int[] Message ids holding a number in the fixture series (see seedDuplicateFixture()) */
+    /**
+     * The fixture messages that share an episode number.
+     *
+     * @var    int[]
+     * @since  10.5.6
+     */
     private array $tiedIds = [];
 
+    /**
+     * The fixture series.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $seriesId = 0;
 
+    /**
+     * The fixture message whose episode number no other message holds.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $uniqueId = 0;
 
+    /**
+     * Create a fresh table, and with a test database open a transaction for the
+     * fixture.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,6 +83,13 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * Roll back the fixture.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -58,6 +108,10 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
      * — a self-contained
      * fixture, independent of whatever data (if any) the target database
      * already has.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     private function seedDuplicateFixture(): void
     {
@@ -111,12 +165,26 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
         $this->uniqueId = $insertSermon('Fixture Episode 4', '4');
     }
 
+    /**
+     * A message with a title passes.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckPassesWithValidData(): void
     {
         $this->table->studytitle = 'John 3:16 — For God So Loved';
         $this->assertTrue($this->table->check());
     }
 
+    /**
+     * A NULL title is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenStudytitleNull(): void
     {
         $this->table->studytitle = null;
@@ -124,6 +192,13 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * An empty title is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenStudytitleEmpty(): void
     {
         $this->table->studytitle = '';
@@ -131,6 +206,13 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * A title of only whitespace is refused.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     public function testCheckThrowsWhenStudytitleWhitespace(): void
     {
         $this->table->studytitle = '   ';
@@ -145,6 +227,10 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
      * tied at studynumber '1' and one unique message at studynumber '4',
      * seeded fresh per test and rolled back afterward — not dependent on any
      * pre-existing data in the target database.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testCheckThrowsOnNewMessageWithDuplicateNumber(): void
     {
@@ -158,6 +244,13 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * An episode number no other message in the series holds passes.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testCheckPassesForUniqueNumberInSeries(): void
     {
         $this->seedDuplicateFixture();
@@ -169,6 +262,14 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
         $this->assertTrue($this->table->check());
     }
 
+    /**
+     * Re-saving a message whose number was already shared, without changing it,
+     * is not blocked.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testCheckDoesNotThrowWhenResavingPreExistingDuplicateUnchanged(): void
     {
         $this->seedDuplicateFixture();
@@ -184,6 +285,13 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
         $this->assertTrue($this->table->check());
     }
 
+    /**
+     * Changing a message's number to one another message holds is refused.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testCheckThrowsWhenChangingToANewlyConflictingNumber(): void
     {
         $this->seedDuplicateFixture();
@@ -199,6 +307,13 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
         $this->table->check();
     }
 
+    /**
+     * Without a series, the episode number is not checked.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testCheckIgnoresStudynumberWhenNoSeriesSelected(): void
     {
         $this->table->studytitle  = 'Standalone message';

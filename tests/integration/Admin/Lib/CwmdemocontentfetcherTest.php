@@ -92,6 +92,13 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
      * counts how many requests were actually made — several tests assert
      * this stays 0, proving a short-circuit really happened before any
      * network access.
+     *
+     * @param   Response|\Throwable  $response  Returned, or thrown, for every request.
+     * @param   ?object              $spy       When given, its calls property counts the requests made.
+     *
+     * @return  Http  A client that never opens a socket.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function fakeHttp(Response|\Throwable $response, ?object $spy = null): Http
     {

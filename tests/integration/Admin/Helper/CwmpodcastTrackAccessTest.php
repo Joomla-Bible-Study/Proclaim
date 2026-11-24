@@ -44,18 +44,44 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
 {
     /**
      * View levels a logged-out visitor holds on a default Joomla install.
+     *
+     * @var    int[]
+     * @since  10.7.0
      */
     private const GUEST = [1];
 
     /**
      * Public plus Registered.
+     *
+     * @var    int[]
+     * @since  10.7.0
      */
     private const MEMBER = [1, 2];
 
+    /**
+     * The database, inside a transaction each test rolls back. tearDown() checks that the
+     * rollback restored the media files.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.0
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * How many media files there were when setUp() ran.
+     *
+     * @var    int
+     * @since  10.7.0
+     */
     private int $mediaAtStart = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction and count the media files.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -74,6 +100,14 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
         $this->mediaAtStart = $this->countMedia();
     }
 
+    /**
+     * Roll back the transaction setUp() opened, then fail the test if the media files don't
+     * number what they did at setUp().
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function tearDown(): void
     {
         $leaked = null;
@@ -104,7 +138,11 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
     }
 
     /**
+     * The number of media files.
+     *
      * @return  int  Total rows in the media table.
+     *
+     * @since   10.7.0
      */
     private function countMedia(): int
     {
@@ -119,6 +157,8 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
      * @param   array<string, int>  $state  Overrides for any of the seven flags.
      *
      * @return  int  The new media file's id.
+     *
+     * @since   10.7.0
      */
     private function makeChain(array $state = []): int
     {
@@ -171,6 +211,14 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * findPublishedMedia() gives a guest the media file when it, its message and its series
+     * are all published and public.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A fully public, fully published chain is reachable by a guest')]
     public function testPublicMediaIsServed(): void
     {
@@ -187,6 +235,13 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * findPublishedMedia() gives a guest the media file of a message that is in no series.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A message outside any series is reachable, not filtered out by the series clauses')]
     public function testMediaWithNoSeriesIsServed(): void
     {
@@ -201,6 +256,15 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * findPublishedMedia() refuses a guest the media file when one link alone stands in the
+     * way: the media file, its message or its series restricted to Registered, or any of
+     * the three unpublished.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('Each link in the chain refuses a guest on its own')]
     public function testEachLinkRefusesIndependently(): void
     {
@@ -223,6 +287,14 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * For a media file, message or series restricted to Registered, findPublishedMedia()
+     * refuses a guest and gives the media file to a Registered user.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('Holding the level opens each link that refused without it')]
     public function testHoldingTheLevelGrantsAccess(): void
     {
@@ -244,6 +316,13 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * findPublishedMedia() refuses a public media file when given no view levels at all.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('An empty level set is treated as holding nothing, not everything')]
     public function testEmptyLevelSetRefusesPublicMedia(): void
     {
@@ -257,6 +336,13 @@ class CwmpodcastTrackAccessTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * findPublishedMedia() returns null for a media id of 0.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A missing media id returns null rather than an arbitrary row')]
     public function testUnknownIdReturnsNull(): void
     {

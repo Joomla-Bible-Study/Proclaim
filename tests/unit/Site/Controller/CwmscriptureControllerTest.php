@@ -32,6 +32,9 @@ class CwmscriptureControllerTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $method): string
     {
@@ -44,6 +47,14 @@ class CwmscriptureControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * getPassageXHR() has no provider fallback chain of its own.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testGetPassageXHRHasNoProviderFallbackChain(): void
     {
         $body = self::methodBody('getPassageXHR');
@@ -53,6 +64,14 @@ class CwmscriptureControllerTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/hasText\(\)/', $body, 'getPassageXHR() must not inspect provider results directly — see #1445');
     }
 
+    /**
+     * getPassageXHR() leaves the passage lookup to CwmscriptureLookupHelper.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testGetPassageXHRDelegatesToLookupHelper(): void
     {
         $body = self::methodBody('getPassageXHR');
@@ -64,6 +83,14 @@ class CwmscriptureControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * getPassageXHR() checks the CSRF token and refuses an empty reference.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testGetPassageXHRStillChecksTokenAndReference(): void
     {
         $body = self::methodBody('getPassageXHR');

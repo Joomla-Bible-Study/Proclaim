@@ -34,12 +34,24 @@ class CwmguidedtourHelperStartTourTest extends ProclaimTestCase
      * A helper holding the shipped definitions, built without a database.
      *
      * @return  CwmguidedtourHelper
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
      */
     private function helper(): CwmguidedtourHelper
     {
         return (new \ReflectionClass(CwmguidedtourHelper::class))->newInstanceWithoutConstructor();
     }
 
+    /**
+     * Every post-install message linking to startTour names a shipped tour, read the
+     * way the control panel reads it, and at least one message has such a link.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('Every post-install startTour link names a shipped tour')]
     public function testEveryPostInstallStartTourLinkNamesATour(): void
     {
@@ -70,6 +82,14 @@ class CwmguidedtourHelperStartTourTest extends ProclaimTestCase
         $this->assertGreaterThan(0, $checked, 'No post-install message links to a tour, so this test checked nothing');
     }
 
+    /**
+     * startTourUid() maps the legacy value 1 to the What's New tour.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('startTourUid() keeps the legacy "1" pointing at the What\'s New tour')]
     public function testLegacyOneMeansWhatsNew(): void
     {
@@ -80,6 +100,14 @@ class CwmguidedtourHelperStartTourTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * startTourUid() returns null for an empty string, 0 or an unknown value.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('startTourUid() names nothing for an empty or unknown value')]
     public function testUnknownValuesNameNothing(): void
     {

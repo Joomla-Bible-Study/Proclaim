@@ -34,7 +34,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * A series with no teacher renders in the listing rather than throwing a
+ * TypeError that takes the whole page down.
+ *
+ * @since  10.5.8
  */
 #[CoversClass(Cwmlisting::class)]
 class CwmlistingNullTeacherTest extends IntegrationTestCase
@@ -43,7 +46,8 @@ class CwmlistingNullTeacherTest extends IntegrationTestCase
      * A layout-editor element row, as getFluidRow() receives one.
      *
      * @return  \stdClass
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function elementRow(): \stdClass
     {
@@ -63,7 +67,8 @@ class CwmlistingNullTeacherTest extends IntegrationTestCase
      * A series as the listing query returns one, with no teacher.
      *
      * @return  \stdClass
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function teacherlessSeries(): \stdClass
     {
@@ -82,6 +87,14 @@ class CwmlistingNullTeacherTest extends IntegrationTestCase
         ];
     }
 
+    /**
+     * A series with a null teacher renders instead of throwing.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     */
     #[TestDox('a series with a null teacher renders instead of throwing')]
     public function testNullTeacherDoesNotThrow(): void
     {
@@ -105,6 +118,14 @@ class CwmlistingNullTeacherTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * A series with a teacher renders too.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     */
     #[TestDox('a series with a teacher still renders')]
     public function testATeacherStillRenders(): void
     {

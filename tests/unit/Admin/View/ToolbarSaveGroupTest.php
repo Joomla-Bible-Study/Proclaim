@@ -45,7 +45,10 @@ class ToolbarSaveGroupTest extends ProclaimTestCase
     ];
 
     /**
-     * @return  string
+     * The repository root.
+     *
+     * @return  string  Its path
+     *
      * @since   10.6.0
      */
     private static function repoRoot(): string
@@ -78,6 +81,17 @@ class ToolbarSaveGroupTest extends ProclaimTestCase
         return $cases;
     }
 
+    /**
+     * Each edit view groups its save variants into the save-group dropdown
+     * rather than calling them as flat buttons, or is listed as having none.
+     *
+     * @param   string  $view    The view's directory name
+     * @param   string  $source  Its HtmlView source
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[DataProvider('editViewProvider')]
     #[TestDox('$view groups its save variants into a dropdown')]
     public function testSaveVariantsAreGrouped(string $view, string $source): void
@@ -117,6 +131,16 @@ class ToolbarSaveGroupTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Each edit view that type-hints the child bar imports Toolbar.
+     *
+     * @param   string  $view    The view's directory name
+     * @param   string  $source  Its HtmlView source
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[DataProvider('editViewProvider')]
     #[TestDox('$view imports Toolbar when it type-hints the child bar')]
     public function testToolbarImported(string $view, string $source): void

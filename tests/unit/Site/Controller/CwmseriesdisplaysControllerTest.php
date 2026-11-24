@@ -35,6 +35,16 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class CwmseriesdisplaysControllerTest extends ProclaimTestCase
 {
+    /**
+     * The source of one of the controller's methods.
+     *
+     * @param   string  $method  The method name
+     *
+     * @return  string  Its source lines
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private static function methodBody(string $method): string
     {
         $reflection = new \ReflectionMethod(CwmseriesdisplaysController::class, $method);
@@ -46,6 +56,14 @@ class CwmseriesdisplaysControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * getModel()'s default config does not set ignore_request, so populateState() runs.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testGetModelDefaultConfigDoesNotIgnoreRequest(): void
     {
         $reflection  = new \ReflectionMethod(CwmseriesdisplaysController::class, 'getModel');
@@ -60,6 +78,14 @@ class CwmseriesdisplaysControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * paginateAjax() catches any Throwable, not just Exception.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testPaginateAjaxCatchesThrowableNotJustException(): void
     {
         $body = self::methodBody('paginateAjax');

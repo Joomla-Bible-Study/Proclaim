@@ -37,7 +37,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 class SubmodulePinsTest extends ProclaimTestCase
 {
     /**
-     * @return  string
+     * The repository root.
+     *
+     * @return  string  Its absolute path
+     *
      * @since   10.6.0
      */
     private static function repoRoot(): string
@@ -77,6 +80,13 @@ class SubmodulePinsTest extends ProclaimTestCase
         return $match[1];
     }
 
+    /**
+     * Both lib_cwmscripture checkouts are pinned to the same commit.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('both lib_cwmscripture checkouts are pinned to the same commit')]
     public function testScriptureLibraryPinsAgree(): void
     {

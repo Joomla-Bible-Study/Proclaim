@@ -24,7 +24,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * The scripture1 and scripture2 elements read a row's references from the
+ * junction, never from properties that look like the retired flat columns.
+ *
+ * @since  10.5.8
  */
 #[CoversClass(Cwmlisting::class)]
 class CwmlistingScriptureSourceTest extends IntegrationTestCase
@@ -79,13 +82,21 @@ class CwmlistingScriptureSourceTest extends IntegrationTestCase
      * either way; asserting on one spelling passes or fails by suite order.
      *
      * @return  Registry  Params asking for chapters only, the default.
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function params(): Registry
     {
         return new Registry(['show_verses' => 0]);
     }
 
+    /**
+     * scripture1 renders the junction reference, not the flat column.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('scripture1 renders the junction reference, not the flat column')]
     public function testFirstReferenceComesFromTheJunction(): void
     {
@@ -100,6 +111,13 @@ class CwmlistingScriptureSourceTest extends IntegrationTestCase
         $this->assertStringNotContainsStringIgnoringCase('GENESIS', $rendered);
     }
 
+    /**
+     * scripture2 renders the junction reference, not the flat column.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('scripture2 renders the junction reference, not the flat column')]
     public function testSecondReferenceComesFromTheJunction(): void
     {
@@ -109,6 +127,13 @@ class CwmlistingScriptureSourceTest extends IntegrationTestCase
         $this->assertStringNotContainsStringIgnoringCase('EXODUS', $rendered);
     }
 
+    /**
+     * A row with no junction references renders nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a row with no junction references renders nothing')]
     public function testRowsWithoutReferencesRenderNothing(): void
     {
@@ -120,6 +145,13 @@ class CwmlistingScriptureSourceTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * hasScripture() reports only what the junction holds.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('hasScripture reports only what the junction holds')]
     public function testHasScriptureReadsTheJunctionOnly(): void
     {
@@ -134,6 +166,13 @@ class CwmlistingScriptureSourceTest extends IntegrationTestCase
         $this->assertFalse(Cwmlisting::hasScripture((object) ['id' => 1], 1));
     }
 
+    /**
+     * A junction row with one reference has no second position.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a junction row with one reference has no second position')]
     public function testASingleJunctionReferenceHasNoSecond(): void
     {

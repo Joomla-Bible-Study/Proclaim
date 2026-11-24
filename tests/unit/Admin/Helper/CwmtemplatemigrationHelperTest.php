@@ -24,14 +24,33 @@ use PHPUnit\Framework\Attributes\DataProvider;
  *
  * Accepts any method call and returns $this so fluent builder chains inside
  * CwmtemplatemigrationHelper work without a real database.
+ *
+ * @since  10.1.0
  */
 class TemplateMigFakeQuery
 {
+    /**
+     * Accept any builder call and return the stub, so a chain keeps working.
+     *
+     * @param   string  $name  The method called
+     * @param   array   $args  Its arguments
+     *
+     * @return  static  This stub
+     *
+     * @since   10.1.0
+     */
     public function __call(string $name, array $args): static
     {
         return $this;
     }
 
+    /**
+     * A placeholder SQL string.
+     *
+     * @return  string  FAKE SQL
+     *
+     * @since   10.1.0
+     */
     public function __toString(): string
     {
         return 'FAKE SQL';
@@ -44,12 +63,26 @@ class TemplateMigFakeQuery
  * Passing this object (not an array) to both ensures that writes from
  * updateTemplateParams() are immediately visible to the next loadObjectList()
  * call — which is how the real DB behaves across migration stages.
+ *
+ * @since  10.1.0
  */
 class TemplateMigStore
 {
-    /** @var object[] */
+    /**
+     * The template rows.
+     *
+     * @var    object[]
+     * @since  10.1.0
+     */
     public array $rows = [];
 
+    /**
+     * Hold the given template rows.
+     *
+     * @param   array  $rows  The template rows
+     *
+     * @since   10.1.0
+     */
     public function __construct(array $rows)
     {
         $this->rows = $rows;
@@ -61,17 +94,41 @@ class TemplateMigStore
  *
  * Delegates loadObjectList() to the shared TemplateMigStore so that after
  * updateTemplateParams() mutates the store, subsequent reads get fresh data.
+ *
+ * @since  10.1.0
  */
 class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver
 {
+    /**
+     * The store this double reads from.
+     *
+     * @var    TemplateMigStore
+     * @since  10.1.0
+     */
     private TemplateMigStore $store;
 
+    /**
+     * Keep the store, without connecting to a database.
+     *
+     * @param   TemplateMigStore  $store  The shared template store
+     *
+     * @since   10.1.0
+     */
     public function __construct(TemplateMigStore $store)
     {
         // Skip parent constructor — no real DB connection needed
         $this->store = $store;
     }
 
+    /**
+     * A fresh query stub.
+     *
+     * @param   bool  $new  Ignored
+     *
+     * @return  TemplateMigFakeQuery  The stub
+     *
+     * @since   10.1.0
+     */
     public function getQuery($new = false): TemplateMigFakeQuery
     {
         return new TemplateMigFakeQuery();
@@ -82,36 +139,100 @@ class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver
     // satisfy, and the inherited implementation needs a factory this double
     // skips constructing — so hand back a real query. The fake DB ignores what
     // is passed to setQuery() anyway, and building it for real costs nothing.
+    /**
+     * A real MySQLi query on this double, which the stub cannot stand in for.
+     *
+     * @return  \Joomla\Database\QueryInterface  The query
+     *
+     * @since   10.5.0
+     */
     public function createQuery(): \Joomla\Database\QueryInterface
     {
         return new \Joomla\Database\Mysqli\MysqliQuery($this);
     }
 
+    /**
+     * Accept a query and ignore it.
+     *
+     * @param   mixed  $query   The query
+     * @param   int    $offset  Ignored
+     * @param   int    $limit   Ignored
+     *
+     * @return  static  This double
+     *
+     * @since   10.1.0
+     */
     public function setQuery($query, $offset = 0, $limit = 0): static
     {
         return $this;
     }
 
+    /**
+     * The store's rows.
+     *
+     * @param   string  $key    Ignored
+     * @param   string  $class  Ignored
+     *
+     * @return  array  The rows
+     *
+     * @since   10.1.0
+     */
     public function loadObjectList($key = '', $class = \stdClass::class): array
     {
         return $this->store->rows;
     }
 
+    /**
+     * The params of the store's rows.
+     *
+     * @param   int  $offset  Ignored
+     *
+     * @return  array  The params values
+     *
+     * @since   10.1.0
+     */
     public function loadColumn($offset = 0): array
     {
         return array_column($this->store->rows, 'params');
     }
 
+    /**
+     * Pretend to run the query.
+     *
+     * @return  bool  Always true
+     *
+     * @since   10.1.0
+     */
     public function execute(): bool
     {
         return true;
     }
 
+    /**
+     * Quote a value with single quotes and addslashes().
+     *
+     * @param   mixed  $text    The value
+     * @param   bool   $escape  Ignored
+     *
+     * @return  string  The quoted value
+     *
+     * @since   10.1.0
+     */
     public function quote($text, $escape = true): string
     {
         return "'" . addslashes((string) $text) . "'";
     }
 
+    /**
+     * Wrap a name, or each of several names, in backticks.
+     *
+     * @param   string|array  $name  The name or names
+     * @param   mixed         $as    Ignored
+     *
+     * @return  string|array  The quoted name or names
+     *
+     * @since   10.1.0
+     */
     public function quoteName($name, $as = null): string|array
     {
         if (\is_array($name)) {
@@ -122,92 +243,281 @@ class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver
     }
 
     // Abstract method implementations required by DatabaseDriver
+    /**
+     * No CREATE statements.
+     *
+     * @param   mixed  $tables  Ignored
+     *
+     * @return  array  An empty array
+     *
+     * @since   10.3.0
+     */
     public function getTableCreate($tables)
     {
         return [];
     }
 
+    /**
+     * Not supported by this double.
+     *
+     * @param   string  $query  The query
+     *
+     * @return  \Joomla\Database\StatementInterface  Never; it always throws
+     *
+     * @since   10.3.0
+     * @throws  \RuntimeException  Always
+     */
     protected function prepareStatement(string $query): \Joomla\Database\StatementInterface
     {
         throw new \RuntimeException('prepareStatement not implemented in test fake');
     }
 
+    /**
+     * Report that the character set wasn't set.
+     *
+     * @return  bool  Always false
+     *
+     * @since   10.3.0
+     */
     public function setUtf()
     {
         return false;
     }
+    /**
+     * Do nothing; there is no connection to make.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function connect()
     {
     }
+    /**
+     * Report a connection.
+     *
+     * @return  bool  Always true
+     *
+     * @since   10.3.0
+     */
     public function connected()
     {
         return true;
     }
+    /**
+     * Escape a value with addslashes().
+     *
+     * @param   mixed  $text   The value
+     * @param   bool   $extra  Ignored
+     *
+     * @return  string  The escaped value
+     *
+     * @since   10.3.0
+     */
     public function escape($text, $extra = false)
     {
         return addslashes((string) $text);
     }
+    /**
+     * A fixed collation.
+     *
+     * @return  string  utf8mb4_general_ci
+     *
+     * @since   10.3.0
+     */
     public function getCollation()
     {
         return 'utf8mb4_general_ci';
     }
+    /**
+     * A fixed connection collation.
+     *
+     * @return  string  utf8mb4_general_ci
+     *
+     * @since   10.3.0
+     */
     public function getConnectionCollation()
     {
         return 'utf8mb4_general_ci';
     }
+    /**
+     * No connection encryption.
+     *
+     * @return  string  An empty string
+     *
+     * @since   10.3.0
+     */
     public function getConnectionEncryption(): string
     {
         return '';
     }
+    /**
+     * Report no support for connection encryption.
+     *
+     * @return  bool  Always false
+     *
+     * @since   10.3.0
+     */
     public function isConnectionEncryptionSupported(): bool
     {
         return false;
     }
+    /**
+     * No columns.
+     *
+     * @param   string  $table     Ignored
+     * @param   bool    $typeOnly  Ignored
+     *
+     * @return  array  An empty array
+     *
+     * @since   10.3.0
+     */
     public function getTableColumns($table, $typeOnly = true)
     {
         return [];
     }
+    /**
+     * No keys.
+     *
+     * @param   mixed  $tables  Ignored
+     *
+     * @return  array  An empty array
+     *
+     * @since   10.3.0
+     */
     public function getTableKeys($tables)
     {
         return [];
     }
+    /**
+     * No tables.
+     *
+     * @return  array  An empty array
+     *
+     * @since   10.3.0
+     */
     public function getTableList()
     {
         return [];
     }
+    /**
+     * A fixed server version.
+     *
+     * @return  string  8.0
+     *
+     * @since   10.3.0
+     */
     public function getVersion()
     {
         return '8.0';
     }
+    /**
+     * No inserted id.
+     *
+     * @return  int  Always 0
+     *
+     * @since   10.3.0
+     */
     public function insertid()
     {
         return 0;
     }
+    /**
+     * Report the driver as supported.
+     *
+     * @return  bool  Always true
+     *
+     * @since   10.3.0
+     */
     public static function isSupported()
     {
         return true;
     }
+    /**
+     * Do nothing.
+     *
+     * @param   string  $tableName  Ignored
+     *
+     * @return  static  This double
+     *
+     * @since   10.3.0
+     */
     public function lockTable($tableName)
     {
         return $this;
     }
+    /**
+     * Do nothing.
+     *
+     * @param   string  $oldTable  Ignored
+     * @param   string  $newTable  Ignored
+     * @param   mixed   $backup    Ignored
+     * @param   mixed   $prefix    Ignored
+     *
+     * @return  static  This double
+     *
+     * @since   10.3.0
+     */
     public function renameTable($oldTable, $newTable, $backup = null, $prefix = null)
     {
         return $this;
     }
+    /**
+     * Pretend to select a database.
+     *
+     * @param   string  $database  Ignored
+     *
+     * @return  bool  Always true
+     *
+     * @since   10.3.0
+     */
     public function select($database)
     {
         return true;
     }
+    /**
+     * Do nothing.
+     *
+     * @param   bool  $toSavepoint  Ignored
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function transactionCommit($toSavepoint = false)
     {
     }
+    /**
+     * Do nothing.
+     *
+     * @param   bool  $toSavepoint  Ignored
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function transactionRollback($toSavepoint = false)
     {
     }
+    /**
+     * Do nothing.
+     *
+     * @param   bool  $asSavepoint  Ignored
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
     public function transactionStart($asSavepoint = false)
     {
     }
+    /**
+     * Do nothing.
+     *
+     * @return  static  This double
+     *
+     * @since   10.3.0
+     */
     public function unlockTables()
     {
         return $this;
@@ -223,14 +533,34 @@ class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver
  *  - Overrides updateTemplateParams() to mutate the shared store and capture the
  *    final params for assertion.
  *  - Exposes protected version-filter methods as public for white-box tests.
+ *
+ * @since  10.1.0
  */
 class TestableCwmtemplatemigrationHelper extends CwmtemplatemigrationHelper
 {
+    /**
+     * The store shared with the fake database.
+     *
+     * @var    TemplateMigStore
+     * @since  10.1.0
+     */
     private TemplateMigStore $store;
 
-    /** @var array<int, string>  id → final params JSON (last write wins per ID) */
+    /**
+     * Final params JSON by template id; the last write for an id wins.
+     *
+     * @var    array<int, string>
+     * @since  10.1.0
+     */
     private array $finalParams = [];
 
+    /**
+     * Build the helper on a fake database that shares a store holding these rows.
+     *
+     * @param   array  $templateRows  The template rows
+     *
+     * @since   10.1.0
+     */
     public function __construct(array $templateRows)
     {
         $this->store = new TemplateMigStore($templateRows);
@@ -239,6 +569,16 @@ class TestableCwmtemplatemigrationHelper extends CwmtemplatemigrationHelper
 
     // ---- Override to keep store and assertions in sync ----------------------
 
+    /**
+     * Write the params into the shared store, and record them for the assertions.
+     *
+     * @param   int     $templateId  The template
+     * @param   string  $params      Its new params JSON
+     *
+     * @return  bool  Always true
+     *
+     * @since   10.1.0
+     */
     protected function updateTemplateParams(int $templateId, string $params): bool
     {
         // Update the shared store so subsequent migration stages read fresh data.
@@ -255,13 +595,27 @@ class TestableCwmtemplatemigrationHelper extends CwmtemplatemigrationHelper
         return true;
     }
 
-    /** Return the final params JSON for each template written during migration. */
+    /**
+     * Return the final params JSON for each template written during migration.
+     *
+     * @return  array<int, string>  Params JSON by template id
+     *
+     * @since   10.1.0
+     */
     public function getSavedParams(): array
     {
         return $this->finalParams;
     }
 
-    /** Return the current (post-migration) params for template #$id as an array. */
+    /**
+     * Return the current (post-migration) params for template #$id as an array.
+     *
+     * @param   int  $id  The template's id
+     *
+     * @return  array  The params, or an empty array when the template has none
+     *
+     * @since   10.2.0
+     */
     public function getParamsArray(int $id = 1): array
     {
         return json_decode($this->finalParams[$id] ?? '{}', true) ?? [];
@@ -269,21 +623,57 @@ class TestableCwmtemplatemigrationHelper extends CwmtemplatemigrationHelper
 
     // ---- Expose protected version-filter methods for white-box tests --------
 
+    /**
+     * Expose getMigrationsAfterVersion().
+     *
+     * @param   string  $fromVersion  The version migrated from
+     *
+     * @return  array  The migrations after it
+     *
+     * @since   10.1.0
+     */
     public function callGetMigrationsAfterVersion(string $fromVersion): array
     {
         return $this->getMigrationsAfterVersion($fromVersion);
     }
 
+    /**
+     * Expose getRenamesAfterVersion().
+     *
+     * @param   string  $fromVersion  The version migrated from
+     *
+     * @return  array  The renames after it
+     *
+     * @since   10.1.0
+     */
     public function callGetRenamesAfterVersion(string $fromVersion): array
     {
         return $this->getRenamesAfterVersion($fromVersion);
     }
 
+    /**
+     * Expose getColorConversionsAfterVersion().
+     *
+     * @param   string  $fromVersion  The version migrated from
+     *
+     * @return  array  The color conversions after it
+     *
+     * @since   10.1.0
+     */
     public function callGetColorConversionsAfterVersion(string $fromVersion): array
     {
         return $this->getColorConversionsAfterVersion($fromVersion);
     }
 
+    /**
+     * Expose getPathConversionsAfterVersion().
+     *
+     * @param   string  $fromVersion  The version migrated from
+     *
+     * @return  array  The path conversions after it
+     *
+     * @since   10.1.0
+     */
     public function callGetPathConversionsAfterVersion(string $fromVersion): array
     {
         return $this->getPathConversionsAfterVersion($fromVersion);
@@ -291,6 +681,15 @@ class TestableCwmtemplatemigrationHelper extends CwmtemplatemigrationHelper
 
     // ---- Expose individual migration stage methods for isolated testing -----
 
+    /**
+     * Expose convertPathsInTemplates().
+     *
+     * @param   array  $replacements  Search => replace path pairs
+     *
+     * @return  int  Number of templates updated
+     *
+     * @since   10.1.0
+     */
     public function callConvertPathsInTemplates(array $replacements): int
     {
         return $this->convertPathsInTemplates($replacements);
@@ -304,7 +703,11 @@ class TestableCwmtemplatemigrationHelper extends CwmtemplatemigrationHelper
 /**
  * Build a testable helper pre-loaded with the given template params.
  *
- * @param  array<array<string,mixed>|string>  $templates
+ * @param   array<array<string,mixed>|string>  $templates  Each template's params, as an array or JSON
+ *
+ * @return  TestableCwmtemplatemigrationHelper  The helper
+ *
+ * @since   10.1.0
  */
 function makeMigHelper(array $templates): TestableCwmtemplatemigrationHelper
 {
@@ -351,11 +754,25 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 1 – Version filtering (pure logic, no DB)
     // =========================================================================
 
+    /**
+     * From 0.0.0, the 10.1.0 migrations are selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testMigrationsAfterVersion000Returns101(): void
     {
         $this->assertArrayHasKey('10.1.0', makeMigHelper([])->callGetMigrationsAfterVersion('0.0.0'));
     }
 
+    /**
+     * From 10.1.0, no migrations are selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testMigrationsAfterVersion101ReturnsEmpty(): void
     {
         $this->assertEmpty(
@@ -364,41 +781,97 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * From 10.0.0, the 10.1.0 migrations are selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testMigrationsAfterVersion100Returns101(): void
     {
         $this->assertArrayHasKey('10.1.0', makeMigHelper([])->callGetMigrationsAfterVersion('10.0.0'));
     }
 
+    /**
+     * From 10.9.9, the 10.1.0 migrations are not selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testMigrationsAfterVersion1099DoesNotReturn101(): void
     {
         $this->assertArrayNotHasKey('10.1.0', makeMigHelper([])->callGetMigrationsAfterVersion('10.9.9'));
     }
 
+    /**
+     * From 0.0.0, the 10.1.0 renames are selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRenamesAfterVersion000Returns101(): void
     {
         $this->assertArrayHasKey('10.1.0', makeMigHelper([])->callGetRenamesAfterVersion('0.0.0'));
     }
 
+    /**
+     * From 10.1.0, no renames are selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRenamesAfterVersion101ReturnsEmpty(): void
     {
         $this->assertEmpty(makeMigHelper([])->callGetRenamesAfterVersion('10.1.0'));
     }
 
+    /**
+     * From 0.0.0, the 10.1.0 color conversions are selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testColorConversionsAfterVersion000Returns101(): void
     {
         $this->assertArrayHasKey('10.1.0', makeMigHelper([])->callGetColorConversionsAfterVersion('0.0.0'));
     }
 
+    /**
+     * From 10.1.0, no color conversions are selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testColorConversionsAfterVersion101ReturnsEmpty(): void
     {
         $this->assertEmpty(makeMigHelper([])->callGetColorConversionsAfterVersion('10.1.0'));
     }
 
+    /**
+     * From 0.0.0, the 10.1.0 path conversions are selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testPathConversionsAfterVersion000Returns101(): void
     {
         $this->assertArrayHasKey('10.1.0', makeMigHelper([])->callGetPathConversionsAfterVersion('0.0.0'));
     }
 
+    /**
+     * From 10.1.0, no path conversions are selected.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testPathConversionsAfterVersion101ReturnsEmpty(): void
     {
         $this->assertEmpty(makeMigHelper([])->callGetPathConversionsAfterVersion('10.1.0'));
@@ -412,6 +885,12 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * Every parameter documented in Backward-Compatibility-Breaks-10.1.md
      * must appear in the $migrations array with the correct default value.
      *
+     * @param   string  $param            The parameter's name
+     * @param   string  $expectedDefault  The default it should be added with
+     *
+     * @return  void
+     *
+     * @since   10.2.0
      */
     #[DataProvider('provideExpectedNewParams')]
     public function testMigrationHasAllDocumentedNewParams(string $param, string $expectedDefault): void
@@ -423,7 +902,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame($expectedDefault, $migrations['10.1.0'][$param], "Wrong default for {$param}");
     }
 
-    /** @return array<string, array{string, string}> */
+    /**
+     * Each new 10.1.0 parameter, with the default it should be added with.
+     *
+     * @return  array<string, array{string, string}>  Each case
+     *
+     * @since   10.1.0
+     */
     public static function provideExpectedNewParams(): array
     {
         return [
@@ -441,6 +926,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * The 10.1.0 migration defines exactly 11 new default params.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testMigrationHasExactly11ParamsFor101(): void
     {
         $migrations = makeMigHelper([])->getMigrations();
@@ -456,6 +948,12 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * Every rename documented in Backward-Compatibility-Breaks-10.1.md must be
      * registered in the $renames array.
      *
+     * @param   string  $oldName  The parameter's old name
+     * @param   string  $newName  The name it is renamed to
+     *
+     * @return  void
+     *
+     * @since   10.2.0
      */
     #[DataProvider('provideExpectedRenames')]
     public function testRenameMapHasAllDocumentedEntries(string $oldName, string $newName): void
@@ -470,7 +968,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame($newName, $map['10.1.0'][$oldName], "Wrong mapping for: {$oldName}");
     }
 
-    /** @return array<string, array{string, string}> */
+    /**
+     * Each 10.1.0 rename, old name then new.
+     *
+     * @return  array<string, array{string, string}>  Each case
+     *
+     * @since   10.1.0
+     */
     public static function provideExpectedRenames(): array
     {
         return [
@@ -491,6 +995,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * The 10.1.0 rename map has exactly 14 entries.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRenameMapHasExactly14EntriesFor101(): void
     {
         $h    = makeMigHelper([]);
@@ -505,6 +1016,15 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 2c – B/C completeness: color fields
     // =========================================================================
 
+    /**
+     * Each documented color field is registered for the 10.1.0 color conversion.
+     *
+     * @param   string  $field  The field's name
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('provideExpectedColorFields')]
     public function testColorConversionListHasAllDocumentedFields(string $field): void
     {
@@ -517,7 +1037,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertContains($field, $colors['10.1.0'], "Color field not registered: {$field}");
     }
 
-    /** @return array<string, array{string}> */
+    /**
+     * Each color field the 10.1.0 conversion must cover.
+     *
+     * @return  array<string, array{string}>  Each case
+     *
+     * @since   10.1.0
+     */
     public static function provideExpectedColorFields(): array
     {
         return [
@@ -535,6 +1061,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 2d – B/C completeness: path conversions
     // =========================================================================
 
+    /**
+     * The 10.1.0 path conversions map media/com_biblestudy/ to media/com_proclaim/.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testPathConversionHasBibleStudyToProclaimMapping(): void
     {
         $h     = makeMigHelper([]);
@@ -551,6 +1084,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 3 – apply-if-missing logic
     // =========================================================================
 
+    /**
+     * Migrating an empty template adds the pagination_style default.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testApplyParamsAddsDefaultToEmptyTemplate(): void
     {
         $h = makeMigHelper(['{}']);
@@ -561,6 +1101,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame('pagination', $params['pagination_style']);
     }
 
+    /**
+     * Migrating keeps a template's own pagination_style value.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testApplyParamsDoesNotOverwriteExistingValue(): void
     {
         $h = makeMigHelper([['pagination_style' => 'loadmore']]);
@@ -570,6 +1117,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame('loadmore', $params['pagination_style'] ?? 'pagination', 'Custom value must not be overwritten');
     }
 
+    /**
+     * Migrating from 10.1.0 runs no migrations and writes nothing.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testMigrateFromSameVersionRunsNothing(): void
     {
         $h     = makeMigHelper(['{}']);
@@ -583,6 +1137,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 4 – rename logic
     // =========================================================================
 
+    /**
+     * A rename moves the old param's value to the new name and removes the old name.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRenameTransfersValueToNewName(): void
     {
         $h = makeMigHelper([['teacher_id' => '42']]);
@@ -594,6 +1155,14 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertArrayNotHasKey('teacher_id', $params, 'Old param name must be removed');
     }
 
+    /**
+     * All six list filter params are renamed to their l-prefixed names, and the old names
+     * are removed.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRenameAllLPrefixParams(): void
     {
         $old = [
@@ -619,6 +1188,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * The two search filter params are renamed, and the old names are removed.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRenameSearchFilterParams(): void
     {
         $h = makeMigHelper([[
@@ -634,6 +1210,14 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertArrayNotHasKey('show_locations_search', $params);
     }
 
+    /**
+     * teacherimagerrow is corrected to teacherimagerow in all six contexts, and the
+     * misspelled names are removed.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRenameTypoFixAllSixContextPrefixes(): void
     {
         $typos = [
@@ -662,6 +1246,14 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * A param already under its new name keeps its value, and the old name doesn't
+     * appear.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRenameDoesNotTouchAlreadyNewStyleParam(): void
     {
         $h = makeMigHelper([['lteacher_id' => '7']]);
@@ -679,6 +1271,10 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * just-saved new-name value present at once. The rename copy must not
      * blindly overwrite that just-saved value with the stale one -- see
      * #1541.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testRenameDoesNotOverwriteAlreadyPopulatedNewName(): void
     {
@@ -698,6 +1294,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 5 – color conversion
     // =========================================================================
 
+    /**
+     * An upper-case 0x color becomes the same color with a hash.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testColorConversionConverts0xUppercaseToHash(): void
     {
         $h = makeMigHelper([['backcolor' => '0xFF0000']]);
@@ -706,6 +1309,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame('#FF0000', $h->getParamsArray(1)['backcolor'] ?? null);
     }
 
+    /**
+     * A lower-case 0x color becomes an upper-case hash color.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testColorConversionConverts0xLowercaseToHashUppercase(): void
     {
         $h = makeMigHelper([['frontcolor' => '0xaabbcc']]);
@@ -714,6 +1324,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame('#AABBCC', $h->getParamsArray(1)['frontcolor'] ?? null, '0xaabbcc must become #AABBCC');
     }
 
+    /**
+     * All seven color fields are converted from 0x to hash format.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testColorConversionConvertsAllSevenFields(): void
     {
         $input = [
@@ -744,6 +1361,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * A color already in hash format comes through the migration unchanged.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testColorConversionDoesNotTouchValidHashFormat(): void
     {
         $h = makeMigHelper([['backcolor' => '#FF0000']]);
@@ -760,6 +1384,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame('#FF0000', $params['backcolor'], '# format must not be altered');
     }
 
+    /**
+     * An empty color value comes through the migration unchanged.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testColorConversionDoesNotTouchEmptyValue(): void
     {
         $h = makeMigHelper([['backcolor' => '']]);
@@ -774,6 +1405,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 6 – path conversion
     // =========================================================================
 
+    /**
+     * A com_biblestudy path is rewritten to com_proclaim in the saved params.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testPathConversionReplacesBibleStudyPath(): void
     {
         $h = makeMigHelper([['custom_icon' => 'media/com_biblestudy/images/icon.png']]);
@@ -788,6 +1426,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertStringNotContainsString('com_biblestudy', $json, 'Old path must be gone from JSON');
     }
 
+    /**
+     * A com_proclaim path comes through the migration unchanged.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testPathConversionDoesNotAlterCurrentPath(): void
     {
         $h = makeMigHelper([['custom_icon' => 'media/com_proclaim/images/icon.png']]);
@@ -806,6 +1451,16 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 7 – rowspan image migration
     // =========================================================================
 
+    /**
+     * Each rowspanitem value places its element in row 1, and resets rowspanitem to 0.
+     *
+     * @param   int     $rowspanitem  The legacy rowspanitem value
+     * @param   string  $elementKey   The element it maps to
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     #[DataProvider('provideRowspanItemMap')]
     public function testRowspanItemMapsToElement(int $rowspanitem, string $elementKey): void
     {
@@ -821,7 +1476,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame('0', (string) ($params['rowspanitem'] ?? ''), 'rowspanitem must be reset to 0');
     }
 
-    /** @return array<string, array{int, string}> */
+    /**
+     * Each rowspanitem value, with the element it maps to.
+     *
+     * @return  array<string, array{int, string}>  Each case
+     *
+     * @since   10.1.0
+     */
     public static function provideRowspanItemMap(): array
     {
         return [
@@ -832,6 +1493,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * A rowspanitem of 0 migrates nothing and writes nothing.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRowspanItemZeroIsSkipped(): void
     {
         $h = makeMigHelper([['rowspanitem' => '0']]);
@@ -840,6 +1508,14 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertEmpty($h->getSavedParams());
     }
 
+    /**
+     * Each Bootstrap 2 image class becomes its Bootstrap 5 equivalent in the element's
+     * custom class.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRowspanItemMigratesBootstrap2ClassToBootstrap5(): void
     {
         $cases = [
@@ -862,6 +1538,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * The messages and series rowspan settings both migrate, each to its own element.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRowspanItemMigratesTwoContextPrefixes(): void
     {
         $h = makeMigHelper([[
@@ -880,6 +1563,14 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame('1', (string) ($params['sseriesthumbnailrow'] ?? ''), 'sseriesthumbnailrow=1 for series context');
     }
 
+    /**
+     * An element already placed keeps its row, and the legacy rowspanitem is still reset
+     * to 0.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testRowspanItemSkipsElementAlreadyPlaced(): void
     {
         // thumbnail is already placed in row 2 — migration must not move it to row 1
@@ -911,6 +1602,10 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * path) used to hit an early return before ever reaching the rowspan
      * cleanup. Uses a $fromVersion well past '10.1.0' to reproduce that
      * -- see #1541.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testMigrateFromVersionPastAllGatedMigrationsStillRunsRowspanCleanup(): void
     {
@@ -928,11 +1623,25 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 8 – Public API
     // =========================================================================
 
+    /**
+     * getMigrations() returns an array.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testGetMigrationsReturnsArray(): void
     {
         $this->assertIsArray(makeMigHelper([])->getMigrations());
     }
 
+    /**
+     * addMigration() adds a version's params to the migrations.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testAddMigrationInsertsCustomVersionEntry(): void
     {
         $h = makeMigHelper([]);
@@ -943,6 +1652,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertSame('0', $migrations['11.0.0']['new_feature']);
     }
 
+    /**
+     * An added 11.0.0 migration is selected from 10.0.0 but not from 11.0.0.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testAddMigrationVersionFilteringWorks(): void
     {
         $h = makeMigHelper([]);
@@ -955,6 +1671,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertArrayNotHasKey('11.0.0', $h->callGetMigrationsAfterVersion('11.0.0'));
     }
 
+    /**
+     * migrateAll() updates at least one template and writes its params.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testMigrateAllRunsAllMigrations(): void
     {
         $h     = makeMigHelper(['{}']);
@@ -964,6 +1687,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertNotEmpty($h->getSavedParams(), 'migrateAll() must produce at least one write');
     }
 
+    /**
+     * migrateAll() updates as many templates as migrateFromVersion('0.0.0').
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
     public function testMigrateAllAndMigrateFromVersionZeroProduceSameResult(): void
     {
         $h1 = makeMigHelper(['{}']);

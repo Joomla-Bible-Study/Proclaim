@@ -20,7 +20,10 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.6.0
+ * HealthQuietStore quietens a finding by its fingerprint, brings back a finding
+ * that changed, and never writes over params it could not read.
+ *
+ * @since  10.6.0
  */
 class HealthQuietStoreTest extends ProclaimTestCase
 {
@@ -33,6 +36,8 @@ class HealthQuietStoreTest extends ProclaimTestCase
     private ?string $originalParams = null;
 
     /**
+     * Remember the admin row's params, which the tests overwrite.
+     *
      * @return  void
      *
      * @since   10.6.0
@@ -96,6 +101,8 @@ class HealthQuietStoreTest extends ProclaimTestCase
     }
 
     /**
+     * Quietening hides the finding it was cleared against.
+     *
      * @return  void
      *
      * @since   10.6.0
@@ -135,6 +142,8 @@ class HealthQuietStoreTest extends ProclaimTestCase
     }
 
     /**
+     * Restoring puts a cleared finding back on the dashboard.
+     *
      * @return  void
      *
      * @since   10.6.0

@@ -30,10 +30,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmlocationHelper::class)]
 class CwmlocationHelperIntegrationTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
     /**
+     * Skip without a test database. Otherwise open a transaction and reset the helper's
+     * cache.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -50,7 +61,11 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened and reset the helper's cache.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -67,6 +82,14 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * getTeacherLocations() finds the location of a study linked to the user's teacher
+     * through the study-teacher junction.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('getTeacherLocations() does not throw and finds a location via the many-to-many study_teachers path')]
     public function testGetTeacherLocationsManyToManyPath(): void
     {
@@ -82,6 +105,14 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
         $this->assertSame([$locationId], $result);
     }
 
+    /**
+     * A study naming the teacher only in its legacy teacher_id column, with no junction row,
+     * gives getTeacherLocations() nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a study linked only by the retired column is not found')]
     public function testAStudyWithNoJunctionRowIsNotFound(): void
     {
@@ -97,6 +128,13 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
         $this->assertSame([], CwmlocationHelper::getTeacherLocations($userId));
     }
 
+    /**
+     * Three linked studies at two locations give getTeacherLocations() each location once.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('two studies at the same location yield that location once')]
     public function testDuplicateLocationsAreCollapsed(): void
     {
@@ -117,6 +155,13 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
         $this->assertContains($otherLoc, $result);
     }
 
+    /**
+     * getTeacherLocations() returns an empty list for a user with no teacher record.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('getTeacherLocations() returns an empty array for a user with no teacher record')]
     public function testGetTeacherLocationsReturnsEmptyForUnknownUser(): void
     {
@@ -126,9 +171,13 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published location with the given name.
+     *
      * @param   string  $name  Location display name.
      *
      * @return  int  Location ID.
+     *
+     * @since   10.5.6
      */
     private function insertLocation(string $name): int
     {
@@ -152,9 +201,13 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published teacher linked to the given user.
+     *
      * @param   int  $userId  Joomla user ID to link.
      *
      * @return  int  Teacher ID.
+     *
+     * @since   10.5.6
      */
     private function insertTeacher(int $userId): int
     {
@@ -174,10 +227,15 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published study at the given location, with a legacy teacher id when one is
+     * given.
+     *
      * @param   int       $locationId  Location ID to assign.
      * @param   int|null  $teacherId   Legacy teacher_id column (null = unset).
      *
      * @return  int  Study ID.
+     *
+     * @since   10.5.6
      */
     private function insertStudy(int $locationId, ?int $teacherId = null): int
     {
@@ -202,10 +260,14 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Link a study to a teacher in the study-teacher junction.
+     *
      * @param   int  $studyId    Study ID.
      * @param   int  $teacherId  Teacher ID.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function insertStudyTeacher(int $studyId, int $teacherId): void
     {

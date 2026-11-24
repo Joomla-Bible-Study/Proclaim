@@ -34,22 +34,38 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmpendingReviewTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database. Each test runs inside a transaction, and tearDown() also deletes the
+     * studies it created, with their assets, by id.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  int[]
+     * The ids of the studies the test inserted, for tearDown() to delete.
+     *
+     * @var    int[]
+     * @since  10.5.6
      */
     private array $created = [];
 
     /**
-     * @var  mixed
+     * Factory's language before setUp() silenced the date warnings, for tearDown() to put
+     * back.
+     *
+     * @var    mixed
+     * @since  10.5.6
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
+     * Skip without a test database. Otherwise silence the date warnings Table::publish()
+     * would print, open a transaction, and clear the count helper's cache.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -70,7 +86,12 @@ class CwmpendingReviewTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened, delete the studies the test created with
+     * their assets, clear the count helper's cache, and put Factory's language back.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -94,6 +115,13 @@ class CwmpendingReviewTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * An unpublished study without the pending_review mark leaves the pending-review count as it was.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A study unpublished without being submitted is not counted as awaiting review')]
     public function testPlainlyUnpublishedStudyIsNotCounted(): void
     {
@@ -106,6 +134,13 @@ class CwmpendingReviewTest extends IntegrationTestCase
         $this->assertSame($before, $this->pendingCount(), 'Unpublished alone must not mean awaiting review');
     }
 
+    /**
+     * An unpublished study marked pending_review raises the pending-review count by 1.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A study the API marked and force-unpublished is counted')]
     public function testMarkedStudyIsCounted(): void
     {
@@ -116,6 +151,13 @@ class CwmpendingReviewTest extends IntegrationTestCase
         $this->assertSame($before + 1, $this->pendingCount());
     }
 
+    /**
+     * A published study with the pending_review mark leaves the pending-review count as it was.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A marked study that has been published is not counted')]
     public function testMarkedButPublishedStudyIsNotCounted(): void
     {
@@ -126,6 +168,14 @@ class CwmpendingReviewTest extends IntegrationTestCase
         $this->assertSame($before, $this->pendingCount(), 'Publishing answers the review');
     }
 
+    /**
+     * Publishing a marked study through CwmmessageTable removes pending_review from its
+     * params and keeps its other params.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Publishing a marked study clears the mark, so it cannot return to the count')]
     public function testPublishingClearsTheMark(): void
     {
@@ -143,6 +193,13 @@ class CwmpendingReviewTest extends IntegrationTestCase
         $this->assertStringContainsString('keepme', $params, 'Other params must survive');
     }
 
+    /**
+     * Unpublishing a study through CwmmessageTable doesn't add pending_review to its params.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Unpublishing does not add a mark, so ordinary unpublishing stays uncounted')]
     public function testUnpublishingDoesNotMark(): void
     {
@@ -160,7 +217,11 @@ class CwmpendingReviewTest extends IntegrationTestCase
     }
 
     /**
-     * @return  int
+     * The pending-review count, read after clearing the helper's cache.
+     *
+     * @return  int  The count
+     *
+     * @since   10.5.6
      */
     private function pendingCount(): int
     {
@@ -170,7 +231,11 @@ class CwmpendingReviewTest extends IntegrationTestCase
     }
 
     /**
+     * Delete each study the test created, and its asset, by id.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function purge(): void
     {
@@ -190,10 +255,14 @@ class CwmpendingReviewTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a study with the given state and params, noting its id for tearDown() to delete.
+     *
      * @param   int     $published  Published state.
      * @param   string  $params     Params JSON.
      *
      * @return  int  Study ID.
+     *
+     * @since   10.5.6
      */
     private function insertStudy(int $published, string $params): int
     {

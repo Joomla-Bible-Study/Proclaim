@@ -40,6 +40,10 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
 {
     /**
      * Every table the library owns, and nothing else.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
      */
     public function testTheScriptureStackIsTheFourSharedTables(): void
     {
@@ -58,6 +62,10 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
 
     /**
      * The registry specifically, because it is the dangerous one.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
      */
     public function testTheConsumerRegistryIsTreatedAsShared(): void
     {
@@ -71,6 +79,11 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
 
     /**
      * getOwnObjects() must actually subtract, not just forward.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     * @throws  \ReflectionException
      */
     public function testOwnObjectsIsDefinedAsGetObjectsMinusTheStack(): void
     {
@@ -84,6 +97,11 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
     /**
      * The export gate. Rejecting a table here keeps it out of the dump
      * entirely -- no DROP, no CREATE, no rows.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     * @throws  \ReflectionException
      */
     public function testTheExportAllowListExcludesTheStack(): void
     {
@@ -103,6 +121,11 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
     /**
      * The restore gate. This is what protects against a backup taken *before*
      * this change, which still carries those tables.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     * @throws  \ReflectionException
      */
     public function testTheRestoreAllowListExcludesTheStack(): void
     {
@@ -131,6 +154,10 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
 
     /**
      * The drop loop, and the dead guard it used to carry.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
      */
     public function testTheRestoreDropLoopNeitherTouchesTheStackNorKeepsTheDeadPreserveList(): void
     {
@@ -159,6 +186,17 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The source of one method.
+     *
+     * @param   string  $class   The class
+     * @param   string  $method  The method's name
+     *
+     * @return  string  Its source, from the signature to the closing brace
+     *
+     * @since   10.6.0
+     * @throws  \ReflectionException
+     */
     private static function methodBody(string $class, string $method): string
     {
         $reflection = new \ReflectionMethod($class, $method);

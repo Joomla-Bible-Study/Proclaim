@@ -28,18 +28,47 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class LegacyItemRedirectTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.3
+     */
     private ?DatabaseInterface $db = null;
 
+    /**
+     * The system plugin, built without its constructor: the redirect decision reads
+     * only the database.
+     *
+     * @var    Proclaim
+     * @since  10.7.3
+     */
     private Proclaim $plugin;
 
+    /**
+     * The route of the sermons menu item setUp seeds.
+     *
+     * @var    string
+     * @since  10.7.3
+     */
     private string $menuRoute;
 
+    /**
+     * The id of that menu item.
+     *
+     * @var    int
+     * @since  10.7.7
+     */
     private int $menuId;
 
     /**
+     * Skip without a test database. Otherwise open a transaction, build the plugin
+     * without its constructor, and seed a menu item aliased "sermons".
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     protected function setUp(): void
     {
@@ -60,6 +89,8 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the seeded rows.
+     *
      * @return  void
      *
      * @since   10.7.3
@@ -78,9 +109,13 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * A message whose alias starts with digits, under a menu item aliased "sermons",
+     * is left to the router.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('A message whose alias starts with digits, under a menu item aliased "sermons", is left to the router')]
     public function testDigitAliasUnderMenuItemIsLeftToTheRouter(): void
@@ -93,9 +128,13 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * An id-alias URL under that menu item is left to the router, which keeps the
+     * menu path.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('An <id>-<alias> URL under that menu item is left to the router, which keeps the menu path')]
     public function testIdAliasUnderMenuItemIsLeftToTheRouter(): void
@@ -106,9 +145,12 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * The menu route is recognised behind a base path, index.php and a language prefix.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('The menu route is recognised behind a base path, index.php and a language prefix')]
     public function testMenuRouteIsRecognisedBehindPrefixes(): void
@@ -119,9 +161,13 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * An old item URL refers to the message, with no menu item: the router picks one
+     * as for any message link.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('An old item URL refers to the message, with no menu item: the router picks one as for any message link')]
     public function testOldItemUrlRefersToTheMessage(): void
@@ -135,9 +181,13 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * An old item URL with a bare id, with or without a template id, refers to the
+     * message.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('An old item URL with a bare id, with or without a template id, refers to the message')]
     public function testBareIdOldItemUrlRefersToTheMessage(): void
@@ -155,6 +205,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('An old item URL means the same at the site root, in a subfolder and behind index.php')]
     public function testOldItemUrlMeansTheSameWhereverItSits(): void
@@ -168,9 +219,12 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * Old teacher and series URLs refer to the teacher and the series.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('Old teacher and series URLs refer to the teacher and the series')]
     public function testOldTeacherAndSeriesUrlsReferToTheirRecords(): void
@@ -188,9 +242,13 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * On a list view a bare number may be a template id, so only an id-alias segment
+     * is read as a record.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('On a list view a bare number may be a template id, so only <id>-<alias> is read as a record')]
     public function testListViewNeedsAnAlias(): void
@@ -206,9 +264,13 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * A missing, unpublished or trashed record is left to the router; an archived one
+     * is redirected.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('A missing, unpublished or trashed record is left to the router; an archived one is redirected')]
     public function testOnlyRecordsTheRouterServesAreRedirected(): void
@@ -230,6 +292,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('Addresses the router builds are not read as old URLs')]
     public function testRouterBuiltAddressesAreLeftAlone(): void
@@ -252,9 +315,12 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * An unpublished menu item does not stop an old item URL from redirecting.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('An unpublished menu item does not stop an old item URL from redirecting')]
     public function testUnpublishedMenuItemDoesNotShieldAnOldUrl(): void
@@ -267,9 +333,12 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * A bare number under a published menu item aliased "sermon" is left to the router.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('A bare number under a published menu item aliased "sermon" is left to the router')]
     public function testBareNumberUnderMenuItemIsLeftToTheRouter(): void
@@ -282,9 +351,12 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * A current task URL under a menu item aliased "sermons" is left to the router.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('A current task URL under a menu item aliased "sermons" is left to the router')]
     public function testCurrentTaskUnderMenuItemIsLeftToTheRouter(): void
@@ -295,9 +367,12 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * An old download URL redirects, naming its controller once.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('An old download URL still redirects, naming its controller once')]
     public function testOldDownloadUrlRedirectsWithOneControllerPrefix(): void
@@ -310,9 +385,12 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * A task that is not an old one, or a media id with no task, is left to the router.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('A task that is not an old one, or a media id with no task, is left to the router')]
     public function testOtherTaskUrlsAreLeftToTheRouter(): void
@@ -322,9 +400,12 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * An old landing URL under a message list keeps that list, filter applied.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('An old landing URL under a message list keeps that list, filter applied')]
     public function testLandingUrlKeepsItsMessageList(): void
@@ -336,9 +417,12 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * An old landing URL anywhere else leaves the choice of message list to the router.
+     *
      * @return  void
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     #[TestDox('An old landing URL anywhere else leaves the choice of message list to the router')]
     public function testLandingUrlElsewhereLeavesTheListToTheRouter(): void
@@ -356,6 +440,8 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * The internal URL the plugin would redirect a request to.
+     *
      * @param   string  $path  The request path
      * @param   string  $task  The request's task
      * @param   int     $mid   The request's media file id
@@ -363,6 +449,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      * @return  ?string  The internal URL the plugin would redirect an old URL to, or null
      *
      * @since   10.7.5
+     * @throws  \ReflectionException
      */
     private function targetFor(string $path, string $task = '', int $mid = 0): ?string
     {
@@ -370,6 +457,9 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * The query of the internal URL the plugin redirects a request to, asserting
+     * that it redirects.
+     *
      * @param   string  $path  The request path
      * @param   string  $task  The request's task
      * @param   int     $mid   The request's media file id
@@ -377,6 +467,7 @@ class LegacyItemRedirectTest extends IntegrationTestCase
      * @return  array<string, string>  The query of the internal URL the plugin would redirect to
      *
      * @since   10.7.3
+     * @throws  \ReflectionException
      */
     private function queryFor(string $path, string $task = '', int $mid = 0): array
     {
@@ -391,6 +482,8 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * The query of a record's internal URL.
+     *
      * @param   string  $view  The record's view
      * @param   int     $id    The record id
      *
@@ -444,6 +537,8 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a message.
+     *
      * @param   ?string  $alias      The message alias
      * @param   int      $published  The message state
      *
@@ -470,6 +565,8 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published teacher.
+     *
      * @return  int  The new teacher id
      *
      * @since   10.7.7
@@ -492,6 +589,8 @@ class LegacyItemRedirectTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published series.
+     *
      * @return  int  The new series id
      *
      * @since   10.7.7

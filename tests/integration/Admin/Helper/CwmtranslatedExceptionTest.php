@@ -37,10 +37,29 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(Cwmtranslated::class)]
 class CwmtranslatedExceptionTest extends IntegrationTestCase
 {
+    /**
+     * The application removeApplication() took away, for tearDown() to put back.
+     *
+     * @var    mixed
+     * @since  10.5.6
+     */
     private mixed $savedApplication = null;
 
+    /**
+     * Whether removeApplication() ran, so tearDown() knows to put the application back.
+     *
+     * @var    bool
+     * @since  10.5.6
+     */
     private bool $applicationRemoved = false;
 
+    /**
+     * Put back the application removeApplication() took away, when it ran.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         // Restore before anything else; every later test in the run needs it.
@@ -57,6 +76,8 @@ class CwmtranslatedExceptionTest extends IntegrationTestCase
      * the only way into the failure path under test.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function removeApplication(): void
     {
@@ -67,6 +88,10 @@ class CwmtranslatedExceptionTest extends IntegrationTestCase
 
     /**
      * The failure path, exercised rather than asserted about.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('A missing application raises a real RuntimeException')]
     public function testMissingApplicationRaisesRuntimeException(): void
@@ -92,6 +117,10 @@ class CwmtranslatedExceptionTest extends IntegrationTestCase
     /**
      * The cause is what a reader actually needs; without it the message says
      * only that something failed.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The original failure is chained as the previous exception')]
     public function testOriginalFailureIsChained(): void
@@ -113,6 +142,10 @@ class CwmtranslatedExceptionTest extends IntegrationTestCase
     /**
      * A caller catching the broad case must see it too -- which an Error would
      * not have satisfied.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The failure is catchable as an Exception')]
     public function testFailureIsCatchableAsException(): void
@@ -136,6 +169,10 @@ class CwmtranslatedExceptionTest extends IntegrationTestCase
     /**
      * The class named must be one that exists. ext-http is not a dependency of
      * this project and is absent from a standard PHP install.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The helper does not reference the PECL ext-http exception')]
     public function testDoesNotImportTheExtHttpClass(): void

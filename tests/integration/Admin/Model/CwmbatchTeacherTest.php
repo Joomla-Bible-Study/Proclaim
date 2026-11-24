@@ -45,7 +45,11 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmbatchTeacherTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database. The batch's table store would commit a transaction, so tests
+     * use none and tearDown deletes their rows by hand.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.8
      */
     private ?DatabaseDriver $db = null;
 
@@ -53,6 +57,7 @@ class CwmbatchTeacherTest extends IntegrationTestCase
      * Study rows created by a test, removed in tearDown.
      *
      * @var  int[]
+     * @since  10.5.8
      */
     private array $studies = [];
 
@@ -60,21 +65,35 @@ class CwmbatchTeacherTest extends IntegrationTestCase
      * Teacher rows created by a test, removed in tearDown.
      *
      * @var  int[]
+     * @since  10.5.8
      */
     private array $teachers = [];
 
     /**
-     * @var  mixed
+     * The identity before the test switched to a Super User.
+     *
+     * @var    mixed
+     * @since  10.5.8
      */
     private mixed $savedIdentity = null;
 
     /**
-     * @var  mixed
+     * Factory's language before the test replaced it to silence date warnings.
+     *
+     * @var    mixed
+     * @since  10.5.8
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
+     * Skip without a test database or a Super User. Otherwise silence date
+     * language warnings, and act as that Super User so each row's core.edit check
+     * passes.
+     *
      * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -107,7 +126,13 @@ class CwmbatchTeacherTest extends IntegrationTestCase
     }
 
     /**
+     * Delete the studies, their teacher links and the teachers the test created,
+     * clear the study-teacher cache, and restore the identity and language.
+     *
      * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -142,6 +167,15 @@ class CwmbatchTeacherTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * Adding leaves the teachers already credited in place.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('adding leaves the teachers already credited in place')]
     public function testAddKeepsExistingTeachers(): void
     {
@@ -159,6 +193,15 @@ class CwmbatchTeacherTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Adding a teacher the message already credits changes nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('adding a teacher the message already credits changes nothing')]
     public function testAddIsIdempotent(): void
     {
@@ -171,6 +214,15 @@ class CwmbatchTeacherTest extends IntegrationTestCase
         self::assertSame([$first, $second], $this->teacherIdsFor($study), 'No duplicate row, no reordering.');
     }
 
+    /**
+     * Replacing sets the teacher list to exactly the chosen teacher.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     * @throws  \Exception
+     */
     #[TestDox('replacing sets the teacher list to exactly the chosen teacher')]
     public function testReplaceOverwritesTheWholeList(): void
     {
@@ -187,6 +239,11 @@ class CwmbatchTeacherTest extends IntegrationTestCase
     /**
      * The mode is a separate command, so a request that omits it must not get
      * the destructive branch.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
      */
     #[TestDox('only an explicit r replaces; every other command shape adds')]
     public function testOnlyExplicitReplaceIsDestructive(): void
@@ -201,11 +258,17 @@ class CwmbatchTeacherTest extends IntegrationTestCase
     }
 
     /**
-     * @param   int    $study    Study id to batch
-     * @param   int    $teacher  Teacher id to apply
-     * @param   string $mode     'a' to add, 'r' to replace
+     * Run batchTeacher() on one study, with the mode set the way batch() sets it.
+     *
+     * @param   int     $study    Study id to batch
+     * @param   int     $teacher  Teacher id to apply
+     * @param   string  $mode     'a' to add, 'r' to replace
      *
      * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \ReflectionException
+     * @throws  \Exception
      */
     private function runBatch(int $study, int $teacher, string $mode): void
     {
@@ -222,9 +285,13 @@ class CwmbatchTeacherTest extends IntegrationTestCase
     }
 
     /**
+     * The teachers a study credits, read from the junction table.
+     *
      * @param   int  $studyId  Study id
      *
      * @return  int[]  Teacher ids in stored order
+     *
+     * @since   10.5.8
      */
     private function teacherIdsFor(int $studyId): array
     {
@@ -245,9 +312,13 @@ class CwmbatchTeacherTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published teacher.
+     *
      * @param   string  $name  Teacher name
      *
      * @return  int  New teacher id
+     *
+     * @since   10.5.8
      */
     private function createTeacher(string $name): int
     {
@@ -269,9 +340,13 @@ class CwmbatchTeacherTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published study that credits these teachers in order.
+     *
      * @param   int[]  $teacherIds  Teachers to credit, in order
      *
      * @return  int  New study id
+     *
+     * @since   10.5.8
      */
     private function createStudy(array $teacherIds): int
     {
@@ -303,7 +378,12 @@ class CwmbatchTeacherTest extends IntegrationTestCase
     }
 
     /**
-     * @return  CwmmessageModel
+     * A CwmmessageModel built through the MVC factory, ignoring the request.
+     *
+     * @return  CwmmessageModel  The model under test
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     private function createModel(): CwmmessageModel
     {

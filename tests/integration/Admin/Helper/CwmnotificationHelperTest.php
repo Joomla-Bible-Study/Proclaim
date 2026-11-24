@@ -25,12 +25,22 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CwmnotificationHelperTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.4
+     */
     private ?DatabaseInterface $db = null;
 
     /**
+     * Skip without a test database. Otherwise load the component's language strings, which
+     * the email uses, and open a transaction.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -49,6 +59,8 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened.
+     *
      * @return  void
      *
      * @since   10.7.4
@@ -67,9 +79,14 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     }
 
     /**
+     * notifyCommentPending() sends one email to the moderation address and returns true. The
+     * subject names the message, and the body holds the commenter, the comment and a link to
+     * the comments list.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Exception
      */
     #[TestDox('A comment held for approval emails the moderation address, naming the message and the comment')]
     public function testModerationEmailGoesToTheModerator(): void
@@ -95,9 +112,13 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     }
 
     /**
+     * With no moderation address set, notifyCommentPending() emails the site's From address.
+     * The From address is restored after.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Exception
      */
     #[TestDox('With no moderation address set, the email goes to the site\'s From address')]
     public function testModerationEmailFallsBackToTheSiteAddress(): void
@@ -125,9 +146,13 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     }
 
     /**
+     * notifyCommentPending() tries the email once and returns false, rather than throwing,
+     * when the mail server can't be reached.
+     *
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \Exception
      */
     #[TestDox('A mail server that fails returns false rather than throwing, so the comment still saves')]
     public function testFailedSendReturnsFalse(): void
@@ -146,6 +171,8 @@ class CwmnotificationHelperTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published message with the given title and a unique alias.
+     *
      * @param   string  $title  The message title
      *
      * @return  int  The new message id

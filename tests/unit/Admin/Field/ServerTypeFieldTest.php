@@ -35,6 +35,12 @@ class ServerTypeFieldTest extends ProclaimTestCase
      * Build a field instance with a bound Form supplying id=5 for
      * $this->form->getValue('id'), without going through the constructor
      * (which needs a full Form already attached).
+     *
+     * @param   mixed  $value  The field's value
+     *
+     * @return  ServerTypeField  The field
+     *
+     * @since   10.5.6
      */
     private function makeField(mixed $value): ServerTypeField
     {
@@ -54,7 +60,11 @@ class ServerTypeFieldTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * ServerTypeField extends ModalSelectField and builds the right URLs.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testFieldExtendsModalSelectFieldAndBuildsCorrectUrls(): void
     {
@@ -77,7 +87,11 @@ class ServerTypeFieldTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * The field's value is normalised to lower case.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testValueIsNormalizedToLowercase(): void
     {
@@ -89,7 +103,11 @@ class ServerTypeFieldTest extends ProclaimTestCase
     }
 
     /**
-     * @return void
+     * getValueTitle() finds the title by reverse lookup, not an SQL query.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetValueTitleUsesReverseLookupNotSqlQuery(): void
     {

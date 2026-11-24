@@ -43,10 +43,32 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(Cwmdownload::class)]
 class CwmdownloadReachableTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.1
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * The media table's row count before the test, checked again after the rollback.
+     *
+     * @var    int
+     * @since  10.7.1
+     */
     private int $mediaAtStart = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction, count the media
+     * rows, and act as a real guest so that view levels come from the site's own
+     * rows.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \Exception
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -75,6 +97,13 @@ class CwmdownloadReachableTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Roll back, and fail the test if the media table's row count changed.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     protected function tearDown(): void
     {
         $leaked = null;
@@ -105,7 +134,11 @@ class CwmdownloadReachableTest extends IntegrationTestCase
     }
 
     /**
+     * Count the rows in the media table.
+     *
      * @return  int  Total rows in the media table.
+     *
+     * @since   10.7.1
      */
     private function countMedia(): int
     {
@@ -115,9 +148,14 @@ class CwmdownloadReachableTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published series, a published message in it and a media file on that
+     * message, all public and the media file published, unless a flag overrides it.
+     *
      * @param   array<string, int>  $state  Overrides for any flag.
      *
      * @return  int  The new media file's id.
+     *
+     * @since   10.7.1
      */
     private function makeChain(array $state = []): int
     {
@@ -163,6 +201,13 @@ class CwmdownloadReachableTest extends IntegrationTestCase
         return (int) $this->db->insertid();
     }
 
+    /**
+     * The loaded row carries the levels the chain check needs.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('The loaded row carries the levels the chain check needs')]
     public function testLoadMediaCarriesTheInheritedLevels(): void
     {
@@ -180,6 +225,13 @@ class CwmdownloadReachableTest extends IntegrationTestCase
         $this->assertSame(3, (int) $media->series_access);
     }
 
+    /**
+     * An unpublished media file is not loaded.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('An unpublished media file is not loaded')]
     public function testUnpublishedMediaIsNotLoaded(): void
     {
@@ -188,12 +240,26 @@ class CwmdownloadReachableTest extends IntegrationTestCase
         $this->assertNull(Cwmdownload::loadMedia($id));
     }
 
+    /**
+     * A media id that does not exist is not loaded.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('A media id that does not exist is not loaded')]
     public function testUnknownMediaIsNotLoaded(): void
     {
         $this->assertNull(Cwmdownload::loadMedia(0));
     }
 
+    /**
+     * Nothing is reachable without a real, published media id.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('Nothing is reachable without a real, published media id')]
     public function testReachableRefusesMissingAndUnpublished(): void
     {
@@ -204,6 +270,13 @@ class CwmdownloadReachableTest extends IntegrationTestCase
         $this->assertFalse(Cwmdownload::reachable($this->makeChain(['media_published' => 0])));
     }
 
+    /**
+     * Each link in the chain puts the media out of a guest's reach on its own.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('Each link in the chain puts the media out of a guest\'s reach on its own')]
     public function testEachLinkRefusesAGuest(): void
     {
@@ -217,6 +290,13 @@ class CwmdownloadReachableTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * A fully public chain is reachable by a guest.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('A fully public chain is reachable by a guest')]
     public function testPublicChainIsReachable(): void
     {

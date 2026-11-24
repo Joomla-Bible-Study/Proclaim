@@ -47,6 +47,9 @@ class CwmaiHelperTest extends ProclaimTestCase
      * @param   string  $method
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private static function methodBody(string $method): string
     {
@@ -59,6 +62,14 @@ class CwmaiHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * callGemini() requests a response schema, so the model returns well-formed JSON.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testCallGeminiSendsResponseSchema(): void
     {
         $body = self::methodBody('callGemini');
@@ -70,6 +81,15 @@ class CwmaiHelperTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The Gemini response schema is an object requiring topics, the intro, the text
+     * and chapters.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testGeminiResponseSchemaShape(): void
     {
         $method = new \ReflectionMethod(CwmaiHelper::class, 'geminiResponseSchema');
@@ -83,6 +103,15 @@ class CwmaiHelperTest extends ProclaimTestCase
         $this->assertArrayHasKey('chapters', $schema['properties']);
     }
 
+    /**
+     * Each provider call leaves the finish-reason check to assertNormalFinish(), with
+     * no truncation check of its own.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testProviderCallsDelegateFinishReasonCheckToSharedHelper(): void
     {
         foreach (['callClaude', 'callGemini', 'callOpenAI'] as $method) {
@@ -103,7 +132,11 @@ class CwmaiHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return  array<string, array{0: string, 1: string}>
+     * Finish reasons each provider reports for a normal end, including none.
+     *
+     * @return  array<string, array{0: string, 1: string}>  The provider and the reason
+     *
+     * @since   10.5.6
      */
     public static function normalReasonProvider(): array
     {
@@ -119,6 +152,17 @@ class CwmaiHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * assertNormalFinish() accepts a normal finish reason.
+     *
+     * @param   string  $provider  The provider
+     * @param   string  $reason    Its finish reason
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('normalReasonProvider')]
     public function testAssertNormalFinishAllowsNormalReasons(string $provider, string $reason): void
     {
@@ -128,7 +172,11 @@ class CwmaiHelperTest extends ProclaimTestCase
     }
 
     /**
-     * @return  array<string, array{0: string, 1: string}>
+     * Finish reasons each provider reports when it ran out of tokens.
+     *
+     * @return  array<string, array{0: string, 1: string}>  The provider and the reason
+     *
+     * @since   10.5.6
      */
     public static function truncatedReasonProvider(): array
     {
@@ -139,6 +187,18 @@ class CwmaiHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * assertNormalFinish() reports truncation with a friendly message, not as a parse
+     * failure.
+     *
+     * @param   string  $provider  The provider
+     * @param   string  $reason    Its finish reason
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('truncatedReasonProvider')]
     public function testAssertNormalFinishThrowsTruncatedMessageForTruncation(string $provider, string $reason): void
     {
@@ -163,6 +223,8 @@ class CwmaiHelperTest extends ProclaimTestCase
      * "Invalid JSON — " error with an empty snippet.
      *
      * @return  array<string, array{0: string, 1: string}>
+     *
+     * @since   10.5.6
      */
     public static function abnormalReasonProvider(): array
     {
@@ -176,6 +238,18 @@ class CwmaiHelperTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * assertNormalFinish() throws for any other abnormal finish reason, without
+     * reporting a parse failure.
+     *
+     * @param   string  $provider  The provider
+     * @param   string  $reason    Its finish reason
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('abnormalReasonProvider')]
     public function testAssertNormalFinishThrowsForOtherAbnormalReasons(string $provider, string $reason): void
     {
@@ -194,6 +268,11 @@ class CwmaiHelperTest extends ProclaimTestCase
      * Text::sprintf() falls back to returning the raw key unsubstituted —
      * this asserts the reason is wired into the translated string at the
      * source level instead, which is what actually matters in production.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testAssertNormalFinishInterpolatesReasonIntoAbnormalMessage(): void
     {
@@ -212,6 +291,16 @@ class CwmaiHelperTest extends ProclaimTestCase
     // to #1537-#1542).
     // =========================================================================
 
+    /**
+     * Call the private extractFirstJsonObject().
+     *
+     * @param   string  $content  The response text
+     *
+     * @return  ?string  The first JSON object in it, or null
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private static function invokeExtractFirstJsonObject(string $content): ?string
     {
         $method = new \ReflectionMethod(CwmaiHelper::class, 'extractFirstJsonObject');
@@ -219,6 +308,16 @@ class CwmaiHelperTest extends ProclaimTestCase
         return $method->invoke(null, $content);
     }
 
+    /**
+     * Call the private parseJsonResponse().
+     *
+     * @param   string  $content  The response text
+     *
+     * @return  array  The decoded response
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     private static function invokeParseJsonResponse(string $content): array
     {
         $method = new \ReflectionMethod(CwmaiHelper::class, 'parseJsonResponse');
@@ -234,6 +333,11 @@ class CwmaiHelperTest extends ProclaimTestCase
      * model (Claude has no JSON-mode constraint) adding a follow-up
      * remark referencing that syntax reintroduces a '}' after the actual
      * JSON object ends.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testExtractFirstJsonObjectStopsAtTheMatchingCloseBraceNotTheLastOne(): void
     {
@@ -250,6 +354,11 @@ class CwmaiHelperTest extends ProclaimTestCase
      * A literal '}' inside a JSON string value is completely ordinary --
      * only '"' and '\' need escaping in JSON strings -- so the scan must
      * not treat it as closing the object early.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testExtractFirstJsonObjectIgnoresBracesInsideStringValues(): void
     {
@@ -262,6 +371,11 @@ class CwmaiHelperTest extends ProclaimTestCase
      * An escaped quote inside a string value must not be mistaken for the
      * end of the string (which would then miscount subsequent braces as
      * outside a string).
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testExtractFirstJsonObjectHandlesEscapedQuotesInsideStrings(): void
     {
@@ -270,6 +384,14 @@ class CwmaiHelperTest extends ProclaimTestCase
         $this->assertSame($content, self::invokeExtractFirstJsonObject($content));
     }
 
+    /**
+     * extractFirstJsonObject() returns null when the text holds no brace.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testExtractFirstJsonObjectReturnsNullWhenNoBraceIsPresent(): void
     {
         $this->assertNull(self::invokeExtractFirstJsonObject('not json at all'));
@@ -279,6 +401,11 @@ class CwmaiHelperTest extends ProclaimTestCase
      * End-to-end: parseJsonResponse() must still successfully decode a
      * response with trailing prose containing a closing brace, instead of
      * corrupting the JSON and throwing "Invalid JSON".
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testParseJsonResponseSurvivesTrailingProseContainingAClosingBrace(): void
     {
@@ -298,6 +425,11 @@ class CwmaiHelperTest extends ProclaimTestCase
      * callers on error, and lands in the debug log whenever JBSMDEBUG is
      * on. Checked structurally since exercising the real HTTP call
      * requires live network access this suite doesn't perform.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testGeminiCallsSendTheApiKeyViaHeaderNotUrl(): void
     {
@@ -327,6 +459,11 @@ class CwmaiHelperTest extends ProclaimTestCase
      * once to eliminate (#1495/#1443/#1444), for a different trigger.
      * Checked structurally: reproducing this requires a live Gemini
      * response this suite doesn't fetch.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testCallGeminiChecksForAMissingCandidatesKeyBeforeParsing(): void
     {
@@ -352,6 +489,11 @@ class CwmaiHelperTest extends ProclaimTestCase
      * generic message either way, with no diagnostic trail to tell them
      * apart. Checked structurally: reproducing a live fetch failure
      * requires network access this suite doesn't perform.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testGetVideoContextLogsTheExceptionInsteadOfSilentlySwallowingIt(): void
     {
@@ -369,6 +511,11 @@ class CwmaiHelperTest extends ProclaimTestCase
      * a slow/hung provider could tie up the PHP worker handling the
      * synchronous AI-Assist AJAX request indefinitely. Checked
      * structurally across every method that calls the HTTP client.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testEveryHttpCallPassesTheSharedTimeoutConstant(): void
     {

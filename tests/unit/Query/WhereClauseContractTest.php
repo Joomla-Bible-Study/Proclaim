@@ -17,28 +17,35 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since 10.5.8
+ * Guards the two ways QueryInterface::where() does not behave the way its call
+ * site reads: an OR outside its own brackets, and the glue argument.
+ *
+ * @since  10.5.8
  */
 class WhereClauseContractTest extends TestCase
 {
     /**
      * Source trees whose queries reach a database.
      *
-     * @var string[]
+     * @var    string[]
      * @since 10.5.8
      */
     private const ROOTS = ['admin', 'site', 'api', 'components', 'modules', 'plugins', 'libraries/lib_cwmscripture'];
 
     /**
-     * @var string[]
-     * @since 10.5.8
+     * Path segments whose files are not scanned.
+     *
+     * @var    string[]
+     * @since  10.5.8
      */
     private const SKIP = ['vendor', 'node_modules', 'tests', 'scripturelinks/libraries'];
 
     /**
+     * Every PHP file the contract covers.
+     *
      * @return  string[]  Absolute paths of every PHP file to inspect
      *
-     * @since 10.5.8
+     * @since   10.5.8
      */
     private static function sourceFiles(): array
     {
@@ -172,6 +179,13 @@ class WhereClauseContractTest extends TestCase
         return $found;
     }
 
+    /**
+     * No where() condition contains an OR outside its own brackets.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('no where() condition contains an OR outside its own brackets')]
     public function testNoUnbracketedOrInAWhereCondition(): void
     {
@@ -193,6 +207,14 @@ class WhereClauseContractTest extends TestCase
         );
     }
 
+    /**
+     * The detector still recognises the shape it was written for, so the scan
+     * above finding nothing means something.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the detector still recognises the shape it was written for')]
     public function testTheDetectorWorks(): void
     {
@@ -209,6 +231,13 @@ class WhereClauseContractTest extends TestCase
         );
     }
 
+    /**
+     * No call relies on where()'s glue argument.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('no call relies on where()\'s glue argument')]
     public function testNoCallReliesOnTheGlueArgument(): void
     {
@@ -240,7 +269,7 @@ class WhereClauseContractTest extends TestCase
      * that call at all, so its correctness rests on this note rather than on a
      * test.
      *
-     * @var array<string, string>
+     * @var    array<string, string>
      * @since 10.6.0
      */
     private const UNVERIFIABLE_WHERE = [
@@ -262,7 +291,8 @@ class WhereClauseContractTest extends TestCase
      * refusing the shape is nearly nothing and the rule is easy to state.
      *
      * @return  void
-     * @since 10.6.0
+     *
+     * @since   10.6.0
      */
     #[TestDox('no where() is handed conditions the OR check cannot read')]
     public function testNoWhereIsGivenAnUnreadableArgument(): void
@@ -303,6 +333,13 @@ class WhereClauseContractTest extends TestCase
         );
     }
 
+    /**
+     * The unreadable-argument list names only lines that still look that way.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('the unreadable-argument list only names lines that still look that way')]
     public function testUnverifiableEntriesAreStillAccurate(): void
     {

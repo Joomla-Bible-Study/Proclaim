@@ -37,17 +37,28 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmyoutubeMatchTest extends IntegrationTestCase
 {
     /**
-     * @var  DatabaseDriver|null
+     * The database. Each test runs inside a transaction, and tearDown() also deletes the
+     * teachers and studies it created, with their links and assets, by id.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  array<string, int[]>
+     * The ids of the rows the test inserted, by table, for tearDown() to delete.
+     *
+     * @var    array<string, int[]>
+     * @since  10.5.6
      */
     private array $created = [];
 
     /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -62,7 +73,11 @@ class CwmyoutubeMatchTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened, then delete the rows the test created.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -83,6 +98,15 @@ class CwmyoutubeMatchTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * For a video titled teacher - message, where the teacher's name is also another
+     * message's title, matchVideoToMessage() returns the teacher's message, not the one
+     * titled like the teacher.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A title whose leading half names a teacher is matched by teacher, not by a same-named message')]
     public function testReversedOrderIsNotPreemptedByAnUnfilteredSearch(): void
     {
@@ -110,6 +134,14 @@ class CwmyoutubeMatchTest extends IntegrationTestCase
         $this->assertNotSame($decoy, (int) $match->id);
     }
 
+    /**
+     * For a video titled message - teacher, matchVideoToMessage() returns that teacher's
+     * message.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A title in message - teacher order still matches by teacher')]
     public function testForwardOrderStillMatches(): void
     {
@@ -123,6 +155,14 @@ class CwmyoutubeMatchTest extends IntegrationTestCase
         $this->assertSame($studyId, (int) $match->id);
     }
 
+    /**
+     * For a video whose title names no known teacher, matchVideoToMessage() still finds the
+     * message by its title.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A title naming no known teacher still falls through to an unfiltered title search')]
     public function testUnknownTeacherStillFallsThroughToTitleSearch(): void
     {
@@ -136,6 +176,13 @@ class CwmyoutubeMatchTest extends IntegrationTestCase
         $this->assertSame($studyId, (int) $match->id);
     }
 
+    /**
+     * matchVideoToMessage() returns null for a title that matches nothing.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A title matching nothing returns null')]
     public function testNoMatchReturnsNull(): void
     {
@@ -145,7 +192,11 @@ class CwmyoutubeMatchTest extends IntegrationTestCase
     }
 
     /**
+     * Delete the studies and teachers the test created, with their study-teacher links and assets.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function purge(): void
     {
@@ -185,9 +236,13 @@ class CwmyoutubeMatchTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published teacher with the given name, noting its id for tearDown() to delete.
+     *
      * @param   string  $name  Teacher name.
      *
      * @return  int  Teacher ID.
+     *
+     * @since   10.5.6
      */
     private function insertTeacher(string $name): int
     {
@@ -209,9 +264,13 @@ class CwmyoutubeMatchTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published study with the given title, noting its id for tearDown() to delete.
+     *
      * @param   string  $title  Study title.
      *
      * @return  int  Study ID.
+     *
+     * @since   10.5.6
      */
     private function insertStudy(string $title): int
     {
@@ -237,10 +296,14 @@ class CwmyoutubeMatchTest extends IntegrationTestCase
     }
 
     /**
+     * Link a teacher to a study in the study-teacher junction.
+     *
      * @param   int  $studyId    Study ID.
      * @param   int  $teacherId  Teacher ID.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function linkTeacher(int $studyId, int $teacherId): void
     {

@@ -32,14 +32,46 @@ use PHPUnit\Framework\Attributes\DataProvider;
  */
 class CwmImageCleanupTest extends ProclaimTestCase
 {
+    /**
+     * The images/biblestudy folder under the test Joomla root.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $biblestudyDir;
 
+    /**
+     * Whether setUp created that folder, so tearDown removes it again.
+     *
+     * @var    bool
+     * @since  10.5.6
+     */
     private bool $createdBiblestudyDir = false;
 
+    /**
+     * A folder outside the allowed base, holding a file a traversal must not reach.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $traversalTargetDir;
 
+    /**
+     * The studies folder inside the allowed base, where folders may be deleted.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $legitTargetDir;
 
+    /**
+     * Create the biblestudy folder if it is missing, a folder outside it holding a
+     * file, and its studies folder.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -59,6 +91,14 @@ class CwmImageCleanupTest extends ProclaimTestCase
         mkdir($this->legitTargetDir, 0777, true);
     }
 
+    /**
+     * Remove the folders setUp made, and the biblestudy folder too when setUp created
+     * it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if (is_dir($this->traversalTargetDir)) {
@@ -83,6 +123,15 @@ class CwmImageCleanupTest extends ProclaimTestCase
         parent::tearDown();
     }
 
+    /**
+     * Delete a folder and everything in it.
+     *
+     * @param   string  $dir  The folder
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     private function rmrf(string $dir): void
     {
         foreach (scandir($dir) ?: [] as $entry) {
@@ -102,6 +151,13 @@ class CwmImageCleanupTest extends ProclaimTestCase
         @rmdir($dir);
     }
 
+    /**
+     * deleteOrphans() deletes nothing reached through ../ outside the allowed base.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testDeleteOrphansRejectsPathTraversalEscapingAllowedBase(): void
     {
         $payload = 'images/biblestudy/studies/../../../' . basename($this->traversalTargetDir);
@@ -116,6 +172,13 @@ class CwmImageCleanupTest extends ProclaimTestCase
         $this->assertNotEmpty($result['errors']);
     }
 
+    /**
+     * deleteOrphans() deletes a folder inside the allowed base.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testDeleteOrphansStillDeletesWithinAllowedBase(): void
     {
         $legitFolder = $this->legitTargetDir . '/cwm-test-orphan-999999';
@@ -127,6 +190,18 @@ class CwmImageCleanupTest extends ProclaimTestCase
         $this->assertDirectoryDoesNotExist($legitFolder);
     }
 
+    /**
+     * extractIdFromFolderName() reads the id from an alias-id or bare-id folder
+     * name, and rejects a name no alias could produce.
+     *
+     * @param   string    $folderName  The folder name
+     * @param   int|null  $expected    The id it should yield, or null
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[DataProvider('folderNameProvider')]
     public function testExtractIdFromFolderName(string $folderName, ?int $expected): void
     {
@@ -135,6 +210,13 @@ class CwmImageCleanupTest extends ProclaimTestCase
         $this->assertSame($expected, $method->invoke(null, $folderName));
     }
 
+    /**
+     * Folder names, each with the id it should yield or null.
+     *
+     * @return  array<string, array{0: string, 1: int|null}>  Each case
+     *
+     * @since   10.5.6
+     */
     public static function folderNameProvider(): array
     {
         return [
@@ -146,6 +228,14 @@ class CwmImageCleanupTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * An empty folder looks app-managed.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testLooksLikeAppManagedFolderTreatsEmptyFolderAsSafe(): void
     {
         $dir = $this->legitTargetDir . '/cwm-test-empty-1';
@@ -156,6 +246,14 @@ class CwmImageCleanupTest extends ProclaimTestCase
         $this->assertTrue($method->invoke(null, $dir));
     }
 
+    /**
+     * A folder holding an image looks app-managed.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testLooksLikeAppManagedFolderAcceptsFolderContainingAnImage(): void
     {
         $dir = $this->legitTargetDir . '/cwm-test-image-1';
@@ -167,6 +265,14 @@ class CwmImageCleanupTest extends ProclaimTestCase
         $this->assertTrue($method->invoke(null, $dir));
     }
 
+    /**
+     * A folder holding no images does not look app-managed.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     public function testLooksLikeAppManagedFolderRejectsFolderWithNoImages(): void
     {
         // Regression case from the issue: a stray directory like

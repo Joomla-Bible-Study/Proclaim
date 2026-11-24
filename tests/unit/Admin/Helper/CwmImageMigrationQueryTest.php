@@ -29,7 +29,11 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.6.0
+ * CwmImageMigration's queries: the image counts run and return integers, a
+ * condition added after the image conditions is ANDed rather than ORed in,
+ * and the records needing migration leave out trashed ones only on request.
+ *
+ * @since  10.6.0
  */
 class CwmImageMigrationQueryTest extends ProclaimTestCase
 {
@@ -96,6 +100,8 @@ class CwmImageMigrationQueryTest extends ProclaimTestCase
     }
 
     /**
+     * The thumbnail regeneration counts run and return an integer for each kind.
+     *
      * @return  void
      *
      * @since   10.6.0
@@ -119,6 +125,8 @@ class CwmImageMigrationQueryTest extends ProclaimTestCase
     }
 
     /**
+     * The WebP, relink and recovery counts run and return an integer total.
+     *
      * @return  void
      *
      * @since   10.6.0

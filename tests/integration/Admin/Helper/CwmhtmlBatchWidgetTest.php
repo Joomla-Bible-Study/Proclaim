@@ -94,7 +94,11 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
     }
 
     /**
-     * @return array<string, array{0: string}>
+     * The batch list methods: teacherList, messageTypeList, seriesList and locationList.
+     *
+     * @return  array<string, array{0: string}>  Each method name
+     *
+     * @since   10.5.6
      */
     public static function listMethodProvider(): array
     {
@@ -107,7 +111,13 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
     }
 
     /**
+     * Each batch list method returns an array.
+     *
      * @param   string  $method  List method name
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('listMethodProvider')]
     #[TestDox('A list method always returns an array, never null')]
@@ -124,6 +134,11 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
      * invites the same bug back.
      *
      * @param   string  $method  List method name
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[DataProvider('listMethodProvider')]
     #[TestDox('A list method does not declare a nullable return')]
@@ -140,7 +155,11 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
     // -------------------------------------------------------------------------
 
     /**
-     * @return array<string, array{0: string}>
+     * The seven batch widget methods.
+     *
+     * @return  array<string, array{0: string}>  Each method name
+     *
+     * @since   10.5.6
      */
     public static function widgetProvider(): array
     {
@@ -156,7 +175,14 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
     }
 
     /**
+     * Each batch widget's label id is batch-, its own name and -lbl, and none is the shared
+     * batch-client-lbl.
+     *
      * @param   string  $widget  Widget method name
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('widgetProvider')]
     #[TestDox('A batch widget carries its own label id')]
@@ -178,6 +204,10 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
 
     /**
      * The failure this prevents: several of these render into one page.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Widgets rendered together produce no duplicate ids')]
     public function testWidgetsCombineWithoutDuplicateIds(): void
@@ -207,6 +237,10 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
      * would have exposed a one-click way to corrupt every selected file. The
      * handler now applies a whole display configuration, so the widget carries
      * the same choices as the Image Tools screen. See #1627.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The media-type widget offers display configurations, each a complete parameter set')]
     public function testMediaTypeWidgetOffersDisplayConfigurations(): void
@@ -239,6 +273,10 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
      * A count is appended to the Image Tools labels to show how many files share
      * a configuration. In a batch modal that number describes the whole site
      * rather than the rows the administrator picked, so it is left off there.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The batch widget omits the site-wide usage counts the Image Tools field shows')]
     public function testBatchWidgetOmitsSiteWideCounts(): void

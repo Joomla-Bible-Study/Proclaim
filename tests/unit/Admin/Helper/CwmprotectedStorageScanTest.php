@@ -38,8 +38,22 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmprotectedStorage::class)]
 class CwmprotectedStorageScanTest extends ProclaimTestCase
 {
+    /**
+     * The temporary directory standing in for the protected folder.
+     *
+     * @var    string
+     * @since  10.7.0
+     */
     private string $dir = '';
 
+    /**
+     * Make a temporary directory holding only the .htaccess and web.config guards.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     * @throws  \Random\RandomException
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -53,6 +67,13 @@ class CwmprotectedStorageScanTest extends ProclaimTestCase
         file_put_contents($this->dir . '/web.config', "<configuration/>\n");
     }
 
+    /**
+     * Remove the temporary directory and everything in it.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function tearDown(): void
     {
         $this->removeTree($this->dir);
@@ -60,6 +81,15 @@ class CwmprotectedStorageScanTest extends ProclaimTestCase
         parent::tearDown();
     }
 
+    /**
+     * Delete a directory and everything under it.
+     *
+     * @param   string  $dir  The directory
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     private function removeTree(string $dir): void
     {
         if (!is_dir($dir)) {
@@ -78,6 +108,13 @@ class CwmprotectedStorageScanTest extends ProclaimTestCase
         rmdir($dir);
     }
 
+    /**
+     * containsMedia() is false for a folder holding only its guard files.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A folder holding only its own guard files is empty')]
     public function testGuardFilesAloneAreNotMedia(): void
     {
@@ -90,6 +127,13 @@ class CwmprotectedStorageScanTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * containsMedia() finds a file at the top level.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A file at the top level is found')]
     public function testTopLevelFileIsFound(): void
     {
@@ -98,6 +142,13 @@ class CwmprotectedStorageScanTest extends ProclaimTestCase
         $this->assertTrue(CwmprotectedStorage::containsMedia($this->dir));
     }
 
+    /**
+     * containsMedia() finds a file one folder down.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A file in a subdirectory is found')]
     public function testFileInSubdirectoryIsFound(): void
     {
@@ -111,6 +162,13 @@ class CwmprotectedStorageScanTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * containsMedia() finds a file three folders down.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A file several folders down is found')]
     public function testDeeplyNestedFileIsFound(): void
     {
@@ -120,6 +178,13 @@ class CwmprotectedStorageScanTest extends ProclaimTestCase
         $this->assertTrue(CwmprotectedStorage::containsMedia($this->dir));
     }
 
+    /**
+     * Guard files in a subfolder still don't count as media.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('Guard files copied into a subfolder are still not media')]
     public function testGuardsAreSkippedAtEveryDepth(): void
     {
@@ -130,6 +195,13 @@ class CwmprotectedStorageScanTest extends ProclaimTestCase
         $this->assertFalse(CwmprotectedStorage::containsMedia($this->dir));
     }
 
+    /**
+     * Empty subfolders don't count as media.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('Empty subdirectories are not mistaken for stored media')]
     public function testEmptyDirectoriesAreNotMedia(): void
     {
@@ -141,12 +213,27 @@ class CwmprotectedStorageScanTest extends ProclaimTestCase
         $this->assertFalse(CwmprotectedStorage::containsMedia($this->dir));
     }
 
+    /**
+     * containsMedia() is false for a directory that doesn't exist.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A directory that does not exist holds nothing')]
     public function testMissingDirectory(): void
     {
         $this->assertFalse(CwmprotectedStorage::containsMedia($this->dir . '/nope'));
     }
 
+    /**
+     * A scan that reaches SCAN_LIMIT before finding any file reports the folder as
+     * holding media, not as empty.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A scan cut short reports the folder as occupied, never as empty')]
     public function testScanLimitFailsTowardsReporting(): void
     {

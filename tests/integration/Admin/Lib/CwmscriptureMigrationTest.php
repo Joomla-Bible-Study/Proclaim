@@ -27,20 +27,28 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * The scripture migration gives each reference its display text, without
+ * overwriting text already there.
+ *
+ * @since  10.5.8
  */
 #[CoversClass(CwmscriptureMigration::class)]
 class CwmscriptureMigrationTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseDriver|null
-     * @since 10.5.8
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
+     * Skip without a test database. Otherwise open a transaction for the test's rows.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -55,8 +63,11 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the test's rows.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function tearDown(): void
     {
@@ -105,11 +116,13 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
     }
 
     /**
+     * A reference's display text.
+     *
      * @param   int  $id  Reference primary key
      *
-     * @return  string
+     * @return  string  The text
      *
-     * @since 10.5.8
+     * @since   10.5.8
      */
     private function referenceText(int $id): string
     {
@@ -121,6 +134,13 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
         )->loadResult();
     }
 
+    /**
+     * A reference the SQL backfill left without display text is given one.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a reference the SQL backfill left without display text is given one')]
     public function testEmptyReferenceTextIsFilled(): void
     {
@@ -136,6 +156,13 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Running it twice does not rewrite text that is already there.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('running it twice does not rewrite text that is already there')]
     public function testItIsIdempotent(): void
     {
@@ -153,6 +180,13 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
         $this->assertSame($first, $this->referenceText($id));
     }
 
+    /**
+     * A reference that already has text is left alone.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('a reference that already has text is left alone')]
     public function testExistingTextIsNotOverwritten(): void
     {
@@ -170,6 +204,14 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
         $this->assertSame('Hand written', $this->referenceText($id));
     }
 
+    /**
+     * migrateStudy() does nothing. It is kept only so an importer or older caller
+     * does not hit a fatal error.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('migrateStudy is a no-op now that there are no legacy columns')]
     public function testMigrateStudyDoesNothing(): void
     {

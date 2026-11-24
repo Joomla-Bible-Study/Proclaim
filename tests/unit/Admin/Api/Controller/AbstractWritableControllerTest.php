@@ -41,6 +41,8 @@ class AbstractWritableControllerTest extends ProclaimTestCase
      * The 8 writable controllers preprocessSaveData() duplication spanned.
      *
      * @return  array<string, array{0: class-string}>
+     *
+     * @since   10.5.6
      */
     public static function writableControllerProvider(): array
     {
@@ -63,6 +65,8 @@ class AbstractWritableControllerTest extends ProclaimTestCase
      * @param   string        $method
      *
      * @return  string
+     *
+     * @since   10.5.6
      */
     private static function methodBody(string $class, string $method): string
     {
@@ -75,6 +79,13 @@ class AbstractWritableControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * stripProtectedFields() exists, is protected and returns an array.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testStripProtectedFieldsExistsAndIsProtected(): void
     {
         $ref = new \ReflectionMethod(AbstractWritableController::class, 'stripProtectedFields');
@@ -82,6 +93,15 @@ class AbstractWritableControllerTest extends ProclaimTestCase
         $this->assertSame('array', $ref->getReturnType()?->getName());
     }
 
+    /**
+     * stripProtectedFields() unsets the bookkeeping columns a client must not set,
+     * requires core.admin to change created_by, and gates published on
+     * core.edit.state.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testStripProtectedFieldsStripsSystemFieldsAndGatesAcl(): void
     {
         $body = self::methodBody(AbstractWritableController::class, 'stripProtectedFields');
@@ -99,9 +119,14 @@ class AbstractWritableControllerTest extends ProclaimTestCase
     }
 
     /**
-     * @param   class-string  $class
+     * Each writable controller's preprocessSaveData() calls the shared
+     * stripProtectedFields().
+     *
+     * @param   class-string  $class  The writable controller's class name
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('writableControllerProvider')]
     public function testPreprocessSaveDataDelegatesToSharedHelper(string $class): void
@@ -123,6 +148,8 @@ class AbstractWritableControllerTest extends ProclaimTestCase
      * @param   class-string  $class
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('writableControllerProvider')]
     public function testPreprocessSaveDataHasNoDuplicatedSystemFieldUnset(string $class): void
@@ -136,6 +163,13 @@ class AbstractWritableControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * LocationsController calls the shared helper and handles its own extra fields on top of it.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testLocationsControllerLayersItsOwnExtraFieldsOnTopOfSharedHelper(): void
     {
         $body = self::methodBody(LocationsController::class, 'preprocessSaveData');
@@ -151,6 +185,13 @@ class AbstractWritableControllerTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * MediaController still splits podcast_id into a list before it calls the shared helper.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testMediaControllerKeepsPodcastIdNormalizationBeforeSharedHelper(): void
     {
         $body = self::methodBody(MediaController::class, 'preprocessSaveData');
@@ -164,6 +205,14 @@ class AbstractWritableControllerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * TeachersController still defaults image to an empty string before it calls
+     * the shared helper.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testTeachersControllerKeepsImageDefaultBeforeSharedHelper(): void
     {
         $body = self::methodBody(TeachersController::class, 'preprocessSaveData');

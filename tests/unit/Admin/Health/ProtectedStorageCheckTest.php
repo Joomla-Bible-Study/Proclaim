@@ -38,6 +38,13 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(ProtectedStorageCheck::class)]
 class ProtectedStorageCheckTest extends ProclaimTestCase
 {
+    /**
+     * The check runs and returns a result.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('The check runs and returns a result')]
     public function testRunReturnsAResult(): void
     {
@@ -47,6 +54,13 @@ class ProtectedStorageCheckTest extends ProclaimTestCase
         $this->assertInstanceOf(HealthStatus::class, $result->status);
     }
 
+    /**
+     * The check is passive, so running it here is what the panel does.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('It is passive, so running it here is what the panel does')]
     public function testCheckIsPassive(): void
     {
@@ -60,7 +74,12 @@ class ProtectedStorageCheckTest extends ProclaimTestCase
     }
 
     /**
-     * @return  array<string, array{0: string, 1: bool, 2: string}>
+     * Each stored verdict and folder state, with the language key describe() should
+     * choose for it.
+     *
+     * @return  array<string, array{0: string, 1: bool, 2: string}>  Each case
+     *
+     * @since   10.7.1
      */
     public static function verdicts(): array
     {
@@ -72,6 +91,18 @@ class ProtectedStorageCheckTest extends ProclaimTestCase
         ];
     }
 
+    /**
+     * The wording follows what is actually at stake.
+     *
+     * @param   string  $stored       The stored verdict
+     * @param   bool    $holds        Whether the folder holds anything
+     * @param   string  $expectedKey  The language key suffix the sentence should carry
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     #[TestDox('The wording follows what is actually at stake')]
     #[\PHPUnit\Framework\Attributes\DataProvider('verdicts')]
     public function testDescribeChoosesTheRightSentence(string $stored, bool $holds, string $expectedKey): void
@@ -91,6 +122,14 @@ class ProtectedStorageCheckTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * An empty folder is never reported as a fault.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     * @throws  \ReflectionException
+     */
     #[TestDox('An empty folder is never reported as a fault')]
     public function testEmptyFolderIsNotAWarning(): void
     {

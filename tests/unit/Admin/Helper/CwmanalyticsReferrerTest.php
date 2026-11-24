@@ -36,7 +36,11 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmanalyticsReferrerTest extends ProclaimTestCase
 {
     /**
-     * @return array<string, array{0: string, 1: string|null}>
+     * URLs as received, each with what may be stored.
+     *
+     * @return  array<string, array{0: string, 1: string|null}>  The URL and what may be stored
+     *
+     * @since   10.5.6
      */
     public static function urlProvider(): array
     {
@@ -85,8 +89,14 @@ class CwmanalyticsReferrerTest extends ProclaimTestCase
     }
 
     /**
+     * A URL is reduced to scheme, host and path.
+     *
      * @param   string       $input     URL as received.
      * @param   string|null  $expected  What may be stored.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('urlProvider')]
     #[TestDox('A URL is reduced to scheme, host and path')]
@@ -95,6 +105,13 @@ class CwmanalyticsReferrerTest extends ProclaimTestCase
         $this->assertSame($expected, CwmanalyticsHelper::stripUrlParameters($input));
     }
 
+    /**
+     * Stripping is idempotent, so the migration can run more than once.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Stripping is idempotent, so the migration can run more than once')]
     public function testStrippingIsIdempotent(): void
     {
@@ -104,6 +121,13 @@ class CwmanalyticsReferrerTest extends ProclaimTestCase
         $this->assertSame($once, $twice);
     }
 
+    /**
+     * A stripped URL never exceeds the column width.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A stripped URL never exceeds the column width')]
     public function testResultFitsTheColumn(): void
     {
@@ -116,6 +140,10 @@ class CwmanalyticsReferrerTest extends ProclaimTestCase
      * logEvent() needs a full application and session stack to run end to end,
      * so this is pinned structurally the way the consent gate is in
      * CwmanalyticsConsentTest: no assignment to $referrerUrl may store a raw URL.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Every referrer_url assignment strips parameters first')]
     public function testNoAssignmentStoresARawUrl(): void
@@ -142,6 +170,13 @@ class CwmanalyticsReferrerTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * Proclaim's settings offer no retention period: only the purge task applies one.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox("Proclaim's settings no longer offer a retention period that nothing applies")]
     public function testRetentionSettingIsGone(): void
     {
@@ -154,6 +189,13 @@ class CwmanalyticsReferrerTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The purge task owns a retention period.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The purge task still owns a retention period')]
     public function testTaskRetainsItsOwnSetting(): void
     {

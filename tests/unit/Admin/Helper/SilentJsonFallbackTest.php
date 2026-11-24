@@ -48,6 +48,9 @@ class SilentJsonFallbackTest extends ProclaimTestCase
      * @param   mixed  $stored  Whatever is sitting in location_group_mapping.
      *
      * @return  array
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private function mappingFor(mixed $stored): array
     {
@@ -60,6 +63,8 @@ class SilentJsonFallbackTest extends ProclaimTestCase
      * Clear the once-per-request warning latch between cases.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -69,6 +74,14 @@ class SilentJsonFallbackTest extends ProclaimTestCase
         $flag->setValue(null, false);
     }
 
+    /**
+     * getGroupMapping() returns a readable mapping as it is.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('A readable mapping is returned as-is')]
     public function testReadableMappingSurvives(): void
     {
@@ -78,6 +91,14 @@ class SilentJsonFallbackTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * getGroupMapping() returns an empty array for an unreadable mapping.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('An unreadable mapping still returns [], because [] also means "not configured"')]
     public function testUnreadableMappingStillReturnsEmpty(): void
     {
@@ -87,6 +108,14 @@ class SilentJsonFallbackTest extends ProclaimTestCase
         $this->assertSame([], $this->mappingFor('{"4":[11,12'));
     }
 
+    /**
+     * An empty mapping and a corrupt one give the same value.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('An empty mapping is indistinguishable from a corrupt one by value alone')]
     public function testEmptyAndCorruptAgreeOnValue(): void
     {
@@ -96,6 +125,14 @@ class SilentJsonFallbackTest extends ProclaimTestCase
         $this->assertSame($this->mappingFor('{}'), $this->mappingFor('not json at all'));
     }
 
+    /**
+     * A corrupt mapping sets the warning latch, and it stays set for the next lookup.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('The warning latch fires once per request, not once per lookup')]
     public function testWarningIsLatched(): void
     {
@@ -112,6 +149,14 @@ class SilentJsonFallbackTest extends ProclaimTestCase
         $this->assertTrue($flag->getValue());
     }
 
+    /**
+     * A readable mapping leaves the warning latch unset.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('A readable mapping never sets the warning latch')]
     public function testReadableMappingDoesNotWarn(): void
     {
@@ -122,6 +167,14 @@ class SilentJsonFallbackTest extends ProclaimTestCase
         $this->assertFalse($flag->getValue(), 'Valid JSON must not report a failure');
     }
 
+    /**
+     * createGroupLocationMappings()'s source doesn't write #__extensions directly, and
+     * saves through Cwmparams::setCompParams().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('createGroupLocationMappings writes only its own key, never the whole params blob')]
     public function testMigrationWritesOnlyItsOwnParam(): void
     {
@@ -162,6 +215,14 @@ class SilentJsonFallbackTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * createGroupLocationMappings()'s source returns when the stored mapping won't decode,
+     * instead of merging into an empty one.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('createGroupLocationMappings refuses to merge when the stored mapping is unreadable')]
     public function testMigrationRefusesToMergeIntoNothing(): void
     {
@@ -198,6 +259,8 @@ class SilentJsonFallbackTest extends ProclaimTestCase
      * @param   string  $name    Method name.
      *
      * @return  string
+     *
+     * @since   10.5.6
      */
     private function methodBody(string $source, string $name): string
     {
@@ -239,6 +302,8 @@ class SilentJsonFallbackTest extends ProclaimTestCase
      * @param   string  $source  PHP source.
      *
      * @return  string
+     *
+     * @since   10.5.6
      */
     private function stripComments(string $source): string
     {

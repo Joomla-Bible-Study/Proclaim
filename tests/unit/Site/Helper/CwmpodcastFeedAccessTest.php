@@ -31,7 +31,9 @@ class CwmpodcastFeedAccessTest extends TestCase
     /**
      * The source of Cwmpodcast::getEpisodes().
      *
-     * @return string
+     * @return  string
+     *
+     * @since   10.5.8
      */
     private static function episodeQuerySource(): string
     {
@@ -49,6 +51,10 @@ class CwmpodcastFeedAccessTest extends TestCase
      * Every link in the chain must be filtered, matching
      * Cwmdownload::isAccessible() and the sermon listings. Filtering only the
      * media file would still publish an episode whose message is restricted.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testTheFeedQueryFiltersOnTheWholeAccessChain(): void
     {
@@ -70,6 +76,10 @@ class CwmpodcastFeedAccessTest extends TestCase
      * Reading the current identity crashed the scheduled podcast task under the command line, where
      * the console application has no identity, and let a Super User building the feed list items
      * that a podcast app is refused.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
      */
     public function testTheFeedIsBuiltForTheGuestNotWhoeverRunsTheBuild(): void
     {
@@ -87,7 +97,13 @@ class CwmpodcastFeedAccessTest extends TestCase
         );
     }
 
-    /** The levels must come from the reader, not be hardcoded to Public. */
+    /**
+     * The levels must come from the reader, not be hardcoded to Public.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     public function testItFiltersAgainstTheReadersOwnViewLevels(): void
     {
         $this->assertStringContainsString(
@@ -103,6 +119,10 @@ class CwmpodcastFeedAccessTest extends TestCase
      * unless it is known to find something, and the same applies to a scan that
      * finds everything: this fails if episodeQuerySource() ever returns empty
      * or stops resolving the method.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
      */
     public function testTheSourceScannerActuallyReadsTheMethod(): void
     {

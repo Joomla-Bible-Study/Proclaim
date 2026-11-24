@@ -37,28 +37,46 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwminstallUpdateSiteTest extends IntegrationTestCase
 {
     /**
-     * The stream carrying current releases.
+     * The query parameter that names the stream carrying current releases.
+     *
+     * @var    string
+     * @since  10.5.10
      */
     private const CURRENT_STREAM_ID = 'id=1';
 
     /**
      * The 9.x stream. Nothing 10.x is ever announced on it.
+     *
+     * @var    string
+     * @since  10.5.10
      */
     private const LEGACY_STREAM = 'https://www.christianwebministries.org/index.php'
         . '?option=com_ars&view=update&task=stream&id=2&format=xml';
 
     /**
-     * @var  DatabaseDriver|null
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.10
      */
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  int
+     * The com_proclaim extension id.
+     *
+     * @var    int
+     * @since  10.5.10
      */
     private int $componentId = 0;
 
     /**
+     * Skip without a test database or a registered com_proclaim. Otherwise open a
+     * transaction and clear every update site claiming Proclaim, so each test
+     * starts from none.
+     *
      * @return  void
+     *
+     * @since   10.5.10
      */
     protected function setUp(): void
     {
@@ -93,7 +111,11 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the test's changes.
+     *
      * @return  void
+     *
+     * @since   10.5.10
      */
     protected function tearDown(): void
     {
@@ -108,6 +130,15 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * A component-only site is given the stream that carries current releases.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     * @throws  \Exception
+     * @throws  \ReflectionException
+     */
     #[TestDox('A component-only site is given the stream that carries current releases')]
     public function testComponentOnlySiteGetsTheCurrentStream(): void
     {
@@ -142,6 +173,15 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * When the package owns updates the component is left without a duplicate site.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     * @throws  \Exception
+     * @throws  \ReflectionException
+     */
     #[TestDox('When the package owns updates the component is left without a duplicate site')]
     public function testPackageOwnedUpdatesLeaveNoComponentSite(): void
     {
@@ -172,6 +212,15 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * An update site shared with another extension keeps serving that extension.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     * @throws  \Exception
+     * @throws  \ReflectionException
+     */
     #[TestDox('An update site shared with another extension keeps serving that extension')]
     public function testSharedUpdateSiteSurvives(): void
     {
@@ -222,6 +271,10 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
      * Run the finish step under test.
      *
      * @return  void
+     *
+     * @since   10.5.10
+     * @throws  \Exception
+     * @throws  \ReflectionException
      */
     private function runStep(): void
     {
@@ -242,11 +295,15 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
     }
 
     /**
+     * Insert an enabled update site bound to an extension.
+     *
      * @param   string  $name         Update site name
      * @param   string  $location     Stream URL
      * @param   int     $extensionId  Extension to bind it to
      *
      * @return  int  The new update site id
+     *
+     * @since   10.5.10
      */
     private function seedUpdateSite(string $name, string $location, int $extensionId): int
     {
@@ -271,6 +328,8 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
      * A pkg_proclaim row, created only if the test database has none.
      *
      * @return  int  Extension id
+     *
+     * @since   10.5.10
      */
     private function seedPackageExtension(): int
     {
@@ -304,9 +363,13 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
     }
 
     /**
+     * The update sites bound to an extension.
+     *
      * @param   int  $extensionId  Extension to look up
      *
-     * @return  array<int, array{id: int, location: string}>
+     * @return  array<int, array{id: int, location: string}>  Each site's id and location
+     *
+     * @since   10.5.10
      */
     private function sitesFor(int $extensionId): array
     {
@@ -326,9 +389,13 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
     }
 
     /**
+     * Whether an update site row is present.
+     *
      * @param   int  $siteId  Update site id
      *
-     * @return  int  1 when the row is present
+     * @return  int  1 when the row is present, 0 otherwise
+     *
+     * @since   10.5.10
      */
     private function siteExists(int $siteId): int
     {
@@ -344,6 +411,8 @@ class CwminstallUpdateSiteTest extends IntegrationTestCase
      * Drop every update site claiming Proclaim, so each test starts level.
      *
      * @return  void
+     *
+     * @since   10.5.10
      */
     private function clearProclaimUpdateSites(): void
     {

@@ -31,6 +31,13 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class LocationListFieldOrderingTest extends ProclaimTestCase
 {
+    /**
+     * getInput() resolves the options before it collects the layout data.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testOptionsAreResolvedBeforeLayoutDataIsCollected(): void
     {
         $ref   = new \ReflectionMethod(LocationListField::class, 'getInput');
@@ -53,6 +60,13 @@ class LocationListFieldOrderingTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The read-only branch gives its element an id, so its label points at it.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     public function testReadOnlyBranchHasAnIdForItsLabel(): void
     {
         $source = (string) file_get_contents((new \ReflectionClass(LocationListField::class))->getFileName());

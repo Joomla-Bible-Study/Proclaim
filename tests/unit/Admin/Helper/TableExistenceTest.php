@@ -40,11 +40,19 @@ class TableExistenceTest extends ProclaimTestCase
      *
      * build/ and tests/ are excluded deliberately: the harness has its own
      * database access and is not what a user runs.
+     *
+     * @var    list<string>
+     * @since  10.5.10
      */
     private const SHIPPED_PATHS = ['admin/src', 'site/src', 'api/src', 'plugins'];
 
     /**
-     * @return list<string>  Absolute paths of shipped PHP files.
+     * Every shipped PHP file: the shipped trees without their vendor code, plus the
+     * install script.
+     *
+     * @return  list<string>  Absolute paths of shipped PHP files.
+     *
+     * @since   10.5.10
      */
     private static function shippedFiles(): array
     {
@@ -82,6 +90,12 @@ class TableExistenceTest extends ProclaimTestCase
      * Strip block and line comments, so prose explaining the old pattern is not
      * mistaken for the pattern. The explanation of why `SHOW TABLES LIKE` is
      * wrong necessarily contains the words.
+     *
+     * @param   string  $path  The file to read
+     *
+     * @return  string  Its source without comments
+     *
+     * @since   10.5.10
      */
     private static function code(string $path): string
     {
@@ -99,6 +113,14 @@ class TableExistenceTest extends ProclaimTestCase
         return $stripped;
     }
 
+    /**
+     * No shipped file uses SHOW TABLES, or SHOW COLUMNS with LIKE, once its comments are
+     * stripped.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     */
     public function testNoShippedCodeAsksForExistenceWithALikePattern(): void
     {
         $offenders = [];
@@ -132,6 +154,14 @@ class TableExistenceTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * tableExists() asks information_schema.TABLES with a bound equality match and no LIKE.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     * @throws  \ReflectionException
+     */
     public function testTableExistsAsksInformationSchemaWithABoundEqualityMatch(): void
     {
         $body = self::methodBody('tableExists');
@@ -142,6 +172,15 @@ class TableExistenceTest extends ProclaimTestCase
         $this->assertDoesNotMatchRegularExpression('/LIKE/i', $body);
     }
 
+    /**
+     * columnExists() asks information_schema.COLUMNS, binds the table and the column, and
+     * uses no LIKE.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     * @throws  \ReflectionException
+     */
     public function testColumnExistsBindsBothTheTableAndTheColumn(): void
     {
         $body = self::methodBody('columnExists');
@@ -155,6 +194,11 @@ class TableExistenceTest extends ProclaimTestCase
     /**
      * Both helpers accept either `#__x` or an already-prefixed name, because
      * their callers hold one or the other.
+     *
+     * @return  void
+     *
+     * @since   10.5.10
+     * @throws  \ReflectionException
      */
     public function testBothHelpersResolveThePlaceholderPrefix(): void
     {
@@ -167,6 +211,16 @@ class TableExistenceTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * A CwmdbHelper method's source, read through reflection.
+     *
+     * @param   string  $method  The method
+     *
+     * @return  string  Its source
+     *
+     * @since   10.5.10
+     * @throws  \ReflectionException
+     */
     private static function methodBody(string $method): string
     {
         $reflection = new \ReflectionMethod(CwmdbHelper::class, $method);

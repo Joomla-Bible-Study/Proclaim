@@ -24,7 +24,9 @@ class BibleImporterTest extends ProclaimTestCase
     /**
      * Test importFromJson returns -1 for invalid JSON
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testImportFromJsonReturnsNegativeForInvalidJson(): void
     {

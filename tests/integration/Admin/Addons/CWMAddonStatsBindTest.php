@@ -23,25 +23,36 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.1
+ * The platform-stats sync's bound sync-timestamp UPDATE and platform LEFT JOIN
+ * execute against the real database.
+ *
+ * @since  10.7.1
  */
 class CWMAddonStatsBindTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseInterface|null
-     * @since 10.7.1
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.7.1
      */
     private ?DatabaseInterface $db = null;
 
     /**
-     * @var mixed
-     * @since 10.7.1
+     * Factory's language before the test replaced it to silence date warnings.
+     *
+     * @var    mixed
+     * @since  10.7.1
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
+     * Skip without a test database. Otherwise silence date language warnings, since
+     * the timestamp comes from Factory::getDate(), and open a transaction.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     protected function setUp(): void
     {
@@ -60,8 +71,11 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back, and restore the language.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     protected function tearDown(): void
     {
@@ -94,8 +108,11 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
     }
 
     /**
+     * updateServerSyncTimestamp()'s bound :now UPDATE executes.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     #[TestDox("updateServerSyncTimestamp()'s bound :now UPDATE executes")]
     public function testUpdateServerSyncTimestampBindExecutes(): void
@@ -108,8 +125,11 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
     }
 
     /**
+     * getMediaVideoIds()'s bound :platform LEFT JOIN executes.
+     *
      * @return  void
-     * @since 10.7.1
+     *
+     * @since   10.7.1
      */
     #[TestDox("getMediaVideoIds()'s bound :platform LEFT JOIN executes")]
     public function testGetMediaVideoIdsPlatformJoinExecutes(): void

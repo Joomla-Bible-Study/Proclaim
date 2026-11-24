@@ -24,7 +24,9 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @since 10.5.8
+ * The permissions UI stays small enough for PHP to accept its POST.
+ *
+ * @since  10.5.8
  */
 class PermissionsFormSizeTest extends TestCase
 {
@@ -32,13 +34,21 @@ class PermissionsFormSizeTest extends TestCase
      * Repository root.
      *
      * @return  string
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private static function root(): string
     {
         return \dirname(__DIR__, 3);
     }
 
+    /**
+     * The permissions form declares exactly one rules field.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the permissions form declares exactly one rules field')]
     public function testPermissionsFormHasASingleRulesField(): void
     {
@@ -60,6 +70,13 @@ class PermissionsFormSizeTest extends TestCase
         );
     }
 
+    /**
+     * The rules field names the asset_id field that carries the section asset.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the rules field names the asset_id field that carries the section asset')]
     public function testRulesFieldIsBoundToAnAssetField(): void
     {
@@ -81,6 +98,13 @@ class PermissionsFormSizeTest extends TestCase
         );
     }
 
+    /**
+     * The Administration form carries no permissions grid.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('the Administration form carries no permissions grid')]
     public function testAdministrationFormCarriesNoRulesGrid(): void
     {

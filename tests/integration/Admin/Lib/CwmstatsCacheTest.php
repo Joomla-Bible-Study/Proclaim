@@ -14,9 +14,21 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * Cwmstats has getTopScore() but not getTopScoreSite().
+ *
+ * @since  10.2.0
+ */
 #[CoversClass(Cwmstats::class)]
 class CwmstatsCacheTest extends IntegrationTestCase
 {
+    /**
+     * Reset Cwmstats' static cache.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -35,12 +47,23 @@ class CwmstatsCacheTest extends IntegrationTestCase
      * caching). Removed rather than fixed, since nothing calls it.
      * getTopScore() -- the sibling actually used by
      * admin/tmpl/cwmcpanel/default.php -- is unaffected.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetTopScoreSiteIsRemoved(): void
     {
         $this->assertFalse(method_exists(Cwmstats::class, 'getTopScoreSite'));
     }
 
+    /**
+     * Cwmstats has getTopScore().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     public function testGetTopScoreStillExists(): void
     {
         $this->assertTrue(method_exists(Cwmstats::class, 'getTopScore'));

@@ -39,8 +39,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(SetupChecklistCheck::class)]
 class SetupChecklistCheckTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.7.0
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -53,6 +66,13 @@ class SetupChecklistCheckTest extends IntegrationTestCase
         $this->db->transactionStart(true);
     }
 
+    /**
+     * Roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -67,9 +87,13 @@ class SetupChecklistCheckTest extends IntegrationTestCase
     }
 
     /**
+     * Set the setup wizard's completion flag in the admin settings.
+     *
      * @param   int  $complete  Value for setup_wizard_complete.
      *
      * @return  void
+     *
+     * @since   10.7.0
      */
     private function setWizardComplete(int $complete): void
     {
@@ -77,10 +101,14 @@ class SetupChecklistCheckTest extends IntegrationTestCase
     }
 
     /**
+     * Set one param in the admin settings row.
+     *
      * @param   string  $key    Param name.
      * @param   int     $value  Param value.
      *
      * @return  void
+     *
+     * @since   10.7.0
      */
     private function setParam(string $key, int $value): void
     {
@@ -102,6 +130,13 @@ class SetupChecklistCheckTest extends IntegrationTestCase
         )->execute();
     }
 
+    /**
+     * getChecklistItems() returns the same, non-empty list whether or not the wizard has completed.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('The checklist helper ignores the wizard flag, so the caller must not')]
     public function testHelperDoesNotGateOnTheWizardFlag(): void
     {
@@ -125,6 +160,13 @@ class SetupChecklistCheckTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * With the wizard not yet complete, the check reports Ok.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('A site that never ran the wizard is not told it is behind')]
     public function testSilentBeforeTheWizardHasRun(): void
     {
@@ -142,6 +184,14 @@ class SetupChecklistCheckTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Once the wizard has completed, the check reports a Notice with a fingerprint when
+     * steps are outstanding, and Ok when none are.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('Once the wizard has run, outstanding steps are reported')]
     public function testReportsOutstandingStepsAfterTheWizard(): void
     {
@@ -178,6 +228,14 @@ class SetupChecklistCheckTest extends IntegrationTestCase
         $this->assertNotSame('', $result->fingerprint);
     }
 
+    /**
+     * Dismissing the checklist banner hides it, and changes neither the check's status nor
+     * its detail.
+     *
+     * @return  void
+     *
+     * @since   10.7.0
+     */
     #[TestDox('Dismissing the dashboard banner does not change what the check reports')]
     public function testDismissalDoesNotSilenceIt(): void
     {

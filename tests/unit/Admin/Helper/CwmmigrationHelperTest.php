@@ -41,6 +41,10 @@ class CwmmigrationHelperTest extends ProclaimTestCase
      * the test DB are left alone by the assertion (they may or may not have
      * media of their own); only the fixture server's outcome is checked, so
      * this is safe to run against any DB state.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testMigrateLegacyServersMovesAllFixtureRowsDespiteAShrinkingPool(): void
     {
@@ -116,6 +120,10 @@ class CwmmigrationHelperTest extends ProclaimTestCase
      * Verified by hand against j5-dev with 3 fixture scenarios (dup
      * colliding with an existing keeper row, two dups + keeper on one
      * study, a dup with no keeper row) before writing this test.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testFixTeacherAliasesDoesNotOrphanJunctionRowsSkippedByUpdateIgnore(): void
     {

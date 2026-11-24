@@ -31,7 +31,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 class TestSuiteCoverageTest extends ProclaimTestCase
 {
     /**
-     * @return  string
+     * The repository root.
+     *
+     * @return  string  Its absolute path
+     *
      * @since   10.6.0
      */
     private static function repoRoot(): string
@@ -70,6 +73,13 @@ class TestSuiteCoverageTest extends ProclaimTestCase
         return $wired;
     }
 
+    /**
+     * Every test file sits in a suite that a composer script runs.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('every test file sits in a suite that a composer script runs')]
     public function testEveryTestFileIsReachable(): void
     {

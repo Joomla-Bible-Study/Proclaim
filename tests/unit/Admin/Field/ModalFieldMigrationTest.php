@@ -28,7 +28,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class ModalFieldMigrationTest extends ProclaimTestCase
 {
     /**
-     * @return array<string, array{0: class-string, 1: string, 2: string, 3: string, 4: string}>
+     * The modal fields checked, with the URLs each should build.
+     *
+     * @return  array<string, array{0: class-string, 1: string, 2: string, 3: string, 4: string}>  The field class, then its select view, edit view, edit task and new task
+     *
+     * @since   10.5.6
      */
     public static function fieldProvider(): array
     {
@@ -43,11 +47,18 @@ class ModalFieldMigrationTest extends ProclaimTestCase
     }
 
     /**
+     * The field extends ModalSelectField and builds the right select, edit and
+     * new URLs.
+     *
      * @param   class-string  $fieldClass    The field class under test.
      * @param   string        $selectView    Expected view= in the select URL.
      * @param   string        $editView      Expected view= in the edit/new URLs.
      * @param   string        $editTask      Expected task= in the edit URL.
      * @param   string        $newTask       Expected task= in the new URL.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[DataProvider('fieldProvider')]
     public function testFieldExtendsModalSelectFieldAndBuildsCorrectUrls(

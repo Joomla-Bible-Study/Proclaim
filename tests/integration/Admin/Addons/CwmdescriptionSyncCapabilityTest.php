@@ -47,6 +47,8 @@ class CwmdescriptionSyncCapabilityTest extends IntegrationTestCase
      * true before #1920 without implementing the push.
      *
      * @return  array<string, array{0: string, 1: bool}>
+     *
+     * @since   10.6.0
      */
     public static function serverTypeProvider(): array
     {
@@ -77,6 +79,8 @@ class CwmdescriptionSyncCapabilityTest extends IntegrationTestCase
      * @param   bool    $expected  Whether the platform accepts a description push.
      *
      * @return  void
+     *
+     * @since   10.6.0
      */
     #[Test]
     #[DataProvider('serverTypeProvider')]
@@ -98,6 +102,9 @@ class CwmdescriptionSyncCapabilityTest extends IntegrationTestCase
      * the request through to a method that reports the platform unsupported.
      *
      * @return  void
+     *
+     * @since   10.6.0
+     * @throws  \ReflectionException
      */
     #[Test]
     public function claimingTheCapabilityRequiresImplementingIt(): void
@@ -129,6 +136,8 @@ class CwmdescriptionSyncCapabilityTest extends IntegrationTestCase
      * cannot pick up an offer it has no way to honour.
      *
      * @return  void
+     *
+     * @since   10.6.0
      */
     #[Test]
     public function capabilityIsOptInAtTheBaseClass(): void
@@ -165,6 +174,8 @@ class CwmdescriptionSyncCapabilityTest extends IntegrationTestCase
      * not claim the second, or the drill-down offers a button that fails.
      *
      * @return  void
+     *
+     * @since   10.6.0
      */
     #[Test]
     public function readinessIsOptInAtTheBaseClass(): void
@@ -199,6 +210,9 @@ class CwmdescriptionSyncCapabilityTest extends IntegrationTestCase
      * where YouTube could sync and was never asked.
      *
      * @return  void
+     *
+     * @since   10.6.0
+     * @throws  \ReflectionException
      */
     #[Test]
     public function capableAddonsImplementTheirOwnReadinessCheck(): void

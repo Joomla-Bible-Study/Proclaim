@@ -58,9 +58,11 @@ class LoadFormDataShapeTest extends ProclaimTestCase
     }
 
     /**
+     * No model wraps its item in a list when loading form data.
+     *
      * @return  void
      *
-     * @since 10.7.1
+     * @since   10.7.1
      */
     #[TestDox('No model wraps its item in a list when loading form data')]
     public function testNoModelWrapsTheItem(): void

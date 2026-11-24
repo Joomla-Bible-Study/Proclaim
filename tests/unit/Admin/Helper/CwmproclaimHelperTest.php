@@ -24,7 +24,9 @@ class CwmproclaimHelperTest extends ProclaimTestCase
     /**
      * Test extension name constant
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testExtensionNameIsCorrect(): void
     {
@@ -34,7 +36,9 @@ class CwmproclaimHelperTest extends ProclaimTestCase
     /**
      * Test admin_params default is null
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testAdminParamsDefaultIsNull(): void
     {
@@ -44,7 +48,9 @@ class CwmproclaimHelperTest extends ProclaimTestCase
     /**
      * Test arraySortByColumn sorts array correctly
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testArraySortByColumnSortsCorrectly(): void
     {
@@ -64,7 +70,9 @@ class CwmproclaimHelperTest extends ProclaimTestCase
     /**
      * Test halfarray method
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testHalfarrayMethod(): void
     {
@@ -79,7 +87,9 @@ class CwmproclaimHelperTest extends ProclaimTestCase
     /**
      * Test halfarray with odd count
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testHalfarrayWithOddCount(): void
     {

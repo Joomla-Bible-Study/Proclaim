@@ -26,7 +26,9 @@ class CwmaliasTest extends ProclaimTestCase
     /**
      * Test extension name constant
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testExtensionNameIsCorrect(): void
     {
@@ -36,7 +38,9 @@ class CwmaliasTest extends ProclaimTestCase
     /**
      * Test getObjects method returns expected table structure
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetObjectsReturnsExpectedStructure(): void
     {
@@ -57,7 +61,9 @@ class CwmaliasTest extends ProclaimTestCase
     /**
      * Test getObjects method includes series table
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetObjectsIncludesSeriesTable(): void
     {
@@ -71,7 +77,9 @@ class CwmaliasTest extends ProclaimTestCase
     /**
      * Test getObjects method includes studies table
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetObjectsIncludesStudiesTable(): void
     {
@@ -85,7 +93,9 @@ class CwmaliasTest extends ProclaimTestCase
     /**
      * Test getObjects method includes teachers table
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetObjectsIncludesTeachersTable(): void
     {
@@ -99,7 +109,9 @@ class CwmaliasTest extends ProclaimTestCase
     /**
      * Test getObjects method includes message_type table
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetObjectsIncludesMessageTypeTable(): void
     {
@@ -113,7 +125,9 @@ class CwmaliasTest extends ProclaimTestCase
     /**
      * Test getTableQuery returns false for empty table name
      *
-     * @return void
+     * @return  void
+     *
+     * @since   10.1.0
      */
     public function testGetTableQueryReturnsFalseForEmptyTable(): void
     {

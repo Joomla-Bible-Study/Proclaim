@@ -32,12 +32,37 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmImageCleanup::class)]
 class CwmImageCleanupIntegrationTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * The study image folder the test creates, relative to the site root.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $folderPath;
 
+    /**
+     * The same folder as an absolute path, for tearDown() to remove.
+     *
+     * @var    string
+     * @since  10.5.6
+     */
     private string $absoluteFolderPath;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,6 +75,14 @@ class CwmImageCleanupIntegrationTest extends IntegrationTestCase
         $this->db->transactionStart();
     }
 
+    /**
+     * Remove the test's folder, then its parent and grandparent folders when they are empty,
+     * and roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         if (isset($this->absoluteFolderPath) && is_dir($this->absoluteFolderPath)) {
@@ -76,6 +109,14 @@ class CwmImageCleanupIntegrationTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * Given a folder named for a study that exists, deleteOrphans() deletes nothing, leaves
+     * the folder in place and reports an error.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('deleteOrphans() re-validates against current DB state and skips a folder whose record has reappeared')]
     public function testDeleteOrphansSkipsFolderWhoseRecordReappearedSinceScan(): void
     {
@@ -92,6 +133,13 @@ class CwmImageCleanupIntegrationTest extends IntegrationTestCase
         $this->assertNotEmpty($result['errors']);
     }
 
+    /**
+     * Insert a published study and return its id.
+     *
+     * @return  int  The new study's id
+     *
+     * @since   10.5.6
+     */
     private function insertStudy(): int
     {
         $row = (object) [

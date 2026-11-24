@@ -33,9 +33,13 @@ use PHPUnit\Framework\Attributes\TestDox;
 class OrGroupShapeTest extends ProclaimTestCase
 {
     /**
+     * Render the WHERE clause of the query the callable builds.
+     *
      * @param   callable  $build  Receives a fresh query, returns it built.
      *
      * @return  string  The rendered WHERE clause, whitespace-normalised.
+     *
+     * @since   10.7.1
      */
     private function whereOf(callable $build): string
     {
@@ -47,6 +51,13 @@ class OrGroupShapeTest extends ProclaimTestCase
         return trim(substr($sql, strpos($sql, 'WHERE')));
     }
 
+    /**
+     * andWhere([a, b]) appends (a OR b) with AND, brackets included.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('andWhere([a, b]) appends (a OR b) with AND, brackets included')]
     public function testAndWhereAppendsAnOrGroup(): void
     {
@@ -60,6 +71,13 @@ class OrGroupShapeTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * where(a)->orWhere(b) renders (a) OR (b) when the group is the whole clause.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('where(a)->orWhere(b) renders (a) OR (b) when the group is the whole clause')]
     public function testWhereOrWhereSeedsTheClause(): void
     {
@@ -69,6 +87,14 @@ class OrGroupShapeTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * orWhere(rest, 'OR') keeps a flat OR list flat. Its inner glue defaults to
+     * AND, so orWhere([b, c]) alone would narrow the list.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox("orWhere(rest, 'OR') keeps a flat OR list flat")]
     public function testOrWhereListNeedsTheExplicitInnerGlue(): void
     {

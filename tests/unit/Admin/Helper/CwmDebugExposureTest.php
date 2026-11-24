@@ -41,6 +41,9 @@ class CwmDebugExposureTest extends ProclaimTestCase
      * @param   string  $method  Method name on CwmDebug
      *
      * @return  string
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private function methodBody(string $method): string
     {
@@ -65,6 +68,10 @@ class CwmDebugExposureTest extends ProclaimTestCase
      * testGetBufferIsGuardedByAnAuthorisationCheck() below carries the actual
      * regression pin for the authorisation guard (it fails against pre-fix
      * source; this one would not).
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testGetBufferReturnsNothingWhenDebugIsDisabled(): void
     {
@@ -86,6 +93,11 @@ class CwmDebugExposureTest extends ProclaimTestCase
 
     /**
      * The guard must be an authorisation check, not merely "always empty".
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testGetBufferIsGuardedByAnAuthorisationCheck(): void
     {
@@ -113,6 +125,10 @@ class CwmDebugExposureTest extends ProclaimTestCase
      * the upstream fix; the getBuffer() guard above is defence in depth.
      * Asserted structurally because admin/api.php is bootstrap code that
      * cannot be re-executed in-process.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testJbsmdbgParameterRequiresCoreAdmin(): void
     {
@@ -139,6 +155,10 @@ class CwmDebugExposureTest extends ProclaimTestCase
     /**
      * error() is called from catch blocks that then rethrow the original
      * exception. It must not raise one of its own.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     public function testErrorDoesNotThrowWhenLoggingIsImpossible(): void
     {
@@ -159,6 +179,11 @@ class CwmDebugExposureTest extends ProclaimTestCase
      * does not also lose the on-screen entry.
      *
      * @param   string  $method  CwmDebug method that logs
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('loggingMethodProvider')]
     public function testLoggingCallsAreGuarded(string $method): void
@@ -184,7 +209,11 @@ class CwmDebugExposureTest extends ProclaimTestCase
     }
 
     /**
-     * @return array<string, array{0: string}>
+     * The CwmDebug methods that log.
+     *
+     * @return  array<string, array{0: string}>  Each method's name
+     *
+     * @since   10.5.6
      */
     public static function loggingMethodProvider(): array
     {
@@ -199,6 +228,11 @@ class CwmDebugExposureTest extends ProclaimTestCase
      * The old comment claimed the full query reached the log file. It never
      * did, and deliberately still does not: writing complete raw SQL to a
      * web-reachable log is the wrong direction on a SQL-exposure ticket.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     public function testLogQueryDoesNotClaimToLogFullSql(): void
     {

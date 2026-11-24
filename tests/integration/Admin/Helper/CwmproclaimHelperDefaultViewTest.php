@@ -37,12 +37,21 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmproclaimHelperDefaultViewTest extends IntegrationTestCase
 {
     /**
-     * @var  array<string, mixed>
+     * The request's view, controller and task before the test changed them, for tearDown()
+     * to put back.
+     *
+     * @var    array<string, mixed>
+     * @since  10.5.8
      */
     private array $saved = [];
 
     /**
+     * Keep the request's view, controller and task for tearDown() to restore.
+     *
      * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     protected function setUp(): void
     {
@@ -56,7 +65,12 @@ class CwmproclaimHelperDefaultViewTest extends IntegrationTestCase
     }
 
     /**
+     * Put back the request's view, controller and task as setUp() found them.
+     *
      * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     protected function tearDown(): void
     {
@@ -71,6 +85,11 @@ class CwmproclaimHelperDefaultViewTest extends IntegrationTestCase
 
     /**
      * The regression: a bare request must reach a controller that exists.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     #[TestDox('a bare request resolves the landing view through the display controller')]
     public function testBareRequestResolvesSeparateViewAndController(): void
@@ -85,6 +104,11 @@ class CwmproclaimHelperDefaultViewTest extends IntegrationTestCase
 
     /**
      * The admin side passes one argument and must keep behaving as it did.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     #[TestDox('with no separate view the controller name is still used for both')]
     public function testSingleArgumentKeepsTheOldBehaviour(): void
@@ -99,6 +123,11 @@ class CwmproclaimHelperDefaultViewTest extends IntegrationTestCase
 
     /**
      * An explicit controller still names the view, defaults untouched.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     #[TestDox('an explicit controller with no view still supplies the view')]
     public function testExplicitControllerSuppliesTheView(): void
@@ -114,6 +143,11 @@ class CwmproclaimHelperDefaultViewTest extends IntegrationTestCase
 
     /**
      * A controller.task command still splits, and the defaults stay out of it.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     #[TestDox('a controller.task command is split and left alone')]
     public function testControllerTaskCommandIsUnaffected(): void
@@ -128,7 +162,12 @@ class CwmproclaimHelperDefaultViewTest extends IntegrationTestCase
     }
 
     /**
-     * @return  \Joomla\Input\Input
+     * Clear the request's view, controller and task.
+     *
+     * @return  \Joomla\Input\Input  The application's input
+     *
+     * @since   10.5.8
+     * @throws  \Exception
      */
     private function clearRequest(): \Joomla\Input\Input
     {

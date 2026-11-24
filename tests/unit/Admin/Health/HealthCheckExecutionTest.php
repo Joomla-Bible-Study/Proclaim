@@ -47,11 +47,18 @@ class HealthCheckExecutionTest extends ProclaimTestCase
      * The registry builds parameterised checks from the database — one per
      * YouTube server, one per testable server — so the number is site-dependent
      * and only the hand-written floor can be asserted.
+     *
+     * @var    int
+     * @since  10.7.1
      */
     private const MINIMUM_PASSIVE_CHECKS = 15;
 
     /**
-     * @return  list<HealthCheckInterface>
+     * The registered checks that are passive, so safe to run unprompted.
+     *
+     * @return  list<HealthCheckInterface>  The passive checks
+     *
+     * @since   10.7.1
      */
     private function passiveChecks(): array
     {
@@ -61,6 +68,13 @@ class HealthCheckExecutionTest extends ProclaimTestCase
         ));
     }
 
+    /**
+     * Every passive check runs and returns a usable result.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('Every passive check runs and returns a usable result')]
     public function testEveryPassiveCheckRuns(): void
     {
@@ -123,6 +137,13 @@ class HealthCheckExecutionTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * Running the checks writes nothing.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('Running the checks writes nothing')]
     public function testRunningTheChecksIsReadOnly(): void
     {
@@ -156,6 +177,13 @@ class HealthCheckExecutionTest extends ProclaimTestCase
         }
     }
 
+    /**
+     * Active checks are excluded from the passive set, so nothing here runs them.
+     *
+     * @return  void
+     *
+     * @since   10.7.1
+     */
     #[TestDox('The active check is left alone')]
     public function testActiveChecksAreNotRunHere(): void
     {

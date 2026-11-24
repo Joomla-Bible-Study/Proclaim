@@ -48,6 +48,14 @@ class CwmmediaProtectionRootTest extends ProclaimTestCase
         return trim((string) Factory::getContainer()->get('config')->get('live_site', '')) !== '';
     }
 
+    /**
+     * Run from the command line, canResolveSiteRoot() refuses the well-formed root
+     * Uri::root() invents when no Site URL is set, and accepts the root when one is.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('a root invented off a request is refused, however well-formed it looks')]
     public function testAnInventedRootIsRefused(): void
     {
@@ -86,6 +94,14 @@ class CwmmediaProtectionRootTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * canResolveSiteRoot()'s source reads live_site, so it doesn't decide on the root's
+     * shape alone.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
     #[TestDox('the guard does not decide on the shape of the root alone')]
     public function testTheGuardIsNotMerelyAWellFormednessTest(): void
     {

@@ -30,35 +30,44 @@ use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * Section assets are seeded for every declared section with empty rules, answer
+ * exactly as the component does, and are pruned only when undeclared.
+ *
+ * @since  10.5.8
  */
 class CwmassetsSectionTest extends IntegrationTestCase
 {
     /**
      * Actions every non-component section declares.
      *
-     * @var list<string>
+     * @var    list<string>
      * @since 10.5.8
      */
     private const ACTIONS = ['core.create', 'core.delete', 'core.edit', 'core.edit.state', 'core.edit.own'];
 
     /**
-     * @var DatabaseInterface|null
-     * @since 10.5.8
+     * The database. A test deletes the rows it adds instead of rolling them back,
+     * because Table\Asset::store() takes a table lock, an implicit COMMIT in MySQL.
+     *
+     * @var    DatabaseInterface|null
+     * @since  10.5.8
      */
     private ?DatabaseInterface $db = null;
 
     /**
      * Section asset ids created by the test, removed again in tearDown.
      *
-     * @var list<int>
+     * @var    list<int>
      * @since 10.5.8
      */
     private array $created = [];
 
     /**
+     * Skip when access.xml is not readable from this install path.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -81,7 +90,8 @@ class CwmassetsSectionTest extends IntegrationTestCase
      * in, so a pre-existing section asset is never removed.
      *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function tearDown(): void
     {
@@ -109,8 +119,11 @@ class CwmassetsSectionTest extends IntegrationTestCase
     /**
      * Note which sections this test is responsible for cleaning up.
      *
+     * @param   array  $before  The section assets that existed before the test, keyed by section
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function rememberCreated(array $before): void
     {
@@ -131,7 +144,8 @@ class CwmassetsSectionTest extends IntegrationTestCase
      * Section assets that already exist, so tearDown leaves them alone.
      *
      * @return  array<string, int>
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function existingSections(): array
     {
@@ -148,6 +162,13 @@ class CwmassetsSectionTest extends IntegrationTestCase
         return $found;
     }
 
+    /**
+     * Every section answers exactly what the component answers.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('every section answers exactly what the component answers')]
     public function testSectionsAnswerTheSameAsTheComponent(): void
     {
@@ -203,6 +224,13 @@ class CwmassetsSectionTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Section assets are created with empty rules.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('section assets are created with empty rules')]
     public function testSectionAssetsCarryEmptyRules(): void
     {
@@ -234,6 +262,13 @@ class CwmassetsSectionTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * Every declared section resolves to an asset, and the nested set stays valid.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('every declared section resolves to an asset, and the nested set stays valid')]
     public function testSeedingCreatesEveryDeclaredSection(): void
     {
@@ -268,6 +303,13 @@ class CwmassetsSectionTest extends IntegrationTestCase
         $this->assertSame(0, $duplicates, 'Nested set corrupted: duplicate lft values.');
     }
 
+    /**
+     * Seeding twice creates nothing the second time.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('seeding twice creates nothing the second time')]
     public function testSeedingIsIdempotent(): void
     {
@@ -287,6 +329,13 @@ class CwmassetsSectionTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * An undeclared section is refused rather than minted.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('an undeclared section is refused rather than minted')]
     public function testUndeclaredSectionIsRefused(): void
     {
@@ -305,6 +354,13 @@ class CwmassetsSectionTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Pruning removes an undeclared section but never an item asset.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     */
     #[TestDox('pruning removes an undeclared section but never an item asset')]
     public function testPruneRemovesOnlyUndeclaredSectionRows(): void
     {
@@ -374,7 +430,8 @@ class CwmassetsSectionTest extends IntegrationTestCase
      * How many `com_proclaim.<section>` assets exist right now.
      *
      * @return  int
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     private function countSectionAssets(): int
     {

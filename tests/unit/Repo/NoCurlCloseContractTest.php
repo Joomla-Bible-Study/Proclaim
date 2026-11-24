@@ -27,14 +27,16 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.7.8
+ * Nothing Proclaim ships calls curl_close(), which PHP 8.5 deprecates.
+ *
+ * @since  10.7.8
  */
 class NoCurlCloseContractTest extends ProclaimTestCase
 {
     /**
      * Source trees that ship.
      *
-     * @var string[]
+     * @var    string[]
      * @since 10.7.8
      */
     private const ROOTS = ['admin/src', 'site/src', 'api/src', 'plugins', 'modules'];
@@ -42,14 +44,17 @@ class NoCurlCloseContractTest extends ProclaimTestCase
     /**
      * Third-party code we neither wrote nor ship-audit here.
      *
-     * @var string[]
+     * @var    string[]
      * @since 10.7.8
      */
     private const SKIP = ['/vendor/', '/node_modules/'];
 
     /**
+     * Every PHP file the contract covers.
+     *
      * @return  string[]  Absolute paths of every PHP file to inspect.
-     * @since 10.7.8
+     *
+     * @since   10.7.8
      */
     private static function sourceFiles(): array
     {
@@ -89,7 +94,8 @@ class NoCurlCloseContractTest extends ProclaimTestCase
      * @param   string  $source  PHP source code.
      *
      * @return  bool
-     * @since 10.7.8
+     *
+     * @since   10.7.8
      */
     private static function callsCurlClose(string $source): bool
     {
@@ -136,8 +142,11 @@ class NoCurlCloseContractTest extends ProclaimTestCase
     }
 
     /**
+     * No shipped file calls curl_close().
+     *
      * @return  void
-     * @since 10.7.8
+     *
+     * @since   10.7.8
      */
     #[TestDox('No shipped file calls curl_close(), which PHP 8.5 deprecates')]
     public function testNothingCallsCurlClose(): void
@@ -165,7 +174,8 @@ class NoCurlCloseContractTest extends ProclaimTestCase
      * fires on a call and stays quiet on comments and look-alikes.
      *
      * @return  void
-     * @since 10.7.8
+     *
+     * @since   10.7.8
      */
     #[TestDox('The scan reads real files and tells a call from a mention')]
     public function testScanIsNotVacuous(): void

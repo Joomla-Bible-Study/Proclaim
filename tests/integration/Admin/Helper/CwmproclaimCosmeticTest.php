@@ -30,6 +30,13 @@ use PHPUnit\Framework\Attributes\TestDox;
  */
 class CwmproclaimCosmeticTest extends IntegrationTestCase
 {
+    /**
+     * No PHP file under admin/src uses the misspelled message type worning.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('No enqueued message uses the misspelled type')]
     public function testNoMisspelledMessageType(): void
     {
@@ -55,6 +62,14 @@ class CwmproclaimCosmeticTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Cwmbackup's source takes the version from CwmproclaimHelper::getVersion(), not
+     * Version's getShortVersion().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('Backup filenames use the installed version, not a hardcoded one')]
     public function testBackupFilenameUsesInstalledVersion(): void
     {
@@ -72,6 +87,13 @@ class CwmproclaimCosmeticTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * getVersion() returns a string that starts with a major.minor.patch version.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('The installed version is reported as a version string')]
     public function testInstalledVersionIsAVersionString(): void
     {

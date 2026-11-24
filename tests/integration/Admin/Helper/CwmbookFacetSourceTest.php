@@ -26,20 +26,28 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @since 10.5.8
+ * getStudyBooks() takes the books it offers from the scripture junction: each book a
+ * study references, and nothing for a study without references.
+ *
+ * @since  10.5.8
  */
 #[CoversClass(CwmproclaimHelper::class)]
 class CwmbookFacetSourceTest extends IntegrationTestCase
 {
     /**
-     * @var DatabaseDriver|null
-     * @since 10.5.8
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.8
      */
     private ?DatabaseDriver $db = null;
 
     /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function setUp(): void
     {
@@ -54,8 +62,11 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened.
+     *
      * @return  void
-     * @since 10.5.8
+     *
+     * @since   10.5.8
      */
     protected function tearDown(): void
     {
@@ -113,9 +124,12 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
     }
 
     /**
+     * The book numbers getStudyBooks() offers.
+     *
      * @return  int[]  Book numbers offered by getStudyBooks()
      *
-     * @since 10.5.8
+     * @since   10.5.8
+     * @throws  \Exception
      */
     private function offeredBooks(): array
     {
@@ -134,6 +148,7 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
      * @return  int[]
      *
      * @since 10.5.8
+     * @throws  \Exception
      */
     private function unusedBooks(int $count): array
     {
@@ -146,6 +161,15 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
         return \array_slice($free, 0, $count);
     }
 
+    /**
+     * A published study referencing three books that no study used before puts all three
+     * among the books getStudyBooks() offers.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
+     */
     #[TestDox('a study with three references offers all three, not the two the flat columns held')]
     public function testAllReferencesBecomeFacetOptions(): void
     {
@@ -169,6 +193,14 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
     }
 
 
+    /**
+     * A study with no references leaves the books getStudyBooks() offers unchanged.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Exception
+     */
     #[TestDox('a study with no references contributes nothing')]
     public function testStudiesWithoutReferencesAreExcluded(): void
     {

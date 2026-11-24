@@ -14,17 +14,44 @@ use CWM\Component\Proclaim\Administrator\Table\CwmcommentTable;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * CwmcommentTable::check() sets a comment's user from the current identity
+ * when it has none, and keeps one already set.
+ *
+ * @since  10.2.0
+ */
 #[CoversClass(CwmcommentTable::class)]
 class CwmcommentTableCheckTest extends IntegrationTestCase
 {
+    /**
+     * The table under test.
+     *
+     * @var    CwmcommentTable
+     * @since  10.2.0
+     */
     private CwmcommentTable $table;
 
+    /**
+     * Create a fresh table for each test.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
     protected function setUp(): void
     {
         parent::setUp();
         $this->table = $this->createTableInstance(CwmcommentTable::class);
     }
 
+    /**
+     * check() sets the user id from the current identity when it is NULL.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \Exception
+     */
     public function testCheckSetsUserIdFromIdentityWhenNull(): void
     {
         $this->table->user_id = null;
@@ -37,6 +64,14 @@ class CwmcommentTableCheckTest extends IntegrationTestCase
         $this->assertSame(0, $this->table->user_id);
     }
 
+    /**
+     * check() keeps a user id that is already set.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     * @throws  \Exception
+     */
     public function testCheckPreservesExistingUserId(): void
     {
         $this->table->user_id = 99;
