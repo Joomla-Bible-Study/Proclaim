@@ -37,4 +37,8 @@
 
         <field name="asset_id" type="hidden" filter="unset"/>
     </fieldset>
+
+    <fieldset name="captcha">
+        <field name="captcha" type="captcha" label="JBS_CMN_CAPTCHA_LABEL" validate="captcha"/>
+    </fieldset>
 </form>
