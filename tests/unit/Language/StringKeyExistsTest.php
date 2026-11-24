@@ -82,7 +82,7 @@ class StringKeyExistsTest extends TestCase
                 continue;
             }
 
-            if (str_contains($path, '/node_modules/') || str_contains($path, '/tests/Backupfiles/')) {
+            if (str_contains($path, '/node_modules/')) {
                 continue;
             }
 

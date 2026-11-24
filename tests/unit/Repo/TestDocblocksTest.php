@@ -42,8 +42,7 @@ class TestDocblocksTest extends ProclaimTestCase
      * @since  __DEPLOY_VERSION__
      */
     private const array EXCLUDED = [
-        'tests/fixtures/'    => 'seed data and sample files that tests read',
-        'tests/Backupfiles/' => 'an archived add-on, kept as it was released',
+        'tests/fixtures/' => 'seed data and sample files that tests read',
     ];
 
     /**
