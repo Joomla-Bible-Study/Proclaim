@@ -36,12 +36,39 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmstudyteacherHelper::class)]
 class CwmstudyteacherSaveTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back. tearDown() checks that the
+     * rollback restored the study-teacher links.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * The id of the unpublished study setUp() inserts, which the teachers are linked to.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $studyId = 0;
 
+    /**
+     * How many study-teacher links there were when setUp() ran.
+     *
+     * @var    int
+     * @since  10.5.6
+     */
     private int $rowsAtStart = 0;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction, count the study-teacher
+     * links, and insert an unpublished study.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -66,6 +93,14 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
         $this->studyId = (int) $this->db->insertid();
     }
 
+    /**
+     * Roll back the transaction setUp() opened, then fail the test if the study-teacher
+     * links don't number what they did at setUp().
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     protected function tearDown(): void
     {
         $leaked = null;
@@ -95,7 +130,11 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
     }
 
     /**
+     * The number of study-teacher links, across every study.
+     *
      * @return  int  Total rows in the junction table.
+     *
+     * @since   10.5.6
      */
     private function countAllRows(): int
     {
@@ -105,7 +144,11 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
     }
 
     /**
+     * The teacher ids linked to the test's study, in order.
+     *
      * @return  int[]  teacher_ids associated with the fixture study, in order.
+     *
+     * @since   10.5.6
      */
     private function teacherIds(): array
     {
@@ -120,15 +163,27 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
 
 
     /**
+     * Wrap each teacher id as an entry for saveTeachers().
+     *
      * @param   int[]  $ids  Teacher ids
      *
      * @return  array[]  Entries shaped as saveTeachers() expects
+     *
+     * @since   10.5.6
      */
     private function entries(array $ids): array
     {
         return array_map(static fn (int $id): array => ['teacher_id' => $id], $ids);
     }
 
+    /**
+     * saveTeachers() stores teachers 4 and 5, then replaces them with teacher 9.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Throwable
+     */
     #[TestDox('A successful save replaces the teacher list')]
     public function testSuccessfulSaveReplacesTeachers(): void
     {
@@ -139,6 +194,14 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
         $this->assertSame([9], $this->teacherIds(), 'The previous list must be replaced, not appended to');
     }
 
+    /**
+     * Given 7, 7, 0 and 8, saveTeachers() skips the repeat and the 0, and stores 7 and 8.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Throwable
+     */
     #[TestDox('Duplicate and empty entries are skipped')]
     public function testInputIsNormalised(): void
     {
@@ -149,6 +212,11 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
     /**
      * The guarantee that was missing: the study row is already committed by the
      * time this runs, so a half-written teacher list is not recoverable.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \Throwable
      */
     #[TestDox('A failure mid-loop leaves the original teacher list intact')]
     public function testFailedSaveRollsBack(): void
@@ -175,6 +243,14 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * saveTeachers() stores teachers 42 and 43, in the order given.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Throwable
+     */
     #[TestDox('Saving writes the teachers and leaves nothing behind')]
     public function testSaveWritesTheJunction(): void
     {
@@ -183,6 +259,15 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
         $this->assertSame([42, 43], $this->teacherIds(), 'Order matters: the first entry is the primary.');
     }
 
+    /**
+     * When a save fails on an out-of-range teacher id, saveTeachers() throws, and the study
+     * keeps the one teacher it had.
+     *
+     * @return  void
+     *
+     * @since   10.5.8
+     * @throws  \Throwable
+     */
     #[TestDox('A failed save restores the teachers it replaced')]
     public function testFailedSaveRestoresThePrevious(): void
     {

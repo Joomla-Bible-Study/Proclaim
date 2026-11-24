@@ -41,16 +41,25 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
 {
     /**
      * A stable remote video ID used as the junction key throughout.
+     *
+     * @var    string
+     * @since  10.5.7
      */
     private const VIDEO_ID = 'dQw4w9WgXcQ';
 
     /**
      * A created timestamp old enough that an accidental overwrite is unmistakable.
+     *
+     * @var    string
+     * @since  10.5.7
      */
     private const SEEDED_CREATED = '2020-01-01 00:00:00';
 
     /**
-     * @var  DatabaseDriver|null
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.7
      */
     private ?DatabaseDriver $db = null;
 
@@ -59,16 +68,23 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * replaced it, so tearDown() can restore process-wide state.
      *
      * @var mixed
+     * @since  10.5.7
      */
     private mixed $previousFactoryLanguage = null;
 
     /**
-     * @var  int
+     * The id of the YouTube server setUp() inserts.
+     *
+     * @var    int
+     * @since  10.5.7
      */
     private int $serverId = 0;
 
     /**
-     * @var  int
+     * The id of the series setUp() inserts, which the test's studies and playlist link to.
+     *
+     * @var    int
+     * @since  10.5.7
      */
     private int $seriesId = 0;
 
@@ -76,6 +92,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * Begin a transaction and seed a YouTube server + a series.
      *
      * @return  void
+     *
+     * @since   10.5.7
      */
     protected function setUp(): void
     {
@@ -98,6 +116,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * Roll back everything this test inserted.
      *
      * @return  void
+     *
+     * @since   10.5.7
      */
     protected function tearDown(): void
     {
@@ -121,6 +141,9 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * true by accident — expressing it as COALESCE is what keeps it true.
      *
      * @return  void
+     *
+     * @since   10.5.7
+     * @throws  \Exception
      */
     public function testReconcileKeepsMediafileLinkWhenRemoteHasNoLocalMatch(): void
     {
@@ -155,6 +178,9 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * changes nothing — which is what the duplicate-key path is for.
      *
      * @return  void
+     *
+     * @since   10.5.7
+     * @throws  \Exception
      */
     public function testReconcileLinksMatchedVideoAndIsRepeatable(): void
     {
@@ -184,6 +210,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * would make the write-back push try to add it again.
      *
      * @return  void
+     *
+     * @since   10.5.7
      */
     public function testManualAssignmentPreservesImportedSourceAndTitle(): void
     {
@@ -214,6 +242,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * video is still on the platform, so the row goes back to 'remote'.
      *
      * @return  void
+     *
+     * @since   10.5.7
      */
     public function testManualAssignmentCancelsAQueuedRemoval(): void
     {
@@ -238,6 +268,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * the user's own assignment, awaiting a push.
      *
      * @return  void
+     *
+     * @since   10.5.7
      */
     public function testManualAssignmentInsertsANewRowAsManual(): void
     {
@@ -270,43 +302,111 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * @param   array<int,array{videoId:string,title:string}>  $videos  Page to serve.
      *
      * @return  CWMAddon
+     *
+     * @since   10.5.7
      */
     private function fakeAddon(array $videos): CWMAddon
     {
         return new class ($videos) extends CWMAddon {
-            /** @var array<int,array{videoId:string,title:string}> */
+            /**
+             * The page of videos the double serves.
+             *
+             * @var    array<int,array{videoId:string,title:string}>
+             * @since  10.5.7
+             */
             private array $videos;
 
+            /**
+             * Hold the page of videos to serve.
+             *
+             * @param   array<int,array{videoId:string,title:string}>  $videos  Page to serve.
+             *
+             * @since   10.5.7
+             */
             public function __construct(array $videos)
             {
                 $this->videos = $videos;
             }
 
+            /**
+             * Report that the double supports playlists.
+             *
+             * @return  bool  Always true
+             *
+             * @since   10.5.7
+             */
             public function supportsPlaylists(): bool
             {
                 return true;
             }
 
+            /**
+             * Extract the media id the way the YouTube addon does.
+             *
+             * @param   string  $text  A media URL or bare ID.
+             *
+             * @return  string|null  The platform media ID, or null.
+             *
+             * @since   10.5.7
+             */
             public function extractRemoteMediaId(string $text): ?string
             {
                 return CWMAddonYoutube::extractMediaId($text);
             }
 
+            /**
+             * Return the page of videos as a successful fetch, with no next page.
+             *
+             * @param   Input  $input  Request input, unused
+             *
+             * @return  array  A success flag, the videos and an empty next-page token
+             *
+             * @since   10.5.7
+             */
             public function fetchRemotePlaylistItems(Input $input): array
             {
                 return ['success' => true, 'videos' => $this->videos, 'nextPageToken' => ''];
             }
 
+            /**
+             * Render no general form.
+             *
+             * @param   object  $media_form  Media files form
+             * @param   bool    $new         If media is new
+             *
+             * @return  string  An empty string
+             *
+             * @since   10.5.7
+             */
             public function renderGeneral(object $media_form, bool $new): string
             {
                 return '';
             }
 
+            /**
+             * Render no form.
+             *
+             * @param   object  $media_form  Media files form
+             * @param   bool    $new         If media is new
+             *
+             * @return  string  An empty string
+             *
+             * @since   10.5.7
+             */
             public function render(object $media_form, bool $new): string
             {
                 return '';
             }
 
+            /**
+             * Upload nothing.
+             *
+             * @param   Input  $data  Data to upload, unused
+             *
+             * @return  mixed  Always null
+             *
+             * @since   10.5.7
+             */
             protected function upload(Input $data): mixed
             {
                 return null;
@@ -318,6 +418,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * Insert a published YouTube server.
      *
      * @return  int  Server ID.
+     *
+     * @since   10.5.7
      */
     private function insertServer(): int
     {
@@ -339,6 +441,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * Insert a published series.
      *
      * @return  int  Series ID.
+     *
+     * @since   10.5.7
      */
     private function insertSeries(): int
     {
@@ -363,6 +467,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * @param   string  $title  Study title.
      *
      * @return  int  The media file ID.
+     *
+     * @since   10.5.7
      */
     private function insertSeriesMedia(string $url, string $title): int
     {
@@ -401,6 +507,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * Insert a playlist on the seeded server.
      *
      * @return  int  Playlist ID.
+     *
+     * @since   10.5.7
      */
     private function insertPlaylist(): int
     {
@@ -436,6 +544,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * @param   string    $source       Row provenance.
      *
      * @return  void
+     *
+     * @since   10.5.7
      */
     private function insertJunction(
         int $playlistId,
@@ -462,6 +572,8 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * @param   int  $playlistId  Playlist ID.
      *
      * @return  object[]
+     *
+     * @since   10.5.7
      */
     private function junctionRows(int $playlistId): array
     {

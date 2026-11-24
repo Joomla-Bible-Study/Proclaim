@@ -37,10 +37,20 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmschemaorgHelper::class)]
 class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     * @since  10.5.6
+     */
     private ?DatabaseDriver $db = null;
 
     /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function setUp(): void
     {
@@ -55,7 +65,11 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Roll back the transaction setUp() opened.
+     *
      * @return  void
+     *
+     * @since   10.5.6
      */
     protected function tearDown(): void
     {
@@ -70,6 +84,16 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * isManuallyEdited() reports a row as unedited when it was hash-stamped with
+     * _customFields and _fieldHashes present.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \JsonException
+     * @throws  \ReflectionException
+     */
     #[TestDox('isManuallyEdited() does not misclassify a row hash-stamped with _customFields/_fieldHashes present')]
     public function testIsManuallyEditedFalseWhenStoredDataCarriesTrackingKeys(): void
     {
@@ -91,6 +115,15 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * isManuallyEdited() reports a row as edited when a field changed after its hash was stamped.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \JsonException
+     * @throws  \ReflectionException
+     */
     #[TestDox('isManuallyEdited() still returns true when a stored field genuinely diverges from its auto-hash')]
     public function testIsManuallyEditedTrueWhenStoredDataDiverged(): void
     {
@@ -108,6 +141,15 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * syncOne() succeeds for a sermon with a series, message type, location and topic, and
+     * stores genericField entries titled isPartOf, genre, locationCreated and about.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \JsonException
+     */
     #[TestDox('syncOne() for a sermon builds the same genericField set as the bulk sync path (series/genre/location/topics)')]
     public function testSyncOneSermonIncludesGenericFieldFromSeriesGenreLocationTopics(): void
     {
@@ -134,6 +176,15 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         $this->assertContains('about', $titles);
     }
 
+    /**
+     * syncAll() reports teachers synced, and stores a new teacher's schema with worksFor as
+     * an Organization.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \JsonException
+     */
     #[TestDox('Bulk sync (syncTeachers) includes worksFor, matching the syncOne()/buildTeacherSchemaFromRow() path')]
     public function testBulkSyncTeacherIncludesWorksFor(): void
     {
@@ -156,6 +207,15 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         $this->assertEquals('Organization', $schema['worksFor']['@type']);
     }
 
+    /**
+     * buildSermonSchemaFromRow() gives the same schema and auto-hash from prefetched maps as
+     * it does alone, naming the two teachers in their junction order.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
+     */
     #[TestDox('Batched bulk sync builds a byte-identical schema (and auto-hash) to the per-item path')]
     public function testBatchedAndPerItemBuildersAgree(): void
     {
@@ -200,6 +260,14 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         $this->assertSame('Pastor Alpha, Pastor Zeta', $bulk['author']['name']);
     }
 
+    /**
+     * Walking five new teachers two at a time, syncChunk() syncs five in under ten rounds
+     * and leaves each teacher one schema row.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('A chunked walk syncs every item exactly once across batch boundaries')]
     public function testChunkedWalkCoversEveryItemExactlyOnce(): void
     {
@@ -239,6 +307,13 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * syncChunk() reports done, with nothing synced, for an unknown cursor type.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     #[TestDox('syncChunk() reports done for an unrecognised cursor type instead of restarting the walk')]
     public function testSyncChunkRejectsUnknownCursorType(): void
     {
@@ -253,6 +328,9 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
      * broken context match is invisible unless a seeded row is asserted present.
      *
      * @return  void
+     *
+     * @since   10.7.0
+     * @throws  \JsonException
      */
     #[TestDox('hasJoomlaSchema() finds a seeded row by its exact itemId and context, and only that pair')]
     public function testHasJoomlaSchemaMatchesOnItemIdAndContext(): void
@@ -275,6 +353,8 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
      * @param   bool    $enabled  Wanted state
      *
      * @return  void
+     *
+     * @since   10.7.3
      */
     private function setPluginEnabled(string $folder, string $element, bool $enabled): void
     {
@@ -294,10 +374,14 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Whether the extensions table holds the given plugin.
+     *
      * @param   string  $folder   Plugin group
      * @param   string  $element  Plugin element
      *
-     * @return  bool
+     * @return  bool  True when the plugin is installed
+     *
+     * @since   10.7.3
      */
     private function pluginExists(string $folder, string $element): bool
     {
@@ -312,13 +396,26 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Clear PluginHelper's cached plugin list, so a changed plugin state is read afresh.
+     *
      * @return  void
+     *
+     * @since   10.7.3
      */
     private function resetPluginCache(): void
     {
         (new \ReflectionProperty(PluginHelper::class, 'plugins'))->setValue(null, null);
     }
 
+    /**
+     * storedSchemaRenders() is true for a form-context row only while both the system and
+     * the Proclaim schemaorg plugins are enabled. Skipped when either plugin isn't installed.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \JsonException
+     */
     #[TestDox('storedSchemaRenders(): a form-context row renders only while both schemaorg plugins run')]
     public function testFormContextRowNeedsBothPlugins(): void
     {
@@ -341,6 +438,15 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * With only the system schemaorg plugin enabled, storedSchemaRenders() is true for an
+     * item whose row is under the view context. Skipped when either plugin isn't installed.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     * @throws  \JsonException
+     */
     #[TestDox('storedSchemaRenders(): a view-context row renders through Joomla\'s system plugin alone')]
     public function testViewContextRowNeedsOnlyTheSystemPlugin(): void
     {
@@ -355,6 +461,14 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * storedSchemaRenders() is false for an item with no schema row, though both plugins are
+     * enabled. Skipped when either plugin isn't installed.
+     *
+     * @return  void
+     *
+     * @since   10.7.3
+     */
     #[TestDox('storedSchemaRenders(): an item with no row lets the page print its own node')]
     public function testNoRowDoesNotRender(): void
     {
@@ -373,6 +487,9 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
      * context match reads no row and silently leaves the schema untouched.
      *
      * @return  void
+     *
+     * @since   10.7.0
+     * @throws  \JsonException
      */
     #[TestDox('ensureSermonAuthor() writes the linked teacher as author on an author-less sermon schema')]
     public function testEnsureSermonAuthorFillsAuthorFromTeachers(): void
@@ -391,10 +508,14 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Count an item's schema rows in one context.
+     *
      * @param   int     $itemId   Item ID.
      * @param   string  $context  Context string.
      *
      * @return  int  Number of schema rows for the item.
+     *
+     * @since   10.5.6
      */
     private function countSchemaRows(int $itemId, string $context): int
     {
@@ -408,9 +529,13 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Read a study's row with the columns the bulk sync selects.
+     *
      * @param   int  $studyId  Study ID.
      *
      * @return  object  Row shaped like the one the bulk sync query selects.
+     *
+     * @since   10.5.6
      */
     private function loadStudyRow(int $studyId): object
     {
@@ -423,11 +548,15 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Link a teacher to a study at the given position.
+     *
      * @param   int  $studyId    Study ID.
      * @param   int  $teacherId  Teacher ID.
      * @param   int  $ordering   Position within the study.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function insertStudyTeacher(int $studyId, int $teacherId, int $ordering): void
     {
@@ -441,10 +570,15 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Call isManuallyEdited() on an item, by reflection.
+     *
      * @param   int     $itemId   Item ID.
      * @param   string  $context  Context string.
      *
-     * @return  bool|null
+     * @return  bool|null  What isManuallyEdited() returns
+     *
+     * @since   10.5.6
+     * @throws  \ReflectionException
      */
     private function invokeIsManuallyEdited(int $itemId, string $context): ?bool
     {
@@ -454,11 +588,16 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a schema row under the next test item id, counting up from 91000.
+     *
      * @param   string  $context     Context string.
      * @param   string  $schemaType  Schema type name.
      * @param   array   $schema      Schema data (already hash-stamped).
      *
      * @return  int  itemId used for the inserted row.
+     *
+     * @since   10.5.6
+     * @throws  \JsonException
      */
     private function insertSchemaRow(string $context, string $schemaType, array $schema): int
     {
@@ -478,10 +617,15 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Read an item's stored schema, failing the test when it has none.
+     *
      * @param   int     $itemId   Item ID.
      * @param   string  $context  Context string.
      *
-     * @return  array
+     * @return  array  The decoded schema
+     *
+     * @since   10.5.6
+     * @throws  \JsonException
      */
     private function loadStoredSchema(int $itemId, string $context): array
     {
@@ -498,9 +642,13 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published location with the given name.
+     *
      * @param   string  $name  Location display name.
      *
      * @return  int  Location ID.
+     *
+     * @since   10.5.6
      */
     private function insertLocation(string $name): int
     {
@@ -524,9 +672,13 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published series with the given name.
+     *
      * @param   string  $name  Series name.
      *
      * @return  int  Series ID.
+     *
+     * @since   10.5.6
      */
     private function insertSeries(string $name): int
     {
@@ -544,9 +696,13 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published message type with the given name.
+     *
      * @param   string  $name  Message type name.
      *
      * @return  int  Message type ID.
+     *
+     * @since   10.5.6
      */
     private function insertMessageType(string $name): int
     {
@@ -563,9 +719,13 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published topic with the given text.
+     *
      * @param   string  $name  Topic text.
      *
      * @return  int  Topic ID.
+     *
+     * @since   10.5.6
      */
     private function insertTopic(string $name): int
     {
@@ -582,10 +742,14 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Link a topic to a study.
+     *
      * @param   int  $studyId  Study ID.
      * @param   int  $topicId  Topic ID.
      *
      * @return  void
+     *
+     * @since   10.5.6
      */
     private function insertStudyTopic(int $studyId, int $topicId): void
     {
@@ -599,11 +763,16 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published study at the given location, in the given series, with the given
+     * message type.
+     *
      * @param   int  $locationId  Location ID.
      * @param   int  $seriesId    Series ID.
      * @param   int  $typeId      Message type ID.
      *
      * @return  int  Study ID.
+     *
+     * @since   10.5.6
      */
     private function insertStudy(int $locationId, int $seriesId, int $typeId): int
     {
@@ -628,9 +797,13 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     }
 
     /**
+     * Insert a published teacher with the given name.
+     *
      * @param   string  $name  Teacher display name.
      *
      * @return  int  Teacher ID.
+     *
+     * @since   10.5.6
      */
     private function insertTeacher(string $name): int
     {

@@ -39,9 +39,11 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmsetupwizardChecklistTest extends IntegrationTestCase
 {
     /**
-     * The keys, and which store each actually lives in.
+     * The settings that live in the component params rather than #__bsms_admin, so
+     * getChecklistItems() must read them from there.
      *
-     * @return array<string, array{0: string}>
+     * @var    string[]
+     * @since  10.5.6
      */
     private const COMPONENT_KEYS = [
         'enable_location_filtering',
@@ -52,6 +54,10 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
     /**
      * Every component-params key must be read from the component Registry, not
      * from the one loaded out of #__bsms_admin.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('Component-params keys are read from the component params, not the admin table')]
     public function testComponentKeysReadFromComponentParams(): void
@@ -83,6 +89,10 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
     /**
      * simple_mode genuinely does live in the admin table, so it must keep
      * being read from there — the fix is a split, not a wholesale move.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('simple_mode is still read from the admin table')]
     public function testSimpleModeStillReadFromAdminParams(): void
@@ -102,6 +112,10 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
      * The canonical implementation of this same question. If the checklist and
      * CwmlocationHelper disagree about where the answer lives, one of them is
      * wrong -- and it was the checklist.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The checklist and CwmlocationHelper agree on the params source')]
     public function testAgreesWithTheCanonicalImplementation(): void
@@ -125,6 +139,10 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
      * Reading a key that is stored elsewhere is indistinguishable from reading
      * one that was never set, which is why this went unnoticed. Assert the
      * split is real rather than assumed.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The two params stores really do hold different keys')]
     public function testTheTwoStoresHoldDifferentKeys(): void
@@ -143,6 +161,10 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
     /**
      * The helper must still return a usable array — the fix must not turn a
      * silent default into a fatal.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The checklist still builds without error')]
     public function testChecklistStillBuilds(): void
@@ -166,6 +188,10 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
      * The step was gated on an `enable_podcast` param written to neither params
      * store, so the condition was always false. It is now keyed off the podcast
      * itself, like every sibling item.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The podcast step is not gated on a param that is stored nowhere')]
     public function testPodcastStepIsNotGatedOnAnUnstoredParam(): void
@@ -188,6 +214,10 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
      * Every other item is emitted unconditionally with a `done` flag, and the
      * control panel counts "X of Y complete" over the whole list. An item that
      * appears only while incomplete would shrink that denominator on completion.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
      */
     #[TestDox('The podcast step reports done rather than disappearing when a podcast exists')]
     public function testPodcastStepCarriesADoneFlag(): void
