@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * Test class for Cwmthumbnail helper
  *
  *#[CoversClass(Cwmthumbnail::class)]
- * @since  10.0.0
+ * @since  10.1.0
  */
 class CwmthumbnailTest extends ProclaimTestCase
 {

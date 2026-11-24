@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  * Provides common setup, teardown, and helper methods for testing
  * Proclaim component classes without requiring a full Joomla installation.
  *
- * @since 10.0.0
+ * @since 10.1.0
  */
 abstract class ProclaimTestCase extends TestCase
 {
@@ -28,7 +28,7 @@ abstract class ProclaimTestCase extends TestCase
      * A copy of $_SERVER, restored after each test.
      *
      * @var    array
-     * @since  10.2.0
+     * @since  10.1.0
      */
     protected array $serverBackup = [];
 
@@ -37,7 +37,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -52,7 +52,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function tearDown(): void
     {
@@ -67,7 +67,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  MockObject
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function createMockDatabase(): MockObject
     {
@@ -83,7 +83,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  MockObject
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function createMockRegistry(array $data = []): MockObject
     {
@@ -110,7 +110,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function assertValidJson(string $json, string $message = ''): void
     {
@@ -127,7 +127,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function assertArrayHasKeys(array $keys, array $array, string $message = ''): void
     {
@@ -144,7 +144,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  mixed Property value
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function getProtectedProperty(object $object, string $property): mixed
     {
@@ -163,7 +163,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setProtectedProperty(object $object, string $property, mixed $value): void
     {
@@ -181,7 +181,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  mixed Method return value
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function invokeProtectedMethod(object $object, string $method, array $args = []): mixed
     {
@@ -203,7 +203,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function assertReturnTypeName(string $expected, \ReflectionMethod $method): void
     {
@@ -225,7 +225,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function assertParamTypeName(string $expected, \ReflectionParameter $param): void
     {
@@ -244,7 +244,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  string Path to temporary file
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function createTempFile(string $content = '', string $extension = 'tmp'): string
     {
@@ -261,7 +261,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function removeTempFile(string $path): void
     {

@@ -599,7 +599,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \ReflectionException
      */
     #[TestDox("postInstallMessageExists() runs its bound title_key query")]

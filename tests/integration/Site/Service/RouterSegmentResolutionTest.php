@@ -192,7 +192,7 @@ class RouterSegmentResolutionTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.3
+     * @since   10.7.4
      */
     #[TestDox('A series resolves by alias, and by <id>-<alias> with a redirect flag')]
     public function testSeriesResolvesByAliasAndIdAlias(): void

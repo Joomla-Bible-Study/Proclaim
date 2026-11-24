@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * CwmmessagetypeTable::check() requires a message type name.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmmessagetypeTable::class)]
 class CwmmessagetypeTableCheckTest extends IntegrationTestCase
@@ -26,7 +26,7 @@ class CwmmessagetypeTableCheckTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmmessagetypeTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmmessagetypeTable $table;
 
@@ -35,7 +35,7 @@ class CwmmessagetypeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -48,7 +48,7 @@ class CwmmessagetypeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPassesWithValidData(): void
     {
@@ -61,7 +61,7 @@ class CwmmessagetypeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenMessageTypeNull(): void
     {
@@ -75,7 +75,7 @@ class CwmmessagetypeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenMessageTypeEmpty(): void
     {
@@ -89,7 +89,7 @@ class CwmmessagetypeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenMessageTypeWhitespace(): void
     {

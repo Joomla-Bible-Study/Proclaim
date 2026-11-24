@@ -26,7 +26,7 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testExtendsBaseController(): void
     {
@@ -41,7 +41,7 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testDefaultView(): void
     {
@@ -56,7 +56,7 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testViewListProperty(): void
     {
@@ -71,7 +71,7 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testExecuteMethodExists(): void
     {
@@ -92,7 +92,7 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testApplyMethodExists(): void
     {
@@ -116,7 +116,7 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testApplySanitizesMinistryStyle(): void
     {

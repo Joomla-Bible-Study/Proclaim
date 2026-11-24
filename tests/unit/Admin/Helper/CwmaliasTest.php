@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Test class for Cwmalias helper
  *
- * @since  10.0.0
+ * @since  10.1.0
  */
 #[CoversClass(Cwmalias::class)]
 class CwmaliasTest extends ProclaimTestCase

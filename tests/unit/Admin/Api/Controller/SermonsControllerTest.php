@@ -29,7 +29,7 @@ class SermonsControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testGetModelMethodExists(): void
     {
@@ -42,7 +42,7 @@ class SermonsControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testGetModelNameMapping(): void
     {
@@ -59,7 +59,7 @@ class SermonsControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testPreprocessSaveDataExists(): void
     {
@@ -72,7 +72,7 @@ class SermonsControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testPreprocessNormalizesScriptures(): void
     {
@@ -87,7 +87,7 @@ class SermonsControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testPreprocessNormalizesTeachers(): void
     {
@@ -101,7 +101,7 @@ class SermonsControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testPreprocessDefaultsImage(): void
     {

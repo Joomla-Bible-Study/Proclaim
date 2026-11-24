@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * ASC/DESC check would fall back to the model's default instead and silently
  * flip every descending list. This test nails that case by name.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class OrderByWhitelistTest extends ProclaimTestCase
 {
@@ -36,7 +36,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      * The columns a model would list in filter_fields.
      *
      * @var    string[]
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private const FIELDS = ['study.studydate', 'teacher.teachername', 'ordering'];
 
@@ -49,7 +49,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     private function orderOf(?string $column, ?string $direction, string $default = 'study.studydate'): string
     {
@@ -70,7 +70,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     private function q(string $column): string
     {
@@ -82,7 +82,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('A whitelisted column with DESC is quoted and kept descending')]
     public function testWhitelistedColumnDesc(): void
@@ -95,7 +95,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox("An empty direction sorts ASC, not the model's default — the flip guard")]
     public function testEmptyDirectionIsAscendingNotDefault(): void
@@ -111,7 +111,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('A lowercase direction is honoured')]
     public function testLowercaseDirection(): void
@@ -125,7 +125,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('A column not on the whitelist falls back to the default column')]
     public function testNonWhitelistedColumnFallsBack(): void
@@ -138,7 +138,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('A null column and null direction give the default column, ASC')]
     public function testNullsGiveDefaults(): void
@@ -151,7 +151,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('A combined "column direction" pair (list.fullordering) is split and validated')]
     public function testCompoundFullorderingIsSplit(): void
@@ -167,7 +167,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('A garbage direction becomes ASC rather than reaching the SQL')]
     public function testGarbageDirectionIsNeutralised(): void

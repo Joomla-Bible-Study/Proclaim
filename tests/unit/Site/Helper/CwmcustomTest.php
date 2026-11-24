@@ -17,7 +17,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * Test class for Cwmcustom helper
  *
- * @since  10.0.0
+ * @since  10.1.0
  */
 class CwmcustomTest extends ProclaimTestCase
 {
@@ -26,7 +26,7 @@ class CwmcustomTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testGetElementnumberValues(): void
     {

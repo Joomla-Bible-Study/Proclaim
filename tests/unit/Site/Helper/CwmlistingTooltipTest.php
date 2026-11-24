@@ -33,7 +33,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     private function callBuildApiReference(string $book, int $ch_b, int $ch_e, int $v_b, int $v_e): string
@@ -55,7 +55,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  string
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     private function callWrapTooltip(
@@ -76,7 +76,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testBuildApiReferenceSingleVerse(): void
@@ -91,7 +91,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testBuildApiReferenceSameChapterRange(): void
@@ -106,7 +106,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testBuildApiReferenceCrossChapter(): void
@@ -121,7 +121,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testBuildApiReferenceChaptersOnly(): void
@@ -136,7 +136,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testBuildApiReferenceSingleChapter(): void
@@ -151,7 +151,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testBuildApiReferenceZeroChapter(): void
@@ -166,7 +166,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testWrapTooltipEnabled(): void
@@ -189,7 +189,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testWrapTooltipDisabledByElement(): void
@@ -207,7 +207,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testWrapTooltipDefaultsToOff(): void
@@ -224,7 +224,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testWrapTooltipEmptyRef(): void
@@ -241,7 +241,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testWrapTooltipEmptyText(): void
@@ -258,7 +258,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testWrapTooltipDefaultsVersion(): void
@@ -275,7 +275,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testWrapTooltipEscapesHtml(): void

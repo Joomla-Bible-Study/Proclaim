@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * CwmserieTable::check() requires a series title.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmserieTable::class)]
 class CwmserieTableCheckTest extends IntegrationTestCase
@@ -26,7 +26,7 @@ class CwmserieTableCheckTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmserieTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmserieTable $table;
 
@@ -35,7 +35,7 @@ class CwmserieTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -48,7 +48,7 @@ class CwmserieTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPassesWithValidData(): void
     {
@@ -61,7 +61,7 @@ class CwmserieTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenSeriesTextNull(): void
     {
@@ -75,7 +75,7 @@ class CwmserieTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenSeriesTextEmpty(): void
     {
@@ -89,7 +89,7 @@ class CwmserieTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenSeriesTextWhitespace(): void
     {

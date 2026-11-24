@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * CwmserverTable::check() requires a server name.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmserverTable::class)]
 class CwmserverTableCheckTest extends IntegrationTestCase
@@ -26,7 +26,7 @@ class CwmserverTableCheckTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmserverTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmserverTable $table;
 
@@ -35,7 +35,7 @@ class CwmserverTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -48,7 +48,7 @@ class CwmserverTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPassesWithValidData(): void
     {
@@ -61,7 +61,7 @@ class CwmserverTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenServerNameNull(): void
     {
@@ -75,7 +75,7 @@ class CwmserverTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenServerNameEmpty(): void
     {
@@ -89,7 +89,7 @@ class CwmserverTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenServerNameWhitespace(): void
     {

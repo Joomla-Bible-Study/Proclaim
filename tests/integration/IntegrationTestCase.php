@@ -34,7 +34,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      *
      * @return  object  Table instance
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function createTableInstance(string $fqcn, string $tblKey = 'id'): object
     {
@@ -269,7 +269,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function resetStaticCache(string $class, string $property, mixed $value = []): void
     {
