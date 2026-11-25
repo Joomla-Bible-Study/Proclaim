@@ -432,7 +432,7 @@ class ApiActionLogTest extends ProclaimTestCase
         );
         $source = implode('', $lines);
 
-        $this->assertStringContainsString('CwmlogHelper::warning', $source);
+        $this->assertStringContainsString('CwmlogHelper::apiRefusal(', $source);
         $this->assertStringNotContainsString(
             'CwmactionlogHelper',
             $source,

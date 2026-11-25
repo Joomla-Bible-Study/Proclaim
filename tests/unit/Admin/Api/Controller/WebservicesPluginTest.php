@@ -12,6 +12,10 @@ namespace CWM\Component\Proclaim\Tests\Admin\Api\Controller;
 
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Plugin\WebServices\Proclaim\Extension\Proclaim;
+use Joomla\CMS\Application\ApiApplication;
+use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Router\ApiRouter;
+use Joomla\Input\Input;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -47,7 +51,7 @@ class WebservicesPluginTest extends ProclaimTestCase
     }
 
     /**
-     * Write routes must always use public=false, regardless of api_access setting.
+     * Write routes are never public, including through a per-route override.
      *
      * @return  void
      *
@@ -315,59 +319,85 @@ class WebservicesPluginTest extends ProclaimTestCase
     }
 
     /**
-     * Enabling the plugin must not open the API to anonymous callers.
-     *
-     * The plugin being enabled is the API's on/off switch — there is no separate
-     * Proclaim setting. So the read posture is decided entirely by one parameter,
-     * and it has to default closed: an administrator who enables the plugin
-     * without reading anything gets an authenticated API, not an open one.
+     * The plugin has no setting at all, so nothing can open its reads to the
+     * public: RSS feeds are the public channel.
      *
      * @return  void
      *
-     * @since   10.3.6
+     * @since   __DEPLOY_VERSION__
      */
-    public function testPublicReadsDefaultsToOff(): void
+    public function testThePluginHasNoPublicReadsSetting(): void
     {
-        $xml = simplexml_load_file(
-            \dirname(__DIR__, 5) . '/plugins/webservices/proclaim/proclaim.xml'
-        );
+        $root = \dirname(__DIR__, 5);
+        $xml  = simplexml_load_string((string) file_get_contents($root . '/plugins/webservices/proclaim/proclaim.xml'));
 
         $this->assertNotFalse($xml, 'Plugin manifest should parse');
+        $this->assertSame([], $xml->xpath('//config'), 'The plugin should declare no settings');
 
-        $field = $xml->xpath('//field[@name="public_reads"]');
+        $source = (string) file_get_contents($root . '/plugins/webservices/proclaim/src/Extension/Proclaim.php');
 
-        $this->assertNotEmpty($field, 'public_reads parameter should exist');
-        $this->assertSame('0', (string) $field[0]['default'], 'public_reads must default to off');
+        $this->assertStringNotContainsString('public_reads', $source);
+        $this->assertStringNotContainsString('api_access', $source);
     }
 
     /**
-     * The read posture comes from the plugin parameter, not a component setting.
+     * Every route the plugin registers requires a token: none is public.
      *
-     * api_access was a tri-state in #__bsms_admin.params whose "disabled" third
-     * duplicated the plugin's own enabled state, and which was never rendered in
-     * any template — so the API could not be switched on at all (#1328).
+     * Registers the real routes on a real API router, so a route added later,
+     * however it is built, is checked too.
      *
      * @return  void
      *
-     * @since   10.3.6
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
      */
-    public function testReadPostureComesFromThePluginParameter(): void
+    public function testEveryRouteRequiresAToken(): void
     {
-        $ref   = new \ReflectionMethod(Proclaim::class, 'onBeforeApiRoute');
-        $lines = \array_slice(
-            file($ref->getFileName()),
-            $ref->getStartLine() - 1,
-            $ref->getEndLine() - $ref->getStartLine() + 1
-        );
-        $source = implode('', $lines);
+        // A read, so the plugin's explanation of unroutable writes stays quiet.
+        $_SERVER['REQUEST_METHOD'] = 'GET';
 
-        $this->assertStringContainsString("params->get('public_reads'", $source);
-        $this->assertStringNotContainsString('api_access', $source);
-        $this->assertStringNotContainsString(
-            'getApiAccessSetting',
-            $source,
-            'The per-request component-params query should be gone'
-        );
+        $app = (new \ReflectionClass(ApiApplication::class))->newInstanceWithoutConstructor();
+        (new \ReflectionProperty(CMSApplication::class, 'input'))->setValue($app, new Input([]));
+
+        $router = new ApiRouter($app);
+        $plugin = (new \ReflectionClass(Proclaim::class))->newInstanceWithoutConstructor();
+        $plugin->setApplication($app);
+
+        $plugin->onBeforeApiRoute(new class ($router) {
+            /**
+             * Keep the router the plugin registers its routes on.
+             *
+             * @param   ApiRouter  $router  The API router.
+             *
+             * @since   __DEPLOY_VERSION__
+             */
+            public function __construct(private readonly ApiRouter $router)
+            {
+            }
+
+            /**
+             * The API router.
+             *
+             * @return  ApiRouter  The router the plugin registers its routes on
+             *
+             * @since   __DEPLOY_VERSION__
+             */
+            public function getRouter(): ApiRouter
+            {
+                return $this->router;
+            }
+        });
+
+        $routes = $router->getRoutes();
+
+        $this->assertNotEmpty($routes, 'The plugin registered no routes, so nothing was checked');
+
+        foreach ($routes as $route) {
+            $this->assertFalse(
+                $route->getDefaults()['public'] ?? null,
+                implode(',', $route->getMethods()) . ' ' . $route->getPattern() . ' should require a token'
+            );
+        }
     }
 
     /**
