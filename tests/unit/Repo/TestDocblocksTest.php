@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Run with PROCLAIM_SHRINK_DOCBLOCK_DEBT=1 to rewrite each list to the
  * entries still owed. It never adds one.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 class TestDocblocksTest extends ProclaimTestCase
 {
@@ -40,7 +40,7 @@ class TestDocblocksTest extends ProclaimTestCase
      * Folders under tests/ that hold data rather than test code, with why.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const array EXCLUDED = [
         'tests/fixtures/' => 'seed data and sample files that tests read',
@@ -50,7 +50,7 @@ class TestDocblocksTest extends ProclaimTestCase
      * The tokens that may sit between a docblock and its declaration.
      *
      * @var    list<int>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const array MODIFIERS = [T_WHITESPACE, T_PUBLIC, T_PROTECTED, T_PRIVATE, T_STATIC, T_FINAL, T_READONLY, T_ABSTRACT];
 
@@ -58,7 +58,7 @@ class TestDocblocksTest extends ProclaimTestCase
      * The tokens a property's type is written with, or a trait use.
      *
      * @var    list<int|string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const array TYPE_TOKENS = [T_STRING, T_ARRAY, T_NAME_QUALIFIED, T_NAME_FULLY_QUALIFIED, T_NS_SEPARATOR, '?', '|', T_USE];
 
@@ -66,7 +66,7 @@ class TestDocblocksTest extends ProclaimTestCase
      * The audit of every file in scope, keyed by path, once per run.
      *
      * @var    array<string, list<array{kind: string, name: string, line: int, gaps: list<string>}>>|null
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private static ?array $suite = null;
 
@@ -76,7 +76,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('The audit reads the test suite')]
     public function testTheAuditReadsTheSuite(): void
@@ -96,7 +96,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('The audit finds each kind of gap')]
     public function testTheAuditFindsEachKindOfGap(): void
@@ -254,7 +254,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     #[TestDox('No @param list disagrees with its signature')]
@@ -287,7 +287,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     #[TestDox('No docblock gap is new')]
@@ -318,7 +318,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     #[TestDox('Every debt entry still matches a gap')]
@@ -367,7 +367,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  list<array{kind: string, name: string, line: int, gaps: list<string>}>  One entry per declaration
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function audit(string $source): array
     {
@@ -514,7 +514,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  list<string>  The gaps, in the order the audit reports them
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function gaps(string $kind, string $name, ?string $doc, array $tokens, int $at): array
     {
@@ -592,7 +592,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  list<string>  The names, $ included, in order
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function signature(array $tokens, int $at): array
     {
@@ -629,7 +629,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  array{0: string, 1: string}  The variable, then the description; both empty when there is no variable
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function splitParam(string $text): array
     {
@@ -648,7 +648,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  array{0: string, 1: string}  The type, then the rest, which is empty when nothing follows
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function splitType(string $text): array
     {
@@ -678,7 +678,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  int  The index
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function nextSolid(array $tokens, int $i): int
     {
@@ -698,7 +698,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  list<string>  The entries, in source order
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function entries(array $declarations): array
     {
@@ -719,7 +719,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  array<string, list<array{kind: string, name: string, line: int, gaps: list<string>}>>  By path
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function suite(): array
     {
@@ -752,7 +752,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  array<string, array<string, int>>  Entry counts, by path
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     private static function debt(): array
@@ -776,7 +776,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     private static function shrinkDebt(): void
@@ -812,7 +812,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  list<string>  Their paths
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function debtFiles(): array
     {
@@ -824,7 +824,7 @@ class TestDocblocksTest extends ProclaimTestCase
      *
      * @return  string  Its absolute path
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function repoRoot(): string
     {

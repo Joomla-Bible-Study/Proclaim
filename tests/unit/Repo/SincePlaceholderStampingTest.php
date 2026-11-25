@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * would sit in tests/, which the release stamps, and be turned into a version
  * number like any other.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 class SincePlaceholderStampingTest extends ProclaimTestCase
 {
@@ -31,7 +31,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      * The file types a release stamps when the config lists none.
      *
      * @var    list<string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const array DEFAULT_EXTENSIONS = ['php'];
 
@@ -39,7 +39,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      * Directories the release never descends into, whatever the paths say.
      *
      * @var    list<string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const array NEVER_STAMPED = ['vendor', 'node_modules', '.git'];
 
@@ -49,7 +49,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('git lists the repository, so the checks below read something')]
     public function testGitListsTheRepository(): void
@@ -69,7 +69,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     #[TestDox('Every placeholder tag sits in a file the release stamps')]
@@ -98,7 +98,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     #[TestDox('A stamped file holds the placeholder only in a @since or @deprecated tag')]
@@ -125,7 +125,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     #[TestDox('Every stamped path exists')]
@@ -147,7 +147,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     #[TestDox('No stamped path reaches into a submodule')]
@@ -183,7 +183,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     #[TestDox('Every install script a manifest names is stamped')]
@@ -227,7 +227,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  string  The token
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function placeholder(): string
     {
@@ -239,7 +239,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  string  Its absolute path
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function repoRoot(): string
     {
@@ -251,7 +251,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  array{paths: list<string>, extensions: list<string>}  The listed paths and file types
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     private static function stamping(): array
@@ -271,7 +271,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  list<array{file: string, line: int, text: string}>  One entry per line
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function placeholderLines(): array
     {
@@ -297,7 +297,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  bool  True for a @since or @deprecated tag carrying the placeholder
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function isTag(string $text): bool
     {
@@ -315,7 +315,7 @@ class SincePlaceholderStampingTest extends ProclaimTestCase
      *
      * @return  bool  True when the release replaces the placeholder in it
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     private static function isStamped(string $file): bool

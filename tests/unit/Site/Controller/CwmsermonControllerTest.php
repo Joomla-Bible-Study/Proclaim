@@ -91,7 +91,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testCommentChecksTheCaptchaTheFormShows(): void
     {

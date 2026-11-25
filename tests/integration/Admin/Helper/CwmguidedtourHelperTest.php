@@ -73,7 +73,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * installed.
      *
      * @var    int|null
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private ?int $pluginStateAtStart = null;
 
@@ -213,7 +213,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  CwmguidedtourHelper  A helper whose tour list is just the two shipped keys, each mapped to a test uid.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function startTourHelper(): CwmguidedtourHelper
     {
@@ -237,7 +237,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  int  How many guided tour rows carry that uid.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function rowsForUid(string $uid): int
     {
@@ -254,7 +254,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  int|null  The Guided Tours plugin's enabled flag, or null when it is not installed.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function guidedToursPluginState(): ?int
     {
@@ -278,7 +278,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function setGuidedToursPlugin(bool $enabled): void
     {
@@ -297,7 +297,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function writeGuidedToursPluginState(int $enabled): void
     {
@@ -316,7 +316,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function resetPluginCache(): void
     {
@@ -623,7 +623,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('canStartTours() follows the System - Guided Tours plugin')]
     public function testCanStartToursFollowsThePlugin(): void
@@ -644,7 +644,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('Registering still writes a tour while the plugin is disabled')]
     public function testRegisterIgnoresThePlugin(): void
@@ -665,7 +665,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('Uninstall still removes a tour while the plugin is disabled')]
     public function testRemoveAllToursIgnoresThePlugin(): void
@@ -693,7 +693,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('resolveStartTour() maps the legacy "1" and the tour keys to their tour ids')]
     public function testResolveStartTourMapsAliasAndKeys(): void
@@ -720,7 +720,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('resolveStartTour() starts nothing for an unknown value, a missing tour or a disabled plugin')]
     public function testResolveStartTourRefuses(): void

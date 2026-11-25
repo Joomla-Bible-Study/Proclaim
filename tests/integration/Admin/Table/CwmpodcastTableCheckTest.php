@@ -29,7 +29,7 @@ class CwmpodcastTableCheckTest extends IntegrationTestCase
      * Each setting check() requires, with the language key of the error naming it.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const array REQUIRED = [
         'title'    => 'JBS_PDC_VALIDATE_TITLE_REQUIRED',
@@ -84,7 +84,7 @@ class CwmpodcastTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     #[TestDox('A podcast without artwork can still be stored')]
@@ -100,7 +100,7 @@ class CwmpodcastTableCheckTest extends IntegrationTestCase
      *
      * @return  array<string, array{string, ?string}>  The column, and the value it holds instead
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public static function missingSettingProvider(): array
     {
@@ -123,7 +123,7 @@ class CwmpodcastTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     #[DataProvider('missingSettingProvider')]
@@ -145,7 +145,7 @@ class CwmpodcastTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     #[TestDox('Every missing setting is named in the one error')]
