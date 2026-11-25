@@ -64,7 +64,7 @@ class Cwmpodcast
      * The same settings validatePodcast() reports as required, in its order.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     public const array FEED_SETTINGS = [
         'title'        => 'JBS_PDC_VALIDATE_TITLE_REQUIRED',
@@ -98,7 +98,7 @@ class Cwmpodcast
      * How many feeds the last makePodcasts() run could not build.
      *
      * @var    int
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private int $failedFeeds = 0;
 
@@ -438,7 +438,7 @@ class Cwmpodcast
      *
      * @return  string  The podcast's line in the run's report
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function feedNotBuilt(object $podinfo, string $reason, string $where = ''): string
     {
@@ -464,7 +464,7 @@ class Cwmpodcast
      *
      * @return  int
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function getFailedFeedCount(): int
     {
@@ -478,7 +478,7 @@ class Cwmpodcast
      *
      * @return  array<string, string>  The message naming each one, by column
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public static function missingSettings(object $podcast): array
     {
@@ -506,7 +506,7 @@ class Cwmpodcast
      *
      * @return  array<string, string>  The message naming each one, by column
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public static function unbuildableSettings(object $podcast): array
     {

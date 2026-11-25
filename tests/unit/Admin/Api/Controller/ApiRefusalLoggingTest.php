@@ -36,7 +36,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * a captured message is unreadable here: the tests count entries, and the line
  * itself is tested through refusalMessage().
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 class ApiRefusalLoggingTest extends ProclaimTestCase
 {
@@ -44,7 +44,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      * The entries the capturing logger received.
      *
      * @var    LogEntry[]
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private array $logged = [];
 
@@ -52,7 +52,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      * The Log instance in place before the test.
      *
      * @var    Log|null
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private ?Log $previousLog = null;
 
@@ -60,7 +60,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      * Whether CwmlogHelper had registered its file loggers before the test.
      *
      * @var    bool
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private bool $wasRegistered = false;
 
@@ -69,7 +69,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function setUp(): void
     {
@@ -101,7 +101,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function tearDown(): void
     {
@@ -118,7 +118,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  User  The user
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function user(int $id): User
     {
@@ -147,7 +147,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     private function dispatchOnError(string $class, string $client, array $request, User $identity, \Throwable $error): void
@@ -169,7 +169,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testTheRefusalLineNamesWhoWhatAndWhere(): void
     {
@@ -185,7 +185,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testEachRefusalIsRecordedOnce(): void
     {
@@ -207,7 +207,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testEachDistinctRefusalIsRecorded(): void
     {
@@ -225,7 +225,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: string}>  The method, then its verb
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public static function methodProvider(): array
     {
@@ -245,7 +245,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     #[DataProvider('methodProvider')]
@@ -265,7 +265,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     public function testOnErrorRecordsAProclaimApiRefusal(): void
@@ -292,7 +292,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: class-string, 1: string, 2: string, 3: int, 4: bool}>  The application class, client, option, user id, and whether the error is a refusal
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public static function ignoredProvider(): array
     {
@@ -316,7 +316,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     #[DataProvider('ignoredProvider')]
@@ -338,7 +338,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     public function testOnErrorSkipsARefusalTheControllerRecorded(): void
@@ -366,7 +366,7 @@ class ApiRefusalLoggingTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testTheSystemPluginListensForOnError(): void
     {

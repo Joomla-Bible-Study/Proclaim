@@ -142,7 +142,7 @@ class CwmsetupwizardPodcastTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     #[TestDox('The podcast the wizard creates has everything its feed needs to be built')]
@@ -166,7 +166,7 @@ class CwmsetupwizardPodcastTest extends IntegrationTestCase
      *
      * @return  int  The new podcast id, or 0 when the wizard skipped it
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     private function createPodcastRecord(): int

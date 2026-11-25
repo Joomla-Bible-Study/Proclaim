@@ -21,7 +21,7 @@ use Joomla\Database\DatabaseDriver;
  * @property  DatabaseDriver|null  $db
  * @method    string  uniqueAlias(string $label = 'row')
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 trait PodcastFeedFixtures
 {
@@ -32,7 +32,7 @@ trait PodcastFeedFixtures
      *
      * @return  array{id: int, filename: string}  The new podcast's id and its feed filename
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function seedPodcast(string $title): array
     {
@@ -53,7 +53,7 @@ trait PodcastFeedFixtures
      *
      * @return  int  The new podcast id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function insertPodcast(string $filename, ?int $limit = null, string $title = 'Episode date podcast'): int
     {
@@ -83,7 +83,7 @@ trait PodcastFeedFixtures
      *
      * @return  int  The new message id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function insertMessage(?string $studydate): int
     {
@@ -122,7 +122,7 @@ trait PodcastFeedFixtures
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function insertMediaFile(int $studyId, int $podcastId, ?string $createdate): void
     {

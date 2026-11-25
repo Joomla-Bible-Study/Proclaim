@@ -40,7 +40,7 @@ class CwmguidedtourHelper
      * What's New post-install messages already stored on sites link with "1".
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const array START_TOUR_ALIASES = ['1' => 'whats_new_10_1'];
 
@@ -574,7 +574,7 @@ class CwmguidedtourHelper
      *
      * @return  bool  True when the tours table exists and the plugin is enabled
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function canStartTours(): bool
     {
@@ -590,7 +590,7 @@ class CwmguidedtourHelper
      *
      * @return  string|null  The tour uid, or null when the value names no tour
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function startTourUid(string $value): ?string
     {
@@ -606,7 +606,7 @@ class CwmguidedtourHelper
      *
      * @return  int  The tour id, or 0 when there is nothing to start
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function resolveStartTour(string $value): int
     {

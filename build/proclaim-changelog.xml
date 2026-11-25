@@ -19,6 +19,40 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.7.9                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.7.9</version>
+        <date>2026-11-25</date>
+        <fix>
+            <item>Proclaim declares the Access Web Services permission that Joomla 5.4.11 and 6.2.1 require for API requests. It can be granted in Proclaim's Options, and saving those Options no longer removes it.</item>
+            <item>A delete that Joomla refuses, such as for an item that is not trashed, answers 409 on every supported Joomla version, instead of 204 with a deletion in the action log that did not happen.</item>
+            <item>Proclaim's API log records requests refused for lacking a permission, including those Joomla refuses before Proclaim sees them.</item>
+            <item>Action log entries for messages changed through the API name the message, not just its number.</item>
+            <item>The comment form shows a captcha again when Options > Captcha, or the site's default captcha, names an enabled captcha plugin. Before, a site with a default captcha refused every comment.</item>
+            <item>One podcast that cannot be built no longer stops the other feeds from being written. The one that failed is named and logged.</item>
+            <item>A podcast needs a title, a website and a file name to be saved, including through a batch edit.</item>
+            <item>An episode whose media file has no date takes its message's date, and is ordered by it.</item>
+            <item>The podcast the setup wizard creates now builds.</item>
+            <item>Start Tour appears only while the System - Guided Tours plugin is enabled, and the Getting Started post-install link starts its tour.</item>
+        </fix>
+        <addition>
+            <item>A System Health check, Podcast feed settings, lists the published podcasts that are missing settings their feed needs.</item>
+        </addition>
+        <remove>
+            <item>The Allow public reads option of the Web Services - Proclaim plugin. Every API request now needs a token. RSS and podcast feeds are the public channel.</item>
+        </remove>
+        <language>
+            <item>When a comment fails the captcha check, the message says so, instead of "Incorrect Key".</item>
+        </language>
+        <note>
+            <item>If an API client gets 403 after Joomla is updated to 5.4.11 or 6.2.1, grant its user group Access Web Services in Proclaim's Options, under Permissions.</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.7.8                                                   -->
     <!-- ============================================================ -->
     <changelog>
