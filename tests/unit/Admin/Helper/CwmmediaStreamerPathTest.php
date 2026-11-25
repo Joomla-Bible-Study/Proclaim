@@ -37,7 +37,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * from the filesystem checks around it. No web server, no fixture, and no
  * dependence on where this test happens to be checked out.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 #[CoversClass(CwmmediaStreamer::class)]
 class CwmmediaStreamerPathTest extends ProclaimTestCase

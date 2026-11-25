@@ -25,7 +25,7 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testCreateDefaultServersChecksExisting(): void
     {
@@ -52,7 +52,7 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testRegisterScheduledTasksChecksExisting(): void
     {
@@ -74,7 +74,7 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testApplyWizardSetsCompletionFlag(): void
     {
@@ -90,7 +90,7 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testDismissSetsCompletionFlag(): void
     {

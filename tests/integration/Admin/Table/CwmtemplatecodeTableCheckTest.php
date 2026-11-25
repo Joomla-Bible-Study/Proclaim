@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * CwmtemplatecodeTable::check() requires a file name and a valid template
  * type, and refuses a name that is restricted, unsafe or already shipped.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmtemplatecodeTable::class)]
 class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
@@ -28,7 +28,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmtemplatecodeTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmtemplatecodeTable $table;
 
@@ -37,7 +37,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -50,7 +50,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPassesWithValidData(): void
     {
@@ -64,7 +64,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenFilenameNull(): void
     {
@@ -79,7 +79,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenFilenameEmpty(): void
     {
@@ -94,7 +94,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenFilenameWhitespace(): void
     {
@@ -110,7 +110,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     #[DataProvider('restrictedFilenameProvider')]
     public function testCheckThrowsForRestrictedFilename(string $name): void
@@ -126,7 +126,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  array<string, array{0: string}>  Each name
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public static function restrictedFilenameProvider(): array
     {
@@ -409,7 +409,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenTypeZero(): void
     {
@@ -424,7 +424,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenTypeEight(): void
     {
@@ -440,7 +440,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     #[DataProvider('validTypeProvider')]
     public function testCheckPassesForValidTypes(int $type): void
@@ -455,7 +455,7 @@ class CwmtemplatecodeTableCheckTest extends IntegrationTestCase
      *
      * @return  array<string, array{0: int}>  Each type
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public static function validTypeProvider(): array
     {

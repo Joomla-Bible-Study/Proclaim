@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * is a filesystem walk, and a walk cannot be asserted against a folder whose
  * location is fixed to JPATH_ROOT.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 #[CoversClass(CwmprotectedStorage::class)]
 class CwmprotectedStorageScanTest extends ProclaimTestCase

@@ -54,7 +54,7 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     #[DataProvider('presetKeyProvider')]
     public function testPresetHasRequiredFields(string $key): void
@@ -157,7 +157,7 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     #[DataProvider('presetKeyProvider')]
     public function testPresetLabelsAreLangKeys(string $key): void
@@ -175,7 +175,7 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     #[DataProvider('presetKeyProvider')]
     public function testPresetIconsAreFontAwesome(string $key): void

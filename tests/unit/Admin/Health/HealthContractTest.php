@@ -428,7 +428,7 @@ class HealthContractTest extends ProclaimTestCase
      * makes them leave trashed content out.
      *
      * @var    array<string, string>
-     * @since  10.6.0
+     * @since  10.6.3
      */
     private const CONTENT_HELPERS = [
         'CwmImageMigration::getMigrationCounts'     => 'getMigrationCounts(true)',
@@ -450,7 +450,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.6.0
+     * @since   10.6.3
      */
     #[TestDox('A check reading content rows constrains their state')]
     public function testContentChecksExcludeTrashedRows(): void

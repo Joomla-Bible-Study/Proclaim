@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 /**
  * Cwmstats' date-range filters run with bound values.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class CwmstatsDateBindTest extends IntegrationTestCase
 {
@@ -33,7 +33,7 @@ class CwmstatsDateBindTest extends IntegrationTestCase
      * The identity before the test switched to a guest.
      *
      * @var    User|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?User $savedIdentity = null;
 
@@ -42,7 +42,7 @@ class CwmstatsDateBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \Exception
      */
     protected function setUp(): void
@@ -65,7 +65,7 @@ class CwmstatsDateBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \Exception
      */
     protected function tearDown(): void
@@ -83,7 +83,7 @@ class CwmstatsDateBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('getTotalMessages()/getTotalTopics() date-range filter executes with bound values')]
     public function testDateRangeBindsExecute(): void

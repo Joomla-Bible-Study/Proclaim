@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * The setup wizard's default-creation loops bind the row type in each
  * existence check, and those checks execute against the real database.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class CwmsetupwizardModelBindTest extends IntegrationTestCase
 {
@@ -34,7 +34,7 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseInterface|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?DatabaseInterface $db = null;
 
@@ -44,7 +44,7 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     protected function setUp(): void
     {
@@ -64,7 +64,7 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     protected function tearDown(): void
     {
@@ -88,7 +88,7 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
      *
      * @return  mixed
      *
-     * @since 10.7.1
+     * @since 10.7.0
      */
     private function invoke(string $method, ...$args): mixed
     {
@@ -103,7 +103,7 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox("createDefaultServers()'s bound per-type existence check executes")]
     public function testCreateDefaultServersBoundTypeCheckExecutes(): void
@@ -121,7 +121,7 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox("registerScheduledTasks()'s bound per-type existence check executes")]
     public function testRegisterScheduledTasksBoundTypeCheckExecutes(): void

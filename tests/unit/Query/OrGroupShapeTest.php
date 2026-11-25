@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * top-level OR once escaped published/access/language (the reason
  * WhereClauseContractTest exists).
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class OrGroupShapeTest extends ProclaimTestCase
 {
@@ -39,7 +39,7 @@ class OrGroupShapeTest extends ProclaimTestCase
      *
      * @return  string  The rendered WHERE clause, whitespace-normalised.
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     private function whereOf(callable $build): string
     {
@@ -56,7 +56,7 @@ class OrGroupShapeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('andWhere([a, b]) appends (a OR b) with AND, brackets included')]
     public function testAndWhereAppendsAnOrGroup(): void
@@ -76,7 +76,7 @@ class OrGroupShapeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('where(a)->orWhere(b) renders (a) OR (b) when the group is the whole clause')]
     public function testWhereOrWhereSeedsTheClause(): void
@@ -93,7 +93,7 @@ class OrGroupShapeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox("orWhere(rest, 'OR') keeps a flat OR list flat")]
     public function testOrWhereListNeedsTheExplicitInnerGlue(): void

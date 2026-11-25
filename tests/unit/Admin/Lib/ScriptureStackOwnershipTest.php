@@ -43,7 +43,7 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.6.0
+     * @since   10.5.10
      */
     public function testTheScriptureStackIsTheFourSharedTables(): void
     {
@@ -65,7 +65,7 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.6.0
+     * @since   10.5.10
      */
     public function testTheConsumerRegistryIsTreatedAsShared(): void
     {
@@ -82,7 +82,7 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.6.0
+     * @since   10.5.10
      * @throws  \ReflectionException
      */
     public function testOwnObjectsIsDefinedAsGetObjectsMinusTheStack(): void
@@ -100,7 +100,7 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.6.0
+     * @since   10.5.10
      * @throws  \ReflectionException
      */
     public function testTheExportAllowListExcludesTheStack(): void
@@ -124,7 +124,7 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.6.0
+     * @since   10.5.10
      * @throws  \ReflectionException
      */
     public function testTheRestoreAllowListExcludesTheStack(): void
@@ -157,7 +157,7 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.6.0
+     * @since   10.5.10
      */
     public function testTheRestoreDropLoopNeitherTouchesTheStackNorKeepsTheDeadPreserveList(): void
     {
@@ -194,7 +194,7 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
      *
      * @return  string  Its source, from the signature to the closing brace
      *
-     * @since   10.6.0
+     * @since   10.5.10
      * @throws  \ReflectionException
      */
     private static function methodBody(string $class, string $method): string

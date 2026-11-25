@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * The platform-stats sync's bound sync-timestamp UPDATE and platform LEFT JOIN
  * execute against the real database.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class CWMAddonStatsBindTest extends IntegrationTestCase
 {
@@ -34,7 +34,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseInterface|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?DatabaseInterface $db = null;
 
@@ -42,7 +42,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
      * Factory's language before the test replaced it to silence date warnings.
      *
      * @var    mixed
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -52,7 +52,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     protected function setUp(): void
     {
@@ -75,7 +75,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     protected function tearDown(): void
     {
@@ -100,7 +100,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
      *
      * @return  mixed
      *
-     * @since 10.7.1
+     * @since 10.7.0
      */
     private function invoke(string $method, ...$args): mixed
     {
@@ -112,7 +112,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox("updateServerSyncTimestamp()'s bound :now UPDATE executes")]
     public function testUpdateServerSyncTimestampBindExecutes(): void
@@ -129,7 +129,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox("getMediaVideoIds()'s bound :platform LEFT JOIN executes")]
     public function testGetMediaVideoIdsPlatformJoinExecutes(): void

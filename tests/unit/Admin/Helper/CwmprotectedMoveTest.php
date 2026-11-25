@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Pure over the row on purpose, so every rule can be asserted without a
  * database or a filesystem.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 #[CoversClass(CwmprotectedMove::class)]
 class CwmprotectedMoveTest extends ProclaimTestCase

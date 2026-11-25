@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * CwmcommentTable::check() sets a comment's user from the current identity
  * when it has none, and keeps one already set.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmcommentTable::class)]
 class CwmcommentTableCheckTest extends IntegrationTestCase
@@ -27,7 +27,7 @@ class CwmcommentTableCheckTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmcommentTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmcommentTable $table;
 
@@ -36,7 +36,7 @@ class CwmcommentTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -49,7 +49,7 @@ class CwmcommentTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \Exception
      */
     public function testCheckSetsUserIdFromIdentityWhenNull(): void
@@ -69,7 +69,7 @@ class CwmcommentTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \Exception
      */
     public function testCheckPreservesExistingUserId(): void

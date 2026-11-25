@@ -25,7 +25,7 @@ class CwmpodcastP2Test extends ProclaimTestCase
      * The podcast helper under test.
      *
      * @var    Cwmpodcast
-     * @since  10.3.2
+     * @since  10.3.0
      */
     protected Cwmpodcast $podcast;
 
@@ -34,7 +34,7 @@ class CwmpodcastP2Test extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     protected function setUp(): void
     {
@@ -135,7 +135,7 @@ class CwmpodcastP2Test extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: string}>  The time, and the HH:MM:SS it becomes
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public static function normalizeTimeProvider(): array
     {
@@ -322,7 +322,7 @@ class CwmpodcastP2Test extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: float}>  The time, and its length in seconds
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public static function timeToSecondsProvider(): array
     {

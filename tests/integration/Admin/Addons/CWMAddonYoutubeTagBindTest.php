@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * The YouTube addon's importTagsAsTopics() inserts a topic with the tag bound
  * into the VALUES list.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
 {
@@ -35,7 +35,7 @@ class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseInterface|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?DatabaseInterface $db = null;
 
@@ -43,7 +43,7 @@ class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
      * Factory's language before the test replaced it to silence date warnings.
      *
      * @var    mixed
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -52,7 +52,7 @@ class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     protected function setUp(): void
     {
@@ -75,7 +75,7 @@ class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     protected function tearDown(): void
     {
@@ -97,7 +97,7 @@ class CWMAddonYoutubeTagBindTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \ReflectionException
      */
     #[TestDox("importTagsAsTopics() inserts a topic with the tag bound into the VALUES list")]

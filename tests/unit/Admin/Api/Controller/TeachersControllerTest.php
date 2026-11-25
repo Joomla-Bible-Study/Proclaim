@@ -29,7 +29,7 @@ class TeachersControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testGetModelNameMapping(): void
     {
@@ -45,7 +45,7 @@ class TeachersControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testPreprocessSaveDataExists(): void
     {
@@ -58,7 +58,7 @@ class TeachersControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testPreprocessDefaultsImage(): void
     {
