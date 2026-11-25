@@ -97,7 +97,7 @@ class ListSortFieldContractTest extends ProclaimTestCase
      * @return  array<int, string|null>  Each call's column in source order: a string literal's value, or null when
      *                                   the argument is anything else and so cannot be read
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function sortColumns(string $source): array
     {
@@ -219,7 +219,7 @@ class ListSortFieldContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('The sort column is read from every way a call can be written')]
     public function testSortColumnsAreReadFromEveryCallShape(): void

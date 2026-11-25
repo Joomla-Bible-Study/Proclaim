@@ -226,7 +226,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  object|null  The record still in the database, or null when it is gone or cannot be read
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function remainingRecord(int $id): ?object
     {
@@ -260,7 +260,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function sendDeleteConflict(object $record): void
     {

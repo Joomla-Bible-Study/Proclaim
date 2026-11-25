@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * started anything. These tests read the shipped definitions, so a message
  * whose link names no tour fails here rather than on a site.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 #[CoversClass(CwmguidedtourHelper::class)]
 class CwmguidedtourHelperStartTourTest extends ProclaimTestCase
@@ -35,7 +35,7 @@ class CwmguidedtourHelperStartTourTest extends ProclaimTestCase
      *
      * @return  CwmguidedtourHelper  A new instance, created without running its constructor
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     private function helper(): CwmguidedtourHelper
@@ -49,7 +49,7 @@ class CwmguidedtourHelperStartTourTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     #[TestDox('Every post-install startTour link names a shipped tour')]
@@ -87,7 +87,7 @@ class CwmguidedtourHelperStartTourTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     #[TestDox('startTourUid() keeps the legacy "1" pointing at the What\'s New tour')]
@@ -105,7 +105,7 @@ class CwmguidedtourHelperStartTourTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     #[TestDox('startTourUid() names nothing for an empty or unknown value')]

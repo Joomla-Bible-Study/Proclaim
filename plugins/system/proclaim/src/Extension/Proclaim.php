@@ -66,7 +66,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * HTTP methods, mapped to the verb an API refusal is logged with.
      *
      * @var array<string, string>
-     * @since __DEPLOY_VERSION__
+     * @since 10.7.9
      */
     private const array API_VERBS = [
         'GET'    => 'read',
@@ -590,7 +590,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function onError(EventInterface $event): void
     {
@@ -639,7 +639,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  array{0: string, 1: string}  The verb, such as read or delete, then the resource with " #id" when one was named
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function describeApiRequest(Input $input): array
     {

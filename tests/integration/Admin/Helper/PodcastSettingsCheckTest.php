@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * The by-name assertions read the fingerprint, which carries the podcast ids
  * and the columns they lack and is the same in any language.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 #[CoversClass(PodcastSettingsCheck::class)]
 class PodcastSettingsCheckTest extends IntegrationTestCase
@@ -38,7 +38,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseDriver|null
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private ?DatabaseDriver $db = null;
 
@@ -46,7 +46,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      * Factory::$language as it was before a test pinned it, for tearDown() to restore.
      *
      * @var    mixed
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -54,7 +54,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      * Whether this test pinned Factory::$language, which may have been null before.
      *
      * @var    bool
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private bool $languagePinned = false;
 
@@ -63,7 +63,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function setUp(): void
     {
@@ -88,7 +88,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function tearDown(): void
     {
@@ -112,7 +112,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('A published podcast with every setting passes')]
     public function testCompletePodcastIsOk(): void
@@ -127,7 +127,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('A podcast whose feed is not being rebuilt is a Warning')]
     public function testUnbuildablePodcastIsAWarning(): void
@@ -146,7 +146,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('A podcast that still builds without settings directories need is a Notice')]
     public function testIncompletePodcastIsANotice(): void
@@ -165,7 +165,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('A blank website still builds, so on its own it is a Notice')]
     public function testBlankWebsiteIsANotice(): void
@@ -183,7 +183,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('A feed that is not being rebuilt outranks one that is only incomplete')]
     public function testWarningOutranksNotice(): void
@@ -201,7 +201,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('An unpublished podcast is in no feed, so it is not a finding')]
     public function testUnpublishedPodcastIsIgnored(): void
@@ -219,7 +219,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('The finding names each podcast and what it is missing')]
     public function testDetailNamesThePodcastAndTheSetting(): void
@@ -248,7 +248,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  int  The new podcast id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function insertPodcast(array $overrides): int
     {
@@ -280,7 +280,7 @@ class PodcastSettingsCheckTest extends IntegrationTestCase
      *
      * @return  HealthResult  Its result
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function check(): HealthResult
     {

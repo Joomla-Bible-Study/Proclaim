@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * Each test builds a real feed with makePodcasts(). writeFile() is replaced so
  * the feed is captured rather than written under the site root.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 #[CoversClass(Cwmpodcast::class)]
 class CwmpodcastEpisodeDateTest extends IntegrationTestCase
@@ -37,7 +37,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseDriver|null
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private ?DatabaseDriver $db = null;
 
@@ -45,7 +45,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      * Factory's language before the test replaced it to silence date warnings.
      *
      * @var    mixed
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -54,7 +54,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function setUp(): void
     {
@@ -75,7 +75,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function tearDown(): void
     {
@@ -97,7 +97,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      * @throws  \DateInvalidTimeZoneException
      * @throws  \ReflectionException
@@ -115,7 +115,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      * @throws  \DateInvalidTimeZoneException
      * @throws  \ReflectionException
@@ -134,7 +134,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('With no date on the media file or its message, the episode is dated when the feed is written')]
     public function testUndatedMessageIsDatedWhenTheFeedIsWritten(): void
@@ -161,7 +161,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      * @throws  \DateInvalidTimeZoneException
      * @throws  \ReflectionException
@@ -190,7 +190,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  string  The feed's XML
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function buildFeed(?string $createdate, ?string $studydate): string
     {
@@ -209,7 +209,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  string  The feed's XML
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function captureFeed(string $filename): string
     {
@@ -218,7 +218,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
              * Feed XML by file name, as writeFile() received it.
              *
              * @var    array<string, string>
-             * @since  __DEPLOY_VERSION__
+             * @since  10.7.9
              */
             public array $written = [];
 
@@ -230,7 +230,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
              *
              * @return  bool  Always true
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function writeFile(string $file, string $filecontent): bool
             {
@@ -254,7 +254,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  string[]  Every item's pubDate, in feed order
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function pubDates(string $feed): array
     {
@@ -270,7 +270,7 @@ class CwmpodcastEpisodeDateTest extends IntegrationTestCase
      *
      * @return  string  The date as the feed writes it
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      * @throws  \DateInvalidTimeZoneException
      * @throws  \ReflectionException

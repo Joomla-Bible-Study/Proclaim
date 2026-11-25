@@ -8,7 +8,7 @@
  * A listener of the same shape stands in for it here.
  *
  * @package  Proclaim.Tests
- * @since    __DEPLOY_VERSION__
+ * @since    10.7.9
  */
 
 require('./setup');

@@ -137,7 +137,7 @@ final class CwmlogHelper
      * client cannot mark its own refusal as already recorded.
      *
      * @var    \WeakMap<\Throwable, true>|null
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private static ?\WeakMap $recordedRefusals = null;
 
@@ -308,7 +308,7 @@ final class CwmlogHelper
      *
      * @return  bool  True when this call wrote the entry, false when the refusal was already recorded
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public static function apiRefusal(
         \Throwable $refusal,
@@ -341,7 +341,7 @@ final class CwmlogHelper
      *
      * @return  string  The line, naming who was refused what, and from where
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public static function refusalMessage(string $username, int $userId, string $verb, string $target, string $address): string
     {
@@ -362,7 +362,7 @@ final class CwmlogHelper
      *
      * @return  bool  True when apiRefusal() has already recorded it
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public static function refusalRecorded(\Throwable $refusal): bool
     {

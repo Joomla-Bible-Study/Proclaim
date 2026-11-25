@@ -109,7 +109,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      * @return  array<string, array{0: string, 1: string}>  Each distinct reference's fully qualified class, then its
      *                                                      symbol, keyed by the two joined with ::
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function referencesIn(array $files): array
     {
@@ -274,7 +274,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Random\RandomException
      */
     #[TestDox('each file is read against its own imports only')]

@@ -35,7 +35,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * doubles for its model factory and application, so the model lookup runs
  * through the controller's own getModel().
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 class ApiDeleteOutcomeTest extends ProclaimTestCase
 {
@@ -44,7 +44,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      * trashed.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const string NOT_TRASHED = 'Resource not in state that can be deleted, must be trashed before it can be deleted';
 
@@ -56,7 +56,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  object  The table double
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function table(bool|\Throwable $loads, int $published = 1): object
     {
@@ -65,7 +65,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              * The record's published state, as a loaded table holds it.
              *
              * @var    int
-             * @since  __DEPLOY_VERSION__
+             * @since  10.7.9
              */
             public int $published;
 
@@ -75,7 +75,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              * @param   bool|\Throwable  $loads      What load() returns, or throws.
              * @param   int              $published  The record's published state.
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function __construct(private readonly bool|\Throwable $loads, int $published)
             {
@@ -87,7 +87,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  bool  The fixed answer
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              * @throws  \Throwable
              */
             public function load(): bool
@@ -108,7 +108,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  object  The model double
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function model(object $table): object
     {
@@ -118,7 +118,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @param   object  $table  The table double.
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function __construct(private readonly object $table)
             {
@@ -129,7 +129,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  void
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function setState(): void
             {
@@ -140,7 +140,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  object  The table double
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function getTable(): object
             {
@@ -154,7 +154,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  object  The application double
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function app(): object
     {
@@ -163,7 +163,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              * The headers set, by name.
              *
              * @var    array<string, mixed>
-             * @since  __DEPLOY_VERSION__
+             * @since  10.7.9
              */
             public array $headers = [];
 
@@ -171,7 +171,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              * Whether the headers were sent.
              *
              * @var    bool
-             * @since  __DEPLOY_VERSION__
+             * @since  10.7.9
              */
             public bool $sent = false;
 
@@ -180,7 +180,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  string  Always api
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function getName(): string
             {
@@ -194,7 +194,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  bool  True for api
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function isClient(string $identifier): bool
             {
@@ -209,7 +209,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  static  This double
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function setHeader(string $name, mixed $value): static
             {
@@ -223,7 +223,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  static  This double
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function sendHeaders(): static
             {
@@ -237,7 +237,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  void
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              * @throws  \LogicException
              */
             public function close(): void
@@ -250,7 +250,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  array  No messages
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function getMessageQueue(): array
             {
@@ -269,7 +269,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  MediaController  The controller
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     private static function controller(?object $model, ?object $app = null, string $logType = 'mediafile'): MediaController
@@ -282,7 +282,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @param   ?object  $model  The model, or null for none.
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function __construct(private readonly ?object $model)
             {
@@ -293,7 +293,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  ?object  The model, or null for none
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function createModel(): ?object
             {
@@ -317,7 +317,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  mixed  What the method returns
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     private static function call(AbstractWritableController $controller, string $method, mixed ...$args): mixed
@@ -333,7 +333,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  array{0: object, 1: array}  The application double, and the decoded response body
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      * @throws  \JsonException
      */
@@ -368,7 +368,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     public function testARecordStillThereIsReturned(): void
@@ -383,7 +383,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     public function testARecordThatIsGoneIsNotReturned(): void
@@ -397,7 +397,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     public function testARecordThatCannotBeLookedUpCountsAsGone(): void
@@ -419,7 +419,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      * @throws  \JsonException
      */
@@ -442,7 +442,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      * @throws  \JsonException
      */
@@ -459,7 +459,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testDeleteLogsOnlyOnceTheRowIsGone(): void
     {
@@ -486,7 +486,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: class-string}>  Each controller's class, keyed by resource name
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public static function writableControllerProvider(): array
     {
@@ -512,7 +512,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     #[DataProvider('writableControllerProvider')]
@@ -525,7 +525,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              * The model names asked for, in order.
              *
              * @var    string[]
-             * @since  __DEPLOY_VERSION__
+             * @since  10.7.9
              */
             public array $requested = [];
 
@@ -536,7 +536,7 @@ class ApiDeleteOutcomeTest extends ProclaimTestCase
              *
              * @return  null  No model
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function createModel(string $name): null
             {

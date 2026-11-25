@@ -268,7 +268,7 @@ class CwmbackupTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function withStudyRowsAbove(int $minimum, callable $test): void
     {

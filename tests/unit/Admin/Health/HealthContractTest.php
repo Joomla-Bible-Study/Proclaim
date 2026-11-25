@@ -396,7 +396,7 @@ class HealthContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('A check\'s detail is escaped wherever it is shown')]
     public function testDetailIsEscapedWhereverItIsShown(): void

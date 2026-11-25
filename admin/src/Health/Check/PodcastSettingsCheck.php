@@ -34,14 +34,14 @@ use Joomla\Database\DatabaseInterface;
  * scheduled task records only in its log; the others still build, with tags
  * left empty that podcast directories reject.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 final class PodcastSettingsCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     public function getId(): string
     {
@@ -51,7 +51,7 @@ final class PodcastSettingsCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     public function getGroup(): HealthGroup
     {
@@ -61,7 +61,7 @@ final class PodcastSettingsCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     public function getTitle(): string
     {
@@ -71,7 +71,7 @@ final class PodcastSettingsCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     public function isPassive(): bool
     {
@@ -81,7 +81,7 @@ final class PodcastSettingsCheck implements HealthCheckInterface
     /**
      * @inheritDoc
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     public function run(): HealthResult
     {
