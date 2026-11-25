@@ -42,12 +42,13 @@ class PlaceholderParityTest extends TestCase
     private const PLACEHOLDER = '/%%|%(?:\d+\$)?[-+0#]*[\d.]*[bcdeEfFgGosuxX]/';
 
     /**
-     * Matches an opening or closing HTML tag, capturing its name.
+     * Matches an opening or closing HTML tag, capturing its name, digits
+     * included, so h1 and h2 stay apart.
      *
      * @var    string
      * @since  10.6.0
      */
-    private const HTML_TAG = '/<\/?([a-z]+)[^>]*>/i';
+    private const HTML_TAG = '/<\/?([a-z][a-z0-9]*)[^>]*>/i';
 
     /**
      * Trees that hold shipped translations. Submodules keep their own suites.
@@ -140,7 +141,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @param   string  $value  A raw language string
      *
-     * @return  string[]  The lowercased name of every opening and closing tag, cut at its first non-letter, sorted
+     * @return  string[]  The lowercased name of every opening and closing tag, digits included, sorted
      *
      * @since 10.6.0
      */
@@ -188,6 +189,21 @@ class PlaceholderParityTest extends TestCase
             $pairs,
             'The unprefixed naming case dropped out of discovery.'
         );
+    }
+
+    /**
+     * A tag name keeps its digits, so a translation that changes a heading's
+     * level no longer matches its en-GB original.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('A tag name keeps its digits, so a changed heading level is caught')]
+    public function testTagNamesKeepTheirDigits(): void
+    {
+        $this->assertSame(['br', 'h2', 'h2'], self::tags('<h2>Title</h2><br/>'));
+        $this->assertNotSame(self::tags('<h2>Title</h2>'), self::tags('<h3>Title</h3>'));
     }
 
     /**
