@@ -30,7 +30,7 @@ trait PodcastFeedFixtures
      *
      * @param   string  $title  The podcast's title
      *
-     * @return  array{id: int, filename: string}
+     * @return  array{id: int, filename: string}  The new podcast's id and its feed filename
      *
      * @since   __DEPLOY_VERSION__
      */

@@ -99,7 +99,7 @@ class WebservicesPluginTest extends ProclaimTestCase
     /**
      * Resources the API exposes, and whether each accepts writes.
      *
-     * @return  array<string, array{0: string, 1: bool}>
+     * @return  array<string, array{0: string, 1: bool}>  Each resource's route name and whether it accepts writes
      *
      * @since   10.3.4
      */

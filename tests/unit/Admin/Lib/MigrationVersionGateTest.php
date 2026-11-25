@@ -53,7 +53,7 @@ class MigrationVersionGateTest extends ProclaimTestCase
      * @param   string  $from   Version being upgraded from ('' when unknown)
      * @param   string  $since  Release the migration shipped in
      *
-     * @return  bool
+     * @return  bool  Whether the migration runs, which it does when $from is empty or predates $since
      *
      * @since   10.5.9
      */

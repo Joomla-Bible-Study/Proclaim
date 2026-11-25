@@ -87,7 +87,7 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      * @param   string  $title      Series title
      * @param   int     $published  Published state
      *
-     * @return  int
+     * @return  int  The new series id
      *
      * @since   10.5.6
      */
@@ -150,7 +150,7 @@ class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
      *
      * @param   string  $title  Podcast title
      *
-     * @return  int
+     * @return  int  The new podcast id
      *
      * @since   10.5.2
      */

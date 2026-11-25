@@ -107,7 +107,7 @@ class CwmparamsResilienceTest extends IntegrationTestCase
      * which is why the original "Registry tolerates malformed params" comment
      * looked true and was not.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each case's broken params text, keyed by how it breaks
      *
      * @since   10.5.6
      */

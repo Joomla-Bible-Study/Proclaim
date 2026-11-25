@@ -72,7 +72,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      * Get a DatabaseInterface for tables: real driver from the CMS container
      * when PROCLAIM_TEST_DB_AVAILABLE, otherwise a typed stub.
      *
-     * @return  \Joomla\Database\DatabaseInterface
+     * @return  \Joomla\Database\DatabaseInterface  The container's driver, or a stub one without a test database
      *
      * @since   10.3.2
      */
@@ -112,7 +112,8 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      * Get a DispatcherInterface for tables: real CMS dispatcher when
      * available, otherwise a stub that returns an empty Event.
      *
-     * @return  \Joomla\Event\DispatcherInterface
+     * @return  \Joomla\Event\DispatcherInterface  The container's dispatcher, or a stub when there is no test database
+     *                                             or it has none
      *
      * @since   10.3.2
      */
@@ -144,7 +145,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      *
      * @param   string  $label  A readable part, to tell rows apart
      *
-     * @return  string
+     * @return  string  The label, prefixed with zz- and suffixed with a unique id
      *
      * @since   10.7.4
      */
@@ -246,7 +247,7 @@ abstract class IntegrationTestCase extends ProclaimTestCase
      *
      * @param   \Joomla\CMS\Mail\Mail  $mail  The mailer to hand out
      *
-     * @return  \Joomla\CMS\Mail\MailerFactoryInterface
+     * @return  \Joomla\CMS\Mail\MailerFactoryInterface  A stub whose createMailer() returns that mailer
      *
      * @since   10.7.4
      */

@@ -143,7 +143,7 @@ class CwmassetsSectionTest extends IntegrationTestCase
     /**
      * Section assets that already exist, so tearDown leaves them alone.
      *
-     * @return  array<string, int>
+     * @return  array<string, int>  The asset id of each declared section that has one, keyed by section
      *
      * @since   10.5.8
      */
@@ -429,7 +429,7 @@ class CwmassetsSectionTest extends IntegrationTestCase
     /**
      * How many `com_proclaim.<section>` assets exist right now.
      *
-     * @return  int
+     * @return  int  The number of asset rows named for a declared section
      *
      * @since   10.5.8
      */

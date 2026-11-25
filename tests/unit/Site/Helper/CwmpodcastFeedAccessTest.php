@@ -31,7 +31,7 @@ class CwmpodcastFeedAccessTest extends TestCase
     /**
      * The source of Cwmpodcast::getEpisodes().
      *
-     * @return  string
+     * @return  string  The method's lines, from its declaration through its closing brace
      *
      * @since   10.5.8
      */

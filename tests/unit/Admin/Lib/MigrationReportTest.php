@@ -61,7 +61,7 @@ class MigrationReportTest extends ProclaimTestCase
     /**
      * Just the report builder, so tag assertions do not pick up the whole file.
      *
-     * @return  string
+     * @return  string  The source of reportMigrations(), from its signature to just before its closing brace
      *
      * @since   10.5.9
      */

@@ -187,7 +187,7 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
      * The production XML uses the switcher layout; the plain radio layout
      * exercises the same gate without the switcher's web-asset needs.
      *
-     * @return  string
+     * @return  string  The radio markup when the server is connected, else a warning and a hidden external input.
      *
      * @since   10.4.1
      * @throws  \Exception
@@ -214,7 +214,7 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
     /**
      * The field under test.
      *
-     * @return  YoutubeStreamModeField
+     * @return  YoutubeStreamModeField  A new field, not yet set up.
      *
      * @since   10.4.1
      */

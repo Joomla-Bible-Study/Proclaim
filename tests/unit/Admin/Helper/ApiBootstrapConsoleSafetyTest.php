@@ -40,7 +40,7 @@ class ApiBootstrapConsoleSafetyTest extends TestCase
      *
      * @param   string  $line  A line of source.
      *
-     * @return  bool
+     * @return  bool  Whether the line calls getDocument(), has no leading space, and is not a // or * comment
      *
      * @since   10.5.8
      */

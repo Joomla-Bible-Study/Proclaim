@@ -44,7 +44,7 @@ class CwmbibleVersionFallbackTest extends ProclaimTestCase
      * @param   bool                   $servableOnly    Restrict to servable
      * @param   string[]               $enabledSources  Enabled providers
      *
-     * @return  array<int, array{value: string, text: string}>
+     * @return  array<int, array{value: string, text: string}>  Each version's abbreviation and label, English first
      *
      * @since   10.5.6
      * @throws  \ReflectionException

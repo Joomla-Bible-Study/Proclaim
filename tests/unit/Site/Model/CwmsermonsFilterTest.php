@@ -60,7 +60,8 @@ class CwmsermonsFilterTest extends ProclaimTestCase
     /**
      * Create a PHPUnit stub of QueryInterface that tracks where() calls.
      *
-     * @return  QueryInterface&\PHPUnit\Framework\MockObject\Stub
+     * @return  QueryInterface&\PHPUnit\Framework\MockObject\Stub  A stub that returns itself from where(), whereIn(),
+     *                                                             select() and from(); the first two log to whereCalls
      *
      * @since   10.3.0
      */

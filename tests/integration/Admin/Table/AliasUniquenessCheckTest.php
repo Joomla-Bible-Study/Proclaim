@@ -215,7 +215,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
      * @param   Table                    $table  The table to check
      * @param   CMSApplicationInterface  $app    The application to check it under
      *
-     * @return  string
+     * @return  string  The message of the UnexpectedValueException check() throws
      *
      * @since   10.7.4
      */
@@ -237,7 +237,7 @@ class AliasUniquenessCheckTest extends IntegrationTestCase
      * @param   string  $client     The client it reports being
      * @param   bool    $superUser  Whether its user passes every permission check
      *
-     * @return  CMSApplicationInterface
+     * @return  CMSApplicationInterface  A stub for that client alone, whose user passes every permission check or none
      *
      * @since   10.7.4
      */

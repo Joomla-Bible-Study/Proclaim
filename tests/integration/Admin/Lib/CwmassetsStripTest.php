@@ -88,7 +88,7 @@ class CwmassetsStripTest extends IntegrationTestCase
     /**
      * The highest right-hand bound in the tree.
      *
-     * @return  int
+     * @return  int  The largest rgt in the assets table, or 0 when it is empty
      *
      * @since   10.5.8
      */

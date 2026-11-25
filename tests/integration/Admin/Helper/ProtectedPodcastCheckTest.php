@@ -89,7 +89,7 @@ class ProtectedPodcastCheckTest extends IntegrationTestCase
      * @param   string  $filename   Site-relative filename.
      * @param   string  $podcastId  Raw podcast_id column value.
      *
-     * @return  int
+     * @return  int  The new media row's id
      *
      * @since   10.7.0
      */

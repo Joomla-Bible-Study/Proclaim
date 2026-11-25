@@ -49,7 +49,8 @@ class PluralKeyContractTest extends TestCase
     /**
      * Every `Text::plural('KEY', …)` in the codebase, as [file, line, key].
      *
-     * @return  array<int, array{0: string, 1: int, 2: string}>
+     * @return  array<int, array{0: string, 1: int, 2: string}>  One entry per line opening a literal-key call: its
+     *                                                           repository-relative file, line number and key
      *
      * @since 10.6.0
      */

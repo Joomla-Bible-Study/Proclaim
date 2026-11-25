@@ -30,7 +30,7 @@ class ProclaimScriptCacheTest extends ProclaimTestCase
     /**
      * The install script's source.
      *
-     * @return  string
+     * @return  string  The full text of proclaim.script.php
      *
      * @since   10.5.1
      */

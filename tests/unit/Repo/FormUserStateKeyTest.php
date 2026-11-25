@@ -43,7 +43,7 @@ class FormUserStateKeyTest extends ProclaimTestCase
      *
      * @param   string  $class  Fully qualified controller class name.
      *
-     * @return  string
+     * @return  string  The context, such as cwmtopic for CwmtopicController; empty when no Controller segment matches
      *
      * @since 10.7.1
      */

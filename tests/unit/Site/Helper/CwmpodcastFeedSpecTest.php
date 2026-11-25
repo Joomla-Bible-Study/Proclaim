@@ -74,7 +74,9 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
      * which is the only thing that pads on write — so single-digit and '0'
      * values reach the feed exactly as typed.
      *
-     * @return  array<string, array{0: mixed, 1: mixed, 2: mixed, 3: string}>
+     * @return  array<string, array{0: mixed, 1: mixed, 2: mixed, 3: string}>  The stored hours, minutes and seconds,
+     *                                                                         then the itunes:duration they produce,
+     *                                                                         or empty when all three are zero
      *
      * @since   10.5.0
      */
@@ -151,7 +153,7 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
     /**
      * Values a hand-typed duration can hold, and their normalized form.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  What the admin typed, then what must be stored
      *
      * @since   10.5.0
      */
@@ -253,7 +255,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
     /**
      * File paths, the stored mime_type, and the type that must be declared.
      *
-     * @return  array<string, array{0: string, 1: ?string, 2: string}>
+     * @return  array<string, array{0: string, 1: ?string, 2: string}>  The media path or URL, the stored mime_type or
+     *                                                                  null, then the type to declare
      *
      * @since   10.5.0
      */
@@ -480,7 +483,8 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
     /**
      * Filenames, stored types, and whether the validator should warn.
      *
-     * @return  array<string, array{0: string, 1: string, 2: bool}>
+     * @return  array<string, array{0: string, 1: string, 2: bool}>  The stored filename and mime_type, then whether
+     *                                                               the validator should warn
      *
      * @since   10.5.0
      */

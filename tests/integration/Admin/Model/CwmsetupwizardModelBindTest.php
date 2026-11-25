@@ -86,7 +86,7 @@ class CwmsetupwizardModelBindTest extends IntegrationTestCase
      * @param   string  $method  Private method name.
      * @param   mixed   ...$args Arguments.
      *
-     * @return  mixed
+     * @return  mixed  Whatever the model method returns
      *
      * @since 10.7.0
      */

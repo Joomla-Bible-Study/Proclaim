@@ -54,7 +54,7 @@ method gets one, including `setUp()`, `tearDown()`, data providers, test
 methods and the members of anonymous test doubles:
 
 - a description first
-- `@param` entries aligned, one per parameter
+- `@param` entries aligned, one per parameter, each with a description
 - a blank line, then `@return`, every time; a bare `@return  void` is enough,
   and any other type takes a description
 - a blank line, then `@since`, then any `@throws`

@@ -30,7 +30,7 @@ class CwmmediafileRedetectTest extends ProclaimTestCase
     /**
      * Old params, new params, and whether a re-detect should be triggered.
      *
-     * @return  array<string, array{0: array, 1: array, 2: bool}>
+     * @return  array<string, array{0: array, 1: array, 2: bool}>  Stored and saved params, and whether to re-detect
      *
      * @since   10.5.0
      */

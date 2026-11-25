@@ -83,7 +83,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      * Columns of every table in the install schema, keyed by table name
      * without the `#__` prefix.
      *
-     * @return  array<string, string[]>
+     * @return  array<string, string[]>  Each table's column names, keyed by table name without the prefix
      *
      * @since   10.5.8
      */
@@ -123,7 +123,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
     /**
      * Every JsonapiView on disk, by view directory name.
      *
-     * @return  array<string, array{0: string, 1: class-string}>
+     * @return  array<string, array{0: string, 1: class-string}>  Each view's directory name and its JsonapiView class
      *
      * @since   10.5.6
      */
@@ -144,7 +144,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      *
      * @param   class-string  $viewClass  View to read
      *
-     * @return  array{item: string[], list: string[]}
+     * @return  array{item: string[], list: string[]}  The field names the view declares for each route, keyed by route
      *
      * @since   10.5.8
      */
@@ -221,7 +221,7 @@ class JsonapiViewFieldsTest extends ProclaimTestCase
      *
      * @param   string  $view  View directory name
      *
-     * @return  string[]|null
+     * @return  string[]|null  The controller's LIST_SELECT columns, or null when the class or the constant is missing
      *
      * @since   10.5.8
      */

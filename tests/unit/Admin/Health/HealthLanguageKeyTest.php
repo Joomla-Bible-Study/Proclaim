@@ -73,7 +73,7 @@ class HealthLanguageKeyTest extends TestCase
     /**
      * The component's own en-GB strings.
      *
-     * @return  array<string, string>
+     * @return  array<string, string>  Each string in the admin en-GB.com_proclaim.ini, keyed by its language key
      *
      * @since   10.6.0
      */

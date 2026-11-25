@@ -296,12 +296,12 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      * Build a fake playlist-capable addon that serves a fixed page of videos.
      *
      * The CWMAddon constructor (which loads an addon XML file) is deliberately
-     * overridden to a no-op so the double needs no config on disk, and ID
+     * overridden to only store the page of videos, so the double needs no config on disk, and ID
      * extraction delegates to the real YouTube extractor.
      *
      * @param   array<int,array{videoId:string,title:string}>  $videos  Page to serve.
      *
-     * @return  CWMAddon
+     * @return  CWMAddon  An addon double that serves these videos as one page.
      *
      * @since   10.5.7
      */
@@ -571,7 +571,7 @@ class CwmplaylistUpsertTest extends IntegrationTestCase
      *
      * @param   int  $playlistId  Playlist ID.
      *
-     * @return  object[]
+     * @return  object[]  The playlist's junction rows, lowest position first.
      *
      * @since   10.5.7
      */
