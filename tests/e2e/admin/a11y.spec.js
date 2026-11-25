@@ -33,13 +33,14 @@ const PROCLAIM_CONTENT = 'section#content';
  * the rules, so `aria-required-attr`, `frame-title`, `target-size` and
  * `aria-input-field-name` still apply to Proclaim's own markup on every page.
  *
- * The subform tooltip icon is deliberately NOT excluded. Joomla core emits it
- * with aria-hidden="true" and tabindex="0" at once, but the decision to render
- * it is ours — message.xml selects the repeatable-table layout and
+ * The subform tooltip icon is deliberately NOT excluded. Joomla core renders it
+ * invalid, as aria-hidden="true" with tabindex="0" on 5.4 and 6.1, and named
+ * with aria-labelledby but given no role on 6.2. The decision to render it is
+ * ours, though: message.xml selects the repeatable-table layout, and
  * scripture_row.xml gives bible_version a description.
  * com_proclaim.subform-tooltip-a11y repairs it at runtime, and the sermon form
- * scan is what proves the repair still works (upstream: joomla-cms#48151,
- * tracked in #1341).
+ * scan is what proves the repair still works on each version CI runs
+ * (upstream: joomla/joomla-cms#48151 and joomla/joomla-cms#48499).
  */
 const THIRD_PARTY = ['.tox-tinymce', '.cm-editor', '.choices'];
 

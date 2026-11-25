@@ -77,6 +77,11 @@ jobs:
     # release gate every servertype test failed on 5.4.7 and passed on 6.1.3
     # against identical code, and there was no CI signal either way.
     #
+    # Joomla 6 has two legs because core's markup changes within a major too.
+    # 6.2 renders the subform column-header tooltip icon differently from 6.1
+    # and 5.4, and the accessibility scans, which run on the J6 legs only, have
+    # to see both forms. The 6.1.3 leg scans the form 5.4 still renders.
+    #
     # fail-fast is off so a broken J6 leg still reports the J5 result. A leg
     # that goes red tells you which Joomla it was from its own name.
     strategy:
@@ -90,10 +95,14 @@ jobs:
             # config's own decision -- Proclaim renders the same markup on
             # both, so scanning twice costs a second full pass and reports
             # every violation twice -- and matrixing this way honours it
-            # rather than overriding it here. The scans run on the J6 leg.
+            # rather than overriding it here. The scans run on the J6 legs.
             projects: '--project=admin-j5 --project=site-j5'
           - label: 'Package install + E2E (Joomla 6)'
             joomla: '6.1.3'
+            props: j6dev
+            projects: '--project=admin-j6 --project=site-j6'
+          - label: 'Package install + E2E (Joomla 6.2)'
+            joomla: '6.2.1'
             props: j6dev
             projects: '--project=admin-j6 --project=site-j6'
 
@@ -305,7 +314,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report-${{ matrix.props }}
+          name: playwright-report-${{ matrix.props }}-${{ matrix.joomla }}
           path: |
             build/reports/e2e
             test-results
@@ -316,7 +325,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: php-server-log-${{ matrix.props }}
+          name: php-server-log-${{ matrix.props }}-${{ matrix.joomla }}
           path: /tmp/php-server.log
           retention-days: 7
 
@@ -336,7 +345,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: proclaim-log-${{ matrix.props }}
+          name: proclaim-log-${{ matrix.props }}-${{ matrix.joomla }}
           path: ${{ env.SITE_DIR }}/administrator/logs/com_proclaim.*.php
           retention-days: 7
           if-no-files-found: ignore
