@@ -11,9 +11,10 @@
  *          enabled #__extensions row.
  *   #1310  API controllers never deployed to the api application — asserted
  *          here as the controller file existing on disk under api/.
- *   #1331  the plugin's parameters must be seeded at install so the API is
- *          reachable (authenticated) out of the box — asserted here as
- *          public_reads present in the row's params.
+ *   #1331  the API must be reachable (authenticated) out of the box —
+ *          asserted here as that row being enabled. The plugin has no
+ *          parameters to seed since its one setting, public reads, was
+ *          removed: every route requires an API token.
  *
  * Runs as part of `composer test:install` against the site the installer
  * just built — not a dev site assembled by reset-testsite file copying,
@@ -102,16 +103,6 @@ foreach ($installs as $install) {
         $failures++;
     } else {
         echo "  OK   plg_webservices_proclaim installed and enabled\n";
-
-        $params = json_decode((string) $row['params'], true);
-
-        if (!\is_array($params) || !\array_key_exists('public_reads', $params)) {
-            fwrite(STDERR, "  FAIL plugin params not seeded at install (no public_reads) —\n");
-            fwrite(STDERR, "       defaults must be stored, not implied (#1331). params: {$row['params']}\n");
-            $failures++;
-        } else {
-            echo "  OK   plugin params seeded (public_reads={$params['public_reads']})\n";
-        }
     }
 
 }
