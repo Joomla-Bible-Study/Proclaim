@@ -92,6 +92,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \ReflectionException
      */
     #[TestDox('A page reloaded because the poll saw the stream go live renders it live, so the poll does not reload it again')]
     public function testPageRendersThePolledStatus(): void
@@ -116,6 +117,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
      * @return  void
      *
      * @since   10.7.4
+     * @throws  \ReflectionException
      */
     #[TestDox('A status the poll only guessed because the quota ran out does not change the page')]
     public function testQuotaGuessDoesNotChangeThePage(): void
@@ -207,10 +209,12 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
 
     /**
      * The video the module renders, for a module with the default settings.
+     * The test fails here, with a message, if getVideo() finds none.
      *
      * @return  array  The video's data as getVideo() returns it, such as its videoId, isLive and isUpcoming
      *
      * @since   10.7.4
+     * @throws  \ReflectionException
      */
     private function render(): array
     {
@@ -218,7 +222,14 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
         // is final, so it cannot be stubbed
         $app = (new \ReflectionClass(SiteApplication::class))->newInstanceWithoutConstructor();
 
-        return (new ProclaimYoutubeHelper())->getVideo(new Registry(['server_id' => self::SERVER_ID]), $app);
+        $video = (new ProclaimYoutubeHelper())->getVideo(new Registry(['server_id' => self::SERVER_ID]), $app);
+
+        $this->assertNotNull(
+            $video,
+            'getVideo() found no video for the module, so the cache this test seeds no longer matches what it reads.'
+        );
+
+        return $video;
     }
 
     /**

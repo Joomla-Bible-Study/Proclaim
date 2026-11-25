@@ -11,7 +11,6 @@
 
 namespace CWM\Component\Proclaim\Tests;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -60,46 +59,6 @@ abstract class ProclaimTestCase extends TestCase
         $_SERVER = $this->serverBackup;
 
         parent::tearDown();
-    }
-
-    /**
-     * Create a bare stdClass mock to stand in for a database driver
-     *
-     * @return  MockObject  A bare stdClass mock, with no driver methods to stub
-     *
-     * @since   10.1.0
-     */
-    protected function createMockDatabase(): MockObject
-    {
-        $db = $this->createMock(\stdClass::class);
-
-        return $db;
-    }
-
-    /**
-     * Create a mock Registry object
-     *
-     * @param array $data Initial data for the registry
-     *
-     * @return  MockObject  A stdClass mock whose get() and toArray() serve $data; set() and the loaders do nothing
-     *
-     * @since   10.1.0
-     */
-    protected function createMockRegistry(array $data = []): MockObject
-    {
-        $registry = $this->getMockBuilder(\stdClass::class)
-            ->addMethods(['get', 'set', 'loadString', 'loadArray', 'toArray'])
-            ->getMock();
-
-        $registry->method('get')
-            ->willReturnCallback(function ($key, $default = null) use ($data) {
-                return $data[$key] ?? $default;
-            });
-
-        $registry->method('toArray')
-            ->willReturn($data);
-
-        return $registry;
     }
 
     /**
