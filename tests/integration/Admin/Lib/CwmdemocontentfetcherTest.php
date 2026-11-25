@@ -283,6 +283,19 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
     }
 
     /**
+     * The folder the fetcher works in, asked of the fetcher itself: the
+     * application's tmp_path, or the system temp directory when none is set.
+     *
+     * @return  string  The folder, with no trailing slash
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function fetcherTmpBase(): string
+    {
+        return $this->invokeProtectedMethod(new Cwmdemocontentfetcher(), 'tmpBase');
+    }
+
+    /**
      * With no release passed in and none pinned in the package, no release is
      * available.
      *
@@ -420,8 +433,9 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
     }
 
     /**
-     * A zip without a manifest.json fails as extraction_failed, and the system
-     * temp directory holds the same proclaim-demo-* entries afterward as before.
+     * A zip without a manifest.json fails as extraction_failed, and the folder
+     * the fetcher works in holds the same proclaim-demo-* entries afterward as
+     * before.
      *
      * @return  void
      *
@@ -434,13 +448,14 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
         $release  = ['url' => 'https://example.invalid/x.zip', 'sha256' => hash('sha256', $zipBytes)];
         $fetcher  = new Cwmdemocontentfetcher($release, null, $this->fakeHttp($this->responseWithBody($zipBytes)));
 
-        $before = glob(sys_get_temp_dir() . '/proclaim-demo-*');
+        $tmpBase = $this->fetcherTmpBase();
+        $before  = glob($tmpBase . '/proclaim-demo-*');
 
         $result = $fetcher->fetchAndImport($this->tag());
 
         $this->assertSame(['status' => 'failed', 'reason' => 'extraction_failed'], $result);
 
-        $after = glob(sys_get_temp_dir() . '/proclaim-demo-*');
+        $after = glob($tmpBase . '/proclaim-demo-*');
         $this->assertSame($before, $after, 'Nothing should be left behind under tmp after a failed extraction.');
     }
 
@@ -484,11 +499,11 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
 
     /**
      * A zip with a path-traversal entry and a symlink entry beside a manifest
-     * and an image still imports. The manifest and the images folder reach the
-     * importer, and the traversal entry's file is neither at the top of the
-     * extraction directory nor in the system temp directory. The symlink sits
-     * inside images/, below the level the importer double lists, so nothing
-     * here checks it.
+     * and an image still imports. The manifest, the images folder and the image
+     * reach the importer. The symlink entry doesn't, as a link or as a file.
+     * The traversal entry's file is neither at the top of the extraction
+     * directory nor in that directory's parent, the folder the fetcher works
+     * in.
      *
      * @return  void
      *
@@ -497,7 +512,7 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
      */
     public function testFetchAndImportDropsTraversalAndSymlinkEntriesButImportsTheRest(): void
     {
-        $escapeTarget = sys_get_temp_dir() . '/cwm2177-should-never-exist.txt';
+        $escapeTarget = $this->fetcherTmpBase() . '/cwm2177-should-never-exist.txt';
         @unlink($escapeTarget);
 
         $entries = [
@@ -521,8 +536,19 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
             public array $seenEntries = [];
 
             /**
-             * Record the top level of the directory it is handed, and import
-             * nothing.
+             * The names scandir() listed in the images folder of the directory
+             * import() was handed. scandir() lists a symlink, even a dangling
+             * one, as well as a file.
+             *
+             * @var    string[]
+             *
+             * @since  __DEPLOY_VERSION__
+             */
+            public array $seenImages = [];
+
+            /**
+             * Record the top level of the directory it is handed and of its
+             * images folder, and import nothing.
              *
              * @param   string  $tag        The import tag.
              * @param   array   $payload    The decoded manifest.json.
@@ -536,6 +562,7 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
             public function import(string $tag, array $payload, string $sourceDir): array
             {
                 $this->seenEntries = scandir($sourceDir) ?: [];
+                $this->seenImages  = scandir($sourceDir . '/images') ?: [];
 
                 return ['teachers' => 0, 'series' => 0, 'locations' => 0, 'messages' => 0, 'mediafiles' => 0, 'files' => 0];
             }
@@ -549,6 +576,12 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
         $this->assertContains('manifest.json', $importer->seenEntries);
         $this->assertContains('images', $importer->seenEntries);
         $this->assertNotContains('cwm2177-should-never-exist.txt', $importer->seenEntries);
+        $this->assertContains('logo.png', $importer->seenImages);
+        $this->assertNotContains(
+            'link.png',
+            $importer->seenImages,
+            'A symlink entry must never be extracted, as a link or as a file holding the link text.'
+        );
         $this->assertFileDoesNotExist($escapeTarget, 'A traversal entry must never escape the extraction directory.');
     }
 
@@ -599,8 +632,8 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
 
     /**
      * An importer that throws fails the import as unexpected_error, and the
-     * system temp directory holds the same proclaim-demo-* entries afterward as
-     * before.
+     * folder the fetcher works in holds the same proclaim-demo-* entries
+     * afterward as before.
      *
      * @return  void
      *
@@ -632,7 +665,8 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
             }
         };
 
-        $before = glob(sys_get_temp_dir() . '/proclaim-demo-*');
+        $tmpBase = $this->fetcherTmpBase();
+        $before  = glob($tmpBase . '/proclaim-demo-*');
 
         $fetcher = new Cwmdemocontentfetcher($release, $importer, $this->fakeHttp($this->responseWithBody($zipBytes)));
         $result  = $fetcher->fetchAndImport($this->tag());
@@ -640,7 +674,7 @@ class CwmdemocontentfetcherTest extends IntegrationTestCase
         $this->assertSame('failed', $result['status']);
         $this->assertSame('unexpected_error', $result['reason']);
 
-        $after = glob(sys_get_temp_dir() . '/proclaim-demo-*');
+        $after = glob($tmpBase . '/proclaim-demo-*');
         $this->assertSame($before, $after, 'The finally block must clean up even when the importer itself throws.');
     }
 }
