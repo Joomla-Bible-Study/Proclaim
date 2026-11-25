@@ -38,10 +38,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 class ListSortFieldContractTest extends ProclaimTestCase
 {
     /**
-     * Every admin list template that renders sortable column headers, paired
+     * Every admin list template whose sort headers sortFields() can read, paired
      * with the model whose whitelist has to accept them.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  A sortable list template's absolute path, then its model's
      *
      * @since   10.5.6
      */
@@ -66,11 +66,13 @@ class ListSortFieldContractTest extends ProclaimTestCase
     }
 
     /**
-     * Extract the ordering column each searchtools.sort call submits.
+     * Extract the ordering column each searchtools.sort call submits, where the
+     * call puts each argument on its own line and its label is a string literal.
      *
      * @param   string  $template  Absolute path to the template.
      *
-     * @return  string[]
+     * @return  string[]  The distinct non-empty columns of its searchtools.sort calls that put each argument on its
+     *                    own line and give a literal label
      *
      * @since   10.5.6
      */
@@ -95,7 +97,7 @@ class ListSortFieldContractTest extends ProclaimTestCase
      *
      * @param   string  $model  Absolute path to the model.
      *
-     * @return  string[]
+     * @return  string[]  Each name quoted in the model's filter_fields array, or empty without one
      *
      * @since   10.5.6
      */

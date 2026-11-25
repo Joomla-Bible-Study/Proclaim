@@ -139,7 +139,7 @@ class CopyEpisodeNumberTest extends IntegrationTestCase
      * @param   int     $series  The copy's series
      * @param   string  $number  The episode number the copy keeps
      *
-     * @return  CwmmessageTable
+     * @return  CwmmessageTable  The unsaved row, as prepareTable() leaves it
      *
      * @since   10.7.4
      */

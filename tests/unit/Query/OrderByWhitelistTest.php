@@ -47,7 +47,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      * @param   ?string  $direction  The requested direction.
      * @param   string   $default    The fallback column.
      *
-     * @return  string
+     * @return  string  The ORDER BY clause, each whitespace run collapsed to a single space
      *
      * @since   10.7.0
      */
@@ -68,7 +68,7 @@ class OrderByWhitelistTest extends ProclaimTestCase
      *
      * @param   string  $column  Column name.
      *
-     * @return  string
+     * @return  string  The name with each dotted part in the driver's identifier quotes
      *
      * @since   10.7.0
      */

@@ -208,7 +208,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
     /**
      * The video the module renders, for a module with the default settings.
      *
-     * @return  array
+     * @return  array  The video's data as getVideo() returns it, such as its videoId, isLive and isUpcoming
      *
      * @since   10.7.4
      */
@@ -228,7 +228,7 @@ class YoutubeStatusCacheTest extends ProclaimTestCase
      * @param   string       $videoId   The video to ask about
      * @param   string|null  $tokenFor  The video the token was minted for; the asked-about one when null
      *
-     * @return  array
+     * @return  array  getStatusAjax()'s answer: the video's status, or success false with an error if refused
      *
      * @since   10.7.4
      */

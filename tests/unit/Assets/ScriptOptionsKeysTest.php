@@ -83,7 +83,7 @@ class ScriptOptionsKeysTest extends TestCase
     /**
      * Every key passed to addScriptOptions() in PHP, mapped to the files doing it.
      *
-     * @return  array<string, list<string>>
+     * @return  array<string, list<string>>  Each key's publishing files, as repository-relative paths, one per call
      *
      * @since   10.4.1
      */
@@ -134,7 +134,7 @@ class ScriptOptionsKeysTest extends TestCase
     /**
      * Every key read via Joomla.getOptions() in JS.
      *
-     * @return  list<string>
+     * @return  list<string>  Each distinct key a getOptions() call reads or an optionsKey field names
      *
      * @since   10.4.1
      */

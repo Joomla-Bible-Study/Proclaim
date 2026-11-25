@@ -243,10 +243,10 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
     }
 
     /**
-     * Count monthly rows sharing the all-NULL dimension tuple this fixture
-     * produces, for the month the fixture lands in.
+     * Count the page_view rows in the monthly table for the month the fixture lands in whose
+     * study, series and country are NULL; the other dimensions are not checked.
      *
-     * @return  array{rows: int, total: int}
+     * @return  array{rows: int, total: int}  How many monthly rows match, and the sum of their count column
      *
      * @since   10.5.6
      */

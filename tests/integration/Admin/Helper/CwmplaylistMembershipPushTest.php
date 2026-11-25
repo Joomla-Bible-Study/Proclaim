@@ -290,12 +290,12 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      *
      * Per-video results may be supplied keyed by video ID; '__default__' sets the
      * fallback. The CWMAddon constructor (which loads an addon XML file) is
-     * deliberately overridden to a no-op so the double needs no config on disk,
+     * deliberately overridden to only store the result map, so the double needs no config on disk,
      * and ID extraction delegates to the real YouTube extractor.
      *
      * @param   array<string,array{success:bool,error?:string,fatal?:bool}>  $results  Result map.
      *
-     * @return  CWMAddon
+     * @return  CWMAddon  An addon double that logs each push to calls and answers from the result map, else success.
      *
      * @since   10.3.3
      */
@@ -587,7 +587,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      *
      * @param   int  $playlistId  Playlist ID.
      *
-     * @return  object[]
+     * @return  object[]  The playlist's junction rows, lowest position first.
      *
      * @since   10.3.3
      */

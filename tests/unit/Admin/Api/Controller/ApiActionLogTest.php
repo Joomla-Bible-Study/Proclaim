@@ -25,7 +25,7 @@ class ApiActionLogTest extends ProclaimTestCase
     /**
      * Writable controllers and the entity type each logs under.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  Each controller's short class name, then its log entity type
      *
      * @since   10.3.4
      */
@@ -393,7 +393,7 @@ class ApiActionLogTest extends ProclaimTestCase
      *
      * @param   string  $verb  Method name (add/edit/delete)
      *
-     * @return  string
+     * @return  string  The verb's method source, from its first line to its last
      *
      * @since   10.5.6
      */

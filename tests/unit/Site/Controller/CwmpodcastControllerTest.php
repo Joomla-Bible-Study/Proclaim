@@ -395,7 +395,7 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      * services, and cloud metadata endpoints in particular (AWS/GCP/Azure
      * all use 169.254.169.254, a link-local address).
      *
-     * @return  iterable<string, array{0: string}>
+     * @return  iterable<string, array{0: string}>  Each host that must be refused, keyed by what makes it unsafe
      *
      * @since   10.5.5
      */

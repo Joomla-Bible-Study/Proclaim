@@ -37,7 +37,7 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
     /**
      * Every concrete addon class.
      *
-     * @return  array<string, array{0: class-string}>
+     * @return  array<string, array{0: class-string}>  Each server addon's fully qualified class, keyed by short name
      *
      * @since   10.5.6
      */
@@ -161,7 +161,7 @@ class CwmmediafileXhrDispatchTest extends ProclaimTestCase
      * serve them. Derived from `handler=` in build/media_source/js — a new JS
      * caller without a matching allow-list entry would 404 at runtime.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  The addon's class suffix, then the handler the JS requests
      *
      * @since   10.5.6
      */

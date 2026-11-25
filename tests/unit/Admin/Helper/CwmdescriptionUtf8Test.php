@@ -36,7 +36,7 @@ class CwmdescriptionUtf8Test extends ProclaimTestCase
     /**
      * Characters whose encoding ends in one of the bytes the dash class held.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each case: a title whose last byte is 0x80, 0x93 or 0x94
      *
      * @since   10.7.0
      */

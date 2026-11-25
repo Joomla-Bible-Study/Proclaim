@@ -65,7 +65,9 @@ class PlaceholderParityTest extends TestCase
      * legal and both are in use here, so a resolver that only knows the
      * prefixed form silently skips whole extensions.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  Each translation outside the SKIP trees that has an
+     *                                                      en-GB original, keyed by its repository-relative path:
+     *                                                      its absolute path, then the original's
      *
      * @since 10.6.0
      */
@@ -120,7 +122,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @param   string  $value  A raw language string
      *
-     * @return  string[]
+     * @return  string[]  Each printf conversion and literal `%%` in the value, sorted, repeats kept
      *
      * @since 10.6.0
      */
@@ -138,7 +140,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @param   string  $value  A raw language string
      *
-     * @return  string[]
+     * @return  string[]  The lowercased name of every opening and closing tag, cut at its first non-letter, sorted
      *
      * @since 10.6.0
      */

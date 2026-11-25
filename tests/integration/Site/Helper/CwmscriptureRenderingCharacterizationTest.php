@@ -111,12 +111,12 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
     }
 
     /**
-     * A row as the site queries build it today: flat columns plus the joined
-     * book-name keys from the two #__bsms_books JOINs.
+     * A row shaped as the site queries built it before the flat columns were retired: flat columns
+     * plus the book-name keys the two #__bsms_books JOINs added.
      *
      * @param   array  $overrides  Column overrides.
      *
-     * @return  object
+     * @return  object  John 3:16's columns with the overrides applied, plus scriptures built from them
      *
      * @since   10.5.6
      */

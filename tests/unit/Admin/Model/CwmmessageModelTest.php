@@ -32,9 +32,9 @@ class CwmmessageModelTest extends ProclaimTestCase
     /**
      * Get the source body of a CwmmessageModel method for structural assertions.
      *
-     * @param   string  $method
+     * @param   string  $method  The method's name
      *
-     * @return  string
+     * @return  string  The method's source, from the signature to the closing brace
      *
      * @since   10.5.6
      * @throws  \ReflectionException
@@ -107,7 +107,7 @@ class CwmmessageModelTest extends ProclaimTestCase
      * rather than as a plain string — not what the original controller code
      * (which read raw $_POST, bypassing Form::filter()) ever had to handle.
      *
-     * @return  array<string, array{0: array|string, 1: string[]}>
+     * @return  array<string, array{0: array|string, 1: string[]}>  The topics as submitted, then the tags they become
      *
      * @since   10.5.6
      */

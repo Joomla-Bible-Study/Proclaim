@@ -45,7 +45,7 @@ class CwmdownloadAccessTest extends ProclaimTestCase
      * @param   int|null  $study   The message's level, or null when there is no message.
      * @param   int|null  $series  The series' level, or null when the message is in no series.
      *
-     * @return  object
+     * @return  object  A stdClass row holding the three levels as access, study_access and series_access
      *
      * @since   10.5.8
      */

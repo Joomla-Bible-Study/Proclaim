@@ -40,7 +40,7 @@ class CwmlistingScriptureSourceTest extends IntegrationTestCase
      *
      * @param   bool  $withJunction  Whether to attach junction references
      *
-     * @return  object
+     * @return  object  A row citing Genesis 1 and Exodus 2 in its flat columns, plus Romans 8 and Titus 3 when asked.
      *
      * @since 10.5.8
      */

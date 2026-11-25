@@ -175,7 +175,7 @@ class CwmaliasTest extends IntegrationTestCase
      * @param   string  $table  Table name
      * @param   int     $id     Row id
      *
-     * @return  string
+     * @return  string  The row's alias, or an empty string when no row has that id
      *
      * @since   10.5.6
      */

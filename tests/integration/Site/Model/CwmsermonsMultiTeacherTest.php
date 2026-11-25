@@ -170,7 +170,7 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
     /**
      * Build a real site sermons model through a component MVCFactory.
      *
-     * @return  CwmsermonsModel
+     * @return  CwmsermonsModel  A site sermons model that ignores the request, its module state set for 100 items
      *
      * @since   10.5.8
      * @throws  \Exception
@@ -202,7 +202,7 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
     /**
      * How many rows the real listing query returns for the fixture study.
      *
-     * @return  int
+     * @return  int  The number of rows the list query returns for the fixture study
      *
      * @since   10.5.8
      * @throws  \ReflectionException
@@ -332,7 +332,7 @@ class CwmsermonsMultiTeacherTest extends IntegrationTestCase
      *
      * @param   callable  $fn  Work to run
      *
-     * @return  mixed
+     * @return  mixed  Whatever $fn returns
      *
      * @since 10.5.8
      */

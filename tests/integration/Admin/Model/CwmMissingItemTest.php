@@ -87,7 +87,7 @@ class CwmMissingItemTest extends IntegrationTestCase
      *
      * @param   string  $table  Table name
      *
-     * @return  int
+     * @return  int  The table's highest id plus 1000
      *
      * @since   10.7.3
      */

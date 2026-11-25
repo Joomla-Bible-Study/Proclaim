@@ -37,7 +37,7 @@ class CwmplaylistCapabilityTest extends IntegrationTestCase
     /**
      * Every shipped server type and whether it can host playlists.
      *
-     * @return  array<string, array{0: string, 1: bool}>
+     * @return  array<string, array{0: string, 1: bool}>  Each server type, then whether it can host playlists
      *
      * @since   10.5.0
      */

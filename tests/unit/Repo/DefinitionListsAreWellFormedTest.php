@@ -41,7 +41,7 @@ class DefinitionListsAreWellFormedTest extends ProclaimTestCase
     /**
      * Every template and script the package ships.
      *
-     * @return  array<int, string>
+     * @return  array<int, string>  Absolute paths of every PHP and JS file under ROOTS, vendor folders skipped
      *
      * @since 10.7.1
      */

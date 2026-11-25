@@ -29,12 +29,13 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
     /**
      * Invoke the private buildOptions() static method via reflection.
      *
-     * @param   array<int, \stdClass>  $rows
-     * @param   bool                   $servableOnly
-     * @param   string[]               $enabledSources
-     * @param   string                 $currentLang
+     * @param   array<int, \stdClass>  $rows            The translation rows to group and label
+     * @param   bool                   $servableOnly    Whether to keep only translations that can be served
+     * @param   string[]               $enabledSources  The enabled provider sources, used when $servableOnly is true
+     * @param   string                 $currentLang     The current language's two-letter code
      *
-     * @return  array<int, array{value: string, text: string}>
+     * @return  array<int, array{value: string, text: string}>  Each version's abbreviation and label, those in
+     *                                                          $currentLang first
      *
      * @since   10.5.6
      * @throws  \ReflectionException

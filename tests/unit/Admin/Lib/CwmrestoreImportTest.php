@@ -184,7 +184,7 @@ SQL;
      * Everything the core splitter treats specially, so a port that got any of
      * it wrong shows up here rather than as a corrupted import.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each case: SQL both splitters must split the same way
      *
      * @since 10.6.0
      */

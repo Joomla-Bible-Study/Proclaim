@@ -34,9 +34,10 @@ class CwmadminModelTest extends ProclaimTestCase
     /**
      * Invoke the private static resolveMediaImageMatcher() via reflection.
      *
-     * @param   object  $decoded
+     * @param   object  $decoded  The decoded mediaimage payload
      *
-     * @return  array{keys: string[], values: array<int, mixed>}|null
+     * @return  array{keys: string[], values: array<int, mixed>}|null  The params keys to match on, with the payload's
+     *                                                                 values for them, or null for an unrecognized mode
      *
      * @since   10.5.6
      * @throws  \ReflectionException
@@ -51,9 +52,9 @@ class CwmadminModelTest extends ProclaimTestCase
     /**
      * Get the source body of a CwmadminModel method for structural assertions.
      *
-     * @param   string  $method
+     * @param   string  $method  The method's name
      *
-     * @return  string
+     * @return  string  The method's source, from the signature to the closing brace
      *
      * @since   10.5.6
      * @throws  \ReflectionException
@@ -249,11 +250,11 @@ class CwmadminModelTest extends ProclaimTestCase
     /**
      * Invoke the private static mergeStoredParams().
      *
-     * @param   array     $stored
-     * @param   array     $submitted
-     * @param   string[]  $formNames
+     * @param   array     $stored     The params currently stored
+     * @param   array     $submitted  The params the form submitted
+     * @param   string[]  $formNames  The bare names the form defines
      *
-     * @return  array
+     * @return  array  The submitted params laid over the stored ones the form doesn't define
      *
      * @since   10.7.1
      * @throws  \ReflectionException
@@ -269,7 +270,7 @@ class CwmadminModelTest extends ProclaimTestCase
      * The bare param names the shipped settings form defines, read through the
      * model's own extraction against the real admin.xml.
      *
-     * @return  string[]
+     * @return  string[]  The bare name of each field in admin.xml's params group
      *
      * @since   10.7.1
      * @throws  \ReflectionException
@@ -431,9 +432,9 @@ class CwmadminModelTest extends ProclaimTestCase
     /**
      * Invoke the private static settingsRowId().
      *
-     * @param   array  $data
+     * @param   array  $data  The submitted form data
      *
-     * @return  int
+     * @return  int  The posted id, or the settings row's id, 1, when it casts to zero
      *
      * @since   10.7.1
      * @throws  \ReflectionException

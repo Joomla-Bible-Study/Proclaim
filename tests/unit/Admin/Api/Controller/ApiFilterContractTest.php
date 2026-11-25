@@ -71,9 +71,9 @@ class ApiFilterContractTest extends ProclaimTestCase
     }
 
     /**
-     * Every API controller on disk, by name.
+     * Every concrete API controller on disk, by name.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each concrete controller's name without its suffix, keyed by that name
      *
      * @since   10.5.8
      */
@@ -100,7 +100,7 @@ class ApiFilterContractTest extends ProclaimTestCase
      *
      * @param   string  $controller  Controller name without the suffix
      *
-     * @return  string[]
+     * @return  string[]  The filter keys it sets, each once and without the filter prefix
      *
      * @since   10.5.8
      */
@@ -116,8 +116,8 @@ class ApiFilterContractTest extends ProclaimTestCase
     /**
      * Whether a model reads a given filter key.
      *
-     * ⚠️ Deliberately permissive: any mention of the key in the model source
-     * counts, whether through getState() or getUserStateFromRequest(). It can
+     * ⚠️ Deliberately permissive: any mention of the key as a quoted filter
+     * state key counts, whether through getState() or getUserStateFromRequest(). It can
      * therefore pass a filter that is read and then not applied to the query.
      * It cannot pass one the model never mentions, which is the failure this
      * test exists for.
@@ -125,7 +125,7 @@ class ApiFilterContractTest extends ProclaimTestCase
      * @param   string  $model   Model class name
      * @param   string  $filter  Filter key without the `filter.` prefix
      *
-     * @return  bool
+     * @return  bool  Whether the model's source quotes that key as a filter state key
      *
      * @since   10.5.8
      */

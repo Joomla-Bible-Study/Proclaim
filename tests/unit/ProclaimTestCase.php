@@ -63,9 +63,9 @@ abstract class ProclaimTestCase extends TestCase
     }
 
     /**
-     * Create a mock database driver
+     * Create a bare stdClass mock to stand in for a database driver
      *
-     * @return  MockObject
+     * @return  MockObject  A bare stdClass mock, with no driver methods to stub
      *
      * @since   10.1.0
      */
@@ -81,7 +81,7 @@ abstract class ProclaimTestCase extends TestCase
      *
      * @param array $data Initial data for the registry
      *
-     * @return  MockObject
+     * @return  MockObject  A stdClass mock whose get() and toArray() serve $data; set() and the loaders do nothing
      *
      * @since   10.1.0
      */

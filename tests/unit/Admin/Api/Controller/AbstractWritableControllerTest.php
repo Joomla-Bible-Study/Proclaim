@@ -40,7 +40,7 @@ class AbstractWritableControllerTest extends ProclaimTestCase
     /**
      * The 8 writable controllers preprocessSaveData() duplication spanned.
      *
-     * @return  array<string, array{0: class-string}>
+     * @return  array<string, array{0: class-string}>  Each controller's class, keyed by resource name
      *
      * @since   10.5.6
      */
@@ -61,10 +61,10 @@ class AbstractWritableControllerTest extends ProclaimTestCase
     /**
      * Get the source body of a method for structural assertions.
      *
-     * @param   class-string  $class
-     * @param   string        $method
+     * @param   class-string  $class   The class that declares the method
+     * @param   string        $method  The method's name
      *
-     * @return  string
+     * @return  string  The method's source, from its first line to its last
      *
      * @since   10.5.6
      */
@@ -145,7 +145,7 @@ class AbstractWritableControllerTest extends ProclaimTestCase
      * controller means the dedup regressed — the shared helper exists
      * precisely so no controller needs to unset these fields itself again.
      *
-     * @param   class-string  $class
+     * @param   class-string  $class  The writable API controller under test
      *
      * @return  void
      *

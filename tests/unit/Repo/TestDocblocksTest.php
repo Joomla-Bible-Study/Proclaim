@@ -16,10 +16,11 @@ use PHPUnit\Framework\Attributes\TestDox;
 /**
  * Test code follows the docblock layout shipped code does. Every class,
  * property, constant and method has a docblock with a description and a
- * since tag. A method also lists each parameter in signature order and
- * states its return type, with a blank line between the groups, and a
- * property or constant states its type. An inheritDoc tag stands in for the
- * description and the return type.
+ * since tag. A method also lists and describes each parameter in signature
+ * order, and states its return type, describing the value unless the type is
+ * void, with a blank line between the groups. A property or constant states
+ * its type. An inheritDoc tag stands in for the description and the return
+ * type.
  *
  * The gaps the suite already had are listed in docblock-debt/, and the list
  * may only shrink. A gap that is not listed fails, and so does an entry whose
@@ -89,7 +90,9 @@ class TestDocblocksTest extends ProclaimTestCase
 
     /**
      * The audit reports each kind of gap, by declaration, on a sample that has
-     * one of each.
+     * one of each. A return described after a bracketed type, a bare void one,
+     * and parameters described after a bracketed type, by reference or
+     * variadic, pass.
      *
      * @return  void
      *
@@ -140,6 +143,82 @@ class TestDocblocksTest extends ProclaimTestCase
                 }
 
                 /**
+                 * Count something.
+                 *
+                 * @return  int
+                 *
+                 * @since   1.0.0
+                 */
+                public function bareReturn(): int
+                {
+                    return 1;
+                }
+
+                /**
+                 * Map something.
+                 *
+                 * @return  array<string, int>
+                 *
+                 * @since   1.0.0
+                 */
+                public function bareGenericReturn(): array
+                {
+                    return [];
+                }
+
+                /**
+                 * Shape something.
+                 *
+                 * @return  array{a: int, b: string}  The pair
+                 *
+                 * @since   1.0.0
+                 */
+                public function describedShapeReturn(): array
+                {
+                    return ['a' => 1, 'b' => ''];
+                }
+
+                /**
+                 * Do something.
+                 *
+                 * @return  void
+                 *
+                 * @since   1.0.0
+                 */
+                public function bareVoid(): void
+                {
+                }
+
+                /**
+                 * Join something.
+                 *
+                 * @param   string    $glue   What goes between
+                 * @param   string[]  $parts
+                 *
+                 * @return  string  The joined parts
+                 *
+                 * @since   1.0.0
+                 */
+                public function bareParam(string $glue, array $parts): string
+                {
+                    return implode($glue, $parts);
+                }
+
+                /**
+                 * Collect something.
+                 *
+                 * @param   array<string, int>  &$counts  Running totals
+                 * @param   string              ...$keys  The keys to count
+                 *
+                 * @return  void
+                 *
+                 * @since   1.0.0
+                 */
+                public function describedParams(array &$counts, string ...$keys): void
+                {
+                }
+
+                /**
                  * Inherit the rest.
                  *
                  * @inheritDoc
@@ -160,6 +239,9 @@ class TestDocblocksTest extends ProclaimTestCase
                 'function compact: @param [] vs signature ["$count"]',
                 'function bare: no docblock',
                 'function noBlankAfterParam: no blank line between @param and @return',
+                'function bareReturn: no @return description',
+                'function bareGenericReturn: no @return description',
+                'function bareParam: no description for @param $parts',
                 'function inherited: no @since',
             ],
             self::entries(self::audit($sample))
@@ -460,6 +542,14 @@ class TestDocblocksTest extends ProclaimTestCase
                 $gaps[] = 'no @return';
             }
 
+            if (preg_match('~@return[ \t]+([^\n]*)~', $doc, $r)) {
+                [$type, $description] = self::splitType(rtrim($r[1]));
+
+                if ($type !== 'void' && $description === '') {
+                    $gaps[] = 'no @return description';
+                }
+            }
+
             if (preg_match('~@return[^\n]*\n\s*\*\s*@since~', $doc)) {
                 $gaps[] = 'no blank line between @return and @since';
             }
@@ -474,6 +564,16 @@ class TestDocblocksTest extends ProclaimTestCase
 
             if ($m[1] !== $params) {
                 $gaps[] = '@param ' . json_encode($m[1]) . ' vs signature ' . json_encode($params);
+            }
+
+            preg_match_all('~@param[ \t]+([^\n]*)~', $doc, $tags);
+
+            foreach ($tags[1] as $text) {
+                [$variable, $description] = self::splitParam(rtrim($text));
+
+                if ($variable !== '' && $description === '') {
+                    $gaps[] = 'no description for @param ' . $variable;
+                }
             }
         }
 
@@ -519,6 +619,55 @@ class TestDocblocksTest extends ProclaimTestCase
         }
 
         return $params;
+    }
+
+    /**
+     * Split the text after a param tag into its variable and its description.
+     * The type before the variable is skipped as splitType() reads it.
+     *
+     * @param   string  $text  The rest of the tag's line
+     *
+     * @return  array{0: string, 1: string}  The variable, then the description; both empty when there is no variable
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function splitParam(string $text): array
+    {
+        if ($text !== '' && !\in_array($text[0], ['$', '&', '.'], true)) {
+            [, $text] = self::splitType($text);
+        }
+
+        return preg_match('~^(&?(?:\.\.\.)?\$\w+)\s*(.*)$~', $text, $m) === 1 ? [$m[1], trim($m[2])] : ['', ''];
+    }
+
+    /**
+     * Split a tag's text into the type it starts with and the rest. Brackets
+     * are counted, so a type such as array<string, int> stays whole.
+     *
+     * @param   string  $text  The rest of the tag's line
+     *
+     * @return  array{0: string, 1: string}  The type, then the rest, which is empty when nothing follows
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function splitType(string $text): array
+    {
+        $depth  = 0;
+        $length = \strlen($text);
+
+        for ($i = 0; $i < $length; $i++) {
+            $c = $text[$i];
+
+            if (str_contains('<{([', $c)) {
+                $depth++;
+            } elseif (str_contains('>})]', $c)) {
+                $depth--;
+            } elseif ($depth === 0 && ($c === ' ' || $c === "\t")) {
+                break;
+            }
+        }
+
+        return [substr($text, 0, $i), trim(substr($text, $i))];
     }
 
     /**

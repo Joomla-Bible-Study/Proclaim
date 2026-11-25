@@ -114,9 +114,9 @@ class CwmassetsTest extends ProclaimTestCase
     /**
      * Get the source body of a Cwmassets method for structural assertions.
      *
-     * @param   string  $method
+     * @param   string  $method  The method's name
      *
-     * @return  string
+     * @return  string  The method's source, from the signature to the closing brace
      *
      * @since   10.5.6
      */
@@ -354,7 +354,7 @@ class CwmassetsTest extends ProclaimTestCase
      * @param   DatabaseInterface  $db     Database driver
      * @param   int                $count  How many ids are needed
      *
-     * @return  int[]
+     * @return  int[]  The teacher ids, $count of them: existing ones first, then any it inserts
      *
      * @since   __DEPLOY_VERSION__
      */

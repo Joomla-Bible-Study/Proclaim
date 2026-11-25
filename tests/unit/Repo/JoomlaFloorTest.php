@@ -303,7 +303,7 @@ class JoomlaFloorTest extends TestCase
     /**
      * The floor the component enforces.
      *
-     * @return  string
+     * @return  string  The version proclaim.script.php assigns to $minimumJoomla.
      *
      * @since   10.6.0
      */
@@ -315,7 +315,7 @@ class JoomlaFloorTest extends TestCase
     /**
      * The floor the package installer enforces.
      *
-     * @return  string
+     * @return  string  The version build/script.install.php assigns to $minimumJoomla.
      *
      * @since   10.6.0
      */
@@ -329,7 +329,7 @@ class JoomlaFloorTest extends TestCase
      *
      * @param   string  $relative  Path from the repository root.
      *
-     * @return  string
+     * @return  string  The version in the script's first $minimumJoomla assignment.
      *
      * @since   10.6.0
      */
@@ -354,7 +354,7 @@ class JoomlaFloorTest extends TestCase
      *
      * @param   string  $version  A full version string.
      *
-     * @return  string
+     * @return  string  Its major and minor joined by a dot, with 0 for a missing minor.
      *
      * @since   10.6.0
      */
@@ -368,7 +368,7 @@ class JoomlaFloorTest extends TestCase
     /**
      * The repository root.
      *
-     * @return  string
+     * @return  string  Its absolute path.
      *
      * @since   10.6.0
      */

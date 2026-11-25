@@ -39,7 +39,7 @@ class LoadFormDataShapeTest extends ProclaimTestCase
     /**
      * Every model in the component.
      *
-     * @return  array<int, string>
+     * @return  array<int, string>  Absolute paths of the PHP files directly in the admin, site and api Model folders
      *
      * @since 10.7.1
      */

@@ -67,7 +67,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
     /**
      * What the package actually has on disk, by type.
      *
-     * @return  array<int, array<int, string>>
+     * @return  array<int, array<int, string>>  Each type's sorted layout names, as found in its default_*.php files
      *
      * @since 10.7.1
      */
@@ -140,7 +140,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
     /**
      * Every shipped name, as (type, filename) pairs.
      *
-     * @return  array<string, array{0: int, 1: string}>
+     * @return  array<string, array{0: int, 1: string}>  A template type, then a layout SHIPPED_LAYOUTS lists for it
      *
      * @since 10.7.1
      */
@@ -187,7 +187,7 @@ class ShippedLayoutsTest extends ProclaimTestCase
      * The seven names this issue was actually about — shipped, and creatable
      * before the fix because the hard-coded list of five did not mention them.
      *
-     * @return  array<string, array{0: int, 1: string}>
+     * @return  array<string, array{0: int, 1: string}>  A template type, then one of the layouts it ships
      *
      * @since 10.7.1
      */

@@ -82,12 +82,11 @@ class WhereClauseContractTest extends TestCase
     }
 
     /**
-     * The string literals a where() argument concatenates, with PHP
-     * expressions replaced by a placeholder.
+     * The single-quoted literals in a where() argument, joined by a placeholder.
      *
      * @param   string  $argument  Raw PHP source of the argument
      *
-     * @return  string
+     * @return  string  The text inside its single-quoted literals, joined by X, whitespace collapsed; empty if none
      *
      * @since 10.5.8
      */
@@ -103,7 +102,7 @@ class WhereClauseContractTest extends TestCase
      *
      * @param   string  $sql  Reconstructed SQL fragment
      *
-     * @return  bool
+     * @return  bool  Whether an uppercase OR sits outside every bracket
      *
      * @since 10.5.8
      */
@@ -130,7 +129,8 @@ class WhereClauseContractTest extends TestCase
      * Every bare where()/having() argument in the codebase, as
      * [file, line, reconstructed SQL].
      *
-     * @return  array<int, array{0: string, 1: int, 2: string}>
+     * @return  array<int, array{0: string, 1: int, 2: string}>  Each bare call found: the file's absolute path, the
+     *                                                           line it starts on, then the reconstructed SQL
      *
      * @since 10.5.8
      */

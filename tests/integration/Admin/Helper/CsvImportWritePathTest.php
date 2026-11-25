@@ -90,7 +90,7 @@ class CsvImportWritePathTest extends IntegrationTestCase
     /**
      * A row whose values carry the characters quoting exists for.
      *
-     * @return  array<string, string>
+     * @return  array<string, string>  An import row's values, keyed by importer field name
      *
      * @since   10.7.0
      */

@@ -43,9 +43,9 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmlistingNullTeacherTest extends IntegrationTestCase
 {
     /**
-     * A layout-editor element row, as getFluidRow() receives one.
+     * A layout-editor element row, as getFluidData() receives one.
      *
-     * @return  \stdClass
+     * @return  \stdClass  The series element, linked to its details, at row 1, column 1
      *
      * @since   10.5.8
      */
@@ -66,7 +66,7 @@ class CwmlistingNullTeacherTest extends IntegrationTestCase
     /**
      * A series as the listing query returns one, with no teacher.
      *
-     * @return  \stdClass
+     * @return  \stdClass  Series 1 with teacher, teachername and teachertitle all null
      *
      * @since   10.5.8
      */
