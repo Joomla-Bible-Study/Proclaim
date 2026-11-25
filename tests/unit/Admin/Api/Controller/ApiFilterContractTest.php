@@ -116,8 +116,8 @@ class ApiFilterContractTest extends ProclaimTestCase
     /**
      * Whether a model reads a given filter key.
      *
-     * ⚠️ Deliberately permissive: any mention of the key in the model source
-     * counts, whether through getState() or getUserStateFromRequest(). It can
+     * ⚠️ Deliberately permissive: any mention of the key as a quoted filter
+     * state key counts, whether through getState() or getUserStateFromRequest(). It can
      * therefore pass a filter that is read and then not applied to the query.
      * It cannot pass one the model never mentions, which is the failure this
      * test exists for.

@@ -43,7 +43,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmlistingNullTeacherTest extends IntegrationTestCase
 {
     /**
-     * A layout-editor element row, as getFluidRow() receives one.
+     * A layout-editor element row, as getFluidData() receives one.
      *
      * @return  \stdClass  The series element, linked to its details, at row 1, column 1
      *
