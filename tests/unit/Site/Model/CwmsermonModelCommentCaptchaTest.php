@@ -94,6 +94,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     public function testTheCaptchaOptionNamesThePlugin(): void
     {
@@ -108,6 +109,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     public function testUseGlobalFallsBackToTheSiteDefault(): void
     {
@@ -122,6 +124,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     public function testNoneMeansNoCaptcha(): void
     {
@@ -137,6 +140,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     public function testAPluginThatIsNotEnabledMeansNoCaptcha(): void
     {
@@ -151,6 +155,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
      */
     public function testThePluginJudgesTheAnswer(): void
     {
@@ -169,6 +174,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
      */
     public function testAPluginThatCannotLoadNeverAcceptsAnAnswer(): void
     {
@@ -267,6 +273,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  CwmsermonModel  An instance built without running its constructor
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
      */
     private function model(): CwmsermonModel
     {
@@ -287,8 +294,6 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
              * Remember the name the provider registers under.
              *
              * @param   string  $name  The provider's name.
-             *
-             * @return  void
              *
              * @since   __DEPLOY_VERSION__
              */
