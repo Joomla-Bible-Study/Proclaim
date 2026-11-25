@@ -60,6 +60,8 @@ class CwmseriesModel extends ListModel
                 'access_level',
                 'language',
                 'series.language',
+                'created',
+                'series.created',
             ];
         }
 

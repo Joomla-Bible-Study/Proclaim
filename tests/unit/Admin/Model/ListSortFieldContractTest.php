@@ -38,10 +38,11 @@ use PHPUnit\Framework\Attributes\TestDox;
 class ListSortFieldContractTest extends ProclaimTestCase
 {
     /**
-     * Every admin list template whose sort headers sortFields() can read, paired
-     * with the model whose whitelist has to accept them.
+     * Every template in an admin list view that renders sort headers, its modal
+     * included, paired with the model whose whitelist has to accept them.
      *
-     * @return  array<string, array{0: string, 1: string}>  A sortable list template's absolute path, then its model's
+     * @return  array<string, array{0: string, 1: string}>  A sortable template's absolute path, then its model's, keyed
+     *                                                      by view, and for a layout besides default by view/layout
      *
      * @since   10.5.6
      */
@@ -50,42 +51,98 @@ class ListSortFieldContractTest extends ProclaimTestCase
         $root  = \dirname(__DIR__, 4);
         $cases = [];
 
-        foreach (glob($root . '/admin/tmpl/*/default.php') as $template) {
-            $view  = basename(\dirname($template));
-            $model = $root . '/admin/src/Model/' . ucfirst($view) . 'Model.php';
+        foreach (glob($root . '/admin/tmpl/*/*.php') as $template) {
+            $view   = basename(\dirname($template));
+            $layout = basename($template, '.php');
+            $model  = $root . '/admin/src/Model/' . ucfirst($view) . 'Model.php';
 
             // Not every tmpl directory is a list view backed by a plural model.
-            if (!is_file($model) || !self::sortFields($template)) {
+            if (!is_file($model) || !self::sortColumns((string) file_get_contents($template))) {
                 continue;
             }
 
-            $cases[$view] = [$template, $model];
+            $cases[$layout === 'default' ? $view : $view . '/' . $layout] = [$template, $model];
         }
 
         return $cases;
     }
 
     /**
-     * Extract the ordering column each searchtools.sort call submits, where the
-     * call puts each argument on its own line and its label is a string literal.
+     * Extract the ordering column each searchtools.sort call submits.
      *
      * @param   string  $template  Absolute path to the template.
      *
-     * @return  string[]  The distinct non-empty columns of its searchtools.sort calls that put each argument on its
-     *                    own line and give a literal label
+     * @return  string[]  The distinct non-empty columns its searchtools.sort calls submit
      *
      * @since   10.5.6
      */
     private static function sortFields(string $template): array
     {
-        preg_match_all(
-            '/[\'"]searchtools\.sort[\'"],\s*\n\s*[\'"][^\'"]*[\'"],\s*\n\s*[\'"]([^\'"]+)[\'"]/',
-            (string) file_get_contents($template),
-            $matches
+        // An empty name is the drag-handle column, which submits nothing.
+        $fields = array_filter(
+            self::sortColumns((string) file_get_contents($template)),
+            static fn (?string $field): bool => $field !== null && $field !== ''
         );
 
-        // An empty name is the drag-handle column, which submits nothing.
-        return array_values(array_filter(array_unique($matches[1]), static fn ($f) => $f !== ''));
+        return array_values(array_unique($fields));
+    }
+
+    /**
+     * The column argument of every searchtools.sort call in a template, read
+     * with the tokenizer, so a call written on one line or with a computed label
+     * counts too.
+     *
+     * @param   string  $source  The template's PHP source
+     *
+     * @return  array<int, string|null>  Each call's column in source order: a string literal's value, or null when
+     *                                   the argument is anything else and so cannot be read
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function sortColumns(string $source): array
+    {
+        $tokens  = token_get_all($source);
+        $count   = \count($tokens);
+        $columns = [];
+
+        foreach ($tokens as $i => $token) {
+            if (!\is_array($token) || $token[0] !== T_CONSTANT_ENCAPSED_STRING || trim($token[1], '\'"') !== 'searchtools.sort') {
+                continue;
+            }
+
+            // Split the rest of the call at its top-level commas: the label, then the column.
+            $args  = [[]];
+            $depth = 0;
+
+            for ($j = $i + 1; $j < $count; $j++) {
+                $text = \is_array($tokens[$j]) ? $tokens[$j][1] : $tokens[$j];
+
+                if ($text === '(' || $text === '[') {
+                    $depth++;
+                } elseif ($text === ')' || $text === ']') {
+                    if ($depth === 0) {
+                        break;
+                    }
+
+                    $depth--;
+                } elseif ($text === ',' && $depth === 0) {
+                    $args[] = [];
+
+                    continue;
+                }
+
+                if (!\is_array($tokens[$j]) || $tokens[$j][0] !== T_WHITESPACE) {
+                    $args[\count($args) - 1][] = $tokens[$j];
+                }
+            }
+
+            $column    = $args[2] ?? [];
+            $columns[] = \count($column) === 1 && \is_array($column[0]) && $column[0][0] === T_CONSTANT_ENCAPSED_STRING
+                ? substr($column[0][1], 1, -1)
+                : null;
+        }
+
+        return $columns;
     }
 
     /**
@@ -113,7 +170,8 @@ class ListSortFieldContractTest extends ProclaimTestCase
     }
 
     /**
-     * Every sortable column header submits a name its model accepts.
+     * Every sortable column header names its column as a string literal, which
+     * its model accepts.
      *
      * @param   string  $template  The list template's path
      * @param   string  $model     The path of the model whose whitelist must accept it
@@ -126,6 +184,15 @@ class ListSortFieldContractTest extends ProclaimTestCase
     #[TestDox('Every sortable column header submits a name its model accepts')]
     public function testSortHeadersAreWhitelisted(string $template, string $model): void
     {
+        $name = basename(\dirname($template)) . '/' . basename($template);
+
+        $this->assertNotContains(
+            null,
+            self::sortColumns((string) file_get_contents($template)),
+            $name . ' has a searchtools.sort call whose column is not a string literal, so this test cannot check it '
+            . 'against the whitelist.'
+        );
+
         $emitted   = self::sortFields($template);
         $whitelist = self::filterFields($model);
 
@@ -139,10 +206,44 @@ class ListSortFieldContractTest extends ProclaimTestCase
             \sprintf(
                 "%s submits ordering columns %s does not accept, so clicking those headers does nothing.\n"
                 . 'Dotted names must match the query alias in getListQuery(), not the Cwm class name.',
-                basename(\dirname($template)) . '/default.php',
+                $name,
                 basename($model)
             )
         );
+    }
+
+    /**
+     * The column is read from a one-line call, a call with one argument per
+     * line, and a call with a computed label. A column that is not a string
+     * literal reads as null.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('The sort column is read from every way a call can be written')]
+    public function testSortColumnsAreReadFromEveryCallShape(): void
+    {
+        $source = <<<'PHP'
+            <th><?php echo HTMLHelper::_('searchtools.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?></th>
+            <th><?php echo HTMLHelper::_(
+                'searchtools.sort',
+                'JGLOBAL_TITLE',
+                'a.title',
+                $listDirn,
+                $listOrder
+            ); ?></th>
+            <th><?php echo HTMLHelper::_(
+                'searchtools.sort',
+                'JBS_HEADING_DATE_' . strtoupper($column),
+                'a.created',
+                $listDirn,
+                $listOrder
+            ); ?></th>
+            <th><?php echo HTMLHelper::_('searchtools.sort', '', $column, $listDirn, $listOrder); ?></th>
+            PHP;
+
+        $this->assertSame(['a.published', 'a.title', 'a.created', null], self::sortColumns($source));
     }
 
     /**
