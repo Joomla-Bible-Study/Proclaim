@@ -95,6 +95,10 @@ module.exports = defineConfig({
         // What J5 is actually here to catch is Joomla-version behaviour
         // differences, which is what the functional specs cover.
         //
+        // Core markup inside the scanned region can differ by version as well.
+        // The subform column-header tooltip icon does, so CI scans Joomla 6.1,
+        // which renders it as 5.4 does, and 6.2, which renders it differently.
+        //
         // If a violation ever turns out to be J5-only, it will be a Joomla
         // template difference outside the scanned region — drop the
         // testIgnore then, deliberately.
