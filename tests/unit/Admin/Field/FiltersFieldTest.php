@@ -52,7 +52,7 @@ class FiltersFieldTest extends ProclaimTestCase
     /**
      * Values the whole `filters` param has been seen or could plausibly arrive as.
      *
-     * @return  array<string, array{0: mixed, 1: array<array-key, mixed>}>
+     * @return  array<string, array{0: mixed, 1: array<array-key, mixed>}>  A stored value, then the array it becomes
      *
      * @since   10.3.5
      */
@@ -116,7 +116,7 @@ class FiltersFieldTest extends ProclaimTestCase
     /**
      * Per-group entries, including the shape that caused the outage.
      *
-     * @return  array<string, array{0: mixed}>
+     * @return  array<string, array{0: mixed}>  Each case: a group entry in a broken or unexpected shape
      *
      * @since   10.3.5
      */

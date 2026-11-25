@@ -51,10 +51,10 @@ class UploadMediaTypesTest extends ProclaimTestCase
     /**
      * Invoke a private static helper on the install script.
      *
-     * @param   string  $method
-     * @param   mixed   ...$args
+     * @param   string  $method   The helper's name
+     * @param   mixed   ...$args  The arguments to pass to it
      *
-     * @return  mixed
+     * @return  mixed  Whatever the helper returns
      *
      * @since   10.7.2
      */

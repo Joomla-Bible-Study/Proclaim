@@ -98,7 +98,7 @@ class CWMAddonStatsBindTest extends IntegrationTestCase
      * @param   string  $method  Method name.
      * @param   mixed   ...$args Arguments.
      *
-     * @return  mixed
+     * @return  mixed  Whatever the CWMAddon method returns
      *
      * @since 10.7.0
      */

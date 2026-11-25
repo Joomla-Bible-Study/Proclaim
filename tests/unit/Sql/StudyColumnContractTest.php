@@ -64,9 +64,10 @@ class StudyColumnContractTest extends ProclaimTestCase
     ];
 
     /**
-     * One case per distinct property read across the message templates.
+     * One case per distinct property each message template reads.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  Each template's file name, then a property it reads
+     *                                                      from the item, one case per pair
      *
      * @since   10.5.8
      */
@@ -90,7 +91,7 @@ class StudyColumnContractTest extends ProclaimTestCase
     /**
      * Column names declared for #__bsms_studies by the install schema.
      *
-     * @return  string[]
+     * @return  string[]  Each backticked column name in the table's CREATE TABLE block, in order
      *
      * @since   10.5.8
      */

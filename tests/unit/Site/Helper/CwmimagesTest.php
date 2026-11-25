@@ -31,7 +31,7 @@ class CwmimagesTest extends ProclaimTestCase
      *
      * @param   string  $webp  WebP variant path, or empty for none
      *
-     * @return object
+     * @return object  A stdClass for a 120 by 80 lead.jpg teacher image, with $webp as its WebP path
      *
      * @since  10.7.3
      */

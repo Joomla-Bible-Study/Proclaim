@@ -91,7 +91,8 @@ class CommittedVendorMatchesLockTest extends ProclaimTestCase
      *
      * @param   array  $packages  Package entries from composer.lock or installed.json
      *
-     * @return  array<string, array{version: string, reference: string}>
+     * @return  array<string, array{version: string, reference: string}>  Each package's version and commit reference
+     *                                                                    (dist, else source, else empty), keyed by name
      *
      * @since   10.7.8
      */

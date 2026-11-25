@@ -163,7 +163,7 @@ class InstallScriptImportsTest extends ProclaimTestCase
      * @param   array  $tokens  token_get_all() output
      * @param   int    $i       Index to look back from
      *
-     * @return  mixed
+     * @return  mixed  The token as token_get_all() gives it, an array or a bare string; null when none precedes it
      *
      * @since   10.6.0
      */
@@ -186,7 +186,7 @@ class InstallScriptImportsTest extends ProclaimTestCase
      * @param   array  $tokens  token_get_all() output
      * @param   int    $i       Index to test
      *
-     * @return  bool
+     * @return  bool  Whether a catch keyword lies within 11 tokens back, with no ), { or ; between them
      *
      * @since   10.6.0
      */
@@ -281,7 +281,7 @@ class InstallScriptImportsTest extends ProclaimTestCase
      * @param   ?\ReflectionType  $type   The declared type, if any
      * @param   string            $where  Where it was declared, for the message
      *
-     * @return  array<string, string>
+     * @return  array<string, string>  The given $where, keyed by the name of each non-builtin type at its top level
      *
      * @since   10.6.0
      */

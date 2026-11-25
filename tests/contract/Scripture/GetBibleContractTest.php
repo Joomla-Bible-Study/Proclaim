@@ -103,7 +103,7 @@ class GetBibleContractTest extends TestCase
     /**
      * Read the committed capture the rest of the suite runs against.
      *
-     * @return  array
+     * @return  array  The fixture's recorded response for the probe reference
      *
      * @since 10.7.0
      */

@@ -54,7 +54,7 @@ class CwmmediaMimeCatalogueTest extends ProclaimTestCase
     /**
      * Read Cwmmime's private canonical map.
      *
-     * @return  array<string, string>
+     * @return  array<string, string>  The MIME type Cwmmime detects for each extension, keyed by extension
      *
      * @since   10.5.0
      */

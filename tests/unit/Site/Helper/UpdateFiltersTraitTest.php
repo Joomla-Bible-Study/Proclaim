@@ -190,7 +190,7 @@ XML;
      * @param   array  $filterValues  Values bound into the form's filter group.
      * @param   array  $params        Template params driving the show_*_search toggles.
      *
-     * @return  object
+     * @return  object  An object using the trait, holding the bound form and params; run() calls updateFilters()
      *
      * @since   10.5.0
      */

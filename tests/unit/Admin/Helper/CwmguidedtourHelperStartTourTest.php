@@ -33,7 +33,7 @@ class CwmguidedtourHelperStartTourTest extends ProclaimTestCase
     /**
      * A helper holding the shipped definitions, built without a database.
      *
-     * @return  CwmguidedtourHelper
+     * @return  CwmguidedtourHelper  A new instance, created without running its constructor
      *
      * @since   __DEPLOY_VERSION__
      * @throws  \ReflectionException

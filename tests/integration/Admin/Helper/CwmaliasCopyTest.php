@@ -246,7 +246,7 @@ class CwmaliasCopyTest extends IntegrationTestCase
     /**
      * A title no other test run shares, so the aliases built from it are free.
      *
-     * @return  string
+     * @return  string  A Zz Copy title ending in a unique id
      *
      * @since   10.7.4
      */

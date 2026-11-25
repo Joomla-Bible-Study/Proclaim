@@ -44,7 +44,7 @@ class UninstallOrderTest extends ProclaimTestCase
     /**
      * The body of `dropTablesIfRequested()`.
      *
-     * @return  string
+     * @return  string  The method's source, from its signature to just before its closing brace
      *
      * @since   10.6.0
      */

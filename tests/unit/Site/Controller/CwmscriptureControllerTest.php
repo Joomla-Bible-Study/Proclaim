@@ -29,9 +29,9 @@ class CwmscriptureControllerTest extends ProclaimTestCase
     /**
      * Get the source body of a CwmscriptureController method for structural assertions.
      *
-     * @param   string  $method
+     * @param   string  $method  The method's name
      *
-     * @return  string
+     * @return  string  The method's lines, from its declaration through its closing brace
      *
      * @since   10.5.6
      * @throws  \ReflectionException

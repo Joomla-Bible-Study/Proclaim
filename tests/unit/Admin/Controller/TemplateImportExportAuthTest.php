@@ -32,9 +32,9 @@ class TemplateImportExportAuthTest extends ProclaimTestCase
     /**
      * The source body of a controller method.
      *
-     * @param   string  $method
+     * @param   string  $method  The method's name
      *
-     * @return  string
+     * @return  string  The method's source, from the signature to the closing brace
      *
      * @since   10.7.2
      * @throws  \ReflectionException

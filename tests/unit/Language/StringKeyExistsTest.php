@@ -61,7 +61,7 @@ class StringKeyExistsTest extends TestCase
      * their own en-GB file, and a scan that misses those reports ~70 keys as
      * undefined that are defined perfectly well one directory over.
      *
-     * @return  array<string, string>
+     * @return  array<string, string>  Each en-GB string's raw value, keyed by its language key
      *
      * @since 10.6.0
      */
@@ -105,7 +105,8 @@ class StringKeyExistsTest extends TestCase
      * — and the literal prefix is not a key anyone declares. Treating those as
      * missing would make this test permanently red for correct code.
      *
-     * @return  array<int, array{0: string, 1: int, 2: string}>
+     * @return  array<int, array{0: string, 1: int, 2: string}>  Each unconcatenated literal key found: its
+     *                                                           repository-relative file, line number, then the key
      *
      * @since 10.6.0
      */

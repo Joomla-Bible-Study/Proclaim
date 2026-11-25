@@ -144,7 +144,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
      * @param   int     $type      Template type
      * @param   string  $filename  Record filename
      *
-     * @return  CwmtemplatecodeTable
+     * @return  CwmtemplatecodeTable  A table on a stub database, with id 4242 and that type and filename
      *
      * @since 10.7.1
      */
@@ -189,7 +189,7 @@ class CwmtemplatecodeTableDeleteTest extends IntegrationTestCase
      * harness — so every full stop in the message is substituted and the text
      * cannot be asserted on. The count is what distinguishes the branches.
      *
-     * @return  int
+     * @return  int  The number of entries recorded since setUp()
      *
      * @since 10.7.1
      */

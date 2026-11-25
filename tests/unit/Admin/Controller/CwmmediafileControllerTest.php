@@ -79,7 +79,7 @@ class CwmmediafileControllerTest extends ProclaimTestCase
      * @param   class-string  $class   The class to reflect.
      * @param   string        $method  The method name.
      *
-     * @return  string
+     * @return  string  The method's source, from the signature to the closing brace
      *
      * @since   10.5.6
      * @throws  \ReflectionException

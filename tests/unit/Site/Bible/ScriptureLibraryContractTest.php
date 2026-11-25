@@ -90,7 +90,8 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      * Derived rather than listed: a hand-maintained list is what let the last
      * removal through.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  Each distinct reference's fully qualified class, then its
+     *                                                      symbol, keyed by the two joined with ::
      *
      * @since   10.5.9
      */
@@ -132,7 +133,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
     /**
      * Files under the scanned roots.
      *
-     * @return  string[]
+     * @return  string[]  Absolute paths of every PHP file under SOURCE_ROOTS, vendored trees skipped
      *
      * @since   10.5.9
      */
@@ -212,7 +213,7 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
     /**
      * Every `$provider->method(` name the source calls.
      *
-     * @return  string[]
+     * @return  string[]  Each distinct method called on a variable whose name ends in provider or Provider
      *
      * @since   10.5.9
      */

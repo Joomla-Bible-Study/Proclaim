@@ -56,7 +56,7 @@ class AssetNameContractTest extends TestCase
     /**
      * Section names declared in admin/access.xml.
      *
-     * @return  list<string>
+     * @return  list<string>  The name of each section element in admin/access.xml, in file order
      *
      * @since   10.5.8
      */
@@ -77,7 +77,7 @@ class AssetNameContractTest extends TestCase
     /**
      * Repository root.
      *
-     * @return  string
+     * @return  string  Its absolute path
      *
      * @since   10.5.8
      */
@@ -89,7 +89,8 @@ class AssetNameContractTest extends TestCase
     /**
      * Every PHP file that could carry an asset name.
      *
-     * @return  list<string>
+     * @return  list<string>  Absolute paths of every PHP file at any depth in admin/src, site/src, api/src, admin/tmpl
+     *                        and site/tmpl, bundled vendor code included
      *
      * @since   10.5.8
      */
@@ -123,7 +124,7 @@ class AssetNameContractTest extends TestCase
      *
      * @param   string  $file  Absolute path to a PHP file
      *
-     * @return  string
+     * @return  string  The file's source with every comment and docblock dropped
      *
      * @since   10.5.8
      */
@@ -494,7 +495,7 @@ class AssetNameContractTest extends TestCase
      *
      * Read from source rather than called, so the test needs no Joomla runtime.
      *
-     * @return  list<string>
+     * @return  list<string>  Each literal assetname in getAssetObjects()'s source, in source order
      *
      * @since   10.6.0
      */

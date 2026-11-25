@@ -58,7 +58,8 @@ class ApiFilterQueryTest extends IntegrationTestCase
     /**
      * model, filter key, filter value, and a pattern the WHERE must gain.
      *
-     * @return  array<string, array{0: string, 1: string, 2: mixed, 3: string}>
+     * @return  array<string, array{0: string, 1: string, 2: mixed, 3: string}>  Each case: model, filter key, value,
+     *                                                                           then a pattern the WHERE must gain
      *
      * @since   10.5.8
      */
@@ -79,7 +80,7 @@ class ApiFilterQueryTest extends IntegrationTestCase
      * @param   string  $name   Model name without the Model suffix
      * @param   array   $state  State keys to set before building
      *
-     * @return  string
+     * @return  string  The list query's SQL, with bound values left as placeholders
      *
      * @since   10.5.8
      */
@@ -182,7 +183,7 @@ class ApiFilterQueryTest extends IntegrationTestCase
      *
      * @param   callable  $fn  Work to run
      *
-     * @return  mixed
+     * @return  mixed  Whatever $fn returns
      *
      * @since   10.5.8
      */

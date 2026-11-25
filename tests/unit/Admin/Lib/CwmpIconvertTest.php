@@ -35,9 +35,9 @@ class CwmpIconvertTest extends ProclaimTestCase
     /**
      * Get the source body of a CwmpIconvert method for structural assertions.
      *
-     * @param   string  $method
+     * @param   string  $method  The method's name
      *
-     * @return  string
+     * @return  string  The method's source, from the signature to the closing brace
      *
      * @since   10.5.6
      */

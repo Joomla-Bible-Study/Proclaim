@@ -63,7 +63,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
     /**
      * Every ALTER TABLE in the migration set, one case per statement.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  Each ALTER, keyed by file name and ordinal: the file name,
+     *                                                      then the normalized statement
      *
      * @since   10.5.7
      */
@@ -148,7 +149,8 @@ class MigrationStatementContractTest extends ProclaimTestCase
      * whitespace would make `/** CAN FAIL **\/ ;` — which Joomla does not
      * accept — indistinguishable from the form it does.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  Each additive ALTER, keyed by file name and ordinal:
+     *                                                      the file name, then its raw text before its semicolon
      *
      * @since   10.5.10
      */
@@ -240,7 +242,7 @@ class MigrationStatementContractTest extends ProclaimTestCase
      *
      * @param   string  $sql  File contents, line comments already removed.
      *
-     * @return  list<string>
+     * @return  list<string>  Each statement's raw text before its unquoted semicolon; an unterminated tail is dropped
      *
      * @since   10.5.10
      */
@@ -294,7 +296,7 @@ class MigrationStatementContractTest extends ProclaimTestCase
      *
      * @param   string  $sql  File contents.
      *
-     * @return  list<string>
+     * @return  list<string>  Each non-empty piece between semicolons, with its whitespace collapsed and trimmed
      *
      * @since   10.5.7
      */
@@ -325,7 +327,7 @@ class MigrationStatementContractTest extends ProclaimTestCase
      *
      * @param   string  $statement  The normalised statement.
      *
-     * @return  int
+     * @return  int  One more than the commas outside parentheses and single or double quotes
      *
      * @since   10.5.7
      */

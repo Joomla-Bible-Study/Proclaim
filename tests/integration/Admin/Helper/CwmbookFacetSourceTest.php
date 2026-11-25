@@ -145,7 +145,7 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
      *
      * @param   int  $count  How many to return
      *
-     * @return  int[]
+     * @return  int[]  The lowest $count book numbers, 101 to 166, that getStudyBooks() does not offer
      *
      * @since 10.5.8
      * @throws  \Exception

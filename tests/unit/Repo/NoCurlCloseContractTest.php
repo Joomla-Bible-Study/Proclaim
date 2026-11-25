@@ -93,7 +93,7 @@ class NoCurlCloseContractTest extends ProclaimTestCase
      *
      * @param   string  $source  PHP source code.
      *
-     * @return  bool
+     * @return  bool  Whether the source calls curl_close(); a same-named method or a declaration does not count.
      *
      * @since   10.7.8
      */

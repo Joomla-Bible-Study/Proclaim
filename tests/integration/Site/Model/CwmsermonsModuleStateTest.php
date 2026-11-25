@@ -120,7 +120,7 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      * Skips when no live database/container is available, since the model needs
      * a real driver to build and run its list query.
      *
-     * @return  CwmsermonsModel
+     * @return  CwmsermonsModel  A site sermons model that ignores the request
      *
      * @since   10.3.3
      * @throws  \Exception
@@ -167,11 +167,11 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
     }
 
     /**
-     * Run getItems() while buffering stray core output.
+     * Run getItems() with the core Language.php warning suppressed.
      *
      * @param   CwmsermonsModel  $model  Configured model
      *
-     * @return  array
+     * @return  array  The study rows getItems() returns, empty when none match
      *
      * @since   10.3.3
      */
@@ -213,7 +213,7 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      *
      * @param   array  $overrides  Module param key => value pairs
      *
-     * @return  Registry
+     * @return  Registry  Params with moduleitems at 5, then each override set over it
      *
      * @since   10.3.3
      */
@@ -230,10 +230,10 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
     }
 
     /**
-     * Every filter dropdown left unset — the real-world [""] shape that
-     * triggered the bug.
+     * Every filter dropdown but year left unset — the real-world [""] shape
+     * that triggered the bug.
      *
-     * @return  Registry
+     * @return  Registry  Module params with six filter keys each set to [''], and moduleitems at 5
      *
      * @since   10.3.3
      */
@@ -368,7 +368,7 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
      *
      * @param   string  $label  Distinguishes the fixtures in failure output
      *
-     * @return  array{teacher: int, title: string}
+     * @return  array{teacher: int, title: string}  The new teacher's id, and the title of the study they teach
      *
      * @since   10.7.3
      */

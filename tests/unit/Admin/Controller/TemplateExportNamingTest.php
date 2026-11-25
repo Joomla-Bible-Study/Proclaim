@@ -40,7 +40,7 @@ class TemplateExportNamingTest extends ProclaimTestCase
     /**
      * Anything that would give the title control of a path or a header.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each case: a title that tries to steer a path or a header
      *
      * @since 10.7.1
      */

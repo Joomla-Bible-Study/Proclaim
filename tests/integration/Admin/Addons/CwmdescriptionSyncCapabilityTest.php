@@ -46,7 +46,7 @@ class CwmdescriptionSyncCapabilityTest extends IntegrationTestCase
      * belong here. Rumble, Facebook, Dailymotion and SoundCloud each returned
      * true before #1920 without implementing the push.
      *
-     * @return  array<string, array{0: string, 1: bool}>
+     * @return  array<string, array{0: string, 1: bool}>  Each server type, then whether it can push a description back
      *
      * @since   10.6.0
      */

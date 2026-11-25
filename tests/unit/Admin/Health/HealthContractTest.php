@@ -570,7 +570,7 @@ class HealthContractTest extends ProclaimTestCase
     /**
      * Absolute paths of every check source file.
      *
-     * @return  string[]
+     * @return  string[]  The absolute path of every PHP file in admin/src/Health/Check
      *
      * @since   10.6.0
      */
@@ -643,7 +643,7 @@ class HealthContractTest extends ProclaimTestCase
      * @param   string  $file   The importing file
      * @param   string  $class  Short class name
      *
-     * @return  ?string
+     * @return  ?string  The class's absolute path, or null when no Proclaim import names it or the file is missing
      *
      * @since   10.6.0
      */

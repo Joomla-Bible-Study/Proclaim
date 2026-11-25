@@ -59,7 +59,7 @@ class ToolbarSaveGroupTest extends ProclaimTestCase
     /**
      * Every admin view that builds an edit toolbar.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  Each edit view's directory name, then its HtmlView source
      *
      * @since   10.6.0
      */

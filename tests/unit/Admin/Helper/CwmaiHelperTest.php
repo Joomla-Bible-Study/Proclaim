@@ -44,9 +44,9 @@ class CwmaiHelperTest extends ProclaimTestCase
     /**
      * Get the source body of a CwmaiHelper method for structural assertions.
      *
-     * @param   string  $method
+     * @param   string  $method  The method's name
      *
-     * @return  string
+     * @return  string  The method's source, from the signature to the closing brace
      *
      * @since   10.5.6
      * @throws  \ReflectionException
@@ -222,7 +222,7 @@ class CwmaiHelperTest extends ProclaimTestCase
      * to parseJsonResponse(), which would otherwise throw a raw, unhelpful
      * "Invalid JSON — " error with an empty snippet.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  The provider and an abnormal finish reason it reports
      *
      * @since   10.5.6
      */

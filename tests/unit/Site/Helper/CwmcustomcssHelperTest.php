@@ -28,9 +28,9 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmcustomcssHelperTest extends ProclaimTestCase
 {
     /**
-     * Ways a browser's tokeniser will accept the end of a style element.
+     * Closing style tags, in three letter cases and with whitespace around the slash, that sanitizing must neutralize.
      *
-     * @return  array<string, array{string}>
+     * @return  array<string, array{string}>  Each breakout sheet, keyed by its closing-tag variant
      *
      * @since   10.5.8
      */

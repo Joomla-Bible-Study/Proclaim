@@ -110,7 +110,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
      *
      * @param   \ReflectionMethod  $reflection  The method to read.
      *
-     * @return  string
+     * @return  string  The method's lines, from its declaration through its closing brace
      *
      * @since   10.5.6
      */
