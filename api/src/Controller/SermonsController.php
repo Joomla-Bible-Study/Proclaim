@@ -132,7 +132,9 @@ class SermonsController extends AbstractWritableController
      * Get the model, mapping API names to Cwm-prefixed model classes.
      *
      * Joomla's MVCFactory expects Model\SermonsModel but Proclaim uses
-     * Model\CwmmessagesModel (Cwm prefix + "messages" entity name).
+     * Model\CwmmessagesModel (Cwm prefix + "messages" entity name). The
+     * action-log type, "message", is mapped too, so the record a log entry
+     * names, and a delete's outcome, are read from the real model.
      *
      * @param   string  $name    Model name
      * @param   string  $prefix  Model prefix
@@ -148,6 +150,7 @@ class SermonsController extends AbstractWritableController
         $map = [
             'sermons' => 'Cwmmessages',
             'sermon'  => 'Cwmmessage',
+            'message' => 'Cwmmessage',
         ];
 
         $name = $map[strtolower($name)] ?? $name;

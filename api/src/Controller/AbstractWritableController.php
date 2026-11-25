@@ -16,7 +16,9 @@ namespace CWM\Component\Proclaim\Api\Controller;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use Joomla\CMS\Access\Exception\NotAllowed;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\ApiController;
+use Joomla\CMS\Response\JsonResponse;
 
 /**
  * Base controller for resources the API exposes for writing.
@@ -98,6 +100,12 @@ abstract class AbstractWritableController extends ApiController
      * read it from — a log entry saying only "deleted #7" is of little use during
      * an audit.
      *
+     * Core can return without deleting anything. Joomla 5.4 answers 204 when the
+     * model refuses without setting an error, as it does for an item that is not
+     * yet trashed, and 6.0 to 6.2.0 do the same when a plugin vetoes the delete.
+     * So the deletion is logged only once the row is gone, and a row that is still
+     * there gets the 409 Joomla 6.2.1 sends for the same refusal.
+     *
      * @param   int|null  $id  Record id, or null to read it from the request.
      *
      * @return  mixed
@@ -112,9 +120,17 @@ abstract class AbstractWritableController extends ApiController
         try {
             $result = parent::delete($id);
         } catch (NotAllowed $e) {
-            $this->logDenied('delete', $recordId);
+            $this->logDenied('delete', $recordId, $e);
 
             throw $e;
+        }
+
+        $remaining = $this->remainingRecord($recordId);
+
+        if ($remaining !== null) {
+            $this->sendDeleteConflict($remaining);
+
+            return $result;
         }
 
         $this->logApiWrite('DELETED', $recordId, $title);
@@ -134,7 +150,7 @@ abstract class AbstractWritableController extends ApiController
         try {
             return parent::add();
         } catch (NotAllowed $e) {
-            $this->logDenied('create', 0);
+            $this->logDenied('create', 0, $e);
 
             throw $e;
         }
@@ -152,7 +168,7 @@ abstract class AbstractWritableController extends ApiController
         try {
             return parent::edit();
         } catch (NotAllowed $e) {
-            $this->logDenied('update', $this->input->getInt('id', 0));
+            $this->logDenied('update', $this->input->getInt('id', 0), $e);
 
             throw $e;
         }
@@ -169,33 +185,100 @@ abstract class AbstractWritableController extends ApiController
      * number of real integrations, and is a genuine signal — an over-scoped
      * client, a buggy one, or a key being used for something it should not be.
      *
-     * @param   string   $verb  create, update or delete.
-     * @param   int  $id    Record id, 0 when creating.
+     * The system plugin records the refusals that happen before any controller
+     * exists, such as Joomla's core.api check. Both go through
+     * CwmlogHelper::apiRefusal(), so a refusal recorded here is not recorded again
+     * there.
+     *
+     * @param   string      $verb     create, update or delete.
+     * @param   int         $id       Record id, 0 when creating.
+     * @param   NotAllowed  $refusal  The exception that refused the request.
      *
      * @return  void
      *
      * @since   10.3.4
      */
-    private function logDenied(string $verb, int $id): void
+    private function logDenied(string $verb, int $id, NotAllowed $refusal): void
     {
         try {
-            $user   = $this->app->getIdentity();
-            $target = $id > 0 ? $this->contentType . ' #' . $id : $this->contentType;
+            $user = $this->app->getIdentity();
 
-            CwmlogHelper::warning(
-                \sprintf(
-                    'Authenticated user %s (#%d) was refused permission to %s %s from %s',
-                    $user?->username ?? 'unknown',
-                    (int) ($user?->id ?? 0),
-                    $verb,
-                    $target,
-                    $this->app->getInput()->server->getString('REMOTE_ADDR', 'unknown address')
-                ),
-                CwmlogHelper::CATEGORY_API
+            CwmlogHelper::apiRefusal(
+                $refusal,
+                $user?->username ?? 'unknown',
+                (int) ($user?->id ?? 0),
+                $verb,
+                $id > 0 ? $this->contentType . ' #' . $id : $this->contentType,
+                $this->app->getInput()->server->getString('REMOTE_ADDR', 'unknown address')
             );
         } catch (\Throwable) {
             // Logging must never mask the 403 the caller needs to receive.
         }
+    }
+
+    /**
+     * The record, when a delete that core reported as done left it in place.
+     *
+     * Answers null when the record cannot be looked up, so the delete is logged
+     * as it always was rather than refused on a guess.
+     *
+     * @param   int  $id  Record id.
+     *
+     * @return  object|null  The record still in the database, or null when it is gone or cannot be read
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function remainingRecord(int $id): ?object
+    {
+        if ($id <= 0 || $this->logType === '') {
+            return null;
+        }
+
+        try {
+            $model = $this->getModel($this->logType);
+
+            if (!$model) {
+                return null;
+            }
+
+            $table = $model->getTable();
+
+            return $table->load($id) ? $table : null;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * Answer 409 Conflict for a delete that left the record in place, the way
+     * Joomla 6.2.1 answers the same refusal, then end the request.
+     *
+     * A record that is not trashed gets core's own reason, that it must be
+     * trashed first; anything else gets core's generic delete failure.
+     *
+     * @param   object  $record  The record still in the database.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function sendDeleteConflict(object $record): void
+    {
+        $untrashed = isset($record->published) && (int) $record->published !== -2;
+
+        $this->app->setHeader('status', 409, true);
+        $this->app->setHeader('Content-Type', 'application/json');
+        $this->app->sendHeaders();
+
+        echo new JsonResponse([
+            'status'  => 'Conflict',
+            'code'    => 409,
+            'message' => $untrashed
+                ? 'Resource not in state that can be deleted, must be trashed before it can be deleted'
+                : Text::_('JLIB_APPLICATION_ERROR_DELETE'),
+        ]);
+
+        $this->app->close();
     }
 
     /**

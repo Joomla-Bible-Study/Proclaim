@@ -13,18 +13,16 @@
  *     all three shipped bugs produce (routes never registered)
  *   - a Joomla API token obtained the way an admin obtains one (their
  *     profile) reaches the API and gets a JSON:API document
- *   - the one remaining setting, public_reads, works when set the way an
- *     admin sets it — through the plugin's own edit form. #1328's lesson:
- *     writing the value straight to the database would pass while the UI
- *     path is broken, so the UI path is the one exercised.
+ *   - the plugin's edit form offers no way to open reads to the public: every
+ *     route needs a token, and RSS feeds are the public channel. Checked
+ *     through the form itself, because #1328's lesson is that the UI path is
+ *     the one that breaks unseen.
  *   - the media resource's full write lifecycle round-trips (#2135): create,
  *     read back, amend a field via PATCH, confirm the amendment is visible,
  *     trash, delete. Every prior test here only ever created — nothing
  *     exercised PATCH or DELETE, which is exactly how #2135 shipped invisible.
  *
- * Serial: the token test feeds the authenticated request, and the
- * public_reads test must restore the shipped default for the 401 assertion
- * to stay meaningful on re-runs.
+ * Serial: the token test feeds the authenticated request.
  */
 
 const { test, expect } = require('@playwright/test');
@@ -224,7 +222,7 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
         }
     });
 
-    test('public_reads set through the plugin UI opens and closes anonymous reads', async ({ page, request }) => {
+    test('the plugin offers no setting that opens reads to the public', async ({ page, request }) => {
         // Open the plugin's edit form from the Plugins screen — the same
         // path an administrator walks.
         await page.goto(
@@ -234,27 +232,15 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
         await page.locator('#pluginList tbody tr a[href*="task=plugin.edit"]').first().click();
         await page.waitForLoadState('networkidle');
 
-        const setPublicReads = async (value) => {
-            await page.locator(`label[for="jform_params_public_reads${value}"]`).click();
-            await page.click('.button-apply');
-            await page.waitForLoadState('networkidle');
-        };
+        await expect(page.locator('form[name="adminForm"]')).toBeVisible();
+        await expect(
+            page.locator('[name^="jform[params][public_reads]"]'),
+            'The plugin form still offers a public reads switch',
+        ).toHaveCount(0);
 
-        // Open anonymous reads…
-        await setPublicReads(1);
-        let response = await request.get(API_SERMONS);
-        expect(
-            response.status(),
-            'public_reads=Yes saved through the UI, but an anonymous read is still rejected',
-        ).toBe(200);
-
-        // …and restore the shipped default, which must close them again.
-        await setPublicReads(0);
-        response = await request.get(API_SERMONS);
-        expect(
-            response.status(),
-            'public_reads=No saved through the UI, but anonymous reads stayed open',
-        ).toBe(401);
+        // With nothing to switch, an anonymous read is refused.
+        const response = await request.get(API_SERMONS);
+        expect(response.status(), 'An anonymous read was not refused').toBe(401);
     });
 
     test('a supported (non-legacy) server exists to attach media to', async ({ page, request }) => {
