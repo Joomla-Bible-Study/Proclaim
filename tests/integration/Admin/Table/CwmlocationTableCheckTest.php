@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * CwmlocationTable::check() requires a location name.
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(CwmlocationTable::class)]
 class CwmlocationTableCheckTest extends IntegrationTestCase
@@ -26,7 +26,7 @@ class CwmlocationTableCheckTest extends IntegrationTestCase
      * The table under test.
      *
      * @var    CwmlocationTable
-     * @since  10.2.0
+     * @since  10.1.0
      */
     private CwmlocationTable $table;
 
@@ -35,7 +35,7 @@ class CwmlocationTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -48,7 +48,7 @@ class CwmlocationTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckPassesWithValidData(): void
     {
@@ -61,7 +61,7 @@ class CwmlocationTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenLocationTextNull(): void
     {
@@ -75,7 +75,7 @@ class CwmlocationTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenLocationTextEmpty(): void
     {
@@ -89,7 +89,7 @@ class CwmlocationTableCheckTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testCheckThrowsWhenLocationTextWhitespace(): void
     {

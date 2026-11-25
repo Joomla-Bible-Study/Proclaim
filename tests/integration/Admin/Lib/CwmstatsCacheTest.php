@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Cwmstats has getTopScore() but not getTopScoreSite().
  *
- * @since  10.2.0
+ * @since  10.1.0
  */
 #[CoversClass(Cwmstats::class)]
 class CwmstatsCacheTest extends IntegrationTestCase
@@ -27,7 +27,7 @@ class CwmstatsCacheTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {

@@ -18,7 +18,7 @@ use Joomla\Registry\Registry;
 /**
  * Test class for Cwmhelper
  *
- * @since  10.0.0
+ * @since  10.1.0
  */
 class CwmhelperTest extends ProclaimTestCase
 {

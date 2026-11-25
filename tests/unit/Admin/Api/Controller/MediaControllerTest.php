@@ -29,7 +29,7 @@ class MediaControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testGetModelNameMapping(): void
     {
@@ -47,7 +47,7 @@ class MediaControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testPreprocessSaveDataExists(): void
     {
@@ -60,7 +60,7 @@ class MediaControllerTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testPreprocessNormalizesPodcastId(): void
     {

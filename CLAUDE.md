@@ -80,8 +80,7 @@ from two halves.
   rewrites every list there, so on such a branch, edit its own list by hand.
 
 On `development` the list is empty, so any gap there fails the test. The test
-skips `tests/fixtures/` and the archived add-on in `tests/Backupfiles/`, so
-don't take either as a model.
+skips `tests/fixtures/`, which holds data, not test code.
 
 ### Naming Conventions
 

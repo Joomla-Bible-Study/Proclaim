@@ -31,7 +31,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * A sermon that fails the published filter queues a message and returns
  * nothing, rather than throwing.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
 {
@@ -39,7 +39,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseInterface|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?DatabaseInterface $db = null;
 
@@ -47,7 +47,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
      * Factory's language before the test replaced it to silence date warnings.
      *
      * @var    mixed
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -55,7 +55,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
      * The identity before the test switched to a guest.
      *
      * @var    User|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?User $savedIdentity = null;
 
@@ -64,7 +64,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \Exception
      */
     protected function setUp(): void
@@ -92,7 +92,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \Exception
      */
     protected function tearDown(): void
@@ -119,7 +119,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \Exception
      */
     #[TestDox('A sermon that fails the published filter queues a message instead of throwing')]
@@ -157,7 +157,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
      *
      * @return  int  Seeded study id.
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     private function seedStudy(): int
     {
@@ -183,7 +183,7 @@ class CwmsermonUnpublishedGuardTest extends IntegrationTestCase
      *
      * @return  CwmsermonModel  The model under test
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \Exception
      */
     private function createModel(): CwmsermonModel

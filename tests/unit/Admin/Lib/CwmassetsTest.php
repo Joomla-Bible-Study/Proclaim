@@ -20,7 +20,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * Test class for Cwmassets
  *
- * @since  10.0.0
+ * @since  10.1.0
  */
 class CwmassetsTest extends ProclaimTestCase
 {
@@ -47,7 +47,7 @@ class CwmassetsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testParentIdDefaultIsZero(): void
     {
@@ -59,7 +59,7 @@ class CwmassetsTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testGetAssetObjectsReturnsExpectedStructure(): void
     {

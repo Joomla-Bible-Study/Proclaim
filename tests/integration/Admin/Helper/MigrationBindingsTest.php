@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * method executes here against the real database, inside a rolled-back
  * transaction, and has to produce its observable effect — not merely return.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 #[CoversClass(CwmmigrationHelper::class)]
 class MigrationBindingsTest extends IntegrationTestCase

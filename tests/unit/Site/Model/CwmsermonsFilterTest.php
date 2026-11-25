@@ -35,7 +35,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     private function invokeFilter(string $methodName, array $args): void
@@ -53,7 +53,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      * The conditions the stub query's where() and whereIn() received.
      *
      * @var    array
-     * @since  10.3.2
+     * @since  10.3.0
      */
     private array $whereCalls = [];
 
@@ -62,7 +62,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  QueryInterface&\PHPUnit\Framework\MockObject\Stub
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     private function createMockQuery(): QueryInterface
     {
@@ -93,7 +93,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  object  Mock database object
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     private function createMockDb(): object
     {
@@ -106,7 +106,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
              *
              * @return  string|array  The quoted name or names
              *
-             * @since   10.3.2
+             * @since   10.3.0
              */
             public function quoteName($name, $as = null): string|array
             {
@@ -139,7 +139,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
              *
              * @return  object  The subquery double
              *
-             * @since   10.3.2
+             * @since   10.3.0
              */
             public function getQuery(bool $new = false): object
             {
@@ -170,7 +170,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                      *
                      * @return  static  The double
                      *
-                     * @since   10.3.2
+                     * @since   10.3.0
                      */
                     public function select($columns): static
                     {
@@ -185,7 +185,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                      *
                      * @return  static  The double
                      *
-                     * @since   10.3.2
+                     * @since   10.3.0
                      */
                     public function from($tables, $subQueryAlias = null): static
                     {
@@ -201,7 +201,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                      *
                      * @return  static  The double
                      *
-                     * @since   10.3.2
+                     * @since   10.3.0
                      */
                     public function where($condition): static
                     {
@@ -221,7 +221,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                      *
                      * @return  static  The double
                      *
-                     * @since   10.3.2
+                     * @since   10.3.0
                      */
                     public function whereIn(string $keyName, array $keyValues, $dataType = 'int'): static
                     {
@@ -235,7 +235,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                      *
                      * @return  string  The SQL
                      *
-                     * @since   10.3.2
+                     * @since   10.3.0
                      */
                     public function __toString(): string
                     {
@@ -253,7 +253,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
              *
              * @return  string  The quoted text
              *
-             * @since   10.3.2
+             * @since   10.3.0
              */
             public function quote($text, $escape = true): string
             {
@@ -265,7 +265,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
              *
              * @return  string  The null date
              *
-             * @since   10.3.2
+             * @since   10.3.0
              */
             public function getNullDate(): string
             {
@@ -283,7 +283,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addParamFilter: null params adds no WHERE clause')]
@@ -302,7 +302,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox("addParamFilter: ['-1'] sentinel adds no WHERE clause")]
@@ -322,7 +322,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox("addParamFilter: [''] empty string adds no WHERE clause (module param bug)")]
@@ -341,7 +341,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addParamFilter: [null] adds no WHERE clause')]
@@ -360,7 +360,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addParamFilter: single valid value adds = clause')]
@@ -380,7 +380,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addParamFilter: multiple values adds IN clause')]
@@ -400,7 +400,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addParamFilter: user filter only adds = clause')]
@@ -420,7 +420,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addParamFilter: param + user filter adds both clauses')]
@@ -439,7 +439,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addParamFilter: empty string param + user filter only applies user filter')]
@@ -463,7 +463,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addTeacherFilter: null params adds no WHERE clause')]
@@ -482,7 +482,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox("addTeacherFilter: [''] empty string adds no WHERE clause")]
@@ -501,7 +501,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addTeacherFilter: valid teacher ID adds EXISTS clause')]
@@ -622,7 +622,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox('addBookFilter: null params adds no WHERE clause')]
@@ -641,7 +641,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox("addBookFilter: [''] empty string adds no WHERE clause")]
@@ -660,7 +660,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      * @throws  \ReflectionException
      */
     #[TestDox("addBookFilter: ['-1'] sentinel adds no WHERE clause")]

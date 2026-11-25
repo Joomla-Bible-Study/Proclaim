@@ -29,7 +29,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 /**
  * Nothing Proclaim ships turns off TLS certificate verification.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class TlsVerificationContractTest extends ProclaimTestCase
 {
@@ -37,7 +37,7 @@ class TlsVerificationContractTest extends ProclaimTestCase
      * Source trees that ship.
      *
      * @var    string[]
-     * @since 10.7.1
+     * @since 10.7.0
      */
     private const ROOTS = ['admin/src', 'site/src', 'api/src', 'plugins', 'modules'];
 
@@ -45,7 +45,7 @@ class TlsVerificationContractTest extends ProclaimTestCase
      * Third-party code we neither wrote nor ship-audit here.
      *
      * @var    string[]
-     * @since 10.7.1
+     * @since 10.7.0
      */
     private const SKIP = ['/vendor/', '/node_modules/'];
 
@@ -54,7 +54,7 @@ class TlsVerificationContractTest extends ProclaimTestCase
      *
      * @return  string[]  Absolute paths of every PHP file to inspect.
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     private static function sourceFiles(): array
     {
@@ -93,7 +93,7 @@ class TlsVerificationContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('No shipped file disables TLS peer or host verification')]
     public function testNothingDisablesTlsVerification(): void
@@ -131,7 +131,7 @@ class TlsVerificationContractTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('The scan reads real files and its pattern matches a disabling line')]
     public function testScanIsNotVacuous(): void

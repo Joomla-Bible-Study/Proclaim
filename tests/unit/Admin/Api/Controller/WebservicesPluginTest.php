@@ -26,7 +26,7 @@ class WebservicesPluginTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testPluginClassExists(): void
     {
@@ -38,7 +38,7 @@ class WebservicesPluginTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testCreateWriteRoutesMethodExists(): void
     {
@@ -51,7 +51,7 @@ class WebservicesPluginTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testWriteRoutesNeverPublic(): void
     {
@@ -88,7 +88,7 @@ class WebservicesPluginTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.3.2
+     * @since   10.3.0
      */
     public function testCreateReadOnlyRoutesMethodExists(): void
     {

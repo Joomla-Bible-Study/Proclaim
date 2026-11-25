@@ -25,7 +25,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      * The podcast helper under test.
      *
      * @var    Cwmpodcast
-     * @since  10.2.0
+     * @since  10.1.0
      */
     protected Cwmpodcast $podcast;
 
@@ -33,7 +33,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      * The folder holding the test fixtures.
      *
      * @var    string
-     * @since  10.2.0
+     * @since  10.1.0
      */
     protected string $fixturesPath;
 
@@ -42,7 +42,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function setUp(): void
     {
@@ -61,7 +61,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testGetAvailableDurationMethodsReturnsArray(): void
     {
@@ -91,7 +91,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testGetSupportedDurationFormatsReturnsArray(): void
     {
@@ -114,7 +114,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     #[DataProvider('formatTimeProvider')]
     public function testFormatTime(int $seconds, int $expectedHours, int $expectedMinutes, int $expectedSeconds): void
@@ -132,7 +132,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: int, 1: int, 2: int, 3: int}>  Seconds, then their hours, minutes and seconds
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public static function formatTimeProvider(): array
     {
@@ -152,7 +152,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testGetDurationReturnsZeroForNonExistentFile(): void
     {
@@ -165,7 +165,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testGetDurationReturnsZeroForEmptyFile(): void
     {
@@ -183,7 +183,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testWavDurationParser(): void
     {
@@ -206,7 +206,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testWavDurationParserReturnsZeroForInvalidFile(): void
@@ -229,7 +229,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testM4aDurationParser(): void
@@ -255,7 +255,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testOggDurationParserReturnsZeroForInvalidFile(): void
@@ -278,7 +278,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testMp3DurationParserReturnsZeroForInvalidFile(): void
     {
@@ -296,7 +296,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testFindFFprobe(): void
@@ -324,7 +324,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testGetDurationWithFFprobeReturnsZeroForNonExistentFile(): void
@@ -341,7 +341,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      * @throws  \ReflectionException
      */
     public function testGetDurationWithGetID3ReturnsZeroWhenNotAvailable(): void
@@ -368,7 +368,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testSkipID3v2TagWithValidHeader(): void
     {
@@ -394,7 +394,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function testSkipID3v2TagWithNonID3Data(): void
     {
@@ -413,7 +413,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     #[DataProvider('youtubeUrlProvider')]
     public function testIsYouTubeUrl(string $url, bool $expected): void
@@ -427,7 +427,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: bool}>  The URL, and whether it is a YouTube URL
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public static function youtubeUrlProvider(): array
     {
@@ -451,7 +451,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     #[DataProvider('youtubeVideoIdProvider')]
     public function testExtractYouTubeVideoId(string $url, ?string $expectedId): void
@@ -465,7 +465,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: string|null}>  The URL, and the video id it holds or null
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public static function youtubeVideoIdProvider(): array
     {
@@ -487,7 +487,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     #[DataProvider('iso8601DurationProvider')]
     public function testParseIso8601Duration(string $duration, int $expectedSeconds): void
@@ -501,7 +501,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: int}>  The duration, and its length in seconds
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public static function iso8601DurationProvider(): array
     {
@@ -525,7 +525,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  string  Path to created file
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function createTestWavFile(int $sampleRate, int $bitsPerSample, int $channels, int $durationSeconds): string
     {
@@ -570,7 +570,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  string  Path to created file
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     protected function createTestM4aFile(int $durationSeconds): string
     {
@@ -617,7 +617,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public static function tearDownAfterClass(): void
     {

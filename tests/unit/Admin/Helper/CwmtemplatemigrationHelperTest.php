@@ -614,7 +614,7 @@ class TestableCwmtemplatemigrationHelper extends CwmtemplatemigrationHelper
      *
      * @return  array  The params, or an empty array when the template has none
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     public function getParamsArray(int $id = 1): array
     {
@@ -890,7 +890,7 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     #[DataProvider('provideExpectedNewParams')]
     public function testMigrationHasAllDocumentedNewParams(string $param, string $expectedDefault): void
@@ -953,7 +953,7 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.1.0
      */
     #[DataProvider('provideExpectedRenames')]
     public function testRenameMapHasAllDocumentedEntries(string $oldName, string $newName): void

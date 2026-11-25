@@ -33,7 +33,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * These tests exercise the parts a source-level scan cannot see. The wider gap
  * — that no passive check is ever run by the suite — is its own problem.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 #[CoversClass(ProtectedStorageCheck::class)]
 class ProtectedStorageCheckTest extends ProclaimTestCase
@@ -43,7 +43,7 @@ class ProtectedStorageCheckTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('The check runs and returns a result')]
     public function testRunReturnsAResult(): void
@@ -59,7 +59,7 @@ class ProtectedStorageCheckTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('It is passive, so running it here is what the panel does')]
     public function testCheckIsPassive(): void
@@ -79,7 +79,7 @@ class ProtectedStorageCheckTest extends ProclaimTestCase
      *
      * @return  array<string, array{0: string, 1: bool, 2: string}>  Each case
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     public static function verdicts(): array
     {
@@ -100,7 +100,7 @@ class ProtectedStorageCheckTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \ReflectionException
      */
     #[TestDox('The wording follows what is actually at stake')]
@@ -127,7 +127,7 @@ class ProtectedStorageCheckTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      * @throws  \ReflectionException
      */
     #[TestDox('An empty folder is never reported as a fault')]

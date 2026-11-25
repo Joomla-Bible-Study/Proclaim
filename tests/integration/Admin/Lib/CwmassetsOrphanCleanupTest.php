@@ -28,7 +28,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 /**
  * Cwmassets::cleanOrphanedAssets() removes the assets whose records are gone.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 class CwmassetsOrphanCleanupTest extends IntegrationTestCase
 {
@@ -36,7 +36,7 @@ class CwmassetsOrphanCleanupTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseInterface|null
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private ?DatabaseInterface $db = null;
 
@@ -47,7 +47,7 @@ class CwmassetsOrphanCleanupTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     protected function setUp(): void
     {
@@ -68,7 +68,7 @@ class CwmassetsOrphanCleanupTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     protected function tearDown(): void
     {
@@ -88,7 +88,7 @@ class CwmassetsOrphanCleanupTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('cleanOrphanedAssets() removes an asset whose location record no longer exists')]
     public function testCleanOrphanedAssetsRemovesAnOrphanByBoundLikePattern(): void
@@ -126,7 +126,7 @@ class CwmassetsOrphanCleanupTest extends IntegrationTestCase
      *
      * @return  int  Number of #__assets rows with that name.
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     private function countAssetsNamed(string $name): int
     {

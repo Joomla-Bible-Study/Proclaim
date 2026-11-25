@@ -483,7 +483,7 @@ class AssetNameContractTest extends TestCase
      * UI while nothing enforces them per record, so it needs a reason.
      *
      * @var    array<string, string>
-     * @since 10.5.8
+     * @since 10.6.0
      */
     private const SECTIONS_WITHOUT_RECORDS = [
         'component' => 'Component-level permissions; owns no records.',
@@ -496,7 +496,7 @@ class AssetNameContractTest extends TestCase
      *
      * @return  list<string>
      *
-     * @since   10.5.8
+     * @since   10.6.0
      */
     private static function assetObjectSections(): array
     {

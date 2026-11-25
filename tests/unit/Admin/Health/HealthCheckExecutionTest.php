@@ -38,7 +38,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * This does not assert what any check concludes — that belongs with the check.
  * It asserts they can be executed at all, and that executing them is safe.
  *
- * @since  10.7.1
+ * @since  10.7.0
  */
 #[CoversClass(HealthRegistry::class)]
 class HealthCheckExecutionTest extends ProclaimTestCase
@@ -49,7 +49,7 @@ class HealthCheckExecutionTest extends ProclaimTestCase
      * and only the hand-written floor can be asserted.
      *
      * @var    int
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private const MINIMUM_PASSIVE_CHECKS = 15;
 
@@ -58,7 +58,7 @@ class HealthCheckExecutionTest extends ProclaimTestCase
      *
      * @return  list<HealthCheckInterface>  The passive checks
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     private function passiveChecks(): array
     {
@@ -73,7 +73,7 @@ class HealthCheckExecutionTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('Every passive check runs and returns a usable result')]
     public function testEveryPassiveCheckRuns(): void
@@ -142,7 +142,7 @@ class HealthCheckExecutionTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('Running the checks writes nothing')]
     public function testRunningTheChecksIsReadOnly(): void
@@ -182,7 +182,7 @@ class HealthCheckExecutionTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   10.7.1
+     * @since   10.7.0
      */
     #[TestDox('The active check is left alone')]
     public function testActiveChecksAreNotRunHere(): void

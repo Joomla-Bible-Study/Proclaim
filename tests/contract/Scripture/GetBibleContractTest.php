@@ -42,7 +42,7 @@ use PHPUnit\Framework\TestCase;
  * When it fails, re-capture and commit the fixture:
  *   php build/seed-scripture-fixture.php --refresh
  *
- * @since 10.7.1
+ * @since 10.7.0
  */
 #[Group('network')]
 class GetBibleContractTest extends TestCase
@@ -51,7 +51,7 @@ class GetBibleContractTest extends TestCase
      * Query endpoint, kept in step with GetBibleProvider::API_BASE.
      *
      * @var    string
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private const API_BASE = 'https://query.getbible.net/v2/';
 
@@ -60,7 +60,7 @@ class GetBibleContractTest extends TestCase
      * the live response and the recorded one can be compared directly.
      *
      * @var    string
-     * @since  10.7.1
+     * @since  10.7.0
      */
     private const PROBE_REFERENCE = 'Colossians 3:1-25';
 
@@ -69,7 +69,7 @@ class GetBibleContractTest extends TestCase
      *
      * @return  array|null  Decoded response, or null when the host is unreachable
      *
-     * @since 10.7.1
+     * @since 10.7.0
      */
     private function fetchLive(): ?array
     {
@@ -105,7 +105,7 @@ class GetBibleContractTest extends TestCase
      *
      * @return  array
      *
-     * @since 10.7.1
+     * @since 10.7.0
      */
     private function recorded(): array
     {
@@ -126,7 +126,7 @@ class GetBibleContractTest extends TestCase
      *
      * @return  void
      *
-     * @since 10.7.1
+     * @since 10.7.0
      */
     #[TestDox('the live response still carries the fields the provider reads')]
     public function testLiveResponseKeepsTheProviderContract(): void
@@ -160,7 +160,7 @@ class GetBibleContractTest extends TestCase
      *
      * @return  void
      *
-     * @since 10.7.1
+     * @since 10.7.0
      */
     #[TestDox('the committed fixture still matches the live response shape')]
     public function testFixtureStillMatchesLive(): void
