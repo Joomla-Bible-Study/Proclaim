@@ -28,25 +28,25 @@ use Joomla\Router\Route;
  * separate Proclaim setting duplicating it. That is where a Joomla administrator
  * looks first, and it needs no product-specific knowledge.
  *
- * One plugin parameter, `public_reads`, decides whether GET requires a token.
- * It defaults to off, so enabling the plugin yields an authenticated API rather
- * than an open one. Writes always require a token regardless, and every read is
- * filtered to the caller's authorised view levels — "public" never means
- * "unfiltered".
+ * Every route requires an API token; there is no public mode. Public,
+ * machine-readable access to a site's messages goes through its RSS and podcast
+ * feeds, which do not use this API. From Joomla 5.4.11 and 6.2.1 the caller also
+ * needs Access Web Services (core.api) on Proclaim, which Joomla checks before
+ * any Proclaim code runs.
  *
  * Read endpoints (GET) — every resource in self::RESOURCES:
  *   /api/index.php/v1/proclaim/{resource}
  *   /api/index.php/v1/proclaim/{resource}/:id
  *
- * Write endpoints (always require an API key) — only resources flagged writable
- * in self::RESOURCES; see that constant for why the rest are read-only:
+ * Write endpoints — only resources flagged writable in self::RESOURCES; see that
+ * constant for why the rest are read-only:
  *   POST   /api/index.php/v1/proclaim/{resource}      — Create
  *   PATCH  /api/index.php/v1/proclaim/{resource}/:id  — Update
  *   DELETE /api/index.php/v1/proclaim/{resource}/:id  — Delete
  *
  * Regardless of routing, every list query is filtered to the caller's authorised
- * view levels by the underlying model, so a public read never returns rows a
- * user could not see in the site itself.
+ * view levels by the underlying model, so a read never returns rows the caller
+ * could not see in the site itself.
  *
  * One extra singleton endpoint, not a RESOURCES entry — component metadata, not
  * a database resource:
@@ -128,31 +128,22 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
     {
         // No on/off setting of our own: this plugin being enabled IS the switch.
         // If it is disabled, this method never runs and nothing is registered.
-        //
-        // Reads require a token unless an administrator opts into public reads.
-        // Safe by default — a site that enables the plugin without reading any
-        // documentation gets an authenticated API, not an open one.
-        $isPublic = (bool) $this->params->get('public_reads', 0);
-        $router   = $event->getRouter();
+        $router = $event->getRouter();
 
         CwmlogHelper::debug(
-            \sprintf(
-                'Registering %d Proclaim API resources (reads %s).',
-                \count(self::RESOURCES),
-                $isPublic ? 'public' : 'require an API key'
-            ),
+            \sprintf('Registering %d Proclaim API resources.', \count(self::RESOURCES)),
             CwmlogHelper::CATEGORY_API
         );
 
         foreach (self::RESOURCES as $resource => $writable) {
-            $this->createReadOnlyRoutes($router, "v1/proclaim/$resource", $resource, $isPublic);
+            $this->createReadOnlyRoutes($router, "v1/proclaim/$resource", $resource);
 
             if ($writable) {
                 $this->createWriteRoutes($router, "v1/proclaim/$resource", $resource);
             }
         }
 
-        $this->createInfoRoute($router, $isPublic);
+        $this->createInfoRoute($router);
 
         $this->explainUnroutableRequest();
     }
@@ -237,26 +228,22 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
     }
 
     /**
-     * Register read-only (GET) routes for a resource.
+     * Register read-only (GET) routes for a resource. Like every route here, they
+     * require an API token.
      *
      * @param   ApiRouter  $router      The API router
      * @param   string     $baseName    Route base path
      * @param   string     $controller  Controller name
-     * @param   bool       $isPublic    Whether routes are publicly accessible
      *
      * @return  void
      *
      * @since   10.3.0
      */
-    private function createReadOnlyRoutes(
-        ApiRouter $router,
-        string $baseName,
-        string $controller,
-        bool $isPublic
-    ): void {
+    private function createReadOnlyRoutes(ApiRouter $router, string $baseName, string $controller): void
+    {
         $defaults = [
             'component' => 'com_proclaim',
-            'public'    => $isPublic,
+            'public'    => false,
         ];
 
         $routes = [
@@ -270,8 +257,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
     /**
      * Register write (POST/PATCH/DELETE) routes for a resource.
      *
-     * Write routes always require authentication (public=false),
-     * even when read routes are set to public access.
+     * Like every route here, write routes require an API token (public=false).
      *
      * @param   ApiRouter  $router      The API router
      * @param   string     $baseName    Route base path
@@ -305,19 +291,18 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      * displayItem rather than the list + list/:id pair createReadOnlyRoutes()
      * registers for real resources.
      *
-     * @param   ApiRouter  $router    The API router
-     * @param   bool       $isPublic  Whether the route is publicly accessible
+     * @param   ApiRouter  $router  The API router
      *
      * @return  void
      *
      * @since   10.5.6
      */
-    private function createInfoRoute(ApiRouter $router, bool $isPublic): void
+    private function createInfoRoute(ApiRouter $router): void
     {
         $router->addRoutes([
             new Route(['GET'], 'v1/proclaim/info', 'info.displayItem', [], [
                 'component' => 'com_proclaim',
-                'public'    => $isPublic,
+                'public'    => false,
             ]),
         ]);
     }

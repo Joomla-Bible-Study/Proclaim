@@ -131,6 +131,17 @@ final class CwmlogHelper
     private static bool $registered = false;
 
     /**
+     * API refusals already recorded in this request, keyed by the exception.
+     *
+     * Keyed by the exception object rather than by anything in the request, so a
+     * client cannot mark its own refusal as already recorded.
+     *
+     * @var    \WeakMap<\Throwable, true>|null
+     * @since  __DEPLOY_VERSION__
+     */
+    private static ?\WeakMap $recordedRefusals = null;
+
+    /**
      * Register a logger for every Proclaim category, once per request.
      *
      * Idempotent and safe to call from anywhere.
@@ -278,6 +289,84 @@ final class CwmlogHelper
     public static function error(string $message, string $category = self::CATEGORY_GENERAL): void
     {
         self::write($message, Log::ERROR, $category);
+    }
+
+    /**
+     * Record an authenticated API caller being refused, once per refusal.
+     *
+     * Two places can see the same refusal: the API controller that threw it, and
+     * the system plugin's onError handler, which also covers refusals made before
+     * any controller exists, such as Joomla's core.api check. Whichever reaches
+     * this first writes the entry; the other finds it already recorded.
+     *
+     * @param   \Throwable  $refusal   The exception that refused the request.
+     * @param   string      $username  The caller's username.
+     * @param   int         $userId    The caller's user id.
+     * @param   string      $verb      What the caller tried: read, create, update or delete.
+     * @param   string      $target    The resource, with " #id" when one was named.
+     * @param   string      $address   The caller's IP address.
+     *
+     * @return  bool  True when this call wrote the entry, false when the refusal was already recorded
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function apiRefusal(
+        \Throwable $refusal,
+        string $username,
+        int $userId,
+        string $verb,
+        string $target,
+        string $address
+    ): bool {
+        if (self::refusalRecorded($refusal)) {
+            return false;
+        }
+
+        self::$recordedRefusals ??= new \WeakMap();
+        self::$recordedRefusals[$refusal] = true;
+
+        self::warning(self::refusalMessage($username, $userId, $verb, $target, $address), self::CATEGORY_API);
+
+        return true;
+    }
+
+    /**
+     * The log line for an authenticated API caller being refused.
+     *
+     * @param   string  $username  The caller's username.
+     * @param   int     $userId    The caller's user id.
+     * @param   string  $verb      What the caller tried: read, create, update or delete.
+     * @param   string  $target    The resource, with " #id" when one was named.
+     * @param   string  $address   The caller's IP address.
+     *
+     * @return  string  The line, naming who was refused what, and from where
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function refusalMessage(string $username, int $userId, string $verb, string $target, string $address): string
+    {
+        return \sprintf(
+            'Authenticated user %s (#%d) was refused permission to %s %s from %s',
+            $username,
+            $userId,
+            $verb,
+            $target,
+            $address
+        );
+    }
+
+    /**
+     * Whether a refusal has already been recorded in this request.
+     *
+     * @param   \Throwable  $refusal  The exception that refused the request.
+     *
+     * @return  bool  True when apiRefusal() has already recorded it
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function refusalRecorded(\Throwable $refusal): bool
+    {
+        return self::$recordedRefusals !== null && isset(self::$recordedRefusals[$refusal]);
     }
 
     /**

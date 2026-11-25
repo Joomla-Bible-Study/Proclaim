@@ -91,8 +91,9 @@ class com_proclaimInstallerScript extends InstallerScript
             'task'      => [
                 'proclaim' => 1,
             ],
-            // Registers the REST API routes. Installed enabled; the routes stay
-            // inert until the api_access admin setting is set to public or key.
+            // Registers the REST API routes. Installed enabled; every route
+            // requires an API token, and from Joomla 5.4.11 and 6.2.1 the
+            // Access Web Services permission on Proclaim as well.
             'webservices' => ['proclaim' => 1],
         ],
     ];

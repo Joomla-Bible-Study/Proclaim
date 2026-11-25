@@ -278,7 +278,7 @@ jobs:
         #
         # api-test is the #1330 spec: plugin visible in the admin UI,
         # 401-not-404 without a token, 200 + JSON:API with a token from the
-        # admin profile, public_reads round-tripped through the edit form.
+        # admin profile, and no public reads switch on the plugin's edit form.
         #
         # The admin/site projects are the ten browser specs that until now ran
         # on one developer's laptop and nowhere else. They have real content to

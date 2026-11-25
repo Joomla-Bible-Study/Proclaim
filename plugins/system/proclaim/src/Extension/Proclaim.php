@@ -16,9 +16,12 @@ namespace CWM\Plugin\System\Proclaim\Extension;
 
 use CWM\Component\Proclaim\Administrator\Console\ImportCommand;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmcontentimporter;
 use Joomla\Application\ApplicationEvents;
+use Joomla\CMS\Access\Exception\NotAllowed;
 use Joomla\CMS\Application\ConsoleApplication;
+use Joomla\CMS\Event\ErrorEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -26,7 +29,9 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
+use Joomla\Event\EventInterface;
 use Joomla\Event\SubscriberInterface;
+use Joomla\Input\Input;
 
 /**
  * System plugin for Proclaim runtime checks.
@@ -56,6 +61,21 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @since 10.1.0
      */
     private const string MIN_PHP = '8.4.0';
+
+    /**
+     * HTTP methods, mapped to the verb an API refusal is logged with.
+     *
+     * @var array<string, string>
+     * @since __DEPLOY_VERSION__
+     */
+    private const array API_VERBS = [
+        'GET'    => 'read',
+        'HEAD'   => 'read',
+        'POST'   => 'create',
+        'PATCH'  => 'update',
+        'PUT'    => 'update',
+        'DELETE' => 'delete',
+    ];
 
     /**
      * Default maximum POST submissions per window.
@@ -214,6 +234,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             'onBeforeRender'                  => 'onBeforeRender',
             'onAfterRender'                   => 'onAfterRender',
             'onContentCleanCache'             => 'onContentCleanCache',
+            'onError'                         => 'onError',
             ApplicationEvents::BEFORE_EXECUTE => 'registerCommands',
         ];
     }
@@ -552,6 +573,81 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache::clearVideoCache();
             }
         }
+    }
+
+    /**
+     * Log a Proclaim API request refused for lack of permission.
+     *
+     * From Joomla 5.4.11 and 6.2.1, a request without Access Web Services
+     * (core.api) on Proclaim is refused by Joomla's API dispatcher before any
+     * Proclaim controller exists, so the controllers' own refusal logging never
+     * sees it. Joomla dispatches onError for every uncaught exception, so this
+     * catches those refusals on every supported version. A refusal the controller
+     * already logged is not logged twice, and a guest is never logged: failed
+     * authentication is noise the web server log already has.
+     *
+     * @param   EventInterface  $event  The onError event.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function onError(EventInterface $event): void
+    {
+        try {
+            if (!$event instanceof ErrorEvent || !$event->getError() instanceof NotAllowed) {
+                return;
+            }
+
+            $app = $this->getApplication();
+
+            if ($app === null || !$app->isClient('api')) {
+                return;
+            }
+
+            $input = $app->getInput();
+
+            if ($input->getCmd('option', '') !== 'com_proclaim') {
+                return;
+            }
+
+            $user = $app->getIdentity();
+
+            if ($user === null || $user->guest) {
+                return;
+            }
+
+            [$verb, $target] = self::describeApiRequest($input);
+
+            CwmlogHelper::apiRefusal(
+                $event->getError(),
+                (string) $user->username,
+                (int) $user->id,
+                $verb,
+                $target,
+                $input->server->getString('REMOTE_ADDR', 'unknown address')
+            );
+        } catch (\Throwable) {
+            // Logging must never change the error the caller receives.
+        }
+    }
+
+    /**
+     * What a Proclaim API request tried to do, for its refusal's log entry.
+     *
+     * @param   Input  $input  The request input.
+     *
+     * @return  array{0: string, 1: string}  The verb, such as read or delete, then the resource with " #id" when one was named
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function describeApiRequest(Input $input): array
+    {
+        $method   = strtoupper($input->getMethod());
+        $resource = $input->getCmd('controller', '') ?: 'resource';
+        $id       = $input->getInt('id', 0);
+
+        return [self::API_VERBS[$method] ?? strtolower($method), $id > 0 ? $resource . ' #' . $id : $resource];
     }
 
     /**
