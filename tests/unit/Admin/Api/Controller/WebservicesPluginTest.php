@@ -324,7 +324,7 @@ class WebservicesPluginTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testThePluginHasNoPublicReadsSetting(): void
     {
@@ -348,7 +348,7 @@ class WebservicesPluginTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     public function testEveryRouteRequiresAToken(): void
@@ -369,7 +369,7 @@ class WebservicesPluginTest extends ProclaimTestCase
              *
              * @param   ApiRouter  $router  The API router.
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function __construct(private readonly ApiRouter $router)
             {
@@ -380,7 +380,7 @@ class WebservicesPluginTest extends ProclaimTestCase
              *
              * @return  ApiRouter  The router the plugin registers its routes on
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function getRouter(): ApiRouter
             {

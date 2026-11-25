@@ -27,7 +27,7 @@ use Joomla\Registry\Registry;
  * guards it follows Proclaim's Captcha option and then the site's default, and
  * that plugin judges the answer.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
 {
@@ -36,7 +36,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @var    string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const string TEST_PLUGIN = 'proclaimcommenttest';
 
@@ -45,7 +45,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @var    mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private mixed $savedApplication = null;
 
@@ -54,7 +54,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @var    mixed
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private mixed $savedPlugins = null;
 
@@ -63,7 +63,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function setUp(): void
     {
@@ -78,7 +78,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function tearDown(): void
     {
@@ -93,7 +93,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     public function testTheCaptchaOptionNamesThePlugin(): void
@@ -108,7 +108,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     public function testUseGlobalFallsBackToTheSiteDefault(): void
@@ -123,7 +123,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     public function testNoneMeansNoCaptcha(): void
@@ -139,7 +139,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     public function testAPluginThatIsNotEnabledMeansNoCaptcha(): void
@@ -154,7 +154,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     public function testThePluginJudgesTheAnswer(): void
@@ -173,7 +173,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     public function testAPluginThatCannotLoadNeverAcceptsAnAnswer(): void
@@ -195,7 +195,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testTheCommentFormCarriesTheCaptchaField(): void
     {
@@ -210,7 +210,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testTheCaptchaPostsUnderTheNameTheControllerReads(): void
     {
@@ -229,7 +229,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testTheMenuItemHasNoCaptchaField(): void
     {
@@ -248,7 +248,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function siteWith(string $option, string $default, array $enabled): void
     {
@@ -272,7 +272,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  CwmsermonModel  An instance built without running its constructor
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \ReflectionException
      */
     private function model(): CwmsermonModel
@@ -285,7 +285,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      *
      * @return  CaptchaProviderInterface  A provider named TEST_PLUGIN that accepts only the answer "right"
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function testProvider(): CaptchaProviderInterface
     {
@@ -295,7 +295,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
              *
              * @param   string  $name  The provider's name.
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function __construct(private readonly string $name)
             {
@@ -306,7 +306,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
              *
              * @return  string  The name passed to the constructor
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function getName(): string
             {
@@ -321,7 +321,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
              *
              * @return  string  A hidden input whose name attribute is the escaped field name
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function display(string $name = '', array $attributes = []): string
             {
@@ -335,7 +335,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
              *
              * @return  bool  Whether the posted answer is exactly "right"
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function checkAnswer(?string $code = null): bool
             {
@@ -350,7 +350,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
              *
              * @return  void
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function setupField(FormField $field, \SimpleXMLElement $element): void
             {
@@ -363,7 +363,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
  * The part of Joomla's site application the comment captcha reads, so a test can
  * double it; SiteApplication itself is final.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 interface SiteApplicationDouble extends CMSApplicationInterface
 {
@@ -374,7 +374,7 @@ interface SiteApplicationDouble extends CMSApplicationInterface
      *
      * @return  Registry  The merged options
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function getParams(?string $option = null): Registry;
 }

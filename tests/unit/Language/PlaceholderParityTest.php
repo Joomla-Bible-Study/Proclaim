@@ -197,7 +197,7 @@ class PlaceholderParityTest extends TestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     #[TestDox('A tag name keeps its digits, so a changed heading level is caught')]
     public function testTagNamesKeepTheirDigits(): void

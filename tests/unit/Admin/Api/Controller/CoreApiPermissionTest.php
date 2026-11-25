@@ -18,7 +18,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * be granted on Proclaim alone, and so saving Proclaim's Options keeps a grant:
  * com_config rebuilds the component's rules from the actions its form shows.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 class CoreApiPermissionTest extends ProclaimTestCase
 {
@@ -27,7 +27,7 @@ class CoreApiPermissionTest extends ProclaimTestCase
      *
      * @return  string  The absolute path of the repository root
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function root(): string
     {
@@ -39,7 +39,7 @@ class CoreApiPermissionTest extends ProclaimTestCase
      *
      * @return  \SimpleXMLElement[]  The action elements
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function coreApiActions(): array
     {
@@ -56,7 +56,7 @@ class CoreApiPermissionTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testCoreApiIsDeclaredOnceInTheComponentSection(): void
     {
@@ -80,7 +80,7 @@ class CoreApiPermissionTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     public function testCoreApiLabelsAreProclaimKeysDefinedInEnGb(): void
     {
@@ -109,7 +109,7 @@ class CoreApiPermissionTest extends ProclaimTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \JsonException
      */
     public function testFirstRunAssetDoesNotGrantCoreApi(): void

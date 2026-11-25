@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * settings required can carry one, and their feeds have always built. Those
  * must keep building.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 #[CoversClass(Cwmpodcast::class)]
 class CwmpodcastFeedSettingsTest extends IntegrationTestCase
@@ -38,7 +38,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseDriver|null
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private ?DatabaseDriver $db = null;
 
@@ -46,7 +46,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      * Factory::$language as it was before setUp() pinned it, for tearDown() to restore.
      *
      * @var    mixed
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -56,7 +56,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function setUp(): void
     {
@@ -77,7 +77,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function tearDown(): void
     {
@@ -100,7 +100,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     #[TestDox('A podcast with no website is skipped by name, and the feeds beside it are still written')]
@@ -115,7 +115,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     #[TestDox('A podcast with no artwork value at all is skipped by name')]
@@ -129,7 +129,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     #[TestDox('A podcast with a blank file name is skipped by name')]
@@ -144,7 +144,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     #[TestDox('A blank website and blank artwork still build, as they did before the form required them')]
@@ -171,7 +171,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     #[TestDox('A podcast with no media is reported as having none, not as missing a setting')]
@@ -197,7 +197,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     private function assertSkippedByName(string $column, ?string $value, string $key): void
@@ -232,7 +232,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  array{result: string, written: array<string, string>, failed: int}  The run's report, each feed it would have written by file name, and how many it skipped
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     private function buildFeeds(): array
@@ -242,7 +242,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
              * Each feed the build would have written, by file name.
              *
              * @var    array<string, string>
-             * @since  __DEPLOY_VERSION__
+             * @since  10.7.9
              */
             public array $written = [];
 
@@ -254,7 +254,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
              *
              * @return  bool  Always true, as a successful write would be
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function writeFile(string $file, string $filecontent): bool
             {
@@ -278,7 +278,7 @@ class CwmpodcastFeedSettingsTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private function setColumn(int $podcastId, string $column, ?string $value): void
     {

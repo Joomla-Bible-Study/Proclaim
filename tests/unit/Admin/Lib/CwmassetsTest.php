@@ -356,7 +356,7 @@ class CwmassetsTest extends ProclaimTestCase
      *
      * @return  int[]  The teacher ids, $count of them: existing ones first, then any it inserts
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function teacherIdsForFixture(DatabaseInterface $db, int $count): array
     {
@@ -393,7 +393,7 @@ class CwmassetsTest extends ProclaimTestCase
      *
      * @return  int  The count
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     private static function countRows(DatabaseInterface $db, string $table): int
     {

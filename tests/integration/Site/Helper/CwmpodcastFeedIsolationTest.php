@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * method on null. That is an Error, not an Exception, and it happens after the
  * feed's channel header is built, where the #2339 TypeError happened.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.7.9
  */
 #[CoversClass(Cwmpodcast::class)]
 class CwmpodcastFeedIsolationTest extends IntegrationTestCase
@@ -37,7 +37,7 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
      * The database, inside a transaction each test rolls back.
      *
      * @var    DatabaseDriver|null
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private ?DatabaseDriver $db = null;
 
@@ -45,7 +45,7 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
      * Factory::$language as it was before setUp() pinned it, for tearDown() to restore.
      *
      * @var    mixed
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private mixed $previousFactoryLanguage = null;
 
@@ -55,7 +55,7 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function setUp(): void
     {
@@ -76,7 +76,7 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      */
     protected function tearDown(): void
     {
@@ -99,7 +99,7 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception
      */
     #[TestDox('A podcast whose feed throws an Error is reported, and the feeds around it are still written')]
@@ -116,7 +116,7 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
              * Each feed the build would have written, by file name.
              *
              * @var    array<string, string>
-             * @since  __DEPLOY_VERSION__
+             * @since  10.7.9
              */
             public array $written = [];
 
@@ -124,7 +124,7 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
              * The podcast whose episodes come back unreadable.
              *
              * @var    int
-             * @since  __DEPLOY_VERSION__
+             * @since  10.7.9
              */
             public int $failingId = 0;
 
@@ -137,7 +137,7 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
              *
              * @return  array  The podcast's episodes
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function getEpisodes(int $id, string $limit): array
             {
@@ -160,7 +160,7 @@ class CwmpodcastFeedIsolationTest extends IntegrationTestCase
              *
              * @return  bool  Always true, as a successful write would be
              *
-             * @since   __DEPLOY_VERSION__
+             * @since   10.7.9
              */
             public function writeFile(string $file, string $filecontent): bool
             {

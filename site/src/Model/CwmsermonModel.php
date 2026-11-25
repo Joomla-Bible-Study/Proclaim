@@ -43,7 +43,7 @@ class CwmsermonModel extends FormModel
      *
      * @var    string
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.7.9
      */
     private const string COMMENT_FORM = 'com_proclaim.comment';
 
@@ -404,7 +404,7 @@ class CwmsermonModel extends FormModel
      *
      * @return  string  The plugin name, or an empty string when comments need no captcha.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \Exception  When the application can't be loaded.
      */
     public function getCommentCaptcha(): string
@@ -433,7 +433,7 @@ class CwmsermonModel extends FormModel
      *
      * @return  bool  True when the plugin accepts the answer.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.7.9
      * @throws  \RuntimeException  When the plugin can't be loaded or reports an error.
      */
     public function checkCommentCaptcha(string $plugin, string $answer): bool
