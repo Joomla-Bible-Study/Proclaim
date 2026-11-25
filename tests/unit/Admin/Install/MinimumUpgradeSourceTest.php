@@ -36,11 +36,26 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  */
 class MinimumUpgradeSourceTest extends ProclaimTestCase
 {
+    /**
+     * Read the repository's proclaim.script.php.
+     *
+     * @return  string  The script's source.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     private static function script(): string
     {
         return (string) file_get_contents(\dirname(__DIR__, 4) . '/proclaim.script.php');
     }
 
+    /**
+     * The script's source sets MINIMUM_UPGRADE_SOURCE to 10.5.8, the release that
+     * shipped retireLegacyColumns().
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     public function testTheMinimumIsDeclaredOnceAndIsTheReleaseThatRetiredTheColumns(): void
     {
         $this->assertMatchesRegularExpression(
@@ -51,6 +66,14 @@ class MinimumUpgradeSourceTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * In the script's source, a failed upgrade-source gate returns false, and the
+     * installed version is read before the gate is called.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     public function testPreflightConsultsTheGateOnTheUpdateRoute(): void
     {
         $script = self::script();
@@ -83,6 +106,10 @@ class MinimumUpgradeSourceTest extends ProclaimTestCase
      * A version is a proxy: manifest_cache can be unreadable, and a -dev build
      * of the minimum compares lower than the release while carrying the fix.
      * The column is the fact.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     public function testTheGateAsksTheDatabaseNotJustTheVersion(): void
     {
@@ -112,6 +139,15 @@ class MinimumUpgradeSourceTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The script's source declares abortUnsupportedSource() and calls logInstall()
+     * with a message starting "preflight: REFUSED", the only record a CLI or cron
+     * update leaves of why it stopped.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     public function testARefusalIsRecordedForHeadlessUpdatesToo(): void
     {
         $script = self::script();

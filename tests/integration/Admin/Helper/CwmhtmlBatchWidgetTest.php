@@ -42,8 +42,24 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(Cwmhtml::class)]
 class CwmhtmlBatchWidgetTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseDriver|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private ?DatabaseDriver $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction and add a media file with an
+     * image display configuration, so the display-configuration tests don't rely on the site
+     * having one.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -62,6 +78,13 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
         $this->seedMediaFileWithDisplayConfig();
     }
 
+    /**
+     * Roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -81,6 +104,8 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
      * configuration that still produces a real, non-sentinel option.
      *
      * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
      */
     private function seedMediaFileWithDisplayConfig(): void
     {

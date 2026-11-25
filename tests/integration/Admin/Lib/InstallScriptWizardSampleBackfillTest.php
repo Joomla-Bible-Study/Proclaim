@@ -32,10 +32,32 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversNothing]
 class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private ?DatabaseInterface $db = null;
 
+    /**
+     * The number alias() appends to the next alias it makes.
+     *
+     * @var    int
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private int $seq = 0;
 
+    /**
+     * Load the install script, unless its class is already declared, so its
+     * private backfill can be reached through reflection.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -45,6 +67,13 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
         }
     }
 
+    /**
+     * Skip without a test database. Otherwise open a transaction.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -57,6 +86,13 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
         $this->db->transactionStart(true);
     }
 
+    /**
+     * Roll back the transaction setUp() opened.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -70,6 +106,15 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
         parent::tearDown();
     }
 
+    /**
+     * Run the install script's private backfill on an instance made without
+     * its constructor.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     private function backfill(): void
     {
         $script = (new \ReflectionClass('com_proclaimInstallerScript'))->newInstanceWithoutConstructor();
@@ -85,12 +130,22 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
      * @return  string  The base alias with a random and a sequence suffix.
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
      */
     private function alias(string $base): string
     {
         return $base . '-cwm2182-' . bin2hex(random_bytes(4)) . '-' . $this->seq++;
     }
 
+    /**
+     * A welcome-to-proclaim study with no manifest row is recorded in the
+     * manifest.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('Backfills a pre-existing welcome-to-proclaim study with no manifest row')]
     public function testBackfillsThePreExistingStudy(): void
     {
@@ -105,6 +160,14 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
         $this->assertContains($studyId, Cwmimportmanifest::allRowIds('#__bsms_studies'));
     }
 
+    /**
+     * A sample-series series with no manifest row is recorded in the manifest.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('Backfills a pre-existing sample-series with no manifest row')]
     public function testBackfillsThePreExistingSeries(): void
     {
@@ -117,6 +180,15 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
         $this->assertContains($seriesId, Cwmimportmanifest::allRowIds('#__bsms_series'));
     }
 
+    /**
+     * Running the backfill twice leaves the sample study recorded in the
+     * manifest once.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('Running the backfill twice does not duplicate the manifest row or error')]
     public function testIdempotent(): void
     {
@@ -132,6 +204,16 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
         $this->assertCount(1, $matches, 'A second run must not record the same row twice.');
     }
 
+    /**
+     * With nothing seeded, the backfill runs to completion without error. It
+     * checks nothing more, as the shared test database may already hold sample
+     * rows.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('A site with no such alias is a no-op')]
     public function testNoOpWhenNeitherAliasExists(): void
     {
@@ -143,6 +225,16 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
         $this->addToAssertionCount(1);
     }
 
+    /**
+     * The sample study and numbered copies that keep the sample's title,
+     * welcome-to-proclaim-2 and sample-series-2, are all recorded in the
+     * manifest.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('Renamed copies of the sample, such as welcome-to-proclaim-2, are backfilled too')]
     public function testBackfillsRenamedCopiesOfTheSample(): void
     {
@@ -166,6 +258,15 @@ class InstallScriptWizardSampleBackfillTest extends IntegrationTestCase
         $this->assertContains($seriesId, Cwmimportmanifest::allRowIds('#__bsms_series'));
     }
 
+    /**
+     * A study and a series that carry numbered sample aliases but titles of
+     * their own are not recorded in the manifest.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     */
     #[TestDox('A suffixed alias whose title is not the sample\'s is real content, and is left alone')]
     public function testLeavesSuffixedAliasWithAnotherTitle(): void
     {

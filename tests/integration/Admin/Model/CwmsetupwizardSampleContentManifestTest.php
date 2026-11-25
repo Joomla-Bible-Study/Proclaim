@@ -30,8 +30,22 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversClass(CwmsetupwizardModel::class)]
 class CwmsetupwizardSampleContentManifestTest extends IntegrationTestCase
 {
+    /**
+     * The database, inside a transaction each test rolls back.
+     *
+     * @var    DatabaseInterface|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
     private ?DatabaseInterface $db = null;
 
+    /**
+     * Skip without a test database. Otherwise open a transaction for the test's rows.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,6 +58,13 @@ class CwmsetupwizardSampleContentManifestTest extends IntegrationTestCase
         $this->db->transactionStart(true);
     }
 
+    /**
+     * Roll back the test's rows.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
     protected function tearDown(): void
     {
         if ($this->db !== null) {
@@ -58,8 +79,16 @@ class CwmsetupwizardSampleContentManifestTest extends IntegrationTestCase
     }
 
     /**
-     * Neither this method nor recordRow() touches $this, so an unconstructed
-     * instance is enough — the same pattern CwmsetupwizardModelBindTest uses.
+     * createSampleContent() records the series and message it creates in the
+     * manifest, and not the teacher it is given. Neither it nor recordRow()
+     * touches $this, so an unconstructed instance is enough — the same pattern
+     * CwmsetupwizardModelBindTest uses.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     * @throws  \Random\RandomException
      */
     #[TestDox('createSampleContent() records its series and message in the import manifest')]
     public function testCreateSampleContentRecordsItsRowsInTheManifest(): void
@@ -104,6 +133,12 @@ class CwmsetupwizardSampleContentManifestTest extends IntegrationTestCase
      * A freshly created row must not already look "edited since import" —
      * otherwise #2174's removal would keep it forever. This mirrors the
      * insert-vs-update branch every entity's own prepareTable() uses.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
+     * @throws  \Random\RandomException
      */
     #[TestDox('createSampleContent() does not set modified_by, so #2174 can still remove its rows')]
     public function testCreateSampleContentLeavesModifiedByUnset(): void
