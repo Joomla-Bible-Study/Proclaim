@@ -63,7 +63,7 @@ $onclick   = $this->escape($function);
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'JBS_SVR_SERVER_NAME',
-                            'mediafile.name',
+                            'server.server_name',
                             $listDirn,
                             $listOrder
                         ); ?>
