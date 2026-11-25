@@ -121,7 +121,7 @@ class ContainerLookupsTest extends ProclaimTestCase
      * @param   string                 $namespace  The file's namespace
      * @param   array<string, string>  $imports    Imported names by their alias
      *
-     * @return  string
+     * @return  string  The fully qualified name, without a leading backslash
      *
      * @since   10.7.4
      */
@@ -146,7 +146,7 @@ class ContainerLookupsTest extends ProclaimTestCase
      *
      * @param   string  $source  The source
      *
-     * @return  string
+     * @return  string  The source with every comment reduced to the line breaks it contained
      *
      * @since   10.7.4
      */

@@ -83,7 +83,7 @@ class ProclaimStoredItemTest extends ProclaimTestCase
     /**
      * The graph core builds for a page with no row of its own.
      *
-     * @return  array
+     * @return  array  The Organization, WebSite and WebPage nodes, in that order
      *
      * @since   10.7.3
      */

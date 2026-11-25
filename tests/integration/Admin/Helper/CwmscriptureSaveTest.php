@@ -167,7 +167,7 @@ class CwmscriptureSaveTest extends IntegrationTestCase
      *                        INSERT fail, which is how a mid-loop failure is
      *                        provoked without mocking the driver.
      *
-     * @return  object
+     * @return  object  A plain object citing chapter 1, verses $verse to 2, of that book in the KJV.
      *
      * @since   10.5.6
      */

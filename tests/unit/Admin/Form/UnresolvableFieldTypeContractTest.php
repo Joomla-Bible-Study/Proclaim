@@ -38,7 +38,7 @@ class UnresolvableFieldTypeContractTest extends ProclaimTestCase
      * reading FormHelper::loadClass()'s resolution order and finding no
      * matching class or file anywhere in core or Proclaim.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each unresolvable type name, keyed with the type to use instead
      *
      * @since   10.7.3
      */

@@ -33,7 +33,7 @@ class PermissionsFormSizeTest extends TestCase
     /**
      * Repository root.
      *
-     * @return  string
+     * @return  string  Its absolute path
      *
      * @since   10.5.8
      */

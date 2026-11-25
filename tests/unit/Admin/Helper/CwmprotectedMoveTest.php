@@ -37,7 +37,7 @@ class CwmprotectedMoveTest extends ProclaimTestCase
      *
      * @param   array<string, mixed>  $overrides  Fields to change.
      *
-     * @return  object
+     * @return  object  The eligible baseline row, with the overrides applied
      *
      * @since   10.7.0
      */

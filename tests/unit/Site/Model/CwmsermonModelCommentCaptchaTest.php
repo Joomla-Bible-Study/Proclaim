@@ -94,6 +94,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     public function testTheCaptchaOptionNamesThePlugin(): void
     {
@@ -108,6 +109,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     public function testUseGlobalFallsBackToTheSiteDefault(): void
     {
@@ -122,6 +124,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     public function testNoneMeansNoCaptcha(): void
     {
@@ -137,6 +140,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \Exception
      */
     public function testAPluginThatIsNotEnabledMeansNoCaptcha(): void
     {
@@ -151,6 +155,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
      */
     public function testThePluginJudgesTheAnswer(): void
     {
@@ -169,6 +174,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
      */
     public function testAPluginThatCannotLoadNeverAcceptsAnAnswer(): void
     {
@@ -264,9 +270,10 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
     /**
      * A sermon model; the captcha methods use no model state, so it skips the constructor.
      *
-     * @return  CwmsermonModel
+     * @return  CwmsermonModel  An instance built without running its constructor
      *
      * @since   __DEPLOY_VERSION__
+     * @throws  \ReflectionException
      */
     private function model(): CwmsermonModel
     {
@@ -276,7 +283,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
     /**
      * A captcha provider that accepts only the answer "right".
      *
-     * @return  CaptchaProviderInterface
+     * @return  CaptchaProviderInterface  A provider named TEST_PLUGIN that accepts only the answer "right"
      *
      * @since   __DEPLOY_VERSION__
      */
@@ -288,8 +295,6 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
              *
              * @param   string  $name  The provider's name.
              *
-             * @return  void
-             *
              * @since   __DEPLOY_VERSION__
              */
             public function __construct(private readonly string $name)
@@ -299,7 +304,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
             /**
              * The name the provider registers under.
              *
-             * @return  string
+             * @return  string  The name passed to the constructor
              *
              * @since   __DEPLOY_VERSION__
              */
@@ -314,7 +319,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
              * @param   string  $name        The field name.
              * @param   array   $attributes  The field attributes.
              *
-             * @return  string
+             * @return  string  A hidden input whose name attribute is the escaped field name
              *
              * @since   __DEPLOY_VERSION__
              */
@@ -328,7 +333,7 @@ class CwmsermonModelCommentCaptchaTest extends ProclaimTestCase
              *
              * @param   ?string  $code  The posted answer.
              *
-             * @return  bool
+             * @return  bool  Whether the posted answer is exactly "right"
              *
              * @since   __DEPLOY_VERSION__
              */
@@ -367,7 +372,7 @@ interface SiteApplicationDouble extends CMSApplicationInterface
      *
      * @param   ?string  $option  The component, or null for the current one.
      *
-     * @return  Registry
+     * @return  Registry  The merged options
      *
      * @since   __DEPLOY_VERSION__
      */

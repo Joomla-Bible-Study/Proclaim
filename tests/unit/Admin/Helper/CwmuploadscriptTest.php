@@ -45,7 +45,7 @@ class CwmuploadscriptTest extends ProclaimTestCase
     /**
      * Every addon that ships an upload() override, plus the abstract base.
      *
-     * @return  array<string, array{0: class-string}>
+     * @return  array<string, array{0: class-string}>  The base class and every server addon class, fully qualified
      *
      * @since   10.5.6
      */

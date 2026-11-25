@@ -117,13 +117,12 @@ class PredefinedOptionsFieldsTest extends ProclaimTestCase
     /**
      * TeacherLinkOptionsField and SeriesLinkOptionsField were exact key-for-key
      * subsets of LinkOptionsField's own option set, each wired as its own
-     * duplicate field class. Retired in favor of LinkOptionsField's existing
-     * `optionsFilter` attribute (already used elsewhere in Proclaim's XML,
-     * e.g. layout-element-settings.xml), which restricts the rendered
-     * options to an allowlist of keys -- core's PredefinedlistField has
-     * supported it since 4.0.0.
+     * duplicate field class. Retired in favor of the `optionsFilter` attribute
+     * LinkOptionsField inherits from core's PredefinedlistField (supported
+     * since 4.0.0), which restricts the rendered options to an allowlist of keys.
      *
-     * @return  array<string, array{0: array<int, string>, 1: array<string, string>}>
+     * @return  array<string, array{0: array<int, string>, 1: array<string, string>}>  The optionsFilter allowlist, then
+     *                                                                                 the exact options it must produce
      *
      * @since   10.7.3
      */

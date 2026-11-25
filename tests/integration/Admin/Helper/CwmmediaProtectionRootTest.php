@@ -39,7 +39,7 @@ class CwmmediaProtectionRootTest extends ProclaimTestCase
     /**
      * Whether this site has a Site URL configured.
      *
-     * @return  bool
+     * @return  bool  Whether the global configuration's live_site is not blank
      *
      * @since   10.6.0
      */

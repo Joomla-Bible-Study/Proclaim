@@ -86,7 +86,7 @@ class YoutubeStatusEndpointTest extends ProclaimTestCase
      *
      * @param   string  $module  The module parameter, without "mod_"
      *
-     * @return  string
+     * @return  string  The helper class name, such as ProclaimYoutubeHelper for proclaim_youtube
      *
      * @since   10.7.4
      */

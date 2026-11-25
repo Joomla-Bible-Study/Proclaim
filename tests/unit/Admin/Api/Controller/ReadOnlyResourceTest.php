@@ -31,7 +31,7 @@ class ReadOnlyResourceTest extends ProclaimTestCase
     /**
      * Controllers that must never accept writes.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each controller's short class name, keyed by resource
      *
      * @since   10.3.4
      */

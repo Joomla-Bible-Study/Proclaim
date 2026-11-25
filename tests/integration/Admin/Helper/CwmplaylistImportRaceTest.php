@@ -376,7 +376,7 @@ class CwmplaylistImportRaceTest extends IntegrationTestCase
      *
      * @param   array<int,array{playlistId:string,title:string}>  $playlists  Remote playlists to report.
      *
-     * @return  CWMAddon
+     * @return  CWMAddon  An addon double that reports these playlists and cannot write playlists back.
      *
      * @since   10.5.6
      */

@@ -131,7 +131,7 @@ class CwmepisodenumberRaceTest extends IntegrationTestCase
      * to match the repository. Skipping with a clear reason beats asserting
      * against a table that has not been migrated.
      *
-     * @return  bool
+     * @return  bool  Whether the studies table has the uq_series_studynumber index
      *
      * @since   10.5.6
      */

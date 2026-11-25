@@ -35,7 +35,7 @@ class CwmHttpTimeoutTest extends ProclaimTestCase
     /**
      * Files that make outbound HTTP calls through Joomla's HttpFactory.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each case: a repo-relative path to a file that makes HTTP calls
      *
      * @since   10.5.6
      */
@@ -93,7 +93,7 @@ class CwmHttpTimeoutTest extends ProclaimTestCase
     /**
      * The value has to be a sane bound, not a placeholder.
      *
-     * @return  array<string, array{0: string, 1: string}>
+     * @return  array<string, array{0: string, 1: string}>  A repo-relative file path, then its timeout constant's name
      *
      * @since   10.5.6
      */

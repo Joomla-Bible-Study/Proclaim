@@ -111,7 +111,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
     /**
      * Content a layout might realistically hold.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each case: stored template code in a realistic shape
      *
      * @since 10.7.1
      */
@@ -201,7 +201,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
     /**
      * Names that must never compose into a path.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each case: a filename the table must refuse
      *
      * @since 10.7.1
      */
@@ -251,7 +251,7 @@ class TemplatecodeLayoutWriteTest extends ProclaimTestCase
      * Names that must keep working. ⚠️ Not a vacuous list — a fix that rejects
      * everything would pass the test above and break every existing record.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each case: a filename the table must accept
      *
      * @since 10.7.1
      */

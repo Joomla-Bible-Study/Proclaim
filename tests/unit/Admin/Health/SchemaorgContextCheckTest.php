@@ -65,7 +65,7 @@ class SchemaorgContextCheckTest extends ProclaimTestCase
     /**
      * The check's own list.
      *
-     * @return  string[]
+     * @return  string[]  The context names in the check's NON_CANONICAL constant.
      *
      * @since 10.7.1
      */

@@ -28,7 +28,7 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create a fully-populated sermon item for testing.
      *
-     * @return  \stdClass
+     * @return  \stdClass  Sermon 42, with title, intro, date, teacher, series, topics, type and location
      *
      * @since   10.1.0
      */
@@ -52,7 +52,7 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create a minimal sermon item with only required fields.
      *
-     * @return  \stdClass
+     * @return  \stdClass  Sermon 1, titled Untitled, with no other fields
      *
      * @since   10.1.0
      */
@@ -68,7 +68,7 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create a fully-populated teacher item for testing.
      *
-     * @return  \stdClass
+     * @return  \stdClass  Teacher 10, with name, title, bio, image, website and two social links
      *
      * @since   10.1.0
      */
@@ -96,7 +96,7 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create a series item for testing.
      *
-     * @return  \stdClass
+     * @return  \stdClass  Series 5, with title, description, thumbnail and teacher
      *
      * @since   10.1.0
      */
@@ -115,7 +115,7 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
     /**
      * Create study items for series testing.
      *
-     * @return  array
+     * @return  array  Two studies, 42 and 43, each with only an id, a title and a date
      *
      * @since   10.1.0
      */

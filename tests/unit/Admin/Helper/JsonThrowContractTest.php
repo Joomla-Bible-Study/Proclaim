@@ -80,7 +80,9 @@ class JsonThrowContractTest extends ProclaimTestCase
      * Every json_decode/json_encode call in our source, with its arguments
      * resolved by matching parentheses rather than counting lines.
      *
-     * @return  array<int, array{file: string, line: int, fn: string, args: string}>
+     * @return  array<int, array{file: string, line: int, fn: string, args: string}>  Each call's repo-relative file,
+     *                                                                                line, function name, and argument
+     *                                                                                text minus its ( and ) tokens
      *
      * @since   10.5.6
      */
@@ -321,7 +323,7 @@ class JsonThrowContractTest extends ProclaimTestCase
      * @param   int       $number  1-indexed line the call sits on
      * @param   string    $line    That line's text
      *
-     * @return  bool
+     * @return  bool  Whether the line encodes into a local that reaches quote(), q(), set() or bind() within 15 lines
      *
      * @since   10.6.0
      */

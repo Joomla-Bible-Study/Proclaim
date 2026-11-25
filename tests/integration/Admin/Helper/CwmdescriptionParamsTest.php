@@ -165,9 +165,9 @@ class CwmdescriptionParamsTest extends IntegrationTestCase
     }
 
     /**
-     * Shapes that are valid JSON but not what the code expects.
+     * Params text the code does not expect: valid JSON of the wrong shape, malformed JSON, or an empty string.
      *
-     * @return  array<string, array{0: string}>
+     * @return  array<string, array{0: string}>  Each case's params text, keyed by what is wrong with it
      *
      * @since   10.5.6
      */

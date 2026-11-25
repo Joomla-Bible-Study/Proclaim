@@ -211,7 +211,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * A helper holding two synthetic tours under the shipped keys, so startTour
      * values resolve against rows each test creates.
      *
-     * @return  CwmguidedtourHelper
+     * @return  CwmguidedtourHelper  A helper whose tour list is just the two shipped keys, each mapped to a test uid.
      *
      * @since   __DEPLOY_VERSION__
      */
@@ -235,7 +235,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      *
      * @param   string  $uid  Tour uid
      *
-     * @return  int
+     * @return  int  How many guided tour rows carry that uid.
      *
      * @since   __DEPLOY_VERSION__
      */
@@ -332,7 +332,7 @@ class CwmguidedtourHelperTest extends IntegrationTestCase
      * really asserting against whatever the site happened to have. Replacing
      * the list keeps each test dependent only on its own fixture.
      *
-     * @return  CwmguidedtourHelper
+     * @return  CwmguidedtourHelper  A helper whose only tour is a synthetic definition under the test uid.
      *
      * @since   10.5.6
      */

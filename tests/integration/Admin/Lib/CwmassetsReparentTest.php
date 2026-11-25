@@ -122,7 +122,7 @@ class CwmassetsReparentTest extends IntegrationTestCase
      * @param   int     $parentId  Parent asset id
      * @param   string  $rules     JSON rule set
      *
-     * @return  int
+     * @return  int  The new asset's id
      *
      * @since   10.5.8
      */
@@ -145,7 +145,7 @@ class CwmassetsReparentTest extends IntegrationTestCase
      *
      * @param   string  $name  Asset name
      *
-     * @return  string
+     * @return  string  The parent asset's name, or an empty string when there is none
      *
      * @since   10.5.8
      */

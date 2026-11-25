@@ -31,7 +31,7 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      * @param   int     $v_b   Verse begin
      * @param   int     $v_e   Verse end
      *
-     * @return  string
+     * @return  string  The API reference, such as Luke+7:36-38, or empty when the start chapter is 0
      *
      * @since   10.1.0
      * @throws  \ReflectionException
@@ -53,7 +53,8 @@ class CwmlistingTooltipTest extends ProclaimTestCase
      * @param   Registry  $params         Params
      * @param   ?object   $elementConfig  Per-element config
      *
-     * @return  string
+     * @return  string  The text in a tooltip span when the element config enables one and apiRef is non-empty,
+     *                  otherwise the text as given
      *
      * @since   10.1.0
      * @throws  \ReflectionException

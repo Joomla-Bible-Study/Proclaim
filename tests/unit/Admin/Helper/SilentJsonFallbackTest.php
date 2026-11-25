@@ -47,7 +47,7 @@ class SilentJsonFallbackTest extends ProclaimTestCase
      *
      * @param   mixed  $stored  Whatever is sitting in location_group_mapping.
      *
-     * @return  array
+     * @return  array  Each location's group ids by location id, or empty when the value doesn't read as a mapping
      *
      * @since   10.5.6
      * @throws  \ReflectionException
@@ -251,14 +251,14 @@ class SilentJsonFallbackTest extends ProclaimTestCase
     /**
      * Extract one method's body by brace matching, with comments removed.
      *
-     * Comments have to go: both assertions below look for the absence of a
+     * Comments have to go: both assertions above look for the absence of a
      * string, and the code they guard is explained by a comment that names the
      * very thing being asserted absent.
      *
      * @param   string  $source  File contents.
      * @param   string  $name    Method name.
      *
-     * @return  string
+     * @return  string  The body, braces included and comments removed, or an empty string if it can't be isolated
      *
      * @since   10.5.6
      */
@@ -297,11 +297,11 @@ class SilentJsonFallbackTest extends ProclaimTestCase
     }
 
     /**
-     * Replace every comment with a space, leaving code and line structure intact.
+     * Replace every comment with the newlines it contained, leaving code and line structure intact.
      *
      * @param   string  $source  PHP source.
      *
-     * @return  string
+     * @return  string  The source with each comment reduced to its newlines
      *
      * @since   10.5.6
      */

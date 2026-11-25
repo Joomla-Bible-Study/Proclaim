@@ -200,7 +200,7 @@ class CwmfilterBookJunctionTest extends IntegrationTestCase
      *
      * @param   int  $book  Book number to filter on
      *
-     * @return  int[]
+     * @return  int[]  The ids of the studies the cross-filters keep when filtering on that book
      *
      * @since 10.5.8
      */

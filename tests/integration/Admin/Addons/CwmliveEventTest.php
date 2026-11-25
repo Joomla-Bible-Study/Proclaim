@@ -302,7 +302,7 @@ class CwmliveEventTest extends IntegrationTestCase
      *
      * @param   int  $serverId  The seeded server ID.
      *
-     * @return  Input
+     * @return  Input  A createLiveEvent input for that server that clears the missing-input check.
      *
      * @since   10.4.0
      */
@@ -323,9 +323,9 @@ class CwmliveEventTest extends IntegrationTestCase
      * so asserting on the key matches both environments; when it IS
      * loaded, translate the expectation the same way the addon did.
      *
-     * @param   array  $result  A createLiveEvent result.
+     * @param   array  $result  A createLiveEvent or cancelLiveEvent result.
      *
-     * @return  string
+     * @return  string  The error's language key when it is one this suite asserts on, otherwise the error as given.
      *
      * @since   10.4.0
      */
@@ -377,7 +377,7 @@ class CwmliveEventTest extends IntegrationTestCase
      * The real YouTube addon, constructed without the config-file side
      * effects the production constructor performs.
      *
-     * @return  CWMAddonYoutube
+     * @return  CWMAddonYoutube  A YouTube addon built without running its constructor.
      *
      * @since   10.4.0
      * @throws  \ReflectionException
@@ -393,7 +393,7 @@ class CwmliveEventTest extends IntegrationTestCase
     /**
      * A minimal concrete CWMAddon exposing only the base implementations.
      *
-     * @return  CWMAddon
+     * @return  CWMAddon  An addon whose constructor and abstract methods do nothing.
      *
      * @since   10.4.0
      */

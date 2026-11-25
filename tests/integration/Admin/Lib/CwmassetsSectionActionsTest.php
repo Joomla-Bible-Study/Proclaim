@@ -220,7 +220,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
     /**
      * Id of a user who holds a group but is not a Super User.
      *
-     * @return  int
+     * @return  int  The id of the first grouped user without core.admin, or 0 when there is none
      *
      * @since   10.5.8
      */
@@ -242,7 +242,7 @@ class CwmassetsSectionActionsTest extends IntegrationTestCase
     /**
      * Whether the section asset was already present before this test ran.
      *
-     * @return  bool
+     * @return  bool  Whether the section's asset row exists
      *
      * @since   10.5.8
      */

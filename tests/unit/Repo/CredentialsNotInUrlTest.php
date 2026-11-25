@@ -67,7 +67,7 @@ class CredentialsNotInUrlTest extends ProclaimTestCase
     /**
      * Every shipped source file, excluding vendored third-party code.
      *
-     * @return  array<int, string>
+     * @return  array<int, string>  Absolute paths of every PHP and JS file under ROOTS, vendored trees skipped
      *
      * @since 10.7.1
      */
