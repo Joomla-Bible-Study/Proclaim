@@ -97,13 +97,29 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
      */
     public static function staticReferences(): array
     {
-        $classes = [];
-        $found   = [];
+        return self::referencesIn(self::sourceFiles());
+    }
 
-        foreach (self::sourceFiles() as $file) {
+    /**
+     * Every `LibraryClass::symbol` the given files write, each file read against
+     * its own imports only.
+     *
+     * @param   string[]  $files  Paths of the PHP files to read
+     *
+     * @return  array<string, array{0: string, 1: string}>  Each distinct reference's fully qualified class, then its
+     *                                                      symbol, keyed by the two joined with ::
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function referencesIn(array $files): array
+    {
+        $found = [];
+
+        foreach ($files as $file) {
             $source = self::codeOf($file);
 
             // Short name => FQCN, from this file's own imports.
+            $classes = [];
             preg_match_all('~^use (CWM\\\\Library\\\\Scripture\\\\[\\w\\\\]+);~m', $source, $uses);
 
             foreach ($uses[1] as $fqcn) {
@@ -249,6 +265,39 @@ class ScriptureLibraryContractTest extends ProclaimTestCase
         self::assertNotEmpty(self::sourceFiles(), 'No source files were scanned.');
         self::assertNotEmpty(self::staticReferences(), 'No LibraryClass::symbol references were found.');
         self::assertNotEmpty(self::providerCalls(), 'No $provider->method() calls were found.');
+    }
+
+    /**
+     * A file is read against its own imports only: a short name an earlier file
+     * imports from the library is not credited to the library in a later file
+     * that doesn't import it.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     * @throws  \Random\RandomException
+     */
+    #[TestDox('each file is read against its own imports only')]
+    public function testEachFileIsReadAgainstItsOwnImports(): void
+    {
+        $dir = sys_get_temp_dir() . '/proclaim-scripture-contract-' . bin2hex(random_bytes(4));
+        mkdir($dir);
+
+        $importing = $dir . '/importing.php';
+        $other     = $dir . '/other.php';
+
+        file_put_contents($importing, "<?php\n\nuse CWM\\Library\\Scripture\\Helper\\ScriptureHelper;\n\nScriptureHelper::getBookName(1);\n");
+        file_put_contents($other, "<?php\n\nnamespace Elsewhere;\n\nScriptureHelper::somethingElse();\n");
+
+        try {
+            $references = self::referencesIn([$importing, $other]);
+        } finally {
+            unlink($importing);
+            unlink($other);
+            rmdir($dir);
+        }
+
+        self::assertSame(['CWM\Library\Scripture\Helper\ScriptureHelper::getBookName'], array_keys($references));
     }
 
     /**
