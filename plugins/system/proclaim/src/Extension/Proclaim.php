@@ -414,10 +414,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $wa = $this->getApplication()->getDocument()->getWebAssetManager();
             $wa->useScript('com_proclaim.admin-shortcuts');
 
-            // Repairs the subform header tooltips Joomla renders with both
-            // aria-hidden="true" and tabindex="0" — focusable, yet hidden from
-            // assistive technology (WCAG 4.1.2). Present in Joomla 5.4.7 through
-            // 7.0.0 and reported upstream; the script no-ops once that is fixed.
+            // Repairs the subform header tooltip icons Joomla renders with
+            // invalid ARIA (WCAG 4.1.2): focusable yet aria-hidden up to 6.1,
+            // and named but given no role in 6.2. The script names each icon
+            // from its tooltip, and leaves alone an icon core gives a role.
             //
             // Loaded here rather than from the four views whose forms contain a
             // subform. Those views do not share an asset or a base class, so
